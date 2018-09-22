@@ -1,0 +1,3 @@
+rootProject.name = 'playroll_mobile_app'
+
+include ':app'

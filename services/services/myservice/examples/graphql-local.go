@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	graphql "github.com/graphql-go/graphql"
+	graphiql "github.com/mnmtanish/go-graphiql"
 )
 
 type Album struct {
@@ -75,6 +76,30 @@ func Filter(songs []Song, f func(Song) bool) []Song {
 		}
 	}
 	return vsf
+}
+
+func serveGraphQL(s graphql.Schema) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		sendError := func(err error) {
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+		}
+
+		req := &graphiql.Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			sendError(err)
+			return
+		}
+
+		res := graphql.Do(graphql.Params{
+			Schema:        s,
+			RequestString: req.Query,
+		})
+
+		if err := json.NewEncoder(w).Encode(res); err != nil {
+			sendError(err)
+		}
+	}
 }
 
 func main() {
@@ -205,15 +230,6 @@ func main() {
 		Mutation: rootMutation,
 	})
 	fmt.Println(schema)
-	fmt.Println("adsflkjasdf;ljasd;lasdjlk")
-	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.URL.Query().Get("query"))
-		result := graphql.Do(graphql.Params{
-			Schema:        schema,
-			RequestString: r.URL.Query().Get("query"),
-		})
-		json.NewEncoder(w).Encode(result)
-	})
+	http.HandleFunc("/graphql", serveGraphQL(schema))
 	http.ListenAndServe(":8080", nil)
-
 }

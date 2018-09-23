@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 	"time"
 
 	"github.com/graphql-go/graphql"
+	graphiql "github.com/mnmtanish/go-graphiql"
 
 	"github.com/fatih/structs"
 )
@@ -25,12 +28,21 @@ type Entity struct {
 	Mutations interface{}
 }
 
-func GenerateGraphQLSchema(entities *[]*Entity) (graphql.Schema, error) {
+type Query struct {
+	Request func(params graphql.ResolveParams) (interface{}, error)
+}
+
+type Mutation struct {
+	Request func(params graphql.ResolveParams) (interface{}, error)
+}
+
+func GenerateGraphQLSchema(entities *[]*Entity) (rootQuery, rootMutation *graphql.Object) {
 	typeMap := map[string]*graphql.Object{}
 	for _, entity := range *entities {
-		typeMap[entity.Name] = graphql.NewObject(graphql.ObjectConfig{Name: entity.Name})
+		typeMap[entity.Name] = graphql.NewObject(graphql.ObjectConfig{Name: entity.Name, Fields: graphql.Fields{}})
 	}
 	for _, entity := range *entities {
+		t := typeMap[entity.Name]
 		m := structs.New(entity.Model)
 		fieldlist := m.Fields()
 		for _, field := range fieldlist {
@@ -38,36 +50,30 @@ func GenerateGraphQLSchema(entities *[]*Entity) (graphql.Schema, error) {
 				modelfieldlist := structs.Fields(m.Field("Model").Value())
 				for _, modelfield := range modelfieldlist {
 					name, gqlField := parseGraphQLField(modelfield.Tag("gql"), &typeMap)
-					typeMap[entity.Name].AddFieldConfig(name, gqlField)
-					fmt.Printf("%+v, %+v\n", name, gqlField)
+					t.AddFieldConfig(name, gqlField)
 				}
 			} else if field.Tag("gql") != "" {
 				name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap)
-				typeMap[entity.Name].AddFieldConfig(name, gqlField)
-				fmt.Printf("%+v, %+v\n", name, gqlField)
+				t.AddFieldConfig(name, gqlField)
 			}
 		}
 	}
-	rootQuery := graphql.NewObject(graphql.ObjectConfig{Name: "Query"})
+	rootQuery = graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
+	rootMutation = graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
 	for _, entity := range *entities {
-		querylist := structs.Fields(entity.Queries)
-		for _, query := range querylist {
-			name, gqlField := parseGraphQLField(query.Tag("gql"), &typeMap)
-			rootQuery.AddFieldConfig(name, gqlField)
+		methodlist := structs.Fields(entity.Queries)
+		for _, method := range methodlist {
+			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap)
+			gqlField.Resolve = method.Field("Request").Value().(func(params graphql.ResolveParams) (interface{}, error))
+			switch structs.Name(method.Value()) {
+			case "Query":
+				rootQuery.AddFieldConfig(name, gqlField)
+			case "Mutation":
+				rootMutation.AddFieldConfig(name, gqlField)
+			}
 		}
 	}
-	rootMutation := graphql.NewObject(graphql.ObjectConfig{Name: "Mutation"})
-	for _, entity := range *entities {
-		mutationlist := structs.Fields(entity.Queries)
-		for _, mutation := range mutationlist {
-			name, gqlField := parseGraphQLField(mutation.Tag("gql"), &typeMap)
-			rootMutation.AddFieldConfig(name, gqlField)
-		}
-	}
-	return graphql.NewSchema(graphql.SchemaConfig{
-		Query:    rootQuery,
-		Mutation: rootMutation,
-	})
+	return
 }
 
 /**
@@ -140,27 +146,100 @@ type Playroll struct {
 	Name  string `json:"name" gql:"name: String!"`
 }
 
-type PlayrollQueries struct {
-	GetPlayroll     func() `gql:"playroll: Playroll"`
-	SearchPlayrolls func() `gql:"searchPlayrolls: Playroll"`
-	ListPlayrolls   func() `gql:"listPlayrolls: Playroll"`
+type PlayrollMethods struct {
+	GetPlayroll      *Query    `gql:"playroll: Playroll"`
+	SearchPlayrolls  *Query    `gql:"searchPlayrolls: Playroll"`
+	ListPlayrolls    *Query    `gql:"listPlayrolls: Playroll"`
+	CreatePlayroll   *Mutation `gql:"createPlayroll: Playroll"`
+	UpdatePlayroll   *Mutation `gql:"updatePlayroll: Playroll"`
+	DeletePlayroll   *Mutation `gql:"deletePlayroll: Playroll"`
+	GenerateSonglist *Mutation `gql:"generateSonglist: Playroll"`
 }
 
-type PlayrollMutations struct {
-	CreatePlayroll   func() `gql:"createPlayroll: Playroll"`
-	UpdatePlayroll   func() `gql:"updatePlayroll: Playroll"`
-	DeletePlayroll   func() `gql:"deletePlayroll: Playroll"`
-	GenerateSonglist func() `gql:"generateSonglist: Playroll"`
+func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("getPlayroll, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("updatePlayroll, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func deletePlayroll(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("deletePlayroll, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func generateSonglist(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("generateSonglist, args:%+v\n", params.Args)
+	return nil, nil
 }
 
 var PlayrollEntity = &Entity{
-	Name:      "Playroll",
-	Model:     &Playroll{},
-	Queries:   &PlayrollQueries{},
-	Mutations: &PlayrollMutations{},
+	Name:  "Playroll",
+	Model: &Playroll{},
+	Queries: &PlayrollMethods{
+		GetPlayroll:      &Query{Request: getPlayroll},
+		SearchPlayrolls:  &Query{Request: searchPlayrolls},
+		ListPlayrolls:    &Query{Request: listPlayrolls},
+		CreatePlayroll:   &Mutation{Request: createPlayroll},
+		UpdatePlayroll:   &Mutation{Request: updatePlayroll},
+		DeletePlayroll:   &Mutation{Request: deletePlayroll},
+		GenerateSonglist: &Mutation{Request: generateSonglist},
+	},
+}
+
+func serveGraphiQL(s graphql.Schema) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		sendError := func(err error) {
+			w.WriteHeader(500)
+			w.Write([]byte(err.Error()))
+		}
+
+		req := &graphiql.Request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			sendError(err)
+			return
+		}
+
+		res := graphql.Do(graphql.Params{
+			Schema:        s,
+			RequestString: req.Query,
+		})
+
+		if err := json.NewEncoder(w).Encode(res); err != nil {
+			sendError(err)
+		}
+	}
 }
 
 func main() {
-	resp, _ := GenerateGraphQLSchema(&[]*Entity{PlayrollEntity})
-	fmt.Printf("%+v\n", resp)
+	rootQuery, rootMutation := GenerateGraphQLSchema(&[]*Entity{PlayrollEntity})
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{
+		Query:    rootQuery,
+		Mutation: rootMutation,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(schema)
+	http.HandleFunc("/graphiql", serveGraphiQL(schema))
+	http.ListenAndServe(":8080", nil)
 }

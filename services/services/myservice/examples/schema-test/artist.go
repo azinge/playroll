@@ -1,0 +1,65 @@
+package main
+
+import (
+	"fmt"
+
+	"github.com/graphql-go/graphql"
+)
+
+type Artist struct {
+	Model `gql:"MODEL"`
+	Title string `json:"name" gql:"name: String"`
+	// MusicSource MusicSource `json:"musicSource" gql:"musicSource: MusicSource"`
+}
+
+type ArtistMethods struct {
+	GetArtist     *Query    `gql:"artist: Artist"`
+	SearchArtists *Query    `gql:"searchArtists: Artist"`
+	ListArtists   *Query    `gql:"listArtists: Artist"`
+	CreateArtist  *Mutation `gql:"createArtist: Artist"`
+	UpdateArtist  *Mutation `gql:"updateArtist: Artist"`
+	DeleteArtist  *Mutation `gql:"deleteArtist: Artist"`
+}
+
+func getArtist(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("artist, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func searchArtists(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("searchArtists, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func listArtists(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("listArtists, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func createArtist(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("createArtist, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func updateArtist(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("updateArtist, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+func deleteArtist(params graphql.ResolveParams) (interface{}, error) {
+	fmt.Printf("deleteArtist, args:%+v\n", params.Args)
+	return nil, nil
+}
+
+var ArtistEntity = &Entity{
+	Name:  "Artist",
+	Model: &Artist{},
+	Queries: &ArtistMethods{
+		GetArtist:     &Query{Request: getArtist, Scope: "Public"},
+		SearchArtists: &Query{Request: searchArtists, Scope: "Public"},
+		ListArtists:   &Query{Request: listArtists, Scope: "Admin"},
+		CreateArtist:  &Mutation{Request: createArtist, Scope: "Admin"},
+		UpdateArtist:  &Mutation{Request: updateArtist, Scope: "Admin"},
+		DeleteArtist:  &Mutation{Request: deleteArtist, Scope: "Admin"},
+	},
+}

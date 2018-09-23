@@ -1,24 +1,19 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
 	"regexp"
 	"strings"
 	"time"
 
-	"github.com/graphql-go/graphql"
-	graphiql "github.com/mnmtanish/go-graphiql"
-
 	"github.com/fatih/structs"
+	"github.com/graphql-go/graphql"
 )
 
 type Model struct {
-	ID        uint       `json:"id" gorm:"primary_key" gql:"id: ID!"`
-	CreatedAt time.Time  `json:"createdAt" gql:"createdAt: String!"`
-	UpdatedAt time.Time  `json:"updatedAt" gql:"updatedAt: String!"`
-	DeletedAt *time.Time `json:"deletedAt" gql:"deletedAt: String!"`
+	ID        uint       `json:"id" gorm:"primary_key" gql:"id: ID"`
+	CreatedAt time.Time  `json:"createdAt" gql:"createdAt: String"`
+	UpdatedAt time.Time  `json:"updatedAt" gql:"updatedAt: String"`
+	DeletedAt *time.Time `json:"deletedAt" gql:"deletedAt: String"`
 }
 
 type Entity struct {
@@ -30,13 +25,15 @@ type Entity struct {
 
 type Query struct {
 	Request func(params graphql.ResolveParams) (interface{}, error)
+	Scope   string
 }
 
 type Mutation struct {
 	Request func(params graphql.ResolveParams) (interface{}, error)
+	Scope   string
 }
 
-func GenerateGraphQLSchema(entities *[]*Entity) (rootQuery, rootMutation *graphql.Object) {
+func GenerateGraphQLSchema(entities *[]*Entity) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	for _, entity := range *entities {
 		typeMap[entity.Name] = graphql.NewObject(graphql.ObjectConfig{Name: entity.Name, Fields: graphql.Fields{}})
@@ -58,8 +55,8 @@ func GenerateGraphQLSchema(entities *[]*Entity) (rootQuery, rootMutation *graphq
 			}
 		}
 	}
-	rootQuery = graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
-	rootMutation = graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
+	rootQuery := graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
+	rootMutation := graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
 	for _, entity := range *entities {
 		methodlist := structs.Fields(entity.Queries)
 		for _, method := range methodlist {
@@ -73,7 +70,10 @@ func GenerateGraphQLSchema(entities *[]*Entity) (rootQuery, rootMutation *graphq
 			}
 		}
 	}
-	return
+	return graphql.NewSchema(graphql.SchemaConfig{
+		Query:    rootQuery,
+		Mutation: rootMutation,
+	})
 }
 
 /**
@@ -139,107 +139,4 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object) graphq
 		(*config)[m["Name"]] = arg
 	}
 	return *config
-}
-
-type Playroll struct {
-	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String!"`
-}
-
-type PlayrollMethods struct {
-	GetPlayroll      *Query    `gql:"playroll: Playroll"`
-	SearchPlayrolls  *Query    `gql:"searchPlayrolls: Playroll"`
-	ListPlayrolls    *Query    `gql:"listPlayrolls: Playroll"`
-	CreatePlayroll   *Mutation `gql:"createPlayroll: Playroll"`
-	UpdatePlayroll   *Mutation `gql:"updatePlayroll: Playroll"`
-	DeletePlayroll   *Mutation `gql:"deletePlayroll: Playroll"`
-	GenerateSonglist *Mutation `gql:"generateSonglist: Playroll"`
-}
-
-func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("getPlayroll, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("updatePlayroll, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func deletePlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("deletePlayroll, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func generateSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("generateSonglist, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-var PlayrollEntity = &Entity{
-	Name:  "Playroll",
-	Model: &Playroll{},
-	Queries: &PlayrollMethods{
-		GetPlayroll:      &Query{Request: getPlayroll},
-		SearchPlayrolls:  &Query{Request: searchPlayrolls},
-		ListPlayrolls:    &Query{Request: listPlayrolls},
-		CreatePlayroll:   &Mutation{Request: createPlayroll},
-		UpdatePlayroll:   &Mutation{Request: updatePlayroll},
-		DeletePlayroll:   &Mutation{Request: deletePlayroll},
-		GenerateSonglist: &Mutation{Request: generateSonglist},
-	},
-}
-
-func serveGraphiQL(s graphql.Schema) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		sendError := func(err error) {
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-		}
-
-		req := &graphiql.Request{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			sendError(err)
-			return
-		}
-
-		res := graphql.Do(graphql.Params{
-			Schema:        s,
-			RequestString: req.Query,
-		})
-
-		if err := json.NewEncoder(w).Encode(res); err != nil {
-			sendError(err)
-		}
-	}
-}
-
-func main() {
-	rootQuery, rootMutation := GenerateGraphQLSchema(&[]*Entity{PlayrollEntity})
-	schema, err := graphql.NewSchema(graphql.SchemaConfig{
-		Query:    rootQuery,
-		Mutation: rootMutation,
-	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(schema)
-	http.HandleFunc("/graphiql", serveGraphiQL(schema))
-	http.ListenAndServe(":8080", nil)
 }

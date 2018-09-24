@@ -14,8 +14,8 @@ type Artist struct {
 
 type ArtistMethods struct {
 	GetArtist     *Query    `gql:"artist: Artist"`
-	SearchArtists *Query    `gql:"searchArtists: Artist"`
-	ListArtists   *Query    `gql:"listArtists: Artist"`
+	SearchArtists *Query    `gql:"searchArtists: [Artist]"`
+	ListArtists   *Query    `gql:"listArtists: [Artist]"`
 	CreateArtist  *Mutation `gql:"createArtist: Artist"`
 	UpdateArtist  *Mutation `gql:"updateArtist: Artist"`
 	DeleteArtist  *Mutation `gql:"deleteArtist: Artist"`
@@ -23,38 +23,38 @@ type ArtistMethods struct {
 
 func getArtist(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("artist, args:%+v\n", params.Args)
-	return nil, nil
+	return &Artist{}, nil
 }
 
 func searchArtists(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchArtists, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Artist{}, nil
 }
 
 func listArtists(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listArtists, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Artist{}, nil
 }
 
 func createArtist(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("createArtist, args:%+v\n", params.Args)
-	return nil, nil
+	return &Artist{}, nil
 }
 
 func updateArtist(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("updateArtist, args:%+v\n", params.Args)
-	return nil, nil
+	return &Artist{}, nil
 }
 
 func deleteArtist(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("deleteArtist, args:%+v\n", params.Args)
-	return nil, nil
+	return &Artist{}, nil
 }
 
 var ArtistEntity = &Entity{
 	Name:  "Artist",
 	Model: &Artist{},
-	Queries: &ArtistMethods{
+	Methods: &ArtistMethods{
 		GetArtist:     &Query{Request: getArtist, Scope: "Public"},
 		SearchArtists: &Query{Request: searchArtists, Scope: "Public"},
 		ListArtists:   &Query{Request: listArtists, Scope: "Admin"},

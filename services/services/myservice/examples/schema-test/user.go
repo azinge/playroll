@@ -13,8 +13,8 @@ type User struct {
 
 type UserMethods struct {
 	GetUser     *Query    `gql:"user: User"`
-	SearchUsers *Query    `gql:"searchUsers: User"`
-	ListUsers   *Query    `gql:"listUsers: User"`
+	SearchUsers *Query    `gql:"searchUsers: [User]"`
+	ListUsers   *Query    `gql:"listUsers: [User]"`
 	CreateUser  *Mutation `gql:"createUser: User"`
 	UpdateUser  *Mutation `gql:"updateUser: User"`
 	DeleteUser  *Mutation `gql:"deleteUser: User"`
@@ -22,38 +22,38 @@ type UserMethods struct {
 
 func getUser(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("user, args:%+v\n", params.Args)
-	return nil, nil
+	return &User{}, nil
 }
 
 func searchUsers(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchUsers, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]User{}, nil
 }
 
 func listUsers(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listUsers, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]User{}, nil
 }
 
 func createUser(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("createUser, args:%+v\n", params.Args)
-	return nil, nil
+	return &User{}, nil
 }
 
 func updateUser(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("updateUser, args:%+v\n", params.Args)
-	return nil, nil
+	return &User{}, nil
 }
 
 func deleteUser(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("deleteUser, args:%+v\n", params.Args)
-	return nil, nil
+	return &User{}, nil
 }
 
 var UserEntity = &Entity{
 	Name:  "User",
 	Model: &User{},
-	Queries: &UserMethods{
+	Methods: &UserMethods{
 		GetUser:     &Query{Request: getUser, Scope: "Public"},
 		SearchUsers: &Query{Request: searchUsers, Scope: "Public"},
 		ListUsers:   &Query{Request: listUsers, Scope: "Admin"},

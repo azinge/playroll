@@ -34,21 +34,27 @@ func serveGraphiQL(s graphql.Schema) http.HandlerFunc {
 }
 
 func main() {
-	schema, err := GenerateGraphQLSchema(&[]*Entity{
-		PlayrollEntity,
-		SonglistEntity,
-		RollEntity,
-		SongEntity,
-		AlbumEntity,
-		ArtistEntity,
-		GenreEntity,
-		UserEntity,
-	})
+	schema, err := GenerateGraphQLSchema(
+		&[]*Entity{
+			PlayrollEntity,
+			SonglistEntity,
+			RollEntity,
+			SongEntity,
+			AlbumEntity,
+			ArtistEntity,
+			GenreEntity,
+			UserEntity,
+		},
+		&[]*Type{},
+	)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(schema)
+
 	http.HandleFunc("/graphiql", serveGraphiQL(schema))
+	http.HandleFunc("/", graphiql.ServeGraphiQL)
+
+	fmt.Println("Running Graphiql Server")
 	http.ListenAndServe(":8080", nil)
 }

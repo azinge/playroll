@@ -16,11 +16,17 @@ type Model struct {
 	DeletedAt *time.Time `json:"deletedAt" gql:"deletedAt: String"`
 }
 
+type Type struct {
+	Name    string
+	IsInput bool
+	Model   interface{}
+}
+
 type Entity struct {
-	Name      string
-	Model     interface{}
-	Queries   interface{}
-	Mutations interface{}
+	Name    string
+	Model   interface{}
+	Methods interface{}
+	Types   *[]*Type
 }
 
 type Query struct {
@@ -33,10 +39,40 @@ type Mutation struct {
 	Scope   string
 }
 
-func GenerateGraphQLSchema(entities *[]*Entity) (graphql.Schema, error) {
+func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
+	inputTypeMap := map[string]*graphql.InputObject{}
 	for _, entity := range *entities {
 		typeMap[entity.Name] = graphql.NewObject(graphql.ObjectConfig{Name: entity.Name, Fields: graphql.Fields{}})
+		if entity.Types != nil {
+			for _, t := range *entity.Types {
+				if t.IsInput {
+					inputTypeMap[t.Name] = graphql.NewInputObject(graphql.InputObjectConfig{Name: t.Name, Fields: graphql.InputObjectConfigFieldMap{}})
+				} else {
+					typeMap[t.Name] = graphql.NewObject(graphql.ObjectConfig{Name: t.Name, Fields: graphql.Fields{}})
+				}
+			}
+		}
+	}
+	for _, t := range *types {
+		if t.IsInput {
+			inputTypeMap[t.Name] = graphql.NewInputObject(graphql.InputObjectConfig{Name: t.Name, Fields: graphql.InputObjectConfigFieldMap{}})
+		} else {
+			typeMap[t.Name] = graphql.NewObject(graphql.ObjectConfig{Name: t.Name, Fields: graphql.Fields{}})
+		}
+	}
+	for _, t := range *types {
+		m := structs.New(t.Model)
+		fieldlist := m.Fields()
+		for _, field := range fieldlist {
+			if t.IsInput {
+				name, gqlField := parseGraphQLInputField(field.Tag("gql"), &typeMap, &inputTypeMap)
+				inputTypeMap[t.Name].AddFieldConfig(name, gqlField)
+			} else {
+				name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap, &inputTypeMap)
+				typeMap[t.Name].AddFieldConfig(name, gqlField)
+			}
+		}
 	}
 	for _, entity := range *entities {
 		t := typeMap[entity.Name]
@@ -46,21 +82,36 @@ func GenerateGraphQLSchema(entities *[]*Entity) (graphql.Schema, error) {
 			if field.Tag("gql") == "MODEL" {
 				modelfieldlist := structs.Fields(m.Field("Model").Value())
 				for _, modelfield := range modelfieldlist {
-					name, gqlField := parseGraphQLField(modelfield.Tag("gql"), &typeMap)
+					name, gqlField := parseGraphQLField(modelfield.Tag("gql"), &typeMap, &inputTypeMap)
 					t.AddFieldConfig(name, gqlField)
 				}
 			} else if field.Tag("gql") != "" {
-				name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap)
+				name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap, &inputTypeMap)
 				t.AddFieldConfig(name, gqlField)
+			}
+		}
+		if entity.Types != nil {
+			for _, t := range *entity.Types {
+				m := structs.New(t.Model)
+				fieldlist := m.Fields()
+				for _, field := range fieldlist {
+					if t.IsInput {
+						name, gqlField := parseGraphQLInputField(field.Tag("gql"), &typeMap, &inputTypeMap)
+						inputTypeMap[t.Name].AddFieldConfig(name, gqlField)
+					} else {
+						name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap, &inputTypeMap)
+						typeMap[t.Name].AddFieldConfig(name, gqlField)
+					}
+				}
 			}
 		}
 	}
 	rootQuery := graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
 	rootMutation := graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
 	for _, entity := range *entities {
-		methodlist := structs.Fields(entity.Queries)
+		methodlist := structs.Fields(entity.Methods)
 		for _, method := range methodlist {
-			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap)
+			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap, &inputTypeMap)
 			gqlField.Resolve = method.Field("Request").Value().(func(params graphql.ResolveParams) (interface{}, error))
 			switch structs.Name(method.Value()) {
 			case "Query":
@@ -92,47 +143,66 @@ func getParams(regEx *regexp.Regexp, url string) map[string]string {
 	return paramsMap
 }
 
-func parseGraphQLField(t string, typeMap *map[string]*graphql.Object) (string, *graphql.Field) {
+func parseGraphQLInputField(t string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) (string, *graphql.InputObjectFieldConfig) {
+	fieldRegexp := regexp.MustCompile(`^(?P<Name>\w+)(\((?P<Args>[^\)]*)\))?: (?P<Type>.*)$`)
+	m := getParams(fieldRegexp, t)
+
+	field := &graphql.InputObjectFieldConfig{}
+	field.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
+	return m["Name"], field
+}
+
+func parseGraphQLField(t string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) (string, *graphql.Field) {
 	fieldRegexp := regexp.MustCompile(`^(?P<Name>\w+)(\((?P<Args>[^\)]*)\))?: (?P<Type>.*)$`)
 	m := getParams(fieldRegexp, t)
 
 	field := &graphql.Field{}
-	field.Type = parseGraphQLType(m["Type"], typeMap)
+	field.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
 	if m["Args"] != "" {
-		field.Args = parseGraphQLArguments(m["Args"], typeMap)
+		field.Args = parseGraphQLArguments(m["Args"], typeMap, inputTypeMap)
 	}
 	return m["Name"], field
 }
 
-func parseGraphQLType(s string, typeMap *map[string]*graphql.Object) graphql.Type {
+func parseGraphQLType(s string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) graphql.Type {
 	nonNullRegexp := regexp.MustCompile(`^(?P<Match>.*)!$`)
 	listRegexp := regexp.MustCompile(`^\[(?P<Match>[^\]]+)\]$`)
 	if (*typeMap)[s] != nil {
 		return (*typeMap)[s]
 	}
+	if (*inputTypeMap)[s] != nil {
+		return (*inputTypeMap)[s]
+	}
 	if m := getParams(nonNullRegexp, s); len(m) != 0 {
-		return graphql.NewNonNull(parseGraphQLType(m["Match"], typeMap))
+		return graphql.NewNonNull(parseGraphQLType(m["Match"], typeMap, inputTypeMap))
 	}
 	if m := getParams(listRegexp, s); len(m) != 0 {
-		return graphql.NewList(parseGraphQLType(m["Match"], typeMap))
+		return graphql.NewList(parseGraphQLType(m["Match"], typeMap, inputTypeMap))
 	}
 	switch s {
-	case "String":
-		return graphql.String
+	case "Int":
+		return graphql.Int
 	case "Float":
 		return graphql.Float
+	case "String":
+		return graphql.String
+	case "Boolean":
+		return graphql.Boolean
+	case "ID":
+		return graphql.ID
 	default:
-		return graphql.String // throw error later
+		// TODO: throw error
+		return graphql.NewObject(graphql.ObjectConfig{})
 	}
 }
 
-func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object) graphql.FieldConfigArgument {
-	argumentRegexp := regexp.MustCompile("^(?P<Name>[^: ]+) *: *(?P<Type>[^= ]+)( *= *(?P<Default>[^ ]*))? *$")
+func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) graphql.FieldConfigArgument {
+	argumentRegexp := regexp.MustCompile("^ *(?P<Name>[^: ]+) *: *(?P<Type>[^= ]+)( *= *(?P<Default>[^ ]*))? *$")
 	config := &graphql.FieldConfigArgument{}
 	for _, argParams := range strings.Split(s, ",") {
 		m := getParams(argumentRegexp, argParams)
 		arg := &graphql.ArgumentConfig{}
-		arg.Type = parseGraphQLType(m["Type"], typeMap)
+		arg.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
 		if m["Default"] != "" {
 			arg.DefaultValue = m["Default"]
 		}

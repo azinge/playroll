@@ -15,8 +15,8 @@ type Album struct {
 
 type AlbumMethods struct {
 	GetAlbum     *Query    `gql:"album: Album"`
-	SearchAlbums *Query    `gql:"searchAlbums: Album"`
-	ListAlbums   *Query    `gql:"listAlbums: Album"`
+	SearchAlbums *Query    `gql:"searchAlbums: [Album]"`
+	ListAlbums   *Query    `gql:"listAlbums: [Album]"`
 	CreateAlbum  *Mutation `gql:"createAlbum: Album"`
 	UpdateAlbum  *Mutation `gql:"updateAlbum: Album"`
 	DeleteAlbum  *Mutation `gql:"deleteAlbum: Album"`
@@ -24,38 +24,38 @@ type AlbumMethods struct {
 
 func getAlbum(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("album, args:%+v\n", params.Args)
-	return nil, nil
+	return &Album{}, nil
 }
 
 func searchAlbums(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchAlbums, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Album{}, nil
 }
 
 func listAlbums(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listAlbums, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Album{}, nil
 }
 
 func createAlbum(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("createAlbum, args:%+v\n", params.Args)
-	return nil, nil
+	return &Album{}, nil
 }
 
 func updateAlbum(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("updateAlbum, args:%+v\n", params.Args)
-	return nil, nil
+	return &Album{}, nil
 }
 
 func deleteAlbum(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("deleteAlbum, args:%+v\n", params.Args)
-	return nil, nil
+	return &Album{}, nil
 }
 
 var AlbumEntity = &Entity{
 	Name:  "Album",
 	Model: &Album{},
-	Queries: &AlbumMethods{
+	Methods: &AlbumMethods{
 		GetAlbum:     &Query{Request: getAlbum, Scope: "Public"},
 		SearchAlbums: &Query{Request: searchAlbums, Scope: "Public"},
 		ListAlbums:   &Query{Request: listAlbums, Scope: "Admin"},

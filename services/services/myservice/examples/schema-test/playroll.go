@@ -12,60 +12,66 @@ type Playroll struct {
 }
 
 type PlayrollMethods struct {
-	GetPlayroll      *Query    `gql:"playroll: Playroll"`
-	SearchPlayrolls  *Query    `gql:"searchPlayrolls: Playroll"`
-	ListPlayrolls    *Query    `gql:"listPlayrolls: Playroll"`
-	CreatePlayroll   *Mutation `gql:"createPlayroll: Playroll"`
-	UpdatePlayroll   *Mutation `gql:"updatePlayroll: Playroll"`
-	DeletePlayroll   *Mutation `gql:"deletePlayroll: Playroll"`
-	GenerateSonglist *Mutation `gql:"generateSonglist: Playroll"`
+	GetPlayroll     *Query    `gql:"playroll(id: ID!): Playroll"`
+	SearchPlayrolls *Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	ListPlayrolls   *Query    `gql:"listPlayrolls(offset: Int, count: Int): [Playroll]"`
+	CreatePlayroll  *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	UpdatePlayroll  *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
 func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("playroll, args:%+v\n", params.Args)
-	return nil, nil
+	return &Playroll{}, nil
 }
 
 func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Playroll{}, nil
 }
 
 func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
-	return nil, nil
+	return &[]Playroll{}, nil
+}
+
+type CreatePlayrollInput struct {
+	Name string `json:"name" gql:"name: String"`
 }
 
 func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
-	return nil, nil
+	return &Playroll{}, nil
+}
+
+type UpdatePlayrollInput struct {
+	ID   string `json:"id" gql:"id: ID!"`
+	Name string `json:"name" gql:"name: String"`
 }
 
 func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("updatePlayroll, args:%+v\n", params.Args)
-	return nil, nil
+	return &Playroll{}, nil
 }
 
 func deletePlayroll(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("deletePlayroll, args:%+v\n", params.Args)
-	return nil, nil
-}
-
-func generateSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("generateSonglist, args:%+v\n", params.Args)
-	return nil, nil
+	return &Playroll{}, nil
 }
 
 var PlayrollEntity = &Entity{
 	Name:  "Playroll",
 	Model: &Playroll{},
-	Queries: &PlayrollMethods{
-		GetPlayroll:      &Query{Request: getPlayroll, Scope: "User"},
-		SearchPlayrolls:  &Query{Request: searchPlayrolls, Scope: "User"},
-		ListPlayrolls:    &Query{Request: listPlayrolls, Scope: "User"},
-		CreatePlayroll:   &Mutation{Request: createPlayroll, Scope: "User"},
-		UpdatePlayroll:   &Mutation{Request: updatePlayroll, Scope: "User"},
-		DeletePlayroll:   &Mutation{Request: deletePlayroll, Scope: "User"},
-		GenerateSonglist: &Mutation{Request: generateSonglist, Scope: "User"},
+	Methods: &PlayrollMethods{
+		GetPlayroll:     &Query{Request: getPlayroll, Scope: "User"},
+		SearchPlayrolls: &Query{Request: searchPlayrolls, Scope: "User"},
+		ListPlayrolls:   &Query{Request: listPlayrolls, Scope: "User"},
+		CreatePlayroll:  &Mutation{Request: createPlayroll, Scope: "User"},
+		UpdatePlayroll:  &Mutation{Request: updatePlayroll, Scope: "User"},
+		DeletePlayroll:  &Mutation{Request: deletePlayroll, Scope: "User"},
+	},
+	Types: &[]*Type{
+		&Type{Name: "CreatePlayrollInput", IsInput: true, Model: &CreatePlayrollInput{}},
+		&Type{Name: "UpdatePlayrollInput", IsInput: true, Model: &UpdatePlayrollInput{}},
 	},
 }

@@ -1,37 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/graphql-go/graphql"
-	graphiql "github.com/mnmtanish/go-graphiql"
+	"github.com/graphql-go/handler"
 )
-
-func serveGraphiQL(s graphql.Schema) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		sendError := func(err error) {
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-		}
-
-		req := &graphiql.Request{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			sendError(err)
-			return
-		}
-
-		res := graphql.Do(graphql.Params{
-			Schema:        s,
-			RequestString: req.Query,
-		})
-
-		if err := json.NewEncoder(w).Encode(res); err != nil {
-			sendError(err)
-		}
-	}
-}
 
 func main() {
 	schema, err := GenerateGraphQLSchema(
@@ -52,8 +26,12 @@ func main() {
 		return
 	}
 
-	http.HandleFunc("/graphiql", serveGraphiQL(schema))
-	http.HandleFunc("/", graphiql.ServeGraphiQL)
+	h := handler.New(&handler.Config{
+		Schema:   &schema,
+		Pretty:   true,
+		GraphiQL: true,
+	})
+	http.Handle("/graphql", h)
 
 	fmt.Println("Running Graphiql Server")
 	http.ListenAndServe(":8080", nil)

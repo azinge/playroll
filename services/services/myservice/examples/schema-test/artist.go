@@ -8,8 +8,8 @@ import (
 
 type Artist struct {
 	Model `gql:"MODEL"`
-	Title string `json:"name" gql:"name: String"`
-	// MusicSource MusicSource `json:"musicSource" gql:"musicSource: MusicSource"`
+	Title string `gql:"name: String"`
+	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 }
 
 type ArtistMethods struct {

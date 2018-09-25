@@ -8,8 +8,8 @@ import (
 
 type Genre struct {
 	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String"`
-	// MusicSource MusicSource `json:"musicSource" gql:"musicSource: MusicSource"`
+	Name  string `gql:"name: String"`
+	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 }
 
 type GenreMethods struct {

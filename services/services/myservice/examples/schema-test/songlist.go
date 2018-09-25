@@ -8,10 +8,10 @@ import (
 
 type Songlist struct {
 	Model   `gql:"MODEL"`
-	Starred bool `json:"starred" gql:"starred: Boolean"`
-	Primary bool `json:"primary" gql:"primary: Boolean"`
-	// Playroll Playroll `json:"playroll" gql:"playroll: Playroll"`
-	// Songs    []Song   `json:"songs" gql:"songs: [Song]"` // many to many relationship
+	Starred bool `gql:"starred: Boolean"`
+	Primary bool `gql:"primary: Boolean"`
+	// Playroll Playroll `gql:"playroll: Playroll"`
+	// Songs    []Song   `gql:"songs: [Song]"` // many to many relationship
 }
 
 type SonglistMethods struct {

@@ -8,10 +8,10 @@ import (
 
 type Roll struct {
 	Model `gql:"MODEL"`
-	// Source   RollSource `json:"source" gql:"source: RollSource"`
-	// Filters  RollFilter `json:"filters" gql:"filters: [RollFilter]"`
-	// Length   RollLength `json:"length" gql:"length: RollLength"`
-	// Playroll Playroll   `json:"playroll" gql:"playroll: Playroll"`
+	// Source   RollSource `gql:"source: RollSource"`
+	// Filters  RollFilter `gql:"filters: [RollFilter]"`
+	// Length   RollLength `gql:"length: RollLength"`
+	// Playroll Playroll   `gql:"playroll: Playroll"`
 }
 
 type RollMethods struct {

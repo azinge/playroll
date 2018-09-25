@@ -8,11 +8,11 @@ import (
 
 type Song struct {
 	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String"`
-	// MusicSource MusicSource `json:"musicSource" gql:"musicSource: MusicSource"`
-	// Album       Album       `json:"album" gql:"album: String!"`
-	// Genre       Genre       `json:"genre" gql:"genre: String!"`
-	// Songlist    Songlist    `json:"songlist" gql:"songlist: String!"` // many to many relationship
+	Name  string `gql:"name: String"`
+	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
+	// Album       Album       `gql:"album: String!"`
+	// Genre       Genre       `gql:"genre: String!"`
+	// Songlist    Songlist    `gql:"songlist: String!"` // many to many relationship
 }
 
 type SongMethods struct {

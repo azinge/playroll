@@ -8,7 +8,7 @@ import (
 
 type Playroll struct {
 	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String"`
+	Name  string `gql:"name: String"`
 }
 
 type PlayrollMethods struct {
@@ -27,16 +27,16 @@ func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
 
 func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
-	return &[]Playroll{}, nil
+	return &[]*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
 func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
-	return &[]Playroll{}, nil
+	return &[]*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
 type CreatePlayrollInput struct {
-	Name string `json:"name" gql:"name: String"`
+	Name string `gql:"name: String"`
 }
 
 func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
@@ -45,8 +45,8 @@ func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
 }
 
 type UpdatePlayrollInput struct {
-	ID   string `json:"id" gql:"id: ID!"`
-	Name string `json:"name" gql:"name: String"`
+	ID   string `gql:"id: ID!"`
+	Name string `gql:"name: String"`
 }
 
 func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {

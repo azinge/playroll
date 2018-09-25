@@ -8,9 +8,9 @@ import (
 
 type Album struct {
 	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String"`
-	// MusicSource MusicSource `json:"musicSource" gql:"musicSource: MusicSource"`
-	// Artist Artist `json:"artist" gql:"artist:Artist"`
+	Name  string `gql:"name: String"`
+	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
+	// Artist Artist `gql:"artist:Artist"`
 }
 
 type AlbumMethods struct {

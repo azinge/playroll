@@ -10,10 +10,10 @@ import (
 )
 
 type Model struct {
-	ID        uint       `json:"id" gorm:"primary_key" gql:"id: ID"`
-	CreatedAt time.Time  `json:"createdAt" gql:"createdAt: String"`
-	UpdatedAt time.Time  `json:"updatedAt" gql:"updatedAt: String"`
-	DeletedAt *time.Time `json:"deletedAt" gql:"deletedAt: String"`
+	ID        uint       `gql:"id: ID" gorm:"primary_key"`
+	CreatedAt time.Time  `gql:"createdAt: String"`
+	UpdatedAt time.Time  `gql:"updatedAt: String"`
+	DeletedAt *time.Time `gql:"deletedAt: String"`
 }
 
 type Type struct {

@@ -8,7 +8,7 @@ import (
 
 type User struct {
 	Model `gql:"MODEL"`
-	Name  string `json:"name" gql:"name: String"`
+	Name  string `gql:"name: String"`
 }
 
 type UserMethods struct {

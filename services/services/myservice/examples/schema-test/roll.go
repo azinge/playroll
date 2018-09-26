@@ -30,12 +30,12 @@ func getRoll(params graphql.ResolveParams) (interface{}, error) {
 
 func searchRolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchRolls, args:%+v\n", params.Args)
-	return &[]Roll{}, nil
+	return []*Roll{&Roll{}, &Roll{}}, nil
 }
 
 func listRolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listRolls, args:%+v\n", params.Args)
-	return &[]Roll{}, nil
+	return []*Roll{&Roll{}, &Roll{}}, nil
 }
 
 func createRoll(params graphql.ResolveParams) (interface{}, error) {

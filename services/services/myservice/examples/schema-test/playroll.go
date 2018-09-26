@@ -27,12 +27,12 @@ func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
 
 func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
-	return &[]*Playroll{&Playroll{}, &Playroll{}}, nil
+	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
 func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
-	return &[]*Playroll{&Playroll{}, &Playroll{}}, nil
+	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
 type CreatePlayrollInput struct {

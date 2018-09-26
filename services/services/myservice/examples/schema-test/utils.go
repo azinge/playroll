@@ -131,6 +131,7 @@ func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type) (graphql.Schema,
  * Parses url with the given regular expression and returns the
  * group values defined in the expression.
  *
+ * Credit: https://stackoverflow.com/a/39635221/8072376
  */
 func getParams(regEx *regexp.Regexp, url string) map[string]string {
 	match := regEx.FindStringSubmatch(url)

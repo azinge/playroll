@@ -27,12 +27,12 @@ func getUser(params graphql.ResolveParams) (interface{}, error) {
 
 func searchUsers(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchUsers, args:%+v\n", params.Args)
-	return &[]User{}, nil
+	return []*User{&User{}, &User{}}, nil
 }
 
 func listUsers(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listUsers, args:%+v\n", params.Args)
-	return &[]User{}, nil
+	return []*User{&User{}, &User{}}, nil
 }
 
 func createUser(params graphql.ResolveParams) (interface{}, error) {

@@ -31,12 +31,12 @@ func getSong(params graphql.ResolveParams) (interface{}, error) {
 
 func searchSongs(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchSongs, args:%+v\n", params.Args)
-	return &[]Song{}, nil
+	return []*Song{&Song{}, &Song{}}, nil
 }
 
 func listSongs(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listSongs, args:%+v\n", params.Args)
-	return &[]Song{}, nil
+	return []*Song{&Song{}, &Song{}}, nil
 }
 
 func createSong(params graphql.ResolveParams) (interface{}, error) {

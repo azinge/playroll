@@ -29,12 +29,12 @@ func getAlbum(params graphql.ResolveParams) (interface{}, error) {
 
 func searchAlbums(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchAlbums, args:%+v\n", params.Args)
-	return &[]Album{}, nil
+	return []*Album{&Album{}, &Album{}}, nil
 }
 
 func listAlbums(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listAlbums, args:%+v\n", params.Args)
-	return &[]Album{}, nil
+	return []*Album{&Album{}, &Album{}}, nil
 }
 
 func createAlbum(params graphql.ResolveParams) (interface{}, error) {

@@ -28,12 +28,12 @@ func getGenre(params graphql.ResolveParams) (interface{}, error) {
 
 func searchGenres(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchGenres, args:%+v\n", params.Args)
-	return &[]Genre{}, nil
+	return []*Genre{&Genre{}, &Genre{}}, nil
 }
 
 func listGenres(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listGenres, args:%+v\n", params.Args)
-	return &[]Genre{}, nil
+	return []*Genre{&Genre{}, &Genre{}}, nil
 }
 
 func createGenre(params graphql.ResolveParams) (interface{}, error) {

@@ -28,12 +28,12 @@ func getArtist(params graphql.ResolveParams) (interface{}, error) {
 
 func searchArtists(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("searchArtists, args:%+v\n", params.Args)
-	return &[]Artist{}, nil
+	return []*Artist{&Artist{}, &Artist{}}, nil
 }
 
 func listArtists(params graphql.ResolveParams) (interface{}, error) {
 	fmt.Printf("listArtists, args:%+v\n", params.Args)
-	return &[]Artist{}, nil
+	return []*Artist{&Artist{}, &Artist{}}, nil
 }
 
 func createArtist(params graphql.ResolveParams) (interface{}, error) {

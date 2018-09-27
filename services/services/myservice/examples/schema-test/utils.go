@@ -42,6 +42,13 @@ type Mutation struct {
 	Scope   string
 }
 
+func generateResolveFromMethod(method *structs.Field, db *gorm.DB) func(params graphql.ResolveParams) (interface{}, error) {
+	return func(params graphql.ResolveParams) (interface{}, error) {
+		fmt.Printf("%s, args:%+v\n", params.Info.FieldName, params.Args)
+		return method.Field("Request").Value().(func(graphql.ResolveParams, *gorm.DB) (interface{}, error))(params, db)
+	}
+}
+
 func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
@@ -115,10 +122,7 @@ func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (gr
 		methodlist := structs.Fields(entity.Methods)
 		for _, method := range methodlist {
 			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap, &inputTypeMap)
-			gqlField.Resolve = func(params graphql.ResolveParams) (interface{}, error) {
-				fmt.Printf("%s, args:%+v\n", name, params.Args)
-				return method.Field("Request").Value().(func(graphql.ResolveParams, *gorm.DB) (interface{}, error))(params, db)
-			}
+			gqlField.Resolve = generateResolveFromMethod(method, db)
 			switch structs.Name(method.Value()) {
 			case "Query":
 				rootQuery.AddFieldConfig(name, gqlField)

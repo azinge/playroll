@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Songlist struct {
@@ -24,38 +23,31 @@ type SonglistMethods struct {
 	GenerateSonglist *Mutation `gql:"generateSonglist: Songlist"`
 }
 
-func getSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("songlist, args:%+v\n", params.Args)
+func getSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Songlist{}, nil
 }
 
-func searchSonglists(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("searchSonglists, args:%+v\n", params.Args)
+func searchSonglists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Songlist{&Songlist{}, &Songlist{}}, nil
 }
 
-func listSonglists(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("listSonglists, args:%+v\n", params.Args)
+func listSonglists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Songlist{&Songlist{}, &Songlist{}}, nil
 }
 
-func createSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("createSonglist, args:%+v\n", params.Args)
+func createSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Songlist{}, nil
 }
 
-func updateSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("updateSonglist, args:%+v\n", params.Args)
+func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Songlist{}, nil
 }
 
-func deleteSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("deleteSonglist, args:%+v\n", params.Args)
+func deleteSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Songlist{}, nil
 }
 
-func generateSonglist(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("generateSonglist, args:%+v\n", params.Args)
+func generateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Songlist{}, nil
 }
 

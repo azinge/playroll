@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Song struct {
@@ -24,33 +23,27 @@ type SongMethods struct {
 	DeleteSong  *Mutation `gql:"deleteSong: Song"`
 }
 
-func getSong(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("song, args:%+v\n", params.Args)
+func getSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Song{}, nil
 }
 
-func searchSongs(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("searchSongs, args:%+v\n", params.Args)
+func searchSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Song{&Song{}, &Song{}}, nil
 }
 
-func listSongs(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("listSongs, args:%+v\n", params.Args)
+func listSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Song{&Song{}, &Song{}}, nil
 }
 
-func createSong(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("createSong, args:%+v\n", params.Args)
+func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Song{}, nil
 }
 
-func updateSong(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("updateSong, args:%+v\n", params.Args)
+func updateSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Song{}, nil
 }
 
-func deleteSong(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("deleteSong, args:%+v\n", params.Args)
+func deleteSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Song{}, nil
 }
 

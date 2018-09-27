@@ -1,9 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type User struct {
@@ -20,33 +19,27 @@ type UserMethods struct {
 	DeleteUser  *Mutation `gql:"deleteUser: User"`
 }
 
-func getUser(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("user, args:%+v\n", params.Args)
+func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &User{}, nil
 }
 
-func searchUsers(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("searchUsers, args:%+v\n", params.Args)
+func searchUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*User{&User{}, &User{}}, nil
 }
 
-func listUsers(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("listUsers, args:%+v\n", params.Args)
+func listUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*User{&User{}, &User{}}, nil
 }
 
-func createUser(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("createUser, args:%+v\n", params.Args)
+func createUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &User{}, nil
 }
 
-func updateUser(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("updateUser, args:%+v\n", params.Args)
+func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &User{}, nil
 }
 
-func deleteUser(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("deleteUser, args:%+v\n", params.Args)
+func deleteUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &User{}, nil
 }
 

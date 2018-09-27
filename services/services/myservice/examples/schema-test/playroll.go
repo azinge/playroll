@@ -1,12 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Playroll struct {
@@ -23,18 +19,15 @@ type PlayrollMethods struct {
 	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
-func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("playroll, args:%+v\n", params.Args)
+func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Playroll{}, nil
 }
 
-func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
+func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
-func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
+func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
@@ -42,28 +35,11 @@ type CreatePlayrollInput struct {
 	Name string `gql:"name: String"`
 }
 
-func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
-	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PASS"),
-	)
-
-	db, err := gorm.Open("postgres", host)
-	if err != nil {
-		fmt.Println("error opening db: " + err.Error())
-		return nil, nil
-	}
-	defer db.Close()
-
-	db.AutoMigrate(&Playroll{})
+func createPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
 
 	playRoll := &Playroll{Name: name}
 	db.Create(&playRoll)
-	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
 	return playRoll, nil
 }
 
@@ -72,13 +48,11 @@ type UpdatePlayrollInput struct {
 	Name string `gql:"name: String"`
 }
 
-func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("updatePlayroll, args:%+v\n", params.Args)
+func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Playroll{}, nil
 }
 
-func deletePlayroll(params graphql.ResolveParams) (interface{}, error) {
-	fmt.Printf("deletePlayroll, args:%+v\n", params.Args)
+func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return &Playroll{}, nil
 }
 

@@ -1,15 +1,18 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 
-	"github.com/graphql-go/handler"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
-func main() {
+func Handler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -21,7 +24,10 @@ func main() {
 	db, err := gorm.Open("postgres", host)
 	if err != nil {
 		fmt.Println("error opening db: " + err.Error())
-		return
+		return events.APIGatewayProxyResponse{
+			Body:       err.Error(),
+			StatusCode: 500,
+		}, err
 	}
 	defer db.Close()
 
@@ -42,31 +48,33 @@ func main() {
 		db,
 	)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Println("error generating schema: " + err.Error())
+		return events.APIGatewayProxyResponse{
+			Body:       err.Error(),
+			StatusCode: 500,
+		}, err
 	}
 
-	h := handler.New(&handler.Config{
-		Schema:   &schema,
-		Pretty:   true,
-		GraphiQL: true,
+	result := graphql.Do(graphql.Params{
+		Schema:        schema,
+		RequestString: request.Body,
 	})
-	http.Handle("/graphql", h)
-	// host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
-	// 	os.Getenv("DB_HOST"),
-	// 	os.Getenv("DB_PORT"),
-	// 	os.Getenv("DB_USER"),
-	// 	os.Getenv("DB_NAME"),
-	// 	os.Getenv("DB_PASS"),
-	// )
 
-	// db, err := gorm.Open("postgres", host)
-	// if err != nil {
-	// 	fmt.Println("error opening db: " + err.Error())
-	// 	return
-	// }
-	// defer db.Close()
+	out, err := json.Marshal(result)
+	if err != nil {
+		fmt.Println("json.Marshal failed: " + err.Error())
+		return events.APIGatewayProxyResponse{
+			Body:       err.Error(),
+			StatusCode: 500,
+		}, err
+	}
 
-	fmt.Println("Running Graphiql Server")
-	http.ListenAndServe(":8080", nil)
+	return events.APIGatewayProxyResponse{
+		Body:       string(out),
+		StatusCode: 200,
+	}, nil
+}
+
+func main() {
+	lambda.Start(Handler)
 }

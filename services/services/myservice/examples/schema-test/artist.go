@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Artist struct {
@@ -21,32 +22,32 @@ type ArtistMethods struct {
 	DeleteArtist  *Mutation `gql:"deleteArtist: Artist"`
 }
 
-func getArtist(params graphql.ResolveParams) (interface{}, error) {
+func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("artist, args:%+v\n", params.Args)
 	return &Artist{}, nil
 }
 
-func searchArtists(params graphql.ResolveParams) (interface{}, error) {
+func searchArtists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("searchArtists, args:%+v\n", params.Args)
 	return []*Artist{&Artist{}, &Artist{}}, nil
 }
 
-func listArtists(params graphql.ResolveParams) (interface{}, error) {
+func listArtists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("listArtists, args:%+v\n", params.Args)
 	return []*Artist{&Artist{}, &Artist{}}, nil
 }
 
-func createArtist(params graphql.ResolveParams) (interface{}, error) {
+func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("createArtist, args:%+v\n", params.Args)
 	return &Artist{}, nil
 }
 
-func updateArtist(params graphql.ResolveParams) (interface{}, error) {
+func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("updateArtist, args:%+v\n", params.Args)
 	return &Artist{}, nil
 }
 
-func deleteArtist(params graphql.ResolveParams) (interface{}, error) {
+func deleteArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("deleteArtist, args:%+v\n", params.Args)
 	return &Artist{}, nil
 }

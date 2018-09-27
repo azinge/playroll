@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Genre struct {
@@ -21,32 +22,32 @@ type GenreMethods struct {
 	DeleteGenre  *Mutation `gql:"deleteGenre: Genre"`
 }
 
-func getGenre(params graphql.ResolveParams) (interface{}, error) {
+func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("genre, args:%+v\n", params.Args)
 	return &Genre{}, nil
 }
 
-func searchGenres(params graphql.ResolveParams) (interface{}, error) {
+func searchGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("searchGenres, args:%+v\n", params.Args)
 	return []*Genre{&Genre{}, &Genre{}}, nil
 }
 
-func listGenres(params graphql.ResolveParams) (interface{}, error) {
+func listGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("listGenres, args:%+v\n", params.Args)
 	return []*Genre{&Genre{}, &Genre{}}, nil
 }
 
-func createGenre(params graphql.ResolveParams) (interface{}, error) {
+func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("createGenre, args:%+v\n", params.Args)
 	return &Genre{}, nil
 }
 
-func updateGenre(params graphql.ResolveParams) (interface{}, error) {
+func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("updateGenre, args:%+v\n", params.Args)
 	return &Genre{}, nil
 }
 
-func deleteGenre(params graphql.ResolveParams) (interface{}, error) {
+func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("deleteGenre, args:%+v\n", params.Args)
 	return &Genre{}, nil
 }

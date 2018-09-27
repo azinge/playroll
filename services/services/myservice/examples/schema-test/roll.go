@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Roll struct {
@@ -23,32 +24,32 @@ type RollMethods struct {
 	DeleteRoll  *Mutation `gql:"deleteRoll: Roll"`
 }
 
-func getRoll(params graphql.ResolveParams) (interface{}, error) {
+func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("roll, args:%+v\n", params.Args)
 	return &Roll{}, nil
 }
 
-func searchRolls(params graphql.ResolveParams) (interface{}, error) {
+func searchRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("searchRolls, args:%+v\n", params.Args)
 	return []*Roll{&Roll{}, &Roll{}}, nil
 }
 
-func listRolls(params graphql.ResolveParams) (interface{}, error) {
+func listRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("listRolls, args:%+v\n", params.Args)
 	return []*Roll{&Roll{}, &Roll{}}, nil
 }
 
-func createRoll(params graphql.ResolveParams) (interface{}, error) {
+func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("createRoll, args:%+v\n", params.Args)
 	return &Roll{}, nil
 }
 
-func updateRoll(params graphql.ResolveParams) (interface{}, error) {
+func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("updateRoll, args:%+v\n", params.Args)
 	return &Roll{}, nil
 }
 
-func deleteRoll(params graphql.ResolveParams) (interface{}, error) {
+func deleteRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("deleteRoll, args:%+v\n", params.Args)
 	return &Roll{}, nil
 }

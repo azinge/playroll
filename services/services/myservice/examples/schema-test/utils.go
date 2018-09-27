@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/jinzhu/gorm"
 
 	"github.com/fatih/structs"
 	"github.com/graphql-go/graphql"
@@ -30,16 +33,16 @@ type Entity struct {
 }
 
 type Query struct {
-	Request func(params graphql.ResolveParams) (interface{}, error)
+	Request func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	Scope   string
 }
 
 type Mutation struct {
-	Request func(params graphql.ResolveParams) (interface{}, error)
+	Request func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	Scope   string
 }
 
-func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type) (graphql.Schema, error) {
+func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
 	for _, entity := range *entities {
@@ -112,7 +115,10 @@ func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type) (graphql.Schema,
 		methodlist := structs.Fields(entity.Methods)
 		for _, method := range methodlist {
 			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap, &inputTypeMap)
-			gqlField.Resolve = method.Field("Request").Value().(func(params graphql.ResolveParams) (interface{}, error))
+			gqlField.Resolve = func(params graphql.ResolveParams) (interface{}, error) {
+				fmt.Printf("%s, args:%+v\n", name, params.Args)
+				return method.Field("Request").Value().(func(graphql.ResolveParams, *gorm.DB) (interface{}, error))(params, db)
+			}
 			switch structs.Name(method.Value()) {
 			case "Query":
 				rootQuery.AddFieldConfig(name, gqlField)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Playroll struct {
@@ -20,17 +21,17 @@ type PlayrollMethods struct {
 	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
-func getPlayroll(params graphql.ResolveParams) (interface{}, error) {
+func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("playroll, args:%+v\n", params.Args)
 	return &Playroll{}, nil
 }
 
-func searchPlayrolls(params graphql.ResolveParams) (interface{}, error) {
+func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("searchPlayrolls, args:%+v\n", params.Args)
 	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
-func listPlayrolls(params graphql.ResolveParams) (interface{}, error) {
+func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("listPlayrolls, args:%+v\n", params.Args)
 	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
@@ -39,7 +40,7 @@ type CreatePlayrollInput struct {
 	Name string `gql:"name: String"`
 }
 
-func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
+func createPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
 	return &Playroll{}, nil
 }
@@ -49,12 +50,12 @@ type UpdatePlayrollInput struct {
 	Name string `gql:"name: String"`
 }
 
-func updatePlayroll(params graphql.ResolveParams) (interface{}, error) {
+func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("updatePlayroll, args:%+v\n", params.Args)
 	return &Playroll{}, nil
 }
 
-func deletePlayroll(params graphql.ResolveParams) (interface{}, error) {
+func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("deletePlayroll, args:%+v\n", params.Args)
 	return &Playroll{}, nil
 }

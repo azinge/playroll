@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
 type Album struct {
@@ -22,32 +23,32 @@ type AlbumMethods struct {
 	DeleteAlbum  *Mutation `gql:"deleteAlbum: Album"`
 }
 
-func getAlbum(params graphql.ResolveParams) (interface{}, error) {
+func getAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("album, args:%+v\n", params.Args)
 	return &Album{}, nil
 }
 
-func searchAlbums(params graphql.ResolveParams) (interface{}, error) {
+func searchAlbums(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("searchAlbums, args:%+v\n", params.Args)
 	return []*Album{&Album{}, &Album{}}, nil
 }
 
-func listAlbums(params graphql.ResolveParams) (interface{}, error) {
+func listAlbums(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("listAlbums, args:%+v\n", params.Args)
 	return []*Album{&Album{}, &Album{}}, nil
 }
 
-func createAlbum(params graphql.ResolveParams) (interface{}, error) {
+func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("createAlbum, args:%+v\n", params.Args)
 	return &Album{}, nil
 }
 
-func updateAlbum(params graphql.ResolveParams) (interface{}, error) {
+func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("updateAlbum, args:%+v\n", params.Args)
 	return &Album{}, nil
 }
 
-func deleteAlbum(params graphql.ResolveParams) (interface{}, error) {
+func deleteAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	fmt.Printf("deleteAlbum, args:%+v\n", params.Args)
 	return &Album{}, nil
 }

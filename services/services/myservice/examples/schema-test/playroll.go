@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Playroll struct {
@@ -40,8 +43,28 @@ type CreatePlayrollInput struct {
 }
 
 func createPlayroll(params graphql.ResolveParams) (interface{}, error) {
+	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PASS"),
+	)
+
+	db, err := gorm.Open("postgres", host)
+	if err != nil {
+		fmt.Println("error opening db: " + err.Error())
+		return nil, nil
+	}
+	defer db.Close()
+
+	db.AutoMigrate(&Playroll{})
+	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
+
+	playRoll := &Playroll{Name: name}
+	db.Create(&playRoll)
 	fmt.Printf("createPlayroll, args:%+v\n", params.Args)
-	return &Playroll{}, nil
+	return playRoll, nil
 }
 
 type UpdatePlayrollInput struct {

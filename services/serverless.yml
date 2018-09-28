@@ -43,33 +43,32 @@ provider:
 #            - "/*"
 
 # you can define service wide environment variables here
-#  environment:
-#    variable1: value1
 
 package:
- exclude:
+  exclude:
    - ./**
- include:
+  include:
    - ./bin/**
 
 functions:
-  hello:
-    handler: bin/hello
+  graphql:
+    vpc:
+      securityGroupIds:
+        - sg-02e861cee93b94d2a 
+      subnetIds:
+        - subnet-99d88be0
+        - subnet-c9740882
+        - subnet-e47f52be
+    environment:
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
+      DB_NAME: ${env:DB_NAME}
+      DB_USER: ${env:DB_USER}
+      DB_PASS: ${env:DB_PASS}
+    handler: bin/graphql
     events:
       - http:
-          path: hello
-          method: get
-  world:
-    handler: bin/world
-    events:
-      - http:
-          path: world
-          method: get
-  graphql-example:
-    handler: bin/graphql-example
-    events:
-      - http:
-          path: graphql-example
+          path: graphql
           method: post
 
 #    The following are a few example events you can configure

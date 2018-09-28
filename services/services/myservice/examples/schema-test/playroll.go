@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
@@ -20,7 +22,13 @@ type PlayrollMethods struct {
 }
 
 func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Playroll{}, nil
+	var playroll Playroll
+	id := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
+		fmt.Println("Error getting playroll: " + err.Error())
+		return nil, err
+	}
+	return playroll, nil
 }
 
 func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -28,7 +36,13 @@ func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, er
 }
 
 func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return []*Playroll{&Playroll{}, &Playroll{}}, nil
+	var playrolls []Playroll
+	// currently does not handle offset and count
+	if err := db.Find(&playrolls).Error; err != nil {
+		fmt.Println("Error listing playrolls: " + err.Error())
+		return nil, err
+	}
+	return playrolls, nil
 }
 
 type CreatePlayrollInput struct {
@@ -37,9 +51,11 @@ type CreatePlayrollInput struct {
 
 func createPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
-
 	playRoll := &Playroll{Name: name}
-	db.Create(&playRoll)
+	if err := db.Create(&playRoll).Error; err != nil {
+		fmt.Println("Error creating playroll: " + err.Error())
+		return nil, err
+	}
 	return playRoll, nil
 }
 

@@ -43,14 +43,6 @@
   version = "v0.7.6"
 
 [[projects]]
-  digest = "1:daff313c07347e0a14d715209811cf7e3b53a38735994c2ca9ccefd02eab2b61"
-  name = "github.com/graphql-go/handler"
-  packages = ["."]
-  pruneopts = ""
-  revision = "f0393b2c10daeebea900292b8e092e73475399d9"
-  version = "v0.2.1"
-
-[[projects]]
   digest = "1:d269638dbd514822446c3c818b6389c880058af79ec54d97731818b34fe66921"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -97,7 +89,6 @@
     "github.com/aws/aws-lambda-go/lambda",
     "github.com/fatih/structs",
     "github.com/graphql-go/graphql",
-    "github.com/graphql-go/handler",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/mnmtanish/go-graphiql",

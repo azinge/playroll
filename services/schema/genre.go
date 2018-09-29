@@ -1,23 +1,24 @@
-package main
+package schema
 
 import (
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Genre struct {
-	Model `gql:"MODEL"`
-	Name  string `gql:"name: String"`
+	utils.Model `gql:"MODEL"`
+	Name        string `gql:"name: String"`
 	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 }
 
 type GenreMethods struct {
-	GetGenre     *Query    `gql:"genre: Genre"`
-	SearchGenres *Query    `gql:"searchGenres: [Genre]"`
-	ListGenres   *Query    `gql:"listGenres: [Genre]"`
-	CreateGenre  *Mutation `gql:"createGenre: Genre"`
-	UpdateGenre  *Mutation `gql:"updateGenre: Genre"`
-	DeleteGenre  *Mutation `gql:"deleteGenre: Genre"`
+	GetGenre     *utils.Query    `gql:"genre: Genre"`
+	SearchGenres *utils.Query    `gql:"searchGenres: [Genre]"`
+	ListGenres   *utils.Query    `gql:"listGenres: [Genre]"`
+	CreateGenre  *utils.Mutation `gql:"createGenre: Genre"`
+	UpdateGenre  *utils.Mutation `gql:"updateGenre: Genre"`
+	DeleteGenre  *utils.Mutation `gql:"deleteGenre: Genre"`
 }
 
 func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -44,15 +45,15 @@ func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	return &Genre{}, nil
 }
 
-var GenreEntity = &Entity{
+var GenreEntity = &utils.Entity{
 	Name:  "Genre",
 	Model: &Genre{},
 	Methods: &GenreMethods{
-		GetGenre:     &Query{Request: getGenre, Scope: "Public"},
-		SearchGenres: &Query{Request: searchGenres, Scope: "Public"},
-		ListGenres:   &Query{Request: listGenres, Scope: "Admin"},
-		CreateGenre:  &Mutation{Request: createGenre, Scope: "Admin"},
-		UpdateGenre:  &Mutation{Request: updateGenre, Scope: "Admin"},
-		DeleteGenre:  &Mutation{Request: deleteGenre, Scope: "Admin"},
+		GetGenre:     &utils.Query{Request: getGenre, Scope: "Public"},
+		SearchGenres: &utils.Query{Request: searchGenres, Scope: "Public"},
+		ListGenres:   &utils.Query{Request: listGenres, Scope: "Admin"},
+		CreateGenre:  &utils.Mutation{Request: createGenre, Scope: "Admin"},
+		UpdateGenre:  &utils.Mutation{Request: updateGenre, Scope: "Admin"},
+		DeleteGenre:  &utils.Mutation{Request: deleteGenre, Scope: "Admin"},
 	},
 }

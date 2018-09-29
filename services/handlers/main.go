@@ -8,6 +8,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/cazinge/playroll/services/schema"
+	"github.com/cazinge/playroll/services/utils"
 
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -33,20 +35,20 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	}
 	defer db.Close()
 
-	db.AutoMigrate(&Playroll{})
+	db.AutoMigrate(&schema.Playroll{})
 
-	schema, err := GenerateGraphQLSchema(
-		&[]*Entity{
-			PlayrollEntity,
-			SonglistEntity,
-			RollEntity,
-			SongEntity,
-			AlbumEntity,
-			ArtistEntity,
-			GenreEntity,
-			UserEntity,
+	schema, err := utils.GenerateGraphQLSchema(
+		&[]*utils.Entity{
+			schema.PlayrollEntity,
+			schema.SonglistEntity,
+			schema.RollEntity,
+			schema.SongEntity,
+			schema.AlbumEntity,
+			schema.ArtistEntity,
+			schema.GenreEntity,
+			schema.UserEntity,
 		},
-		&[]*Type{},
+		&[]*utils.Type{},
 		db,
 	)
 	if err != nil {

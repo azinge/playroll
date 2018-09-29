@@ -1,4 +1,4 @@
-package main
+package schema
 
 type RollSource struct {
 	Type          string   `json:"type"`

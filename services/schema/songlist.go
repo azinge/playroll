@@ -1,26 +1,27 @@
-package main
+package schema
 
 import (
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Songlist struct {
-	Model   `gql:"MODEL"`
-	Starred bool `gql:"starred: Boolean"`
-	Primary bool `gql:"primary: Boolean"`
+	utils.Model `gql:"MODEL"`
+	Starred     bool `gql:"starred: Boolean"`
+	Primary     bool `gql:"primary: Boolean"`
 	// Playroll Playroll `gql:"playroll: Playroll"`
 	// Songs    []Song   `gql:"songs: [Song]"` // many to many relationship
 }
 
 type SonglistMethods struct {
-	GetSonglist      *Query    `gql:"songlist: Songlist"`
-	SearchSonglists  *Query    `gql:"searchSonglists: [Songlist]"`
-	ListSonglists    *Query    `gql:"listSonglists: [Songlist]"`
-	CreateSonglist   *Mutation `gql:"createSonglist: Songlist"`
-	UpdateSonglist   *Mutation `gql:"updateSonglist: Songlist"`
-	DeleteSonglist   *Mutation `gql:"deleteSonglist: Songlist"`
-	GenerateSonglist *Mutation `gql:"generateSonglist: Songlist"`
+	GetSonglist      *utils.Query    `gql:"songlist: Songlist"`
+	SearchSonglists  *utils.Query    `gql:"searchSonglists: [Songlist]"`
+	ListSonglists    *utils.Query    `gql:"listSonglists: [Songlist]"`
+	CreateSonglist   *utils.Mutation `gql:"createSonglist: Songlist"`
+	UpdateSonglist   *utils.Mutation `gql:"updateSonglist: Songlist"`
+	DeleteSonglist   *utils.Mutation `gql:"deleteSonglist: Songlist"`
+	GenerateSonglist *utils.Mutation `gql:"generateSonglist: Songlist"`
 }
 
 func getSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -51,16 +52,16 @@ func generateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, e
 	return &Songlist{}, nil
 }
 
-var SonglistEntity = &Entity{
+var SonglistEntity = &utils.Entity{
 	Name:  "Songlist",
 	Model: &Songlist{},
 	Methods: &SonglistMethods{
-		GetSonglist:      &Query{Request: getSonglist, Scope: "User"},
-		SearchSonglists:  &Query{Request: searchSonglists, Scope: "User"},
-		ListSonglists:    &Query{Request: listSonglists, Scope: "User"},
-		CreateSonglist:   &Mutation{Request: createSonglist, Scope: "User"},
-		UpdateSonglist:   &Mutation{Request: updateSonglist, Scope: "User"},
-		DeleteSonglist:   &Mutation{Request: deleteSonglist, Scope: "User"},
-		GenerateSonglist: &Mutation{Request: generateSonglist, Scope: "User"},
+		GetSonglist:      &utils.Query{Request: getSonglist, Scope: "User"},
+		SearchSonglists:  &utils.Query{Request: searchSonglists, Scope: "User"},
+		ListSonglists:    &utils.Query{Request: listSonglists, Scope: "User"},
+		CreateSonglist:   &utils.Mutation{Request: createSonglist, Scope: "User"},
+		UpdateSonglist:   &utils.Mutation{Request: updateSonglist, Scope: "User"},
+		DeleteSonglist:   &utils.Mutation{Request: deleteSonglist, Scope: "User"},
+		GenerateSonglist: &utils.Mutation{Request: generateSonglist, Scope: "User"},
 	},
 }

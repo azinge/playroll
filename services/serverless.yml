@@ -22,7 +22,7 @@ provider:
   name: aws
   runtime: go1.x
 
-# you can overwrite defaults here
+  # you can overwrite defaults here
   stage: dev
   region: us-west-2
 
@@ -46,15 +46,15 @@ provider:
 
 package:
   exclude:
-   - ./**
+    - ./**
   include:
-   - ./bin/**
+    - ./bin/**
 
 functions:
   graphql:
     vpc:
       securityGroupIds:
-        - sg-02e861cee93b94d2a 
+        - sg-02e861cee93b94d2a
       subnetIds:
         - subnet-99d88be0
         - subnet-c9740882
@@ -69,6 +69,12 @@ functions:
     events:
       - http:
           path: graphql
+          method: post
+  graphiql:
+    handler: bin/graphiql
+    events:
+      - http:
+          path: graphiql
           method: post
 
 #    The following are a few example events you can configure

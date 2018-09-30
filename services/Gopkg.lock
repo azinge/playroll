@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/apex/gateway"
-  packages = ["."]
-  revision = "21c9971861be4e8be9352e7a2540710b0c46610f"
-  version = "v1.1.1"
-
-[[projects]]
   name = "github.com/aws/aws-lambda-go"
   packages = [
     "events",
@@ -43,12 +37,6 @@
   version = "v0.7.6"
 
 [[projects]]
-  name = "github.com/graphql-go/handler"
-  packages = ["."]
-  revision = "f0393b2c10daeebea900292b8e092e73475399d9"
-  version = "v0.2.1"
-
-[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
@@ -79,15 +67,9 @@
   packages = ["."]
   revision = "cef5a61bd62b996aa67029c6c858f673d6e51718"
 
-[[projects]]
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4b6bd106ed05e1acf8326da027bfc236f2abd0dccbdf03da2e3eac78bc68cc2b"
+  inputs-digest = "1dddd76609c81bb750b33900800e66c7a8a109e89ad7ff5f73fbfea5c3e393b3"
   solver-name = "gps-cdcl"
   solver-version = 1

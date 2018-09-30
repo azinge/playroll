@@ -59,6 +59,8 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		}, err
 	}
 
+	fmt.Println(request.Body)
+
 	result := graphql.Do(graphql.Params{
 		Schema:        schema,
 		RequestString: request.Body,

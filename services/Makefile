@@ -1,6 +1,6 @@
 build:
 	dep ensure -v
-	env GOOS=linux go build -ldflags="-s -w" -o bin/graphql schema-test/*.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/graphql schema/*.go
 
 .PHONY: clean
 clean:

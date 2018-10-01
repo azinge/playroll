@@ -1,5 +1,5 @@
 import Amplify, { Auth } from "aws-amplify";
-import awsconfig from "../config/aws.js";
+import awsconfig from "../../../shared/config/aws.js";
 import gql from "graphql-tag";
 import AWSAppSyncClient from "aws-appsync";
 

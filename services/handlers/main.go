@@ -29,6 +29,10 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	if err != nil {
 		fmt.Println("error opening db: " + err.Error())
 		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Origin":      "*",
+				"Access-Control-Allow-Credentials": "true",
+			},
 			Body:       err.Error(),
 			StatusCode: 500,
 		}, err
@@ -54,6 +58,10 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Origin":      "*",
+				"Access-Control-Allow-Credentials": "true",
+			},
 			Body:       err.Error(),
 			StatusCode: 500,
 		}, err
@@ -78,12 +86,20 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	if err != nil {
 		fmt.Println("json.Marshal failed: " + err.Error())
 		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Origin":      "*",
+				"Access-Control-Allow-Credentials": "true",
+			},
 			Body:       err.Error(),
 			StatusCode: 500,
 		}, err
 	}
 
 	return events.APIGatewayProxyResponse{
+		Headers: map[string]string{
+			"Access-Control-Allow-Origin":      "*",
+			"Access-Control-Allow-Credentials": "true",
+		},
 		Body:       string(out),
 		StatusCode: 200,
 	}, nil

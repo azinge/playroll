@@ -29,7 +29,7 @@ source <env-var-local>
 make build
 sam local start-api
 ```
-AWS SAM will now deploy an endpoint in the current terminal session. In another session, run this command to hit the local endpoint
+AWS SAM will now deploy an endpoint in the current terminal session. In another session, run this command to hit the local endpoint.
 ```bash
 curl -X POST <graphql-endpoint> -d '<graphql-query/mutation-request>'
 ```

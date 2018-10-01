@@ -1,24 +1,25 @@
-package main
+package schema
 
 import (
 	"fmt"
 
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Playroll struct {
-	Model `gql:"MODEL"`
-	Name  string `gql:"name: String"`
+	utils.Model `gql:"MODEL"`
+	Name        string `gql:"name: String"`
 }
 
 type PlayrollMethods struct {
-	GetPlayroll     *Query    `gql:"playroll(id: ID!): Playroll"`
-	SearchPlayrolls *Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
-	ListPlayrolls   *Query    `gql:"listPlayrolls(offset: Int, count: Int): [Playroll]"`
-	CreatePlayroll  *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
-	UpdatePlayroll  *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
-	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
+	GetPlayroll     *utils.Query    `gql:"playroll(id: ID!): Playroll"`
+	SearchPlayrolls *utils.Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	ListPlayrolls   *utils.Query    `gql:"listPlayrolls(offset: Int, count: Int): [Playroll]"`
+	CreatePlayroll  *utils.Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	UpdatePlayroll  *utils.Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	DeletePlayroll  *utils.Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
 func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -72,19 +73,19 @@ func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 	return &Playroll{}, nil
 }
 
-var PlayrollEntity = &Entity{
+var PlayrollEntity = &utils.Entity{
 	Name:  "Playroll",
 	Model: &Playroll{},
 	Methods: &PlayrollMethods{
-		GetPlayroll:     &Query{Request: getPlayroll, Scope: "User"},
-		SearchPlayrolls: &Query{Request: searchPlayrolls, Scope: "User"},
-		ListPlayrolls:   &Query{Request: listPlayrolls, Scope: "User"},
-		CreatePlayroll:  &Mutation{Request: createPlayroll, Scope: "User"},
-		UpdatePlayroll:  &Mutation{Request: updatePlayroll, Scope: "User"},
-		DeletePlayroll:  &Mutation{Request: deletePlayroll, Scope: "User"},
+		GetPlayroll:     &utils.Query{Request: getPlayroll, Scope: "User"},
+		SearchPlayrolls: &utils.Query{Request: searchPlayrolls, Scope: "User"},
+		ListPlayrolls:   &utils.Query{Request: listPlayrolls, Scope: "User"},
+		CreatePlayroll:  &utils.Mutation{Request: createPlayroll, Scope: "User"},
+		UpdatePlayroll:  &utils.Mutation{Request: updatePlayroll, Scope: "User"},
+		DeletePlayroll:  &utils.Mutation{Request: deletePlayroll, Scope: "User"},
 	},
-	Types: &[]*Type{
-		&Type{Name: "CreatePlayrollInput", IsInput: true, Model: &CreatePlayrollInput{}},
-		&Type{Name: "UpdatePlayrollInput", IsInput: true, Model: &UpdatePlayrollInput{}},
+	Types: &[]*utils.Type{
+		&utils.Type{Name: "CreatePlayrollInput", IsInput: true, Model: &CreatePlayrollInput{}},
+		&utils.Type{Name: "UpdatePlayrollInput", IsInput: true, Model: &UpdatePlayrollInput{}},
 	},
 }

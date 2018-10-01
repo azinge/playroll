@@ -1,23 +1,24 @@
-package main
+package schema
 
 import (
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Artist struct {
-	Model `gql:"MODEL"`
-	Title string `gql:"name: String"`
+	utils.Model `gql:"MODEL"`
+	Title       string `gql:"name: String"`
 	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 }
 
 type ArtistMethods struct {
-	GetArtist     *Query    `gql:"artist: Artist"`
-	SearchArtists *Query    `gql:"searchArtists: [Artist]"`
-	ListArtists   *Query    `gql:"listArtists: [Artist]"`
-	CreateArtist  *Mutation `gql:"createArtist: Artist"`
-	UpdateArtist  *Mutation `gql:"updateArtist: Artist"`
-	DeleteArtist  *Mutation `gql:"deleteArtist: Artist"`
+	GetArtist     *utils.Query    `gql:"artist: Artist"`
+	SearchArtists *utils.Query    `gql:"searchArtists: [Artist]"`
+	ListArtists   *utils.Query    `gql:"listArtists: [Artist]"`
+	CreateArtist  *utils.Mutation `gql:"createArtist: Artist"`
+	UpdateArtist  *utils.Mutation `gql:"updateArtist: Artist"`
+	DeleteArtist  *utils.Mutation `gql:"deleteArtist: Artist"`
 }
 
 func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -44,15 +45,15 @@ func deleteArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 	return &Artist{}, nil
 }
 
-var ArtistEntity = &Entity{
+var ArtistEntity = &utils.Entity{
 	Name:  "Artist",
 	Model: &Artist{},
 	Methods: &ArtistMethods{
-		GetArtist:     &Query{Request: getArtist, Scope: "Public"},
-		SearchArtists: &Query{Request: searchArtists, Scope: "Public"},
-		ListArtists:   &Query{Request: listArtists, Scope: "Admin"},
-		CreateArtist:  &Mutation{Request: createArtist, Scope: "Admin"},
-		UpdateArtist:  &Mutation{Request: updateArtist, Scope: "Admin"},
-		DeleteArtist:  &Mutation{Request: deleteArtist, Scope: "Admin"},
+		GetArtist:     &utils.Query{Request: getArtist, Scope: "Public"},
+		SearchArtists: &utils.Query{Request: searchArtists, Scope: "Public"},
+		ListArtists:   &utils.Query{Request: listArtists, Scope: "Admin"},
+		CreateArtist:  &utils.Mutation{Request: createArtist, Scope: "Admin"},
+		UpdateArtist:  &utils.Mutation{Request: updateArtist, Scope: "Admin"},
+		DeleteArtist:  &utils.Mutation{Request: deleteArtist, Scope: "Admin"},
 	},
 }

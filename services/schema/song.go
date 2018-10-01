@@ -1,13 +1,14 @@
-package main
+package schema
 
 import (
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Song struct {
-	Model `gql:"MODEL"`
-	Name  string `gql:"name: String"`
+	utils.Model `gql:"MODEL"`
+	Name        string `gql:"name: String"`
 	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 	// Album       Album       `gql:"album: String!"`
 	// Genre       Genre       `gql:"genre: String!"`
@@ -15,12 +16,12 @@ type Song struct {
 }
 
 type SongMethods struct {
-	GetSong     *Query    `gql:"song: Song"`
-	SearchSongs *Query    `gql:"searchSongs: [Song]"`
-	ListSongs   *Query    `gql:"listSongs: [Song]"`
-	CreateSong  *Mutation `gql:"createSong: Song"`
-	UpdateSong  *Mutation `gql:"updateSong: Song"`
-	DeleteSong  *Mutation `gql:"deleteSong: Song"`
+	GetSong     *utils.Query    `gql:"song: Song"`
+	SearchSongs *utils.Query    `gql:"searchSongs: [Song]"`
+	ListSongs   *utils.Query    `gql:"listSongs: [Song]"`
+	CreateSong  *utils.Mutation `gql:"createSong: Song"`
+	UpdateSong  *utils.Mutation `gql:"updateSong: Song"`
+	DeleteSong  *utils.Mutation `gql:"deleteSong: Song"`
 }
 
 func getSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -47,15 +48,15 @@ func deleteSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	return &Song{}, nil
 }
 
-var SongEntity = &Entity{
+var SongEntity = &utils.Entity{
 	Name:  "Song",
 	Model: &Song{},
 	Methods: &SongMethods{
-		GetSong:     &Query{Request: getSong, Scope: "Public"},
-		SearchSongs: &Query{Request: searchSongs, Scope: "Public"},
-		ListSongs:   &Query{Request: listSongs, Scope: "Admin"},
-		CreateSong:  &Mutation{Request: createSong, Scope: "Admin"},
-		UpdateSong:  &Mutation{Request: updateSong, Scope: "Admin"},
-		DeleteSong:  &Mutation{Request: deleteSong, Scope: "Admin"},
+		GetSong:     &utils.Query{Request: getSong, Scope: "Public"},
+		SearchSongs: &utils.Query{Request: searchSongs, Scope: "Public"},
+		ListSongs:   &utils.Query{Request: listSongs, Scope: "Admin"},
+		CreateSong:  &utils.Mutation{Request: createSong, Scope: "Admin"},
+		UpdateSong:  &utils.Mutation{Request: updateSong, Scope: "Admin"},
+		DeleteSong:  &utils.Mutation{Request: deleteSong, Scope: "Admin"},
 	},
 }

@@ -62,8 +62,6 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	body := map[string]interface{}{}
 	json.Unmarshal([]byte(request.Body), &body)
 
-	fmt.Println(body)
-
 	requestString, _ := body["query"].(string)
 	variableValues, _ := body["variables"].(map[string]interface{})
 	operationName, _ := body["operationName"].(string)

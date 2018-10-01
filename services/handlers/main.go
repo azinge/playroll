@@ -59,11 +59,21 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		}, err
 	}
 
-	fmt.Println(request.Body)
+	body := map[string]interface{}{}
+	json.Unmarshal([]byte(request.Body), &body)
+
+	fmt.Println(body)
+
+	requestString, _ := body["query"].(string)
+	variableValues, _ := body["variables"].(map[string]interface{})
+	operationName, _ := body["operationName"].(string)
 
 	result := graphql.Do(graphql.Params{
-		Schema:        schema,
-		RequestString: request.Body,
+		Schema:         schema,
+		RequestString:  requestString,
+		VariableValues: variableValues,
+		OperationName:  operationName,
+		Context:        context,
 	})
 
 	out, err := json.Marshal(result)

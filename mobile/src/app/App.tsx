@@ -2,10 +2,13 @@
  * Application component for Playroll mobile application.
  */
 
-import React from "react";
+import React, { Component } from "react";
 import Home from "../components/Home";
 
-export default class App extends React.PureComponent {
+// TODO: REMOVE
+import "./gqlTest";
+
+export default class App extends Component {
   render() {
     return <Home />;
   }

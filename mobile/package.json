@@ -4,21 +4,32 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "patch-package"
   },
   "dependencies": {
-    "babel-preset-react-native": "5",
+    "apollo-boost": "^0.1.16",
+    "apollo-link-context": "^1.0.9",
+    "aws-amplify": "^1.1.4",
+    "aws-appsync": "^1.3.4",
+    "aws-sdk": "^2.325.0",
+    "aws4": "^1.8.0",
+    "babel-preset-react-native": "5.0.2",
+    "graphql-tag": "^2.9.2",
     "native-base": "^2.8.0",
     "react": "16.4.1",
     "react-native": "0.56.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.0",
     "@types/jest": "^23.3.2",
     "@types/react": "^16.4.13",
     "@types/react-native": "^0.56.17",
     "@types/react-test-renderer": "^16.0.2",
     "babel-jest": "23.4.2",
     "jest": "23.5.0",
+    "patch-package": "^5.1.1",
+    "postinstall-prepare": "^1.0.1",
     "react-addons-test-utils": "^15.6.2",
     "react-native-typescript-transformer": "^1.2.10",
     "react-test-renderer": "16.4.1",

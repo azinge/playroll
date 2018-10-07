@@ -2,14 +2,17 @@ package schema
 
 import (
 	"fmt"
-
+	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Playroll struct {
-	utils.Model `gql:"MODEL"`
+	ID        uint       `gql:"id: ID" gorm:"primary_key"`
+	CreatedAt time.Time  `gql:"createdAt: String"`
+	UpdatedAt time.Time  `gql:"updatedAt: String"`
+	DeletedAt *time.Time `gql:"deletedAt: String"`
 	Name        string `gql:"name: String"`
 }
 
@@ -36,6 +39,7 @@ func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, er
 	return []*Playroll{&Playroll{}, &Playroll{}}, nil
 }
 
+//TODO: offset(from the start of the array) count(how much entries to return from offset)
 func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	var playrolls []Playroll
 	// currently does not handle offset and count
@@ -66,11 +70,30 @@ type UpdatePlayrollInput struct {
 }
 
 func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Playroll{}, nil
+	var playroll Playroll
+	id := params.Args["playroll"].(map[string]interface{})["id"].(string)
+	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
+	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
+		fmt.Println("getting playroll to update: " + err.Error())
+		return nil, err
+	}
+	playroll.Name = name
+	if err := db.Save(&playroll).Error; err != nil {
+		fmt.Println("error updating playroll: " + err.Error())
+		return nil, err
+	}
+	return playroll, nil
 }
 
 func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Playroll{}, nil
+	var playroll Playroll
+	id := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
+		fmt.Println("Error deleting playroll: " + err.Error())
+		return nil, err
+	}
+	db.Delete(&playroll)
+	return playroll, nil
 }
 
 var PlayrollEntity = &utils.Entity{

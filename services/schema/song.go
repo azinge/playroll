@@ -1,13 +1,18 @@
 package schema
 
 import (
+	"fmt"
+	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Song struct {
-	utils.Model `gql:"MODEL"`
+	ID        uint       `gql:"id: ID" gorm:"primary_key"`
+	CreatedAt time.Time  `gql:"createdAt: String"`
+	UpdatedAt time.Time  `gql:"updatedAt: String"`
+	DeletedAt *time.Time `gql:"deletedAt: String"`
 	Name        string `gql:"name: String"`
 	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 	// Album       Album       `gql:"album: String!"`
@@ -16,16 +21,22 @@ type Song struct {
 }
 
 type SongMethods struct {
-	GetSong     *utils.Query    `gql:"song: Song"`
+	GetSong     *utils.Query    `gql:"song(id: ID!): Song"`
 	SearchSongs *utils.Query    `gql:"searchSongs: [Song]"`
-	ListSongs   *utils.Query    `gql:"listSongs: [Song]"`
-	CreateSong  *utils.Mutation `gql:"createSong: Song"`
-	UpdateSong  *utils.Mutation `gql:"updateSong: Song"`
-	DeleteSong  *utils.Mutation `gql:"deleteSong: Song"`
+	ListSongs   *utils.Query    `gql:"listSongs(offset: Int, count: Int): [Song]"`
+	CreateSong  *utils.Mutation `gql:"createSong(song: CreateSongInput!): Song"`
+	UpdateSong  *utils.Mutation `gql:"updateSong(song: UpdateSongInput!): Song"`
+	DeleteSong  *utils.Mutation `gql:"deleteSong(id: ID!): Song"`
 }
 
 func getSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Song{}, nil
+	var song Song
+	id := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
+		fmt.Println("error getting song: " + err.Error())
+		return nil, err
+	}
+	return song, nil
 }
 
 func searchSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -33,19 +44,58 @@ func searchSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func listSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return []*Song{&Song{}, &Song{}}, nil
+	var songs []Song
+	if err := db.Find(&songs).Error; err != nil {
+		fmt.Println("error listing songs: " + err.Error())
+		return nil, err
+	}
+	return songs, nil
+}
+
+type CreateSongInput struct {
+	Name string `gql:"name: String"`
 }
 
 func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Song{}, nil
+	name := params.Args["song"].(map[string]interface{})["name"].(string)
+	song := &Song{Name: name}
+	if err := db.Create(&song).Error; err != nil {
+		fmt.Println("error creating song: " + err.Error())
+		return nil, err
+	}
+	return song, nil
+}
+
+type UpdateSongInput struct {
+	ID string `gql:"id: ID!"`
+	Name string `gql:"name: String"`
 }
 
 func updateSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Song{}, nil
+	var song Song
+	id := params.Args["song"].(map[string]interface{})["id"].(string)
+	name := params.Args["name"].(map[string]interface{})["name"].(string)
+	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
+		fmt.Println("getting song to update: " + err.Error())
+		return nil, err
+	}
+	song.Name = name
+	if err := db.Save(&song).Error; err != nil {
+		fmt.Println("error updating song: " + err.Error())
+		return nil, err
+	}
+	return song, nil
 }
 
 func deleteSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Song{}, nil
+	var song Song
+	id := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
+		fmt.Println("error deleting song: " + err.Error())
+		return nil, err
+	}
+	db.Delete(&song)
+	return song, nil
 }
 
 var SongEntity = &utils.Entity{
@@ -58,5 +108,9 @@ var SongEntity = &utils.Entity{
 		CreateSong:  &utils.Mutation{Request: createSong, Scope: "Admin"},
 		UpdateSong:  &utils.Mutation{Request: updateSong, Scope: "Admin"},
 		DeleteSong:  &utils.Mutation{Request: deleteSong, Scope: "Admin"},
+	},
+	Types: &[]*utils.Type{
+		&utils.Type{Name: "CreateSongInput", IsInput: true, Model: &CreateSongInput{}},
+		&utils.Type{Name: "UpdateSongInput", IsInput: true, Model: &UpdateSongInput{}},
 	},
 }

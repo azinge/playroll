@@ -26,8 +26,8 @@ type UserMethods struct {
 }
 
 func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var user User
-	id := params.Args["id"].(string)
+	user := &User{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("Error getting user: " + err.Error())
 		return nil, err
@@ -40,7 +40,7 @@ func searchUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func listUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var users []User
+	users := []*User{}
 	// currently does not handle offset and count
 	if err := db.Find(&users).Error; err != nil {
 		fmt.Println("Error listing users: " + err.Error())
@@ -54,7 +54,7 @@ type CreateUserInput struct {
 }
 
 func createUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name := params.Args["user"].(map[string]interface{})["name"].(string)
+	name, _ := params.Args["user"].(map[string]interface{})["name"].(string)
 	user := &User{Name: name}
 	if err := db.Create(&user).Error; err != nil {
 		fmt.Println("Error creating user: " + err.Error())
@@ -69,9 +69,9 @@ type UpdateUserInput struct {
 }
 
 func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var user User
-	id := params.Args["user"].(map[string]interface{})["id"].(string)
-	name := params.Args["user"].(map[string]interface{})["name"].(string)
+	user := &User{}
+	id, _ := params.Args["user"].(map[string]interface{})["id"].(string)
+	name, _ := params.Args["user"].(map[string]interface{})["name"].(string)
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("getting user to update: " + err.Error())
 		return nil, err
@@ -85,8 +85,8 @@ func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 func deleteUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var user User
-	id := params.Args["id"].(string)
+	user := &User{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("Error deleting user: " + err.Error())
 		return nil, err

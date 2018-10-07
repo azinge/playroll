@@ -30,8 +30,8 @@ type SongMethods struct {
 }
 
 func getSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var song Song
-	id := params.Args["id"].(string)
+	song := &Song{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
 		fmt.Println("error getting song: " + err.Error())
 		return nil, err
@@ -44,7 +44,7 @@ func searchSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func listSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var songs []Song
+	songs := []*Song{}
 	if err := db.Find(&songs).Error; err != nil {
 		fmt.Println("error listing songs: " + err.Error())
 		return nil, err
@@ -57,7 +57,7 @@ type CreateSongInput struct {
 }
 
 func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name := params.Args["song"].(map[string]interface{})["name"].(string)
+	name, _ := params.Args["song"].(map[string]interface{})["name"].(string)
 	song := &Song{Name: name}
 	if err := db.Create(&song).Error; err != nil {
 		fmt.Println("error creating song: " + err.Error())
@@ -72,9 +72,9 @@ type UpdateSongInput struct {
 }
 
 func updateSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var song Song
-	id := params.Args["song"].(map[string]interface{})["id"].(string)
-	name := params.Args["name"].(map[string]interface{})["name"].(string)
+	song := &Song{}
+	id, _ := params.Args["song"].(map[string]interface{})["id"].(string)
+	name, _ := params.Args["name"].(map[string]interface{})["name"].(string)
 	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
 		fmt.Println("getting song to update: " + err.Error())
 		return nil, err
@@ -88,8 +88,8 @@ func updateSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 func deleteSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var song Song
-	id := params.Args["id"].(string)
+	song := &Song{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&song).Error; err != nil {
 		fmt.Println("error deleting song: " + err.Error())
 		return nil, err

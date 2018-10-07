@@ -26,8 +26,8 @@ type PlayrollMethods struct {
 }
 
 func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var playroll Playroll
-	id := params.Args["id"].(string)
+	playroll := &Playroll{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
 		fmt.Println("Error getting playroll: " + err.Error())
 		return nil, err
@@ -41,7 +41,7 @@ func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, er
 
 //TODO: offset(from the start of the array) count(how much entries to return from offset)
 func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var playrolls []Playroll
+	playrolls := []*Playroll{}
 	// currently does not handle offset and count
 	if err := db.Find(&playrolls).Error; err != nil {
 		fmt.Println("Error listing playrolls: " + err.Error())
@@ -55,7 +55,7 @@ type CreatePlayrollInput struct {
 }
 
 func createPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
+	name, _ := params.Args["playroll"].(map[string]interface{})["name"].(string)
 	playRoll := &Playroll{Name: name}
 	if err := db.Create(&playRoll).Error; err != nil {
 		fmt.Println("Error creating playroll: " + err.Error())
@@ -70,9 +70,9 @@ type UpdatePlayrollInput struct {
 }
 
 func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var playroll Playroll
-	id := params.Args["playroll"].(map[string]interface{})["id"].(string)
-	name := params.Args["playroll"].(map[string]interface{})["name"].(string)
+	playroll := &Playroll{}
+	id, _ := params.Args["playroll"].(map[string]interface{})["id"].(string)
+	name, _:= params.Args["playroll"].(map[string]interface{})["name"].(string)
 	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
 		fmt.Println("getting playroll to update: " + err.Error())
 		return nil, err
@@ -86,8 +86,8 @@ func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 }
 
 func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var playroll Playroll
-	id := params.Args["id"].(string)
+	playroll := &Playroll{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
 		fmt.Println("Error deleting playroll: " + err.Error())
 		return nil, err

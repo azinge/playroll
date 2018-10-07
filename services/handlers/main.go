@@ -40,14 +40,14 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	defer db.Close()
 
 	db.AutoMigrate(
-		&schema.Playroll{},
-		&schema.Roll{},
-		&schema.Songlist{},
-		&schema.Song{},
-		&schema.Genre{},
-		&schema.Album{},
-		&schema.Artist{},
-		&schema.User{},
+		&schema.PlayrollEntity.Model,
+		&schema.RollEntity.Model,
+		&schema.SonglistEntity.Model,
+		&schema.SonglistEntity.Model,
+		&schema.GenreEntity.Model,
+		&schema.AlbumEntity.Model,
+		&schema.ArtistEntity.Model,
+		&schema.UserEntity.Model,
 	)
 
 	schema, err := utils.GenerateGraphQLSchema(

@@ -28,9 +28,9 @@ type AlbumMethods struct {
 }
 
 func getAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var album Album
-	id := params.Args["id"].(string)
-	if err := db.Where("id = ?", id).First(&album).Error; err != nil {
+	album := &Album{}
+	id, _ := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("Error getting album: " + err.Error())
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func searchAlbums(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 }
 
 func listAlbums(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var albums []Album
+	albums := []*Album{}
 	// currently does not handle offset and count
 	if err := db.Find(&albums).Error; err != nil {
 		fmt.Println("Error listing albums: " + err.Error())
@@ -56,9 +56,9 @@ type CreateAlbumInput struct {
 }
 
 func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name := params.Args["album"].(map[string]interface{})["name"].(string)
+	name, _ := params.Args["album"].(map[string]interface{})["name"].(string)
 	album := &Album{Name: name}
-	if err := db.Create(&album).Error; err != nil {
+	if err := db.Create(album).Error; err != nil {
 		fmt.Println("Error creating playroll: " + err.Error())
 		return nil, err
 	}
@@ -71,15 +71,15 @@ type UpdateAlbumInput struct {
 }
 
 func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var album Album
-	id := params.Args["album"].(map[string]interface{})["id"].(string)
-	name := params.Args["album"].(map[string]interface{})["name"].(string)
-	if err := db.Where("id = ?", id).First(&album).Error; err != nil {
+	album := &Album{}
+	id, _ := params.Args["album"].(map[string]interface{})["id"].(string)
+	name, _ := params.Args["album"].(map[string]interface{})["name"].(string)
+	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("getting album to update: " + err.Error())
 		return nil, err
 	}
 	album.Name = name
-	if err := db.Save(&album).Error; err != nil {
+	if err := db.Save(album).Error; err != nil {
 		fmt.Println("error updating album: " + err.Error())
 		return nil, err
 	}
@@ -87,13 +87,13 @@ func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func deleteAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var album Album
-	id := params.Args["id"].(string)
-	if err := db.Where("id = ?", id).First(&album).Error; err != nil {
+	album := &Album{}
+	id, _ := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("Error deleting album: " + err.Error())
 		return nil, err
 	}
-	db.Delete(&album)
+	db.Delete(album)
 	return album, nil
 }
 

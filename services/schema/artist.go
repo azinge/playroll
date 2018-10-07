@@ -27,9 +27,9 @@ type ArtistMethods struct {
 }
 
 func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var artist Artist
-	id := params.Args["id"].(string)
-	if err := db.Where("id = ?", id).First(&artist).Error; err != nil {
+	artist := &Artist{}
+	id, _ := params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("Error getting artist: " + err.Error())
 		return nil, err
 	}
@@ -41,9 +41,9 @@ func searchArtists(params graphql.ResolveParams, db *gorm.DB) (interface{}, erro
 }
 
 func listArtists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var artists []Artist
+	artists := []*Artist{}
 	// currently does not handle offset and count
-	if err := db.Find(&artists).Error; err != nil {
+	if err := db.Find(artists).Error; err != nil {
 		fmt.Println("Error listing artists: " + err.Error())
 		return nil, err
 	}
@@ -55,7 +55,7 @@ type CreateArtistInput struct {
 }
 
 func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	title := params.Args["artist"].(map[string]interface{})["title"].(string)
+	title, _ := params.Args["artist"].(map[string]interface{})["title"].(string)
 	artist := &Artist{Title: title}
 	if err := db.Create(&artist).Error; err != nil {
 		fmt.Println("Error creating artist: " + err.Error())
@@ -70,15 +70,15 @@ type UpdateArtistInput struct {
 }
 
 func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var artist Artist
-	id := params.Args["artist"].(map[string]interface{})["id"].(string)
-	title := params.Args["artist"].(map[string]interface{})["title"].(string)
-	if err := db.Where("id = ?", id).First(&artist).Error; err != nil {
+	artist := &Artist{}
+	id, _ := params.Args["artist"].(map[string]interface{})["id"].(string)
+	title, _ := params.Args["artist"].(map[string]interface{})["title"].(string)
+	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("getting artist to update: " + err.Error())
 		return nil, err
 	}
 	artist.Title = title
-	if err := db.Save(&artist).Error; err != nil {
+	if err := db.Save(artist).Error; err != nil {
 		fmt.Println("error updating artist: " + err.Error())
 		return nil, err
 	}
@@ -86,9 +86,9 @@ func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 }
 
 func deleteArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var artist Artist
-	id := params.Args["id"].(string)
-	if err := db.Where("id = ?", id).First(&artist).Error; err != nil {
+	artist := &Artist{}
+	id, _:= params.Args["id"].(string)
+	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("Error deleting artist: " + err.Error())
 		return nil, err
 	}

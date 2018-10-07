@@ -29,8 +29,8 @@ type RollMethods struct {
 }
 
 func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var roll Roll
-	id := params.Args["id"]
+	roll := &Roll{}
+	id, _ := params.Args["id"]
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("error getting roll: " + err.Error())
 		return nil, err
@@ -43,7 +43,7 @@ func searchRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func listRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var rolls []Roll
+	rolls := []*Roll{}
 	if err := db.Find(&rolls).Error; err != nil {
 		fmt.Println("error searching for rolls: " + err.Error())
 		return nil, err
@@ -56,7 +56,7 @@ type CreateRollInput struct {
 }
 
 func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	playroll := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	playroll, _ := params.Args["roll"].(map[string]interface{})["playroll"].(string)
 	roll := &Roll{Playroll: playroll}
 	if err := db.Create(&roll).Error; err != nil {
 		fmt.Println("errror creating roll: " + err.Error())
@@ -71,9 +71,9 @@ type UpdateRollInput struct {
 }
 
 func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var roll Roll
-	id := params.Args["roll"].(map[string]interface{})["id"].(string)
-	playroll := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	roll := &Roll{}
+	id, _ := params.Args["roll"].(map[string]interface{})["id"].(string)
+	playroll, _ := params.Args["roll"].(map[string]interface{})["playroll"].(string)
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("getting roll to update: " + err.Error())
 		return nil, err
@@ -87,8 +87,8 @@ func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 func deleteRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var roll Roll
-	id := params.Args["id"].(string)
+	roll := &Roll{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("error deleting roll: " + err.Error())
 		return nil, err

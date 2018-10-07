@@ -27,8 +27,8 @@ type GenreMethods struct {
 }
 
 func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var genre Genre
-	id := params.Args["id"].(string)
+	genre := &Genre{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("error getting genre: " + err.Error())
 		return nil, err
@@ -41,8 +41,8 @@ func searchGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 }
 
 func listGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var genres []Genre
-	if err := db.Find(&genres).Error; err != nil {
+	genres := []*Genre{}
+	if err := db.Find(genres).Error; err != nil {
 		fmt.Println("error listing genres: " + err.Error())
 		return nil, err
 	}
@@ -54,7 +54,7 @@ type CreateGenreInput struct {
 }
 
 func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name := params.Args["genre"].(map[string]interface{})["name"].(string)
+	name, _ := params.Args["genre"].(map[string]interface{})["name"].(string)
 	genre := &Genre{Name: name}
 	if err := db.Create(&genre).Error; err != nil {
 		fmt.Println("error creating genre: " + err.Error())
@@ -69,9 +69,9 @@ type UpdateGenreInput struct {
 }
 
 func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var genre Genre
-	id := params.Args["genre"].(map[string]interface{})["id"].(string)
-	name := params.Args["genre"].(map[string]interface{})["name"].(string)
+	genre := &Genre{}
+	id, _ := params.Args["genre"].(map[string]interface{})["id"].(string)
+	name, _ := params.Args["genre"].(map[string]interface{})["name"].(string)
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("getting genre to update: " + err.Error())
 		return nil, err
@@ -85,8 +85,8 @@ func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var genre Genre
-	id := params.Args["id"].(string)
+	genre := &Genre{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("Error getting genre: " + err.Error())
 		return nil, err

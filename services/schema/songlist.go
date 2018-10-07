@@ -30,8 +30,8 @@ type SonglistMethods struct {
 }
 
 func getSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var songlist Songlist
-	id := params.Args["id"].(string)
+	songlist := &Songlist{}
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("error getting songlist: " + err.Error())
 		return nil, err
@@ -44,7 +44,7 @@ func searchSonglists(params graphql.ResolveParams, db *gorm.DB) (interface{}, er
 }
 
 func listSonglists(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var songlists []Songlist
+	songlists := []*Songlist{}
 	// currently does not handle offset and count
 	if err := db.Find(&songlists).Error; err != nil {
 		fmt.Println("Error listing songlists: " + err.Error())
@@ -59,8 +59,8 @@ type CreateSonglistInput struct {
 }
 
 func createSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	starred := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
-	primary := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	starred, _ := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
+	primary, _ := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
 	songlist := &Songlist{
 		Starred: starred,
 		Primary: primary,
@@ -79,10 +79,10 @@ type UpdateSonglistInput struct {
 }
 
 func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var songlist Songlist
-	id := params.Args["songlist"].(map[string]interface{})["id"].(string)
-	starred := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
-	primary := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	songlist := &Songlist{}
+	id, _ := params.Args["songlist"].(map[string]interface{})["id"].(string)
+	starred, _ := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
+	primary, _ := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("getting songlist to update: " + err.Error())
 		return nil, err
@@ -97,8 +97,8 @@ func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 }
 
 func deleteSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var songlist Songlist
-	id := params.Args["id"]
+	songlist := &Songlist{}
+	id, _ := params.Args["id"]
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("error deleting songlist: " + err.Error())
 		return nil, err

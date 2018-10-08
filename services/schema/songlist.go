@@ -1,19 +1,16 @@
 package schema
 
 import (
-	"fmt"
 	"errors"
-	"time"
+	"fmt"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Songlist struct {
-	ID        uint       `gql:"id: ID" gorm:"primary_key"`
-	CreatedAt time.Time  `gql:"createdAt: String"`
-	UpdatedAt time.Time  `gql:"updatedAt: String"`
-	DeletedAt *time.Time `gql:"deletedAt: String"`
+	utils.Model `gql:"MODEL"`
 	Starred     bool `gql:"starred: Boolean"`
 	Primary     bool `gql:"primary: Boolean"`
 	// Playroll Playroll `gql:"playroll: Playroll"`
@@ -34,8 +31,8 @@ func getSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	songlist := &Songlist{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -68,15 +65,15 @@ type CreateSonglistInput struct {
 func createSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	starred, ok := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
 	if !ok {
-		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
 	primary, ok := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
 	if !ok {
-		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -85,38 +82,38 @@ func createSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 		Primary: primary,
 	}
 	if err := db.Create(&songlist).Error; err != nil {
-		fmt.Println("error creating Songlist: "+ err.Error())
+		fmt.Println("error creating Songlist: " + err.Error())
 		return nil, err
 	}
 	return songlist, nil
 }
 
 type UpdateSonglistInput struct {
-	ID string `gql:"id: ID!"`
-	Starred bool `gql:"starred: Boolean"`
-	Primary bool `gql:"primary: Boolean"`
+	ID      string `gql:"id: ID!"`
+	Starred bool   `gql:"starred: Boolean"`
+	Primary bool   `gql:"primary: Boolean"`
 }
 
 func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	songlist := &Songlist{}
 	id, ok := params.Args["songlist"].(map[string]interface{})["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
 	starred, ok := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
 	if !ok {
-		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
 	primary, ok := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
 	if !ok {
-		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -137,8 +134,8 @@ func deleteSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 	songlist := &Songlist{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 

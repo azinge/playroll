@@ -1,19 +1,16 @@
 package schema
 
 import (
-	"fmt"
 	"errors"
-	"time"
+	"fmt"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type Artist struct {
-	ID        uint       `gql:"id: ID" gorm:"primary_key"`
-	CreatedAt time.Time  `gql:"createdAt: String"`
-	UpdatedAt time.Time  `gql:"updatedAt: String"`
-	DeletedAt *time.Time `gql:"deletedAt: String"`
+	utils.Model `gql:"MODEL"`
 	Title       string `gql:"title: String"`
 	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
 }
@@ -31,8 +28,8 @@ func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	artist := &Artist{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -64,8 +61,8 @@ type CreateArtistInput struct {
 func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -78,7 +75,7 @@ func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 }
 
 type UpdateArtistInput struct {
-	ID string `gql:"id: ID!"`
+	ID    string `gql:"id: ID!"`
 	Title string `gql:"title: String"`
 }
 
@@ -86,15 +83,15 @@ func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 	artist := &Artist{}
 	id, ok := params.Args["artist"].(map[string]interface{})["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
 	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok);
-		fmt.Println(err);
+		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok)
+		fmt.Println(err)
 		return nil, errors.New(err)
 	}
 
@@ -112,7 +109,7 @@ func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 
 func deleteArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	artist := &Artist{}
-	id, _:= params.Args["id"].(string)
+	id, _ := params.Args["id"].(string)
 	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("Error deleting artist: " + err.Error())
 		return nil, err

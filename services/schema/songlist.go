@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -31,7 +32,13 @@ type SonglistMethods struct {
 
 func getSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	songlist := &Songlist{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("error getting songlist: " + err.Error())
 		return nil, err
@@ -59,8 +66,20 @@ type CreateSonglistInput struct {
 }
 
 func createSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	starred, _ := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
-	primary, _ := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	starred, ok := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
+	if !ok {
+		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	primary, ok := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	if !ok {
+		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	songlist := &Songlist{
 		Starred: starred,
 		Primary: primary,
@@ -80,9 +99,27 @@ type UpdateSonglistInput struct {
 
 func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	songlist := &Songlist{}
-	id, _ := params.Args["songlist"].(map[string]interface{})["id"].(string)
-	starred, _ := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
-	primary, _ := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	id, ok := params.Args["songlist"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	starred, ok := params.Args["songlist"].(map[string]interface{})["starred"].(bool)
+	if !ok {
+		err := fmt.Sprintf("Expected starred of type(bool) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	primary, ok := params.Args["songlist"].(map[string]interface{})["primary"].(bool)
+	if !ok {
+		err := fmt.Sprintf("Expected primary of type(bool) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("getting songlist to update: " + err.Error())
 		return nil, err
@@ -98,7 +135,13 @@ func updateSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, err
 
 func deleteSonglist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	songlist := &Songlist{}
-	id, _ := params.Args["id"]
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&songlist).Error; err != nil {
 		fmt.Println("error deleting songlist: " + err.Error())
 		return nil, err

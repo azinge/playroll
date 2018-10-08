@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -29,7 +30,13 @@ type AlbumMethods struct {
 
 func getAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	album := &Album{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("Error getting album: " + err.Error())
 		return nil, err
@@ -56,7 +63,13 @@ type CreateAlbumInput struct {
 }
 
 func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name, _ := params.Args["album"].(map[string]interface{})["name"].(string)
+	name, ok := params.Args["album"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	album := &Album{Name: name}
 	if err := db.Create(album).Error; err != nil {
 		fmt.Println("Error creating playroll: " + err.Error())
@@ -72,8 +85,20 @@ type UpdateAlbumInput struct {
 
 func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	album := &Album{}
-	id, _ := params.Args["album"].(map[string]interface{})["id"].(string)
-	name, _ := params.Args["album"].(map[string]interface{})["name"].(string)
+	id, ok := params.Args["album"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	name, ok := params.Args["album"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("getting album to update: " + err.Error())
 		return nil, err
@@ -88,7 +113,13 @@ func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 
 func deleteAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	album := &Album{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+	
 	if err := db.Where("id = ?", id).First(album).Error; err != nil {
 		fmt.Println("Error deleting album: " + err.Error())
 		return nil, err

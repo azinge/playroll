@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -30,14 +31,20 @@ type RollMethods struct {
 
 func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	roll := &Roll{}
-	id, _ := params.Args["id"]
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("error getting roll: " + err.Error())
 		return nil, err
 	}
 	return roll, nil
 }
-// TODO:Associations here?
+
 func searchRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return []*Roll{&Roll{}, &Roll{}}, nil
 }
@@ -56,7 +63,13 @@ type CreateRollInput struct {
 }
 
 func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	playroll, _ := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	playroll, ok := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected playroll of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	roll := &Roll{Playroll: playroll}
 	if err := db.Create(&roll).Error; err != nil {
 		fmt.Println("errror creating roll: " + err.Error())
@@ -72,8 +85,20 @@ type UpdateRollInput struct {
 
 func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	roll := &Roll{}
-	id, _ := params.Args["roll"].(map[string]interface{})["id"].(string)
-	playroll, _ := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	id, ok := params.Args["roll"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	playroll, ok := params.Args["roll"].(map[string]interface{})["playroll"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected playroll of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("getting roll to update: " + err.Error())
 		return nil, err
@@ -88,7 +113,13 @@ func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 
 func deleteRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	roll := &Roll{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("error deleting roll: " + err.Error())
 		return nil, err

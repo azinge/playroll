@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -28,7 +29,13 @@ type ArtistMethods struct {
 
 func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	artist := &Artist{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("Error getting artist: " + err.Error())
 		return nil, err
@@ -55,7 +62,13 @@ type CreateArtistInput struct {
 }
 
 func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	title, _ := params.Args["artist"].(map[string]interface{})["title"].(string)
+	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	artist := &Artist{Title: title}
 	if err := db.Create(&artist).Error; err != nil {
 		fmt.Println("Error creating artist: " + err.Error())
@@ -71,8 +84,20 @@ type UpdateArtistInput struct {
 
 func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	artist := &Artist{}
-	id, _ := params.Args["artist"].(map[string]interface{})["id"].(string)
-	title, _ := params.Args["artist"].(map[string]interface{})["title"].(string)
+	id, ok := params.Args["artist"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected title of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
 		fmt.Println("getting artist to update: " + err.Error())
 		return nil, err

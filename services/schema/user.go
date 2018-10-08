@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -27,7 +28,13 @@ type UserMethods struct {
 
 func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("Error getting user: " + err.Error())
 		return nil, err
@@ -54,7 +61,13 @@ type CreateUserInput struct {
 }
 
 func createUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name, _ := params.Args["user"].(map[string]interface{})["name"].(string)
+	name, ok := params.Args["user"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	user := &User{Name: name}
 	if err := db.Create(&user).Error; err != nil {
 		fmt.Println("Error creating user: " + err.Error())
@@ -70,8 +83,20 @@ type UpdateUserInput struct {
 
 func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
-	id, _ := params.Args["user"].(map[string]interface{})["id"].(string)
-	name, _ := params.Args["user"].(map[string]interface{})["name"].(string)
+	id, ok := params.Args["user"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	name, ok := params.Args["user"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("getting user to update: " + err.Error())
 		return nil, err
@@ -86,7 +111,13 @@ func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 
 func deleteUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("Error deleting user: " + err.Error())
 		return nil, err

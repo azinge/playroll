@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"errors"
 	"time"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -28,7 +29,13 @@ type GenreMethods struct {
 
 func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("error getting genre: " + err.Error())
 		return nil, err
@@ -54,7 +61,13 @@ type CreateGenreInput struct {
 }
 
 func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	name, _ := params.Args["genre"].(map[string]interface{})["name"].(string)
+	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	genre := &Genre{Name: name}
 	if err := db.Create(&genre).Error; err != nil {
 		fmt.Println("error creating genre: " + err.Error())
@@ -70,8 +83,20 @@ type UpdateGenreInput struct {
 
 func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
-	id, _ := params.Args["genre"].(map[string]interface{})["id"].(string)
-	name, _ := params.Args["genre"].(map[string]interface{})["name"].(string)
+	id, ok := params.Args["genre"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
+	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("getting genre to update: " + err.Error())
 		return nil, err
@@ -86,7 +111,13 @@ func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 
 func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
-	id, _ := params.Args["id"].(string)
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok);
+		fmt.Println(err);
+		return nil, errors.New(err)
+	}
+
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("Error getting genre: " + err.Error())
 		return nil, err

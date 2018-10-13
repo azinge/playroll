@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.reactnativenavigation.NavigationReactPackage;
+import com.reactnativenavigation.bridge.NavigationReactPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.amazonaws.RNAWSCognitoPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,13 +25,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new VectorIconsPackage(),
-            new NavigationReactPackage(),
-            new ReactMaterialKitPackage(),
-            new RNAWSCognitoPackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new VectorIconsPackage(), new NavigationReactPackage(),
+          new ReactMaterialKitPackage(), new RNAWSCognitoPackage());
     }
 
     @Override

@@ -59,31 +59,37 @@ export default class Playrolls extends React.Component {
       <Query query={GET_PLAYROLLS}>
         {({ loading, error, data }) => {
           const playrolls = data.listPlayrolls;
+          console.log(loading, error, data);
           return (
             <View style={{ flex: 1, marginTop: 20 }}>
               <View>
                 <Text style={styles.headline}>Playrolls</Text>
               </View>
-              <ScrollView>
-                {playrolls.map((item, index) => (
-                  <Card
-                    title={`Playroll ${index + 1}`}
-                    image={require("../../assets/wack.jpg")}
-                  >
-                    <Button
-                      icon={<Icon name="code" color="#ffffff" />}
-                      backgroundColor="#03A9F4"
-                      buttonStyle={{
-                        borderRadius: 0,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        marginBottom: 0,
-                      }}
-                      title={item.name}
-                    />
-                  </Card>
-                ))}
-              </ScrollView>
+              {!loading &&
+                !error && (
+                  <ScrollView>
+                    {playrolls.map((item, index) => (
+                      <Card
+                        title={`Playroll ${index + 1}`}
+                        image={require("../../assets/wack.jpg")}
+                        key={index}
+                      >
+                        <Button
+                          icon={<Icon name="code" color="#ffffff" />}
+                          backgroundColor="#03A9F4"
+                          buttonStyle={{
+                            borderRadius: 0,
+                            marginLeft: 0,
+                            marginRight: 0,
+                            marginBottom: 0,
+                          }}
+                          title={item.name}
+                          onPress={() => {}}
+                        />
+                      </Card>
+                    ))}
+                  </ScrollView>
+                )}
             </View>
           );
         }}

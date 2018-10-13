@@ -1,6 +1,9 @@
 package schema
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -13,16 +16,28 @@ type Genre struct {
 }
 
 type GenreMethods struct {
-	GetGenre     *utils.Query    `gql:"genre: Genre"`
+	GetGenre     *utils.Query    `gql:"genre(id: ID!): Genre"`
 	SearchGenres *utils.Query    `gql:"searchGenres: [Genre]"`
 	ListGenres   *utils.Query    `gql:"listGenres: [Genre]"`
-	CreateGenre  *utils.Mutation `gql:"createGenre: Genre"`
-	UpdateGenre  *utils.Mutation `gql:"updateGenre: Genre"`
-	DeleteGenre  *utils.Mutation `gql:"deleteGenre: Genre"`
+	CreateGenre  *utils.Mutation `gql:"createGenre(genre: CreateGenreInput!): Genre"`
+	UpdateGenre  *utils.Mutation `gql:"updateGenre(genre: UpdateGenreInput!): Genre"`
+	DeleteGenre  *utils.Mutation `gql:"deleteGenre(id: ID!): Genre"`
 }
 
 func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Genre{}, nil
+	genre := &Genre{}
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
+		return nil, errors.New(err)
+	}
+
+	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
+		fmt.Println("error getting genre: " + err.Error())
+		return nil, err
+	}
+	return genre, nil
 }
 
 func searchGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -30,19 +45,82 @@ func searchGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 }
 
 func listGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return []*Genre{&Genre{}, &Genre{}}, nil
+	genres := []*Genre{}
+	if err := db.Find(genres).Error; err != nil {
+		fmt.Println("error listing genres: " + err.Error())
+		return nil, err
+	}
+	return genres, nil
+}
+
+type CreateGenreInput struct {
+	Name string `gql:"name: String"`
 }
 
 func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Genre{}, nil
+	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
+		fmt.Println(err)
+		return nil, errors.New(err)
+	}
+
+	genre := &Genre{Name: name}
+	if err := db.Create(&genre).Error; err != nil {
+		fmt.Println("error creating genre: " + err.Error())
+		return nil, err
+	}
+	return genre, nil
+}
+
+type UpdateGenreInput struct {
+	ID   string `gql:"id: ID!"`
+	Name string `gql:"name: String"`
 }
 
 func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Genre{}, nil
+	genre := &Genre{}
+	id, ok := params.Args["genre"].(map[string]interface{})["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
+		return nil, errors.New(err)
+	}
+
+	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
+		fmt.Println(err)
+		return nil, errors.New(err)
+	}
+
+	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
+		fmt.Println("getting genre to update: " + err.Error())
+		return nil, err
+	}
+	genre.Name = name
+	if err := db.Save(&genre).Error; err != nil {
+		fmt.Println("error updating genre: " + err.Error())
+		return nil, err
+	}
+	return genre, nil
 }
 
 func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return &Genre{}, nil
+	genre := &Genre{}
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+		fmt.Println(err)
+		return nil, errors.New(err)
+	}
+
+	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
+		fmt.Println("Error getting genre: " + err.Error())
+		return nil, err
+	}
+	db.Delete(&genre)
+	return genre, nil
 }
 
 var GenreEntity = &utils.Entity{
@@ -55,5 +133,9 @@ var GenreEntity = &utils.Entity{
 		CreateGenre:  &utils.Mutation{Request: createGenre, Scope: "Admin"},
 		UpdateGenre:  &utils.Mutation{Request: updateGenre, Scope: "Admin"},
 		DeleteGenre:  &utils.Mutation{Request: deleteGenre, Scope: "Admin"},
+	},
+	Types: &[]*utils.Type{
+		&utils.Type{Name: "CreateGenreInput", IsInput: true, Model: &CreateGenreInput{}},
+		&utils.Type{Name: "UpdateGenreInput", IsInput: true, Model: &UpdateGenreInput{}},
 	},
 }

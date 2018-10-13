@@ -39,7 +39,16 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	}
 	defer db.Close()
 
-	db.AutoMigrate(&schema.Playroll{})
+	db.AutoMigrate(
+		&schema.PlayrollEntity.Model,
+		&schema.RollEntity.Model,
+		&schema.SonglistEntity.Model,
+		&schema.SonglistEntity.Model,
+		&schema.GenreEntity.Model,
+		&schema.AlbumEntity.Model,
+		&schema.ArtistEntity.Model,
+		&schema.UserEntity.Model,
+	)
 
 	schema, err := utils.GenerateGraphQLSchema(
 		&[]*utils.Entity{

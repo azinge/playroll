@@ -1,15 +1,42 @@
-/**
- * Application component for Playroll mobile application.
- */
-
 import React, { Component } from "react";
-import Home from "../components/Home";
+import { Tabs } from "./config/router";
+import { ApolloProvider } from "react-apollo";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "../config/aws.js";
+import gql from "graphql-tag";
+import AWSAppSyncClient from "aws-appsync";
 
-// TODO: REMOVE
-import "./gqlTest";
+Amplify.configure(awsconfig.dev.amplify);
+
+Auth.currentCredentials()
+  .then(creds => console.log(creds))
+  .catch(err => console.log(err));
+
+const client = new AWSAppSyncClient(awsconfig.dev.appSync, {
+  connectToDevTools: true,
+});
+
+setTimeout(() => {
+  client
+    .query({
+      query: gql`
+        {
+          listPlayrolls {
+            name
+          }
+        }
+      `,
+    })
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
+}, 5000);
 
 export default class App extends Component {
   render() {
-    return <Home />;
+    return (
+      <ApolloProvider client={client}>
+        <Tabs />
+      </ApolloProvider>
+    );
   }
 }

@@ -9,10 +9,14 @@ Auth.currentCredentials()
   .then(creds => console.log(creds))
   .catch(err => console.log(err));
 
-const client = new AWSAppSyncClient(awsconfig.dev.appSync);
+export const getClient = () => {
+  return new AWSAppSyncClient(awsconfig.dev.appSync, {
+    connectToDevTools: true,
+  });
+};
 
 setTimeout(() => {
-  client
+  getClient()
     .query({
       query: gql`
         {

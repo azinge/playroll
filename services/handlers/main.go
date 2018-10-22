@@ -61,7 +61,16 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			schema.GenreEntity,
 			schema.UserEntity,
 		},
-		&[]*utils.Type{},
+		&[]*utils.Type{
+			schema.RollSourceType,
+			schema.RollSourceInputType,
+			schema.RollFilterType,
+			schema.RollFilterInputType,
+			schema.RollLengthType,
+			schema.RollLengthInputType,
+			schema.MusicSourceType,
+			schema.MusicSourceInputType,
+		},
 		db,
 	)
 	if err != nil {

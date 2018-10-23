@@ -70,6 +70,7 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			schema.RollLengthInputType,
 			schema.MusicSourceType,
 			schema.MusicSourceInputType,
+			schema.ListInputType,
 		},
 		db,
 	)

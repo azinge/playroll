@@ -29,7 +29,7 @@ func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	roll := &Roll{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
@@ -64,28 +64,28 @@ func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 		(map[string]interface{})["playroll"].
 		(string)
 	if !ok {
-		return nil, handleTypeAssertionError("playroll")
+		return nil, utils.HandleTypeAssertionError("playroll")
 	}
 
 	rollSource, ok := params.Args["roll"].
 		(map[string]interface{})["source"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollSource")
+		return nil, utils.HandleTypeAssertionError("rollSource")
 	}
 
 	rollFilters, ok := params.Args["roll"].
 		(map[string]interface{})["filters"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollFilters")
+		return nil, utils.HandleTypeAssertionError("rollFilters")
 	}
 
 	rollLength, ok := params.Args["roll"].
 		(map[string]interface{})["length"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollLength")
+		return nil, utils.HandleTypeAssertionError("rollLength")
 	}
 
 	rs := RollSource{}
@@ -121,33 +121,33 @@ func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	roll := &Roll{}
 	id, ok := params.Args["roll"].(map[string]interface{})["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	playroll, ok := params.Args["roll"].(map[string]interface{})["playroll"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("playroll")
+		return nil, utils.HandleTypeAssertionError("playroll")
 	}
 
 	rollSource, ok := params.Args["roll"].
 		(map[string]interface{})["source"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollSource")
+		return nil, utils.HandleTypeAssertionError("rollSource")
 	}
 
 	rollFilters, ok := params.Args["roll"].
 		(map[string]interface{})["filters"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollFilters")
+		return nil, utils.HandleTypeAssertionError("rollFilters")
 	}
 
 	rollLength, ok := params.Args["roll"].
 		(map[string]interface{})["length"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("rollLength")
+		return nil, utils.HandleTypeAssertionError("rollLength")
 	}
 
 	rs := RollSource{}
@@ -179,7 +179,7 @@ func deleteRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	roll := &Roll{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {

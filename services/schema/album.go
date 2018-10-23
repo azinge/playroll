@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
@@ -26,17 +25,11 @@ type AlbumMethods struct {
 	DeleteAlbum  *utils.Mutation `gql:"deleteAlbum(id: ID!): Album"`
 }
 
-func handleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
-	return errors.New(err)
-}
-
 func getAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	album := &Album{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(album).Error; err != nil {
@@ -68,13 +61,13 @@ type CreateAlbumInput struct {
 func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name, ok := params.Args["album"].(map[string]interface{})["name"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("name")
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}
@@ -101,18 +94,18 @@ func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	album := &Album{}
 	id, ok := params.Args["album"].(map[string]interface{})["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	name, ok := params.Args["album"].(map[string]interface{})["name"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("name")
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}
@@ -135,7 +128,7 @@ func deleteAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	album := &Album{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(album).Error; err != nil {

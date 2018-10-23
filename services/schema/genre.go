@@ -1,18 +1,18 @@
 package schema
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
+	"github.com/mitchellh/mapstructure"
 )
 
 type Genre struct {
 	utils.Model `gql:"MODEL"`
 	Name        string `gql:"name: String"`
-	// MusicSource MusicSource `gql:"musicSource: MusicSource"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
 }
 
 type GenreMethods struct {
@@ -28,9 +28,7 @@ func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, handleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
@@ -55,17 +53,28 @@ func listGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 
 type CreateGenreInput struct {
 	Name string `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
 func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, handleTypeAssertionError("name")
 	}
 
-	genre := &Genre{Name: name}
+	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
+		(map[string]interface{})
+	if !ok {
+		return nil, handleTypeAssertionError("musicSource")
+	}
+
+	ms := MusicSource{}
+	mapstructure.Decode(musicSource, &ms)
+
+	genre := &Genre{
+		Name: name,
+		MusicSource: ms,
+	}
 	if err := db.Create(&genre).Error; err != nil {
 		fmt.Println("error creating genre: " + err.Error())
 		return nil, err
@@ -76,29 +85,37 @@ func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 type UpdateGenreInput struct {
 	ID   string `gql:"id: ID!"`
 	Name string `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
 func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
 	id, ok := params.Args["genre"].(map[string]interface{})["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, handleTypeAssertionError("id")
 	}
 
 	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, handleTypeAssertionError("name")
 	}
+
+	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
+		(map[string]interface{})
+	if !ok {
+		return nil, handleTypeAssertionError("musicSource")
+	}
+
+	ms := MusicSource{}
+	mapstructure.Decode(musicSource, &ms)
 
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
 		fmt.Println("getting genre to update: " + err.Error())
 		return nil, err
 	}
+
 	genre.Name = name
+	genre.MusicSource = ms
 	if err := db.Save(&genre).Error; err != nil {
 		fmt.Println("error updating genre: " + err.Error())
 		return nil, err
@@ -110,9 +127,7 @@ func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	genre := &Genre{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, handleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {

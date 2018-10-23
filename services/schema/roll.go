@@ -1,13 +1,11 @@
 package schema
 
 import (
-	"errors"
 	"fmt"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
-
 )
 
 type Roll struct {
@@ -25,12 +23,6 @@ type RollMethods struct {
 	CreateRoll  *utils.Mutation `gql:"createRoll(roll: CreateRollInput!): Roll"`
 	UpdateRoll  *utils.Mutation `gql:"updateRoll(roll: UpdateRollInput!): Roll"`
 	DeleteRoll  *utils.Mutation `gql:"deleteRoll(id: ID!): Roll"`
-}
-
-func handleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
-	return errors.New(err)
 }
 
 func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {

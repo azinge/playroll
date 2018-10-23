@@ -93,7 +93,7 @@ type MusicSource struct {
 }
 
 var MusicSourceType = &utils.Type{Name: "MusicSource", Model: MusicSource{}}
-var MusicSourceInputType = &utils.Type{Name: "MusicSourceInputType", IsInput: true, Model: MusicSource{}}
+var MusicSourceInputType = &utils.Type{Name: "MusicSourceInput", IsInput: true, Model: MusicSource{}}
 
 func (ms MusicSource) Value() (driver.Value, error) {
 	value, err := json.Marshal(ms)

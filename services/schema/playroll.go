@@ -50,10 +50,9 @@ func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, erro
 	page := params.Args["options"].(map[string]interface{})["page"].(int)
 	limit := params.Args["options"].(map[string]interface{})["limit"].(int)
 	orderBy := params.Args["options"].(map[string]interface{})["orderBy"].([]interface{})
-	showLogs := params.Args["options"].(map[string]interface{})["showLogs"].(bool)
-	paginator := pagination.Paginator{Database: db, ShowLogs: showLogs}
+	paginator := pagination.Paginator{DB: db}
 	options := pagination.Options{OrderBy: orderBy, Page: page, Limit: limit}
-	_, err := paginator.Paginate(&playrolls, &options)
+	err := paginator.Paginate(&playrolls, &options) // review actually returning a response for performance purposes
 	if err != nil {
 		fmt.Println("Error listing playrolls: " + err.Error())
 		return nil, err

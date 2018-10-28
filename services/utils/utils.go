@@ -238,7 +238,7 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
  * Handles type assertion errors
  * Param: field (string)
  * Returns: (error)
- *m
+ *
 */
 func HandleTypeAssertionError(field string) (error) {
 	err := fmt.Sprintf("Type Assertion Error for field", field);

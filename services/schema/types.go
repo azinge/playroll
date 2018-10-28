@@ -115,8 +115,7 @@ func (ms *MusicSource) Scan(value interface{}) error {
 type ListInput struct {
 	Page int `gql:"page: Int"`
 	Limit int `gql:"limit: Int"`
-	OrderBy []interface{} `gql:"orderBy: [String]"`
-	ShowLogs bool `gql:"showLogs: Boolean"`
+	OrderBy pq.StringArray `gql:"orderBy: [String]"`
 }
 
 var ListInputType = &utils.Type{Name: "ListInput", IsInput: true, Model: ListInput{}}

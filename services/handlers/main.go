@@ -72,7 +72,9 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			schema.MusicSourceInputType,
 		},
 		db,
+		request.RequestContext.Identity.CognitoAuthenticationType,
 	)
+
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{
@@ -97,7 +99,8 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		RequestString:  requestString,
 		VariableValues: variableValues,
 		OperationName:  operationName,
-		Context:        context,
+		// Context:        request.RequestContext,
+		Context: context,
 	})
 
 	out, err := json.Marshal(result)
@@ -112,6 +115,10 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			StatusCode: 500,
 		}, err
 	}
+	// fmt.Println("CONTEXT")
+	// fmt.Printf("%+v\n", context)
+	// fmt.Println("request.RequestContext.Identity.CognitoAuthenticationType")
+	// fmt.Printf("%+v\n", request.RequestContext.Identity.CognitoAuthenticationType)
 
 	return events.APIGatewayProxyResponse{
 		Headers: map[string]string{

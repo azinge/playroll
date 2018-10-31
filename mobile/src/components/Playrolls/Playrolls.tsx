@@ -27,7 +27,7 @@ export default class Playrolls extends React.Component {
     return (
       <Query query={GET_PLAYROLLS}>
         {({ loading, error, data }) => {
-          error && console.log(error.networkError, error.extraInfo);
+          error && console.log(error);
           return (
             <View style={{ flex: 1, marginTop: 20 }}>
               <View>

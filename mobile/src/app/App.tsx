@@ -42,7 +42,7 @@ const fetcher = async (uri, { method, body }) => {
   return fetch(uri, signedRequest);
 };
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: new HttpLink({
     uri: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/",
     fetch: fetcher,

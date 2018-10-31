@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Modal, Text, TouchableHighlight, View, Alert} from 'react-native';
+import React, { Component } from "react";
+import { Modal, Text, TouchableHighlight, View, Alert } from "react-native";
 
 export default class AlertModal extends Component {
   state = {
@@ -7,27 +7,29 @@ export default class AlertModal extends Component {
   };
 
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   }
 
   render() {
     return (
-      <View style={{marginTop: 22}}>
+      <View style={{ marginTop: 22 }}>
         <Modal
           animationType="slide"
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <View style={{ marginTop: 22 }}>
             <View>
               <Text>I love GoLang!</Text>
 
               <TouchableHighlight
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
-                }}>
+                }}
+              >
                 <Text>Hide Modal</Text>
               </TouchableHighlight>
             </View>
@@ -37,7 +39,8 @@ export default class AlertModal extends Component {
         <TouchableHighlight
           onPress={() => {
             this.setModalVisible(true);
-          }}>
+          }}
+        >
           <Text>Show Modal</Text>
         </TouchableHighlight>
       </View>

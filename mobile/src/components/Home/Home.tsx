@@ -12,10 +12,11 @@ import {
   Image,
   ScrollView,
   Button,
-  Alert} from "react-native";
+  Alert,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import Create from "../Create";
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from "react-navigation";
 
 import styles from "./Home.styles";
 
@@ -24,13 +25,13 @@ export default class Home extends React.Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <View style={{ backgroundColor: "#6A0070", flexDirection: "row" }}>
-          <Text style={styles.headline}>Hi Eddie </Text>
+          <Text style={styles.headline}>Playroll </Text>
           <Icon
             type="material-community"
             name="language-go"
             size={35}
             color="#ffffff"
-            onPress={() => this.props.navigation.navigate('Create')}
+            onPress={() => this.props.navigation.navigate("Create")}
           />
           <Icon
             type="material-community"

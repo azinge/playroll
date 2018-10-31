@@ -7,7 +7,7 @@ import React from "react";
 import { View, ScrollView, Alert } from "react-native";
 import { Icon } from "react-native-elements";
 import { Container, Header, Item, Input, Button, Text } from "native-base";
-import AlertModal from "../AlertModal";
+import AlertModal from "../shared/AlertModal";
 
 import styles from "./Create.styles";
 
@@ -52,9 +52,7 @@ export default class Create extends React.Component {
             </Button>
           </Header>
         </Container>
-        <ScrollView>
-          {AlertModal}
-        </ScrollView>
+        <ScrollView>{AlertModal}</ScrollView>
       </View>
     );
   }

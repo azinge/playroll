@@ -5,7 +5,7 @@ import { Icon } from "react-native-elements";
 import Home from "../../components/Home";
 import Playrolls from "../../components/Playrolls";
 import Create from "../../components/Create";
-import AlertModal from "../../components/AlertModal"
+import AlertModal from "../../components/shared/AlertModal";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
@@ -14,8 +14,8 @@ export const Tabs = createBottomTabNavigator({
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
         <Icon name="home" size={35} color={tintColor} />
-      )
-    }
+      ),
+    },
   },
   Playrolls: {
     screen: Playrolls,
@@ -28,8 +28,8 @@ export const Tabs = createBottomTabNavigator({
           size={35}
           color={tintColor}
         />
-      )
-    }
+      ),
+    },
   },
   User: {
     screen: Home,
@@ -42,13 +42,13 @@ export const Tabs = createBottomTabNavigator({
           size={35}
           color={tintColor}
         />
-      )
-    }
+      ),
+    },
   },
   Create: {
-    screen: Create
+    screen: Create,
   },
   AlertModal: {
-    screen: AlertModal
-  }
+    screen: AlertModal,
+  },
 });

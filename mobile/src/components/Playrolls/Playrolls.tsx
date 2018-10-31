@@ -17,49 +17,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
-import gql from "graphql-tag";
 import { Query } from "react-apollo";
 
+import { GET_PLAYROLLS } from "./Playrolls.requests";
 import styles from "./Playrolls.styles";
-
-const GET_PLAYROLLS = gql`
-  {
-    listPlayrolls {
-      name
-    }
-  }
-`;
-
-// const data = [
-//   {
-//     title: "Playroll 1",
-//     image: require("../../assets/wack.jpg"),
-//     text: "Here's a sample playroll!",
-//   },
-//   {
-//     title: "Playroll 2",
-//     image: require("../../assets/wack.jpg"),
-//     text: "Here's another sample playroll!",
-//   },
-//   {
-//     title: "Playroll 3",
-//     image: require("../../assets/wack.jpg"),
-//     text: "I'm having fun with this.",
-//   },
-//   {
-//     title: "Playroll 4",
-//     image: require("../../assets/wack.jpg"),
-//     text: "I'm having fun with this.",
-//   },
-// ];
 
 export default class Playrolls extends React.Component {
   render() {
     return (
       <Query query={GET_PLAYROLLS}>
         {({ loading, error, data }) => {
-          const playrolls = data.listPlayrolls;
-          console.log(loading, error, data);
+          error && console.log(error.networkError, error.extraInfo);
           return (
             <View style={{ flex: 1, marginTop: 20 }}>
               <View>
@@ -68,7 +36,7 @@ export default class Playrolls extends React.Component {
               {!loading &&
                 !error && (
                   <ScrollView>
-                    {playrolls.map((item, index) => (
+                    {data.listPlayrolls.map((item, index) => (
                       <Card
                         title={`Playroll ${index + 1}`}
                         image={require("../../assets/wack.jpg")}

@@ -2,34 +2,53 @@ import React, { Component } from "react";
 import { Tabs } from "./config/router";
 import { ApolloProvider } from "react-apollo";
 import Amplify, { Auth } from "aws-amplify";
+import Signer from "aws-appsync/lib/link/signer/signer";
 import awsconfig from "../config/aws.js";
-import gql from "graphql-tag";
-import AWSAppSyncClient from "aws-appsync";
+import Url from "url";
+import ApolloClient from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
 
 Amplify.configure(awsconfig.dev.amplify);
 
-Auth.currentCredentials()
-  .then(creds => console.log(creds))
-  .catch(err => console.log(err));
+const fetcher = async (uri, { method, body }) => {
+  const {
+    accessKeyId,
+    secretAccessKey,
+    sessionToken,
+  } = await Auth.currentCredentials();
 
-const client = new AWSAppSyncClient(awsconfig.dev.appSync, {
-  connectToDevTools: true,
+  // console.warn("CREDENTIALS:", { accessKeyId, secretAccessKey, sessionToken });
+
+  const { host, path } = Url.parse(uri);
+  const formatted = {
+    method,
+    body,
+    service: "execute-api",
+    region: "us-west-2",
+    url: uri,
+    host,
+    path,
+  };
+
+  const signedRequest = Signer.sign(formatted, {
+    access_key: accessKeyId,
+    secret_key: secretAccessKey,
+    session_token: sessionToken,
+  });
+
+  // console.warn({ ...signedRequest, headers: "", body: "" });
+
+  return fetch(uri, signedRequest);
+};
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/",
+    fetch: fetcher,
+  }),
+  cache: new InMemoryCache(),
 });
-
-setTimeout(() => {
-  client
-    .query({
-      query: gql`
-        {
-          listPlayrolls {
-            name
-          }
-        }
-      `,
-    })
-    .then(result => console.log(result))
-    .catch(err => console.log(err));
-}, 5000);
 
 export default class App extends Component {
   render() {

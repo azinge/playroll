@@ -43,7 +43,7 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		&schema.PlayrollEntity.Model,
 		&schema.RollEntity.Model,
 		&schema.SonglistEntity.Model,
-		&schema.SonglistEntity.Model,
+		&schema.SongEntity.Model,
 		&schema.GenreEntity.Model,
 		&schema.AlbumEntity.Model,
 		&schema.ArtistEntity.Model,
@@ -70,6 +70,7 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			schema.RollLengthInputType,
 			schema.MusicSourceType,
 			schema.MusicSourceInputType,
+			schema.ListInputType,
 		},
 		db,
 	)

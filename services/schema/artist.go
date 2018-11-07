@@ -28,7 +28,7 @@ func getArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	artist := &Artist{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(artist).Error; err != nil {
@@ -60,13 +60,13 @@ type CreateArtistInput struct {
 func createArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("title")
+		return nil, utils.HandleTypeAssertionError("title")
 	}
 
 	musicSource, ok := params.Args["artist"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}
@@ -93,18 +93,18 @@ func updateArtist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error
 	artist := &Artist{}
 	id, ok := params.Args["artist"].(map[string]interface{})["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	title, ok := params.Args["artist"].(map[string]interface{})["title"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("title")
+		return nil, utils.HandleTypeAssertionError("title")
 	}
 
 	musicSource, ok := params.Args["artist"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}

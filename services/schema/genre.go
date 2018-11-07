@@ -28,7 +28,7 @@ func getGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	genre := &Genre{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {
@@ -59,13 +59,13 @@ type CreateGenreInput struct {
 func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("name")
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}
@@ -92,18 +92,18 @@ func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	genre := &Genre{}
 	id, ok := params.Args["genre"].(map[string]interface{})["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	name, ok := params.Args["genre"].(map[string]interface{})["name"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("name")
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
 		(map[string]interface{})
 	if !ok {
-		return nil, handleTypeAssertionError("musicSource")
+		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
 
 	ms := MusicSource{}
@@ -127,7 +127,7 @@ func deleteGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	genre := &Genre{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, handleTypeAssertionError("id")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&genre).Error; err != nil {

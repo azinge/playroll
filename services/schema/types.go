@@ -113,8 +113,8 @@ func (ms *MusicSource) Scan(value interface{}) error {
 }
 
 type ListInput struct {
-	Page int `gql:"page: Int"`
-	Limit int `gql:"limit: Int"`
+	Page    int            `gql:"page: Int"`
+	Limit   int            `gql:"limit: Int"`
 	OrderBy pq.StringArray `gql:"orderBy: [String]"`
 }
 

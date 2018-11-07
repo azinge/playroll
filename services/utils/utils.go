@@ -43,12 +43,6 @@ type Mutation struct {
 	Scope   string
 }
 
-func checkUserAuthorization(method *structs.Field, userType string) *structs.Field {
-	// Needs list of private Graphql methods
-	// if userType == ""
-	return nil
-}
-
 func userUnauthorized(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	err := fmt.Sprintf("User is unauthorized")
 	return nil, errors.New(err)
@@ -56,6 +50,7 @@ func userUnauthorized(params graphql.ResolveParams, db *gorm.DB) (interface{}, e
 
 func generateResolveFromMethod(method *structs.Field, db *gorm.DB, userType string) func(params graphql.ResolveParams) (interface{}, error) {
 	return func(params graphql.ResolveParams) (interface{}, error) {
+		fmt.Printf("%s, args:%+v\n", params.Info.FieldName, params.Args)
 		if userType == "unauthenticated" && method.Field("Scope").Value() == "Admin" {
 			return userUnauthorized(params, db)
 		}
@@ -252,9 +247,9 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
  * Param: field (string)
  * Returns: (error)
  *
-*/
-func HandleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
+ */
+func HandleTypeAssertionError(field string) error {
+	err := fmt.Sprintf("Type Assertion Error for field", field)
+	fmt.Println(err)
 	return errors.New(err)
 }

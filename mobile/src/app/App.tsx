@@ -8,6 +8,7 @@ import Url from "url";
 import ApolloClient from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+import { SafeAreaView } from "react-native";
 
 Amplify.configure(awsconfig.dev.amplify);
 
@@ -53,9 +54,11 @@ export const client = new ApolloClient({
 export default class App extends Component {
   render() {
     return (
-      <ApolloProvider client={client}>
-        <Tabs />
-      </ApolloProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <ApolloProvider client={client}>
+          <Tabs />
+        </ApolloProvider>
+      </SafeAreaView>
     );
   }
 }

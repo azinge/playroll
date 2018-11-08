@@ -4,12 +4,13 @@ import { Icon } from "react-native-elements";
 
 import Home from "../../components/Home";
 import Playrolls from "../../components/Playrolls";
-import Create from "../../components/Create";
+import Search from "../../components/Search";
 import AlertModal from "../../components/shared/AlertModal";
+import Create from "../../components/Create";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
-    screen: Home,
+    screen: Search, // TODO: change back to Home
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
@@ -45,10 +46,10 @@ export const Tabs = createBottomTabNavigator({
       ),
     },
   },
+  Search: {
+    screen: Search,
+  },
   Create: {
     screen: Create,
-  },
-  AlertModal: {
-    screen: AlertModal,
   },
 });

@@ -4,13 +4,13 @@
 
 import React from "react";
 import { Text, View, ScrollView } from "react-native";
-import HeaderBar from "./HeaderBar";
+import HeaderBar from "../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
 
 export default class Home extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1, marginTop: 20 }}>
+      <View style={{ flex: 1 }}>
         <HeaderBar />
         <Text>Home | Playrolls | Radio</Text>
         <HomeCarousel />

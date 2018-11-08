@@ -3,25 +3,25 @@
  */
 
 import React from "react";
-import { Text, View } from "native-base";
-import { Platform } from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import HeaderBar from "../../components/shared/HeaderBar";
+import HomeCarousel from "./HomeCarousel";
 
-import styles from "./Home.styles";
-
-const instructions = Platform.select({
-  ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
-  android:
-    "Double tap R on your keyboard to reload,\n" +
-    "Shake or press menu button for dev menu",
-});
-
-export default class Home extends React.PureComponent {
+export default class Home extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}> Welcome to React Native! </Text>
-        <Text style={styles.instructions}> To get started, edit App.tsx </Text>
-        <Text style={styles.instructions}> {instructions} </Text>
+      <View style={{ flex: 1 }}>
+        <HeaderBar />
+        <Text>Home | Playrolls | Radio</Text>
+        <HomeCarousel />
+        <Text>Popular | New | Recommended</Text>
+        <ScrollView horizontal={true}>
+          <Text>Hello </Text>
+          <Text>Hello </Text>
+          <Text>Hello </Text>
+          <Text>Hello </Text>
+          <Text>Hello </Text>
+        </ScrollView>
       </View>
     );
   }

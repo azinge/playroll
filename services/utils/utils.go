@@ -18,6 +18,9 @@ type Model struct {
 	CreatedAt time.Time  `gql:"createdAt: String"`
 	UpdatedAt time.Time  `gql:"updatedAt: String"`
 	DeletedAt *time.Time `gql:"deletedAt: String"`
+
+	// Internal Database Reference
+	DB *gorm.DB `gorm:"-"`
 }
 
 type Type struct {
@@ -239,9 +242,9 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
  * Param: field (string)
  * Returns: (error)
  *
-*/
-func HandleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
+ */
+func HandleTypeAssertionError(field string) error {
+	err := fmt.Sprintf("Type Assertion Error for field", field)
+	fmt.Println(err)
 	return errors.New(err)
 }

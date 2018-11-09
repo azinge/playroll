@@ -18,10 +18,10 @@ export default StyleSheet.create({
       marginBottom: 5,
   },
   headline: {
-      textAlign: 'left',
-      color: '#ffffff',
-      fontSize: 25,
-      margin: 30,
+      textAlign: 'center',
+      color: '#6A0070',
+      fontSize: 20,
+      margin: 25,
   },
   footercontent: {
       backgroundColor: '#00ffff',

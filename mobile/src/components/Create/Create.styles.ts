@@ -34,4 +34,14 @@ export default StyleSheet.create({
       marginBottom: 2,
       width: '33%',
   },
+  formtitle: {
+    fontSize: 24,
+    color: '#6A0070',
+    marginTop: 20,
+    marginLeft: 15,
+  },
+  formfooter: {
+    alignSelf: 'flex-end',
+    marginRight: 15,
+  }
 });

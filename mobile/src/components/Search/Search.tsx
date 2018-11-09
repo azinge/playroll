@@ -3,12 +3,14 @@
  */
 
 import React from "react";
-import { TextInput, View, ScrollView, Text } from "react-native";
+import { TextInput, View, ScrollView, Text, Image } from "react-native";
+
+import { musicSources, MusicSource } from "../../static/mockData";
 
 export interface Props {}
 
 interface State {
-  results: any;
+  results: MusicSource[];
   text: string;
 }
 
@@ -29,21 +31,22 @@ export default class Search extends React.Component<Props, State> {
           onChangeText={(text: string) => this.setState({ text })}
           onSubmitEditing={() =>
             this.setState({
-              results: [
-                "Search Result 1",
-                "Search Result 2",
-                "Search Result 3",
-                "Search Result 4",
-                "Search Result 5",
-                "Search Result 6",
-              ],
+              results: musicSources,
             })
           }
           value={this.state.text}
         />
         <ScrollView>
-          {this.state.results.map((result: any, index: number) => {
-            return <Text key={index}>hello</Text>;
+          {this.state.results.map((result: MusicSource, index: number) => {
+            return (
+              <View style={{ height: 150, margin: 10 }} key={index}>
+                <Image
+                  style={{ width: 100, height: 100 }}
+                  source={{ uri: result.cover }}
+                />
+                <Text>{result.name}</Text>
+              </View>
+            );
           })}
         </ScrollView>
       </View>

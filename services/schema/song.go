@@ -11,7 +11,7 @@ import (
 
 type Song struct {
 	utils.Model `gql:"MODEL"`
-	Name        string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
 	// Album       Album       `gql:"album: String!"`
 	// Genre       Genre       `gql:"genre: String!"`
@@ -55,7 +55,7 @@ func listSongs(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 }
 
 type CreateSongInput struct {
-	Name string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
@@ -65,8 +65,7 @@ func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["song"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["song"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
@@ -75,7 +74,7 @@ func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	mapstructure.Decode(musicSource, &ms)
 
 	song := &Song{
-		Name: name,
+		Name:        name,
 		MusicSource: ms,
 	}
 	if err := db.Create(&song).Error; err != nil {
@@ -86,8 +85,8 @@ func createSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 type UpdateSongInput struct {
-	ID   string `gql:"id: ID!"`
-	Name string `gql:"name: String"`
+	ID          string      `gql:"id: ID!"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
@@ -103,8 +102,7 @@ func updateSong(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["song"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["song"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}

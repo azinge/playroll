@@ -43,9 +43,17 @@ type Mutation struct {
 	Scope   string
 }
 
-func generateResolveFromMethod(method *structs.Field, db *gorm.DB) func(params graphql.ResolveParams) (interface{}, error) {
+func userUnauthorized(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	err := fmt.Sprintf("User is unauthorized")
+	return nil, errors.New(err)
+}
+
+func generateResolveFromMethod(method *structs.Field, db *gorm.DB, userType string) func(params graphql.ResolveParams) (interface{}, error) {
 	return func(params graphql.ResolveParams) (interface{}, error) {
 		fmt.Printf("%s, args:%+v\n", params.Info.FieldName, params.Args)
+		if userType == "unauthenticated" && method.Field("Scope").Value() == "Admin" {
+			return userUnauthorized(params, db)
+		}
 		return method.Field("Request").Value().(func(graphql.ResolveParams, *gorm.DB) (interface{}, error))(params, db)
 	}
 }
@@ -60,7 +68,7 @@ func generateResolveFromModelField(name string) func(params graphql.ResolveParam
 	}
 }
 
-func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (graphql.Schema, error) {
+func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB, userType string) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
 	for _, entity := range *entities {
@@ -134,7 +142,7 @@ func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (gr
 		methodlist := structs.Fields(entity.Methods)
 		for _, method := range methodlist {
 			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap, &inputTypeMap)
-			gqlField.Resolve = generateResolveFromMethod(method, db)
+			gqlField.Resolve = generateResolveFromMethod(method, db, userType)
 			switch structs.Name(method.Value()) {
 			case "Query":
 				rootQuery.AddFieldConfig(name, gqlField)
@@ -239,9 +247,9 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
  * Param: field (string)
  * Returns: (error)
  *
-*/
-func HandleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
+ */
+func HandleTypeAssertionError(field string) error {
+	err := fmt.Sprintf("Type Assertion Error for field", field)
+	fmt.Println(err)
 	return errors.New(err)
 }

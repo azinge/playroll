@@ -1,16 +1,17 @@
 package schema
 
 import (
-	"fmt"
-	"errors"
-	"encoding/json"
 	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/lib/pq"
 )
 
 type RollSource struct {
-	Type          string   `gql:"type: String" json:"type"`
+	Type          string         `gql:"type: String" json:"type"`
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
 
@@ -35,7 +36,7 @@ func (rs *RollSource) Scan(value interface{}) error {
 }
 
 type RollFilter struct {
-	Type          string   `gql:"type: String" json:"type"`
+	Type          string         `gql:"type: String" json:"type"`
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
 
@@ -62,10 +63,9 @@ func (rf *RollFilter) Scan(value interface{}) error {
 }
 
 type RollLength struct {
-	Type          string   `gql:"type: String" json:"type"`
+	Type          string         `gql:"type: String" json:"type"`
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
-
 
 var RollLengthType = &utils.Type{Name: "RollLength", Model: RollLength{}}
 var RollLengthInputType = &utils.Type{Name: "RollLengthInput", IsInput: true, Model: RollLength{}}
@@ -113,8 +113,8 @@ func (ms *MusicSource) Scan(value interface{}) error {
 }
 
 type ListInput struct {
-	Page int `gql:"page: Int"`
-	Limit int `gql:"limit: Int"`
+	Page    int            `gql:"page: Int"`
+	Limit   int            `gql:"limit: Int"`
 	OrderBy pq.StringArray `gql:"orderBy: [String]"`
 }
 

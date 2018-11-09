@@ -73,6 +73,7 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 			schema.ListInputType,
 		},
 		db,
+		request.RequestContext.Identity.CognitoAuthenticationType,
 	)
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())

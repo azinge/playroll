@@ -1,41 +1,45 @@
 package schema
 
 import (
-	"fmt"
-	"errors"
-	"encoding/json"
 	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"time"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/lib/pq"
 )
 
-type RollSource struct {
-	Type          string   `gql:"type: String" json:"type"`
-	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
+type Song struct {
+	Name        string      `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
 }
 
-var RollSourceType = &utils.Type{Name: "RollSource", Model: RollSource{}}
-var RollSourceInputType = &utils.Type{Name: "RollSourceInput", IsInput: true, Model: RollSource{}}
-
-func (rs RollSource) Value() (driver.Value, error) {
-	value, err := json.Marshal(rs)
-	if err != nil {
-		fmt.Println("Error trying to Marshal RollSource: " + err.Error())
-		return nil, errors.New("Error trying to Marshal RollSource: " + err.Error())
-	}
-	return string(value), nil
+func (s *Song) String() string {
+	return fmt.Sprintf("SONG<%s (%s)>", s.Name, s.MusicSource)
 }
 
-func (rs *RollSource) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &rs); err != nil {
-		fmt.Println("Error trying to Unmarshal RollSource: " + err.Error())
-		return err
-	}
-	return nil
+type Artist struct {
+	Title       string      `gql:"title: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
+}
+
+func (a *Artist) String() string {
+	return fmt.Sprintf("ARTIST<%s (%s)>", a.Title, a.MusicSource)
+}
+
+type Album struct {
+	Name        string      `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
+}
+
+func (a *Album) String() string {
+	return fmt.Sprintf("ALBUM<%s (%s)>", a.Name, a.MusicSource)
 }
 
 type RollFilter struct {
-	Type          string   `gql:"type: String" json:"type"`
+	Type          string         `gql:"type: String" json:"type"`
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
 
@@ -62,10 +66,9 @@ func (rf *RollFilter) Scan(value interface{}) error {
 }
 
 type RollLength struct {
-	Type          string   `gql:"type: String" json:"type"`
+	Type          string         `gql:"type: String" json:"type"`
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
-
 
 var RollLengthType = &utils.Type{Name: "RollLength", Model: RollLength{}}
 var RollLengthInputType = &utils.Type{Name: "RollLengthInput", IsInput: true, Model: RollLength{}}
@@ -87,36 +90,47 @@ func (rl *RollLength) Scan(value interface{}) error {
 	return nil
 }
 
-type MusicSource struct {
-	Type   string `gql:"type: String" json:"type"`
-	Source string `gql:"source: String" json:"source"`
+type Token struct {
+	AccessToken  string    `gql:"accessToken: String" json:"accessToken"`
+	RefreshToken string    `gql:"refreshToken: String" json:"refreshToken"`
+	TokenType    string    `gql:"tokenType: String" json:"tokenType"`
+	Expiry       time.Time `gql:"Expiry: String" json:"expiry"`
 }
 
-var MusicSourceType = &utils.Type{Name: "MusicSource", Model: MusicSource{}}
-var MusicSourceInputType = &utils.Type{Name: "MusicSourceInput", IsInput: true, Model: MusicSource{}}
-
-func (ms MusicSource) Value() (driver.Value, error) {
-	value, err := json.Marshal(ms)
+func (token Token) Value() (driver.Value, error) {
+	value, err := json.Marshal(token)
 	if err != nil {
-		fmt.Println("Error trying to Marshal MusicSource: " + err.Error())
+		fmt.Println("Error trying to Marshal Token: " + err.Error())
 		return nil, err
 	}
 	return string(value), nil
 }
 
-func (ms *MusicSource) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &ms); err != nil {
-		fmt.Println("Error trying to Unmarshal MusicSource: " + err.Error())
+func (token *Token) Scan(value interface{}) error {
+	if err := json.Unmarshal(value.([]byte), &token); err != nil {
+		fmt.Println("Error trying to Unmarshal Token: " + err.Error())
 		return err
 	}
 	return nil
 }
 
-type ListInput struct {
-	Page int `gql:"page: Int"`
-	Limit int `gql:"limit: Int"`
-	OrderBy []interface{} `gql:"orderBy: [String]"`
-	ShowLogs bool `gql:"showLogs: Boolean"`
+var TokenType = &utils.Type{Name: "Token", Model: &Token{}}
+
+type PaginationInput struct {
+	Offset   int            `gql:"offset: Int"`
+	Limit    int            `gql:"limit: Int"`
+	OrderBy  pq.StringArray `gql:"orderBy: [String]"`
+	ShowLogs bool           `gql:"showLogs: Boolean"`
 }
 
-var ListInputType = &utils.Type{Name: "ListInput", IsInput: true, Model: ListInput{}}
+var PaginationInputType = &utils.Type{Name: "PaginationInput", IsInput: true, Model: &PaginationInput{}}
+
+type SearchInput struct {
+	UserID          string `gql:"userID: ID"`
+	PreloadModel    string `gql:"preloadModel: String"`
+	PreloadArgument string `gql:"preloadArgument: String"`
+	WhereClause     string `gql:"whereClause: String"`
+	WhereArgument   string `gql:"whereArgument: String"`
+}
+
+var SearchInputType = &utils.Type{Name: "SearchInput", IsInput: true, Model: &SearchInput{}}

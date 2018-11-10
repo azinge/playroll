@@ -1,23 +1,26 @@
 package schema
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
+	"github.com/cazinge/playroll/services/utils/pagination"
+	"github.com/cazinge/playroll/services/utils/search"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
 type User struct {
-	utils.Model `gql:"MODEL"`
-	Name        string `gql:"name: String"`
+	utils.Model         `gql:"MODEL"`
+	Name                string `gql:"name: String"`
+	ExternalCredentials []ExternalCredentials
+	Playrolls           []Playroll
 }
 
 type UserMethods struct {
 	GetUser     *utils.Query    `gql:"user(id: ID!): User"`
-	SearchUsers *utils.Query    `gql:"searchUsers: [User]"`
-	ListUsers   *utils.Query    `gql:"listUsers: [User]"`
+	SearchUsers *utils.Query    `gql:"searchUsers(options: SearchInput!): [User]"`
+	ListUsers   *utils.Query    `gql:"listUsers(options: PaginationInput!): [User]"`
 	CreateUser  *utils.Mutation `gql:"createUser(user: CreateUserInput!): User"`
 	UpdateUser  *utils.Mutation `gql:"updateUser(user: UpdateUserInput!): User"`
 	DeleteUser  *utils.Mutation `gql:"deleteUser(id: ID!): User"`
@@ -27,9 +30,7 @@ func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
@@ -40,16 +41,16 @@ func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 }
 
 func searchUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return []*User{&User{}, &User{}}, nil
+	var users []User
+	if err := search.Query(params, db, &users); err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func listUsers(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	users := []*User{}
-	// currently does not handle offset and count
-	if err := db.Find(&users).Error; err != nil {
-		fmt.Println("Error listing users: " + err.Error())
-		return nil, err
-	}
+	var users []User
+	pagination.HandlePagination(params, db, &users)
 	return users, nil
 }
 
@@ -60,9 +61,7 @@ type CreateUserInput struct {
 func createUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	name, ok := params.Args["user"].(map[string]interface{})["name"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	user := &User{Name: name}
@@ -80,24 +79,22 @@ type UpdateUserInput struct {
 
 func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
+
 	id, ok := params.Args["user"].(map[string]interface{})["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	name, ok := params.Args["user"].(map[string]interface{})["name"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("getting user to update: " + err.Error())
 		return nil, err
 	}
+
 	user.Name = name
 	if err := db.Save(&user).Error; err != nil {
 		fmt.Println("error updating user: " + err.Error())
@@ -108,17 +105,19 @@ func updateUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 
 func deleteUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	user := &User{}
+
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
+		return nil, utils.HandleTypeAssertionError("name")
 	}
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
 		fmt.Println("Error deleting user: " + err.Error())
 		return nil, err
 	}
+
+	associationsToRemove := []string{"ExternalCredentials", "Playrolls"}
+	utils.HandleRemoveAssociationReferences(db, user, associationsToRemove)
 	db.Delete(&user)
 	return user, nil
 }

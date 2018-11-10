@@ -238,10 +238,16 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
  * Handles type assertion errors
  * Param: field (string)
  * Returns: (error)
- *m
-*/
-func HandleTypeAssertionError(field string) (error) {
-	err := fmt.Sprintf("Type Assertion Error for field", field);
-	fmt.Println(err);
+ *
+ */
+func HandleTypeAssertionError(field string) error {
+	err := fmt.Sprintf("Type Assertion Error for field %s", field)
+	fmt.Println(err)
 	return errors.New(err)
+}
+
+func HandleRemoveAssociationReferences(db *gorm.DB, model interface{}, associations []string) {
+	for _, association := range associations {
+		db.Model(&model).Association(association).Clear()
+	}
 }

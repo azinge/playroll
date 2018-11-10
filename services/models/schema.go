@@ -25,18 +25,18 @@ func LinkMutation(method Method) *Mutation {
 }
 
 type Types struct {
-	Playroll *schema.Playroll
+	Playroll *schema.Playroll `gql:"Playroll"`
 }
 
 type Methods struct {
-	PlayrollMethods
+	PlayrollMethods `gql:"GROUP"`
 }
 
 func main() {
-	Types := &Types{
+	types := &Types{
 		Playroll: &schema.Playroll{},
 	}
-	Methods := &Methods{
+	methods := &Methods{
 		PlayrollMethods: LinkedPlayrollMethods,
 	}
 }

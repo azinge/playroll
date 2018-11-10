@@ -10,18 +10,18 @@ import (
 )
 
 type PlayrollMethods struct {
-	GetPlayroll     *Query    `gql:"playroll(id: ID!): Playroll"`
-	SearchPlayrolls *Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
-	ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
-	CreatePlayroll  *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
-	UpdatePlayroll  *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
-	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
+	GetPlayroll *Query `gql:"playroll(id: ID!): Playroll"`
+	// SearchPlayrolls *Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	// ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
+	// CreatePlayroll  *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	// UpdatePlayroll  *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	// DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
 var getPlayroll = Method{
 	Scope: "User",
 	Documentation: `
-		Placeholder Text
+		[Get Playroll Documentation Goes Here]
 	`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		playroll := schema.Playroll{}

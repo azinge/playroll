@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -49,6 +50,16 @@ func generateResolveFromMethod(method *structs.Field, db *gorm.DB) func(params g
 	}
 }
 
+func generateResolveFromModelField(name string) func(params graphql.ResolveParams) (interface{}, error) {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		m := structs.Map(p.Source)
+		if model, ok := m["Model"].(map[string]interface{}); ok {
+			return model[name], nil
+		}
+		return nil, fmt.Errorf("error when parsing model field")
+	}
+}
+
 func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
@@ -93,6 +104,7 @@ func GenerateGraphQLSchema(entities *[]*Entity, types *[]*Type, db *gorm.DB) (gr
 				modelfieldlist := structs.Fields(m.Field("Model").Value())
 				for _, modelfield := range modelfieldlist {
 					name, gqlField := parseGraphQLField(modelfield.Tag("gql"), &typeMap, &inputTypeMap)
+					gqlField.Resolve = generateResolveFromModelField(modelfield.Name())
 					t.AddFieldConfig(name, gqlField)
 				}
 			} else if field.Tag("gql") != "" {
@@ -220,4 +232,22 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
 		(*config)[m["Name"]] = arg
 	}
 	return *config
+}
+
+/**
+ * Handles type assertion errors
+ * Param: field (string)
+ * Returns: (error)
+ *
+ */
+func HandleTypeAssertionError(field string) error {
+	err := fmt.Sprintf("Type Assertion Error for field %s", field)
+	fmt.Println(err)
+	return errors.New(err)
+}
+
+func HandleRemoveAssociationReferences(db *gorm.DB, model interface{}, associations []string) {
+	for _, association := range associations {
+		db.Model(&model).Association(association).Clear()
+	}
 }

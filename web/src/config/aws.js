@@ -15,7 +15,7 @@ export default {
         endpoints: [
           {
             name: "graphql",
-            endpoint: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com",
+            endpoint: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev",
             region: "us-west-2",
           },
         ],

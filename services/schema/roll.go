@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
@@ -15,9 +13,9 @@ import (
 
 type Roll struct {
 	utils.Model  `gql:"MODEL"`
-	MusicSources []MusicSource `gql:"musicSources: [MusicSource]" gorm:"type:jsonb[];"`
-	Filters      RollFilter    `gql:"filters: RollFilter" gorm:"type:jsonb;"`
-	Length       RollLength    `gql:"length: RollLength" gorm:"type:jsonb;"`
+	MusicSources []MusicSource `gql:"musicSources: [MusicSource]" gorm:"type: jsonb[];"`
+	Filters      RollFilter    `gql:"filters: RollFilter" gorm:"type: jsonb;"`
+	Length       RollLength    `gql:"length: RollLength" gorm:"type: jsonb;"`
 	Playroll     Playroll
 	PlayrollID   uint   `gql:"playrollID: ID"`
 	Order        string `gql:"order: String"`
@@ -33,14 +31,8 @@ type RollMethods struct {
 }
 
 func getRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	roll := &Roll{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
-		fmt.Println("error getting roll: " + err.Error())
+	var roll Roll
+	if err := utils.HandleGetSingularModel(params, db, &roll); err != nil {
 		return nil, err
 	}
 	return roll, nil
@@ -201,27 +193,10 @@ func deleteRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	return roll, nil
 }
 
-func (r Roll) Value() (driver.Value, error) {
-	value, err := json.Marshal(r)
-	if err != nil {
-		fmt.Println("Error trying to Marshal Roll: " + err.Error())
-		return nil, err
-	}
-	return string(value), nil
-}
-
-func (r *Roll) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &r); err != nil {
-		fmt.Println("Error trying to Unmarshal Roll: " + err.Error())
-		return err
-	}
-	return nil
-}
-
 type RollInput struct {
-	MusicSources []MusicSource `gql:"musicSources: [MusicSourceInput]" gorm:"type:jsonb[];not null"`
-	Filters      RollFilter    `gql:"filters: RollFilterInput" gorm:"type:jsonb;not null"`
-	Length       RollLength    `gql:"length: RollLengthInput" gorm:"type:jsonb;not null"`
+	MusicSources []MusicSource `gql:"musicSources: [MusicSourceInput]" gorm:"type: jsonb[];not null"`
+	Filters      RollFilter    `gql:"filters: RollFilterInput" gorm:"type: jsonb;not null"`
+	Length       RollLength    `gql:"length: RollLengthInput" gorm:"type: jsonb;not null"`
 	Playroll     Playroll
 	PlayrollID   uint   `gql:"playrollID: ID"`
 	Order        string `gql:"order: String"`

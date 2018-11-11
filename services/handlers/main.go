@@ -40,29 +40,36 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	defer db.Close()
 
 	db.AutoMigrate(
-		&schema.PlayrollEntity.Model,
-		&schema.RollEntity.Model,
-		&schema.TracklistEntity.Model,
-		&schema.AlbumEntity.Model,
-		&schema.UserEntity.Model,
+		schema.PlayrollEntity.Model,
+		schema.RollEntity.Model,
+		schema.MusicSourceEntity.Model,
+		schema.TracklistEntity.Model,
+		schema.RollOutputEntity.Model,
+		schema.UserEntity.Model,
+		schema.ExternalCredentialsEntity.Model,
 	)
 
 	schema, err := utils.GenerateGraphQLSchema(
 		&[]*utils.Entity{
 			schema.PlayrollEntity,
-			schema.TracklistEntity,
 			schema.RollEntity,
-			schema.AlbumEntity,
+			schema.MusicSourceEntity,
+			schema.TracklistEntity,
+			schema.RollOutputEntity,
 			schema.UserEntity,
+			schema.ExternalCredentialsEntity,
 		},
 		&[]*utils.Type{
+			schema.RollInputType,
 			schema.RollFilterType,
 			schema.RollFilterInputType,
 			schema.RollLengthType,
 			schema.RollLengthInputType,
-			schema.MusicSourceType,
 			schema.MusicSourceInputType,
+			schema.RollOutputInputType,
+			schema.SearchInputType,
 			schema.PaginationInputType,
+			schema.TokenType,
 		},
 		db,
 	)

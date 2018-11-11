@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
@@ -47,14 +45,8 @@ type MusicSourceMethods struct {
 }
 
 func getMusicSource(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	musicSource := &MusicSource{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&musicSource).Error; err != nil {
-		fmt.Println("error getting musicSource: " + err.Error())
+	var musicSource MusicSource
+	if err := utils.HandleGetSingularModel(params, db, &musicSource); err != nil {
 		return nil, err
 	}
 	return musicSource, nil
@@ -90,23 +82,6 @@ func deleteMusicSource(params graphql.ResolveParams, db *gorm.DB) (interface{}, 
 	utils.HandleRemoveAssociationReferences(db, musicSource, associationsToRemove)
 	db.Delete(&musicSource)
 	return musicSource, nil
-}
-
-func (ms MusicSource) Value() (driver.Value, error) {
-	value, err := json.Marshal(ms)
-	if err != nil {
-		fmt.Println("Error trying to Marshal MusicSource: " + err.Error())
-		return nil, err
-	}
-	return string(value), nil
-}
-
-func (ms *MusicSource) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &ms); err != nil {
-		fmt.Println("Error trying to Unmarshal MusicSource: " + err.Error())
-		return err
-	}
-	return nil
 }
 
 var MusicSourceInputType = &utils.Type{Name: "MusicSourceInput", IsInput: true, Model: &MusicSource{}}

@@ -16,7 +16,7 @@ type ExternalCredentials struct {
 	Provider    ProviderType `gql:"provider: String"`
 	User        User
 	UserID      uint
-	Token       Token `gql:"token: Token" gorm:"type:jsonb;not null"`
+	Token       Token `gql:"token: Token" gorm:"type: jsonb;not null"`
 }
 
 type ExternalCredentialsMethods struct {
@@ -28,18 +28,11 @@ type ExternalCredentialsMethods struct {
 }
 
 func getExternalCredentials(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	ExternalCredentials := &ExternalCredentials{}
-
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&ExternalCredentials).Error; err != nil {
-		fmt.Println("Error getting ExternalCredentials: " + err.Error())
+	var externalCredentials ExternalCredentials
+	if err := utils.HandleGetSingularModel(params, db, &externalCredentials); err != nil {
 		return nil, err
 	}
-	return ExternalCredentials, nil
+	return externalCredentials, nil
 }
 
 func searchExternalCredentials(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -92,11 +85,11 @@ func createExternalCredentials(params graphql.ResolveParams, db *gorm.DB) (inter
 	url := auth.AuthURL("")
 	fmt.Println(url)
 
-	//NOTE: For now we need to enter the authURL and change the value below to create a fresh access token before generating a tracklist
+	// NOTE: For now we need to enter the authURL and change the value below to create
+	// a fresh access token before generating a tracklist.
 	providerToken, _ := auth.Exchange(
 		"AQAYpgkLbX-XSRm9XCHA3gi2220IrfHA8ld48COF2tJZTBr626A0B2RcSZ-vGaXMLYd10LcegAj8dfKMfsY5ttIQHUyQhuFA4C-KpUMePqi50AecvEF8ceBhfC4usI33pmPrv3XrTrOdc4A1ZHJdOxykKo0OeM_59QJkDECNz7TgIpsRjhbuCfNmmYhpiIvaizZnTT5nb0j1BI1VLKGaG9qXO3nWQl3XUw1rWmh-tgf5zM-q2YC_r9FBBEK4Xh6B7yyp8ZazdsuMNNKMsZRnv21WOv6ryYtvSgLU9YwHr6rSLPULaYKM77SZ4Xps-N9gcPlWCn4XPhLxnt7PblU",
 	)
-
 	token := Token{
 		AccessToken:  providerToken.AccessToken,
 		RefreshToken: providerToken.RefreshToken,

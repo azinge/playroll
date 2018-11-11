@@ -27,14 +27,8 @@ type UserMethods struct {
 }
 
 func getUser(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	user := &User{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		fmt.Println("Error getting user: " + err.Error())
+	var user User
+	if err := utils.HandleGetSingularModel(params, db, &user); err != nil {
 		return nil, err
 	}
 	return user, nil

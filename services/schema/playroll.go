@@ -28,14 +28,8 @@ type PlayrollMethods struct {
 }
 
 func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	playroll := &Playroll{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
-		fmt.Println("Error getting playroll: " + err.Error())
+	var playroll Playroll
+	if err := utils.HandleGetSingularModel(params, db, &playroll); err != nil {
 		return nil, err
 	}
 	return playroll, nil

@@ -13,7 +13,7 @@ import (
 
 type Song struct {
 	Name        string      `gql:"name: String"`
-	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb;not null"`
 }
 
 func (s *Song) String() string {
@@ -22,7 +22,7 @@ func (s *Song) String() string {
 
 type Artist struct {
 	Title       string      `gql:"title: String"`
-	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb;not null"`
 }
 
 func (a *Artist) String() string {
@@ -31,7 +31,7 @@ func (a *Artist) String() string {
 
 type Album struct {
 	Name        string      `gql:"name: String"`
-	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb;not null"`
 }
 
 func (a *Album) String() string {
@@ -94,7 +94,7 @@ type Token struct {
 	AccessToken  string    `gql:"accessToken: String" json:"accessToken"`
 	RefreshToken string    `gql:"refreshToken: String" json:"refreshToken"`
 	TokenType    string    `gql:"tokenType: String" json:"tokenType"`
-	Expiry       time.Time `gql:"Expiry: String" json:"expiry"`
+	Expiry       time.Time `gql:"expiry: String" json:"expiry"`
 }
 
 func (token Token) Value() (driver.Value, error) {

@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
@@ -30,14 +28,8 @@ type RollOutputMethods struct {
 }
 
 func getRollOutput(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	rollOutput := &RollOutput{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&rollOutput).Error; err != nil {
-		fmt.Println("Error getting rollOutput: " + err.Error())
+	var rollOutput RollOutput
+	if err := utils.HandleGetSingularModel(params, db, &rollOutput); err != nil {
 		return nil, err
 	}
 	return rollOutput, nil
@@ -100,7 +92,7 @@ func deleteRollOutput(params graphql.ResolveParams, db *gorm.DB) (interface{}, e
 	rollOutput := &RollOutput{}
 	id, ok := params.Args["id"].(string)
 	if !ok {
-		return nil, utils.HandleTypeAssertionError("name")
+		return nil, utils.HandleTypeAssertionError("id")
 	}
 
 	if err := db.Where("id = ?", id).First(&rollOutput).Error; err != nil {
@@ -112,23 +104,6 @@ func deleteRollOutput(params graphql.ResolveParams, db *gorm.DB) (interface{}, e
 	utils.HandleRemoveAssociationReferences(db, rollOutput, associationsToRemove)
 	db.Delete(&rollOutput)
 	return rollOutput, nil
-}
-
-func (ro RollOutput) Value() (driver.Value, error) {
-	value, err := json.Marshal(ro)
-	if err != nil {
-		fmt.Println("Error trying to Marshal RollOutput: " + err.Error())
-		return nil, err
-	}
-	return string(value), nil
-}
-
-func (ro *RollOutput) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &ro); err != nil {
-		fmt.Println("Error trying to Unmarshal RollOutput: " + err.Error())
-		return err
-	}
-	return nil
 }
 
 var RollOutputInputType = &utils.Type{Name: "RollOutputInput", IsInput: true, Model: &RollOutput{}}

@@ -33,15 +33,8 @@ type TracklistMethods struct {
 }
 
 func getTracklist(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	tracklist := &Tracklist{}
-
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		return nil, utils.HandleTypeAssertionError("id")
-	}
-
-	if err := db.Where("id = ?", id).First(&tracklist).Error; err != nil {
-		fmt.Println("error getting tracklist: " + err.Error())
+	var tracklist Tracklist
+	if err := utils.HandleGetSingularModel(params, db, &tracklist); err != nil {
 		return nil, err
 	}
 	return tracklist, nil
@@ -201,6 +194,7 @@ func generateTracklist(params graphql.ResolveParams, db *gorm.DB) (interface{}, 
 	userRolls, ok := params.Args["generate"].(map[string]interface{})["rolls"].([]interface{})
 	fmt.Println("userRolls: %v", userRolls)
 
+	// TODO: Find issue around getting array of MusicSources to load within rolls
 	rolls := []Roll{}
 	mapstructure.Decode(userRolls, &rolls)
 	fmt.Println("rolls: %v", rolls)

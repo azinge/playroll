@@ -234,20 +234,31 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
 	return *config
 }
 
-/**
- * Handles type assertion errors
- * Param: field (string)
- * Returns: (error)
- *
- */
+// HandleTypeAssertionError handles type assertion errors.
 func HandleTypeAssertionError(field string) error {
 	err := fmt.Sprintf("Type Assertion Error for field %s", field)
 	fmt.Println(err)
 	return errors.New(err)
 }
 
+// HandleRemoveAssociationReferences handles removing association references for a
+// model that will be deleted.
 func HandleRemoveAssociationReferences(db *gorm.DB, model interface{}, associations []string) {
 	for _, association := range associations {
 		db.Model(&model).Association(association).Clear()
 	}
+}
+
+// HandleGetSingularModel handles the generice GQL GET request for a singular model.
+func HandleGetSingularModel(params graphql.ResolveParams, db *gorm.DB, model interface{}) error {
+	id, ok := params.Args["id"].(string)
+	if !ok {
+		return HandleTypeAssertionError("id")
+	}
+
+	if err := db.Where("id = ?", id).First(model).Error; err != nil {
+		fmt.Println("Error getting model: " + err.Error())
+		return err
+	}
+	return nil
 }

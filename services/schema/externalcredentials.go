@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
@@ -88,8 +89,14 @@ func createExternalCredentials(params graphql.ResolveParams, db *gorm.DB) (inter
 	// NOTE: For now we need to enter the authURL and change the value below to create
 	// a fresh access token before generating a tracklist.
 	providerToken, _ := auth.Exchange(
-		"AQAYpgkLbX-XSRm9XCHA3gi2220IrfHA8ld48COF2tJZTBr626A0B2RcSZ-vGaXMLYd10LcegAj8dfKMfsY5ttIQHUyQhuFA4C-KpUMePqi50AecvEF8ceBhfC4usI33pmPrv3XrTrOdc4A1ZHJdOxykKo0OeM_59QJkDECNz7TgIpsRjhbuCfNmmYhpiIvaizZnTT5nb0j1BI1VLKGaG9qXO3nWQl3XUw1rWmh-tgf5zM-q2YC_r9FBBEK4Xh6B7yyp8ZazdsuMNNKMsZRnv21WOv6ryYtvSgLU9YwHr6rSLPULaYKM77SZ4Xps-N9gcPlWCn4XPhLxnt7PblU",
+		"AQC6qbKILcqt0bvO1H0Zlih7Ss9BRxuMGeolmIxxGH4p0rumgUbNYzSLSKTBOawyQUOcQvogIm-AuqvSaCJwfW4R5i_3JnQBfbivj8LPLG7q9iXL-jUoI4SNQvD76quI0m15HMPOUgBcBHOWG7kwHE7EJbVw3LdbwI0ITEhX1YlX4s6bVo_4E5OI9LYX6eNnKDbi8bizGhxZ3mizzZ4mJ_73ifp8lv9tfcy9nWAucKYJ5jVfy8DLleqKq2wVi5MMKmEa4XujeEKaOvPL9rQOwa7KM0No9J3PV_471ZCYR_8GwksYPdwMNd5K_t9PL4lypS97JAWod3GY70gT-pQ",
 	)
+
+	if providerToken == nil {
+		err := errors.New("authorize profile via URL")
+		return nil, err
+	}
+
 	token := Token{
 		AccessToken:  providerToken.AccessToken,
 		RefreshToken: providerToken.RefreshToken,
@@ -101,7 +108,10 @@ func createExternalCredentials(params graphql.ResolveParams, db *gorm.DB) (inter
 		Token:    token,
 	}
 
-	db.Model(&user).Association("ExternalCredentials").Append(extCreds)
+	if err := db.Model(&user).Association("ExternalCredentials").Append(extCreds).Error; err != nil {
+		fmt.Println("Error appending credentials to user model: ", err.Error())
+		return nil, err
+	}
 	return extCreds, nil
 }
 

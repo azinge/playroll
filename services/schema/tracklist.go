@@ -3,15 +3,14 @@ package schema
 import (
 	"fmt"
 
-	"github.com/mitchellh/mapstructure"
-	"golang.org/x/oauth2"
-
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/cazinge/playroll/services/utils/pagination"
 	"github.com/cazinge/playroll/services/utils/search"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
+	"github.com/mitchellh/mapstructure"
 	"github.com/zmb3/spotify"
+	"golang.org/x/oauth2"
 )
 
 type Tracklist struct {
@@ -191,13 +190,9 @@ func generateTracklist(params graphql.ResolveParams, db *gorm.DB) (interface{}, 
 		return nil, utils.HandleTypeAssertionError("primary")
 	}
 
+	// TODO: Find issue around getting array of MusicSources to load within rolls
 	userRolls, ok := params.Args["generate"].(map[string]interface{})["rolls"].([]interface{})
 	fmt.Println("userRolls: %v", userRolls)
-
-	// TODO: Find issue around getting array of MusicSources to load within rolls
-	rolls := []Roll{}
-	mapstructure.Decode(userRolls, &rolls)
-	fmt.Println("rolls: %v", rolls)
 
 	order, ok := params.Args["generate"].(map[string]interface{})["order"].(string)
 	if !ok {
@@ -209,33 +204,18 @@ func generateTracklist(params graphql.ResolveParams, db *gorm.DB) (interface{}, 
 		return nil, err
 	}
 
+	if err := db.Preload("User", "id = ?", userID).First(&playroll, "id = ?", playrollID).Error; err != nil {
+		fmt.Println("Preloading User for playroll error: ", err.Error())
+		return nil, err
+	}
+
 	token := oauth2.Token{}
 	mapstructure.Decode(extCreds.Token, &token)
 	client := spotify.Authenticator{}.NewClient(&token)
 	fmt.Println("client: ", client)
 
-	songs := [][]Song{}
-	for _, roll := range getTestRolls() {
-		fmt.Println("roll")
-		fmt.Println(roll)
-		for _, musicSource := range roll.MusicSources {
-			fmt.Println("musicSource")
-			fmt.Println(musicSource)
-			songs = append(songs, GenerateSongsForRoll(client, musicSource))
-		}
-	}
-
-	for i, set := range songs {
-		fmt.Printf("\n\nOutput from Roll %d:\n", i)
-		for _, song := range set {
-			fmt.Println(song.String())
-		}
-	}
-
-	if err := db.Preload("User", "id = ?", userID).First(&playroll, "id = ?", playrollID).Error; err != nil {
-		fmt.Println("Preloading User for playroll error: ", err.Error())
-		return nil, err
-	}
+	songs := getSongsFromRolls(getTestRolls(), db, playroll, client)
+	outputRollInformation(songs)
 
 	playlist, err := CreatePlaylistFromSets(client, playroll.Name, songs)
 	if err != nil {
@@ -243,8 +223,6 @@ func generateTracklist(params graphql.ResolveParams, db *gorm.DB) (interface{}, 
 		return nil, err
 	}
 	fmt.Printf("\n%+v\n", playlist)
-	// TODO: Find issue around getting array of MusicSources to load within rolls
-	// db.Model(&playroll).Association("User").Append(&rolls)
 
 	tracklist := &Tracklist{
 		Starred: starred,
@@ -319,6 +297,30 @@ func CreatePlaylistFromSets(client spotify.Client, playrollName string, sets [][
 	return playlist, nil
 }
 
+func outputRollInformation(songs [][]Song) {
+	for i, set := range songs {
+		fmt.Printf("\n\nOutput from Roll %d:\n", i)
+		for _, song := range set {
+			fmt.Println(song.String())
+		}
+	}
+}
+
+func getSongsFromRolls(rolls []Roll, db *gorm.DB, playroll Playroll, client spotify.Client) [][]Song {
+	songs := [][]Song{}
+	for _, roll := range rolls {
+		fmt.Println("roll")
+		fmt.Println(roll)
+		db.Model(&playroll).Association("Rolls").Append(roll)
+		for _, musicSource := range roll.MusicSources {
+			fmt.Println("musicSource")
+			fmt.Println(musicSource)
+			songs = append(songs, GenerateSongsForRoll(client, musicSource))
+		}
+	}
+	return songs
+}
+
 func getTestRolls() []Roll {
 	_ = Roll{
 		MusicSources: []MusicSource{},
@@ -330,9 +332,9 @@ func getTestRolls() []Roll {
 		MusicSources: []MusicSource{
 			{
 				Type:       "Song",
-				Name:       "God's Plan",
+				Name:       "Hotline Bling",
 				Provider:   "Spotify",
-				ProviderID: "6DCZcSspjsKoFjzjrWoCdn",
+				ProviderID: "2rTxwqA6v4lccbPKD31CQI",
 			},
 			{
 				Type:       "Song",

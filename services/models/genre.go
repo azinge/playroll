@@ -1,4 +1,4 @@
-package schema
+package models
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 type Genre struct {
 	utils.Model `gql:"MODEL"`
-	Name        string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
 }
 
@@ -52,7 +52,7 @@ func listGenres(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 type CreateGenreInput struct {
-	Name string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
@@ -62,8 +62,7 @@ func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
@@ -72,7 +71,7 @@ func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	mapstructure.Decode(musicSource, &ms)
 
 	genre := &Genre{
-		Name: name,
+		Name:        name,
 		MusicSource: ms,
 	}
 	if err := db.Create(&genre).Error; err != nil {
@@ -83,8 +82,8 @@ func createGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 type UpdateGenreInput struct {
-	ID   string `gql:"id: ID!"`
-	Name string `gql:"name: String"`
+	ID          string      `gql:"id: ID!"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
@@ -100,8 +99,7 @@ func updateGenre(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["genre"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}

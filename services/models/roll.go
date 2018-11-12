@@ -1,7 +1,8 @@
-package schema
+package models
 
 import (
 	"fmt"
+
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -10,10 +11,10 @@ import (
 
 type Roll struct {
 	utils.Model `gql:"MODEL"`
-	Source RollSource `gql:"source: RollSource" gorm:"type:jsonb;not null"`
-	Filters RollFilter `gql:"filters: RollFilter" gorm:"type:jsonb;not null"`
-	Length RollLength `gql:"length: RollLength" gorm:"type:jsonb;not null"`
-	Playroll string `gql:"playroll: ID"`
+	Source      RollSource `gql:"source: RollSource" gorm:"type:jsonb;not null"`
+	Filters     RollFilter `gql:"filters: RollFilter" gorm:"type:jsonb;not null"`
+	Length      RollLength `gql:"length: RollLength" gorm:"type:jsonb;not null"`
+	Playroll    string     `gql:"playroll: ID"`
 }
 
 type RollMethods struct {
@@ -53,37 +54,29 @@ func listRolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 }
 
 type CreateRollInput struct {
-	Source RollSource `gql:"source: RollSourceInput" json: source`
-	Filters RollFilter `gql:"filters: RollFilterInput" json: filters`
-	Length RollLength `gql:"length: RollLengthInput" json: length`
-	Playroll string `gql:"playroll: ID!"`
+	Source   RollSource `gql:"source: RollSourceInput" json: source`
+	Filters  RollFilter `gql:"filters: RollFilterInput" json: filters`
+	Length   RollLength `gql:"length: RollLengthInput" json: length`
+	Playroll string     `gql:"playroll: ID!"`
 }
 
 func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	playroll, ok := params.Args["roll"].
-		(map[string]interface{})["playroll"].
-		(string)
+	playroll, ok := params.Args["roll"].(map[string]interface{})["playroll"].(string)
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("playroll")
 	}
 
-	rollSource, ok := params.Args["roll"].
-		(map[string]interface{})["source"].
-		(map[string]interface{})
+	rollSource, ok := params.Args["roll"].(map[string]interface{})["source"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollSource")
 	}
 
-	rollFilters, ok := params.Args["roll"].
-		(map[string]interface{})["filters"].
-		(map[string]interface{})
+	rollFilters, ok := params.Args["roll"].(map[string]interface{})["filters"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollFilters")
 	}
 
-	rollLength, ok := params.Args["roll"].
-		(map[string]interface{})["length"].
-		(map[string]interface{})
+	rollLength, ok := params.Args["roll"].(map[string]interface{})["length"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollLength")
 	}
@@ -96,9 +89,9 @@ func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	mapstructure.Decode(rollLength, &rl)
 
 	roll := &Roll{
-		Source: rs,
-		Filters: rf,
-		Length: rl,
+		Source:   rs,
+		Filters:  rf,
+		Length:   rl,
 		Playroll: playroll,
 	}
 	if err := db.Create(&roll).Error; err != nil {
@@ -110,11 +103,11 @@ func createRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 type UpdateRollInput struct {
-	ID       string `gql:"id: ID!"`
-	Source RollSource `gql:"source: RollSourceInput" json: source`
-	Filters RollFilter `gql:"filters: RollFilterInput" json: filters`
-	Length RollLength `gql:"length: RollLengthInput" json: length`
-	Playroll string `gql:"playroll: ID!"`
+	ID       string     `gql:"id: ID!"`
+	Source   RollSource `gql:"source: RollSourceInput" json: source`
+	Filters  RollFilter `gql:"filters: RollFilterInput" json: filters`
+	Length   RollLength `gql:"length: RollLengthInput" json: length`
+	Playroll string     `gql:"playroll: ID!"`
 }
 
 func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -129,23 +122,17 @@ func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 		return nil, utils.HandleTypeAssertionError("playroll")
 	}
 
-	rollSource, ok := params.Args["roll"].
-		(map[string]interface{})["source"].
-		(map[string]interface{})
+	rollSource, ok := params.Args["roll"].(map[string]interface{})["source"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollSource")
 	}
 
-	rollFilters, ok := params.Args["roll"].
-		(map[string]interface{})["filters"].
-		(map[string]interface{})
+	rollFilters, ok := params.Args["roll"].(map[string]interface{})["filters"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollFilters")
 	}
 
-	rollLength, ok := params.Args["roll"].
-		(map[string]interface{})["length"].
-		(map[string]interface{})
+	rollLength, ok := params.Args["roll"].(map[string]interface{})["length"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("rollLength")
 	}
@@ -156,7 +143,6 @@ func updateRoll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 	mapstructure.Decode(rollSource, &rs)
 	mapstructure.Decode(rollFilters, &rf)
 	mapstructure.Decode(rollLength, &rl)
-
 
 	if err := db.Where("id = ?", id).First(&roll).Error; err != nil {
 		fmt.Println("getting roll to update: " + err.Error())

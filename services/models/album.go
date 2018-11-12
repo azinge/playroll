@@ -1,4 +1,4 @@
-package schema
+package models
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 type Album struct {
 	utils.Model `gql:"MODEL"`
-	Name        string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type:jsonb;not null"`
 	// Artist Artist `gql:"artist:Artist"`
 }
@@ -54,7 +54,7 @@ func listAlbums(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) 
 }
 
 type CreateAlbumInput struct {
-	Name string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
 }
 
@@ -64,8 +64,7 @@ func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}
@@ -74,7 +73,7 @@ func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	mapstructure.Decode(musicSource, &ms)
 
 	album := &Album{
-		Name: name,
+		Name:        name,
 		MusicSource: ms,
 	}
 	if err := db.Create(album).Error; err != nil {
@@ -85,9 +84,9 @@ func createAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 }
 
 type UpdateAlbumInput struct {
-	ID   string `gql:"id: ID!"`
+	ID          string      `gql:"id: ID!"`
 	MusicSource MusicSource `gql:"musicSource: MusicSourceInput" json: musicSource`
-	Name string `gql:"name: String"`
+	Name        string      `gql:"name: String"`
 }
 
 func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -102,8 +101,7 @@ func updateAlbum(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 		return nil, utils.HandleTypeAssertionError("name")
 	}
 
-	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].
-		(map[string]interface{})
+	musicSource, ok := params.Args["album"].(map[string]interface{})["musicSource"].(map[string]interface{})
 	if !ok {
 		return nil, utils.HandleTypeAssertionError("musicSource")
 	}

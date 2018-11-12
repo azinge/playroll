@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cazinge/playroll/services/gqltag"
+	"github.com/cazinge/playroll/services/schema"
 	graphql "github.com/graphql-go/graphql"
 	graphiql "github.com/mnmtanish/go-graphiql"
 )
@@ -225,10 +227,17 @@ func main() {
 			},
 		},
 	})
-	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
+	s, _ := graphql.NewSchema(graphql.SchemaConfig{
 		Query:    rootQuery,
 		Mutation: rootMutation,
 	})
+	fmt.Println(s)
+
+	schema, err := gqltag.GenerateGraphQLSchemaAlt(schema.LinkedTypes, schema.LinkedMethods, nil)
+	if err != nil {
+		fmt.Println("error generating schema: " + err.Error())
+	}
+
 	fmt.Println(schema)
 	http.HandleFunc("/graphql", serveGraphQL(schema))
 	http.ListenAndServe(":8080", nil)

@@ -5,8 +5,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/cazinge/playroll/services/schema"
-	"github.com/cazinge/playroll/services/utils"
 	"github.com/fatih/structs"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -70,6 +68,7 @@ func addFieldsFromStruct(struc interface{}, typeName, objType string, typeMap *m
 	t := structs.New(struc)
 	fieldlist := t.Fields()
 	for _, field := range fieldlist {
+		//TODO: Recursive form of gorm model destructuring with embedded resolve aka "GROUP"
 		if field.Tag("gql") == "MODEL" {
 			modelfieldlist := structs.Fields(t.Field("Model").Value())
 			for _, modelfield := range modelfieldlist {
@@ -125,7 +124,7 @@ func populateMethodsFromStruct(struc interface{}, db *gorm.DB, rootQuery, rootMu
 	}
 }
 
-func GenerateGraphQLSchemaAlt(types schema.Types, methods schema.Methods, db *gorm.DB) (graphql.Schema, error) {
+func GenerateGraphQLSchemaAlt(types interface{}, methods interface{}, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
 
@@ -137,75 +136,6 @@ func GenerateGraphQLSchemaAlt(types schema.Types, methods schema.Methods, db *go
 
 	populateMethodsFromStruct(methods, db, rootQuery, rootMutation, &typeMap, &inputTypeMap)
 
-	return graphql.NewSchema(graphql.SchemaConfig{
-		Query:    rootQuery,
-		Mutation: rootMutation,
-	})
-}
-
-func GenerateGraphQLSchema(entities *[]*utils.Entity, types *[]*utils.Type, db *gorm.DB) (graphql.Schema, error) {
-	typeMap := map[string]*graphql.Object{}
-	inputTypeMap := map[string]*graphql.InputObject{}
-	for _, entity := range *entities {
-		addObjectToTypeMap(entity.Name, false, &typeMap, &inputTypeMap)
-		if entity.Types != nil {
-			for _, t := range *entity.Types {
-				addObjectToTypeMap(t.Name, t.IsInput, &typeMap, &inputTypeMap)
-			}
-		}
-	}
-	for _, t := range *types {
-		addObjectToTypeMap(t.Name, t.IsInput, &typeMap, &inputTypeMap)
-	}
-	for _, t := range *types {
-		m := structs.New(t.Model)
-		fieldlist := m.Fields()
-		for _, field := range fieldlist {
-			addFieldToTypeMap(t.Name, t.IsInput, field, &typeMap, &inputTypeMap)
-		}
-	}
-	for _, entity := range *entities {
-		t := typeMap[entity.Name]
-		m := structs.New(entity.Model)
-		fieldlist := m.Fields()
-		for _, field := range fieldlist {
-			if field.Tag("gql") == "MODEL" {
-				modelfieldlist := structs.Fields(m.Field("Model").Value())
-				for _, modelfield := range modelfieldlist {
-					name, gqlField := parseGraphQLField(modelfield.Tag("gql"), &typeMap, &inputTypeMap)
-					gqlField.Resolve = generateResolveFromModelField(modelfield.Name())
-					t.AddFieldConfig(name, gqlField)
-				}
-			} else if field.Tag("gql") != "" {
-				name, gqlField := parseGraphQLField(field.Tag("gql"), &typeMap, &inputTypeMap)
-				t.AddFieldConfig(name, gqlField)
-			}
-		}
-		if entity.Types != nil {
-			for _, t := range *entity.Types {
-				m := structs.New(t.Model)
-				fieldlist := m.Fields()
-				for _, field := range fieldlist {
-					addFieldToTypeMap(t.Name, t.IsInput, field, &typeMap, &inputTypeMap)
-				}
-			}
-		}
-	}
-	rootQuery := graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
-	rootMutation := graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
-	for _, entity := range *entities {
-		methodlist := structs.Fields(entity.Methods)
-		for _, method := range methodlist {
-			name, gqlField := parseGraphQLField(method.Tag("gql"), &typeMap, &inputTypeMap)
-			gqlField.Resolve = generateResolveFromMethod(method, db)
-			switch structs.Name(method.Value()) {
-			case "Query":
-				rootQuery.AddFieldConfig(name, gqlField)
-			case "Mutation":
-				rootMutation.AddFieldConfig(name, gqlField)
-			}
-		}
-	}
 	return graphql.NewSchema(graphql.SchemaConfig{
 		Query:    rootQuery,
 		Mutation: rootMutation,

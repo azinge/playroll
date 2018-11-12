@@ -1,4 +1,4 @@
-package schema
+package gqltag
 
 import (
 	"github.com/graphql-go/graphql"

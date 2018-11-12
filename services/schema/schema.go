@@ -8,10 +8,10 @@ type Methods struct {
 	PlayrollMethods `gql:"GROUP"`
 }
 
-var LinkedTypes = Types{
+var LinkedTypes = gqltag.Types{
 	PlayrollTypes: LinkedPlayrollTypes,
 }
 
-var LinkedMethods = Methods{
+var LinkedMethods = gqltag.Methods{
 	PlayrollMethods: LinkedPlayrollMethods,
 }

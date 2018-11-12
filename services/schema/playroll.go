@@ -12,40 +12,40 @@ import (
 )
 
 type PlayrollTypes struct {
-	Playroll            *Output `gql:"Playroll"`
-	CreatePlayrollInput *Input  `gql:"CreatePlayrollInput"`
-	UpdatePlayrollInput *Input  `gql:"UpdatePlayrollInput"`
+	Playroll            *gqltag.Output `gql:"Playroll"`
+	CreatePlayrollInput *gqltag.Input  `gql:"CreatePlayrollInput"`
+	UpdatePlayrollInput *gqltag.Input  `gql:"UpdatePlayrollInput"`
 }
 
-var playrollType = Type{
+var playrollType = gqltag.Type{
 	Description: `[Playroll Type Description Goes Here]`,
 	Fields:      &models.Playroll{},
 }
 
-var createPlayrollInputType = Type{
+var createPlayrollInputType = gqltag.Type{
 	Description: `[Create Playroll Input Type Description Goes Here]`,
 	Fields:      &models.CreatePlayrollInput{},
 }
 
-var updatePlayrollInputType = Type{
+var updatePlayrollInputType = gqltag.Type{
 	Description: `[Update Playroll Input Type Description Goes Here]`,
 	Fields:      &models.UpdatePlayrollInput{},
 }
 
 var LinkedPlayrollTypes = PlayrollTypes{
-	Playroll:            LinkOutput(playrollType),
-	CreatePlayrollInput: LinkInput(createPlayrollInputType),
-	UpdatePlayrollInput: LinkInput(updatePlayrollInputType),
+	Playroll:            gqltag.LinkOutput(playrollType),
+	CreatePlayrollInput: gqltag.LinkInput(createPlayrollInputType),
+	UpdatePlayrollInput: gqltag.LinkInput(updatePlayrollInputType),
 }
 
 type PlayrollMethods struct {
-	GetPlayroll     *Query `gql:"playroll(id: ID!): Playroll"`
-	SearchPlayrolls *Query `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	GetPlayroll     *gqltag.Query `gql:"playroll(id: ID!): Playroll"`
+	SearchPlayrolls *gqltag.Query `gql:"searchPlayrolls(query: String!): [Playroll]"`
 	//TODO: Add ListInput to schema
 	// ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
-	CreatePlayroll *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
-	UpdatePlayroll *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
-	DeletePlayroll *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
+	CreatePlayroll *gqltag.Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	UpdatePlayroll *gqltag.Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	DeletePlayroll *gqltag.Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
 func initPlayroll(db *gorm.DB) *models.Playroll {
@@ -54,7 +54,7 @@ func initPlayroll(db *gorm.DB) *models.Playroll {
 	return playroll
 }
 
-var getPlayroll = Method{
+var getPlayroll = gqltag.Method{
 	Scope:       "User",
 	Description: `[Get Playroll Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -69,7 +69,7 @@ var getPlayroll = Method{
 	},
 }
 
-var searchPlayrolls = Method{
+var searchPlayrolls = gqltag.Method{
 	Scope:       "User",
 	Description: `[Search Playrolls Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -78,7 +78,7 @@ var searchPlayrolls = Method{
 	},
 }
 
-var listPlayrolls = Method{
+var listPlayrolls = gqltag.Method{
 	Scope:       "User",
 	Description: `[List Playrolls Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -90,7 +90,7 @@ var listPlayrolls = Method{
 	},
 }
 
-var createPlayroll = Method{
+var createPlayroll = gqltag.Method{
 	Scope:       "User",
 	Description: `[Create Playroll Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -106,7 +106,7 @@ var createPlayroll = Method{
 	},
 }
 
-var updatePlayroll = Method{
+var updatePlayroll = gqltag.Method{
 	Scope:       "User",
 	Description: `[Update Playroll Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -129,7 +129,7 @@ var updatePlayroll = Method{
 	},
 }
 
-var deletePlayroll = Method{
+var deletePlayroll = gqltag.Method{
 	Scope:       "User",
 	Description: `[Delete Playroll Description Goes Here]`,
 	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -145,10 +145,10 @@ var deletePlayroll = Method{
 }
 
 var LinkedPlayrollMethods = PlayrollMethods{
-	GetPlayroll:     LinkQuery(getPlayroll),
-	SearchPlayrolls: LinkQuery(searchPlayrolls),
+	GetPlayroll:     gqltag.LinkQuery(getPlayroll),
+	SearchPlayrolls: gqltag.LinkQuery(searchPlayrolls),
 	// ListPlayrolls:  LinkQuery(listPlayrolls),
-	CreatePlayroll: LinkMutation(createPlayroll),
-	UpdatePlayroll: LinkMutation(updatePlayroll),
-	DeletePlayroll: LinkMutation(deletePlayroll),
+	CreatePlayroll: gqltag.LinkMutation(createPlayroll),
+	UpdatePlayroll: gqltag.LinkMutation(updatePlayroll),
+	DeletePlayroll: gqltag.LinkMutation(deletePlayroll),
 }

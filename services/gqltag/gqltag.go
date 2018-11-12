@@ -124,6 +124,7 @@ func populateMethodsFromStruct(struc interface{}, db *gorm.DB, rootQuery, rootMu
 	}
 }
 
+//TODO: Support internal Methods/Resolvers
 func GenerateGraphQLSchemaAlt(types interface{}, methods interface{}, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}

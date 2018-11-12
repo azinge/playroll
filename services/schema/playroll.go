@@ -14,6 +14,7 @@ import (
 type PlayrollTypes struct {
 	Playroll            *Output `gql:"Playroll"`
 	CreatePlayrollInput *Input  `gql:"CreatePlayrollInput"`
+	UpdatePlayrollInput *Input  `gql:"UpdatePlayrollInput"`
 }
 
 var playrollType = Type{
@@ -26,18 +27,25 @@ var createPlayrollInputType = Type{
 	Fields:      &models.CreatePlayrollInput{},
 }
 
+var updatePlayrollInputType = Type{
+	Description: `[Update Playroll Input Type Description Goes Here]`,
+	Fields:      &models.UpdatePlayrollInput{},
+}
+
 var LinkedPlayrollTypes = PlayrollTypes{
 	Playroll:            LinkOutput(playrollType),
 	CreatePlayrollInput: LinkInput(createPlayrollInputType),
+	UpdatePlayrollInput: LinkInput(updatePlayrollInputType),
 }
 
 type PlayrollMethods struct {
-	GetPlayroll     *Query    `gql:"playroll(id: ID!): Playroll"`
-	SearchPlayrolls *Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
-	ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
-	CreatePlayroll  *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
-	UpdatePlayroll  *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
-	DeletePlayroll  *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
+	GetPlayroll     *Query `gql:"playroll(id: ID!): Playroll"`
+	SearchPlayrolls *Query `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	//TODO: Add ListInput to schema
+	// ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
+	CreatePlayroll *Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	UpdatePlayroll *Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	DeletePlayroll *Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
 func initPlayroll(db *gorm.DB) *models.Playroll {
@@ -139,8 +147,8 @@ var deletePlayroll = Method{
 var LinkedPlayrollMethods = PlayrollMethods{
 	GetPlayroll:     LinkQuery(getPlayroll),
 	SearchPlayrolls: LinkQuery(searchPlayrolls),
-	ListPlayrolls:   LinkQuery(listPlayrolls),
-	CreatePlayroll:  LinkMutation(createPlayroll),
-	UpdatePlayroll:  LinkMutation(updatePlayroll),
-	DeletePlayroll:  LinkMutation(deletePlayroll),
+	// ListPlayrolls:  LinkQuery(listPlayrolls),
+	CreatePlayroll: LinkMutation(createPlayroll),
+	UpdatePlayroll: LinkMutation(updatePlayroll),
+	DeletePlayroll: LinkMutation(deletePlayroll),
 }

@@ -55,11 +55,12 @@ func initializeTypeMapFromStruct(struc interface{}, typeMap *map[string]*graphql
 			initializeTypeMapFromStruct(t.Value(), typeMap, inputTypeMap)
 		} else {
 			name := t.Tag("gql")
+			description := t.Field("Description").Value().(string)
 			switch structs.Name(t.Value()) {
 			case "Output":
-				(*typeMap)[name] = graphql.NewObject(graphql.ObjectConfig{Name: name, Fields: graphql.Fields{}})
+				(*typeMap)[name] = graphql.NewObject(graphql.ObjectConfig{Name: name, Fields: graphql.Fields{}, Description: description})
 			case "Input":
-				(*inputTypeMap)[name] = graphql.NewInputObject(graphql.InputObjectConfig{Name: name, Fields: graphql.InputObjectConfigFieldMap{}})
+				(*inputTypeMap)[name] = graphql.NewInputObject(graphql.InputObjectConfig{Name: name, Fields: graphql.InputObjectConfigFieldMap{}, Description: description})
 			}
 		}
 	}

@@ -4,75 +4,46 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
 
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func Handler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
-	// 	os.Getenv("DB_HOST"),
-	// 	os.Getenv("DB_PORT"),
-	// 	os.Getenv("DB_USER"),
-	// 	os.Getenv("DB_NAME"),
-	// 	os.Getenv("DB_PASS"),
-	// )
+	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PASS"),
+	)
 
-	// db, err := gorm.Open("postgres", host)
-	// if err != nil {
-	// 	fmt.Println("error opening db: " + err.Error())
-	// 	return events.APIGatewayProxyResponse{
-	// 		Headers: map[string]string{
-	// 			"Access-Control-Allow-Origin":      "*",
-	// 			"Access-Control-Allow-Credentials": "true",
-	// 		},
-	// 		Body:       err.Error(),
-	// 		StatusCode: 500,
-	// 	}, err
-	// }
-	// defer db.Close()
+	db, err := gorm.Open("postgres", host)
+	if err != nil {
+		fmt.Println("error opening db: " + err.Error())
+		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Origin":      "*",
+				"Access-Control-Allow-Credentials": "true",
+			},
+			Body:       err.Error(),
+			StatusCode: 500,
+		}, err
+	}
+	defer db.Close()
 
-	// db.AutoMigrate(
-	// 	&schema.PlayrollEntity.Model,
-	// 	&schema.RollEntity.Model,
-	// 	&schema.SonglistEntity.Model,
-	// 	&schema.SongEntity.Model,
-	// 	&schema.GenreEntity.Model,
-	// 	&schema.AlbumEntity.Model,
-	// 	&schema.ArtistEntity.Model,
-	// 	&schema.UserEntity.Model,
-	// )
+	db.AutoMigrate(
+		&models.Playroll{},
+	)
 
-	// schema, err := utils.GenerateGraphQLSchema(
-	// 	&[]*utils.Entity{
-	// 		schema.PlayrollEntity,
-	// 		schema.SonglistEntity,
-	// 		schema.RollEntity,
-	// 		schema.SongEntity,
-	// 		schema.AlbumEntity,
-	// 		schema.ArtistEntity,
-	// 		schema.GenreEntity,
-	// 		schema.UserEntity,
-	// 	},
-	// 	&[]*utils.Type{
-	// 		schema.RollSourceType,
-	// 		schema.RollSourceInputType,
-	// 		schema.RollFilterType,
-	// 		schema.RollFilterInputType,
-	// 		schema.RollLengthType,
-	// 		schema.RollLengthInputType,
-	// 		schema.MusicSourceType,
-	// 		schema.MusicSourceInputType,
-	// 		schema.ListInputType,
-	// 	},
-	// 	// db,
-	// 	nil,
-	// )
-	schema, err := gqltag.GenerateGraphQLSchemaAlt(models.LinkedTypes, models.LinkedMethods, nil)
+	schema, err := gqltag.GenerateGraphQLSchemaAlt(models.LinkedTypes, models.LinkedMethods, db)
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{
@@ -126,6 +97,5 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 }
 
 func main() {
-	Handler(nil, events.APIGatewayProxyRequest{})
-	// lambda.Start(Handler)
+	lambda.Start(Handler)
 }

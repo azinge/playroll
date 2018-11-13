@@ -10,7 +10,7 @@ import Create from "../../components/Create";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
-    screen: Search, // TODO: change back to Home
+    screen: Home, // TODO: change back to Home
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (

@@ -3,90 +3,114 @@ package schema
 import (
 	"errors"
 	"fmt"
+
 	"github.com/cazinge/playroll/services/pagination"
-	"github.com/cazinge/playroll/services/utils"
+
+	"github.com/cazinge/playroll/services/models"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
-type Playroll struct {
-	utils.Model `gql:"MODEL"`
-	Name        string `gql:"name: String"`
+type PlayrollTypes struct {
+	Playroll            *gqltag.Output `gql:"Playroll"`
+	CreatePlayrollInput *gqltag.Input  `gql:"CreatePlayrollInput"`
+	UpdatePlayrollInput *gqltag.Input  `gql:"UpdatePlayrollInput"`
+}
+
+var playrollType = gqltag.Type{
+	Description: `[Playroll Type Description Goes Here]`,
+	Fields:      &models.Playroll{},
+}
+
+var createPlayrollInputType = gqltag.Type{
+	Description: `[Create Playroll Input Type Description Goes Here]`,
+	Fields:      &models.CreatePlayrollInput{},
+}
+
+var updatePlayrollInputType = gqltag.Type{
+	Description: `[Update Playroll Input Type Description Goes Here]`,
+	Fields:      &models.UpdatePlayrollInput{},
+}
+
+var LinkedPlayrollTypes = PlayrollTypes{
+	Playroll:            gqltag.LinkOutput(playrollType),
+	CreatePlayrollInput: gqltag.LinkInput(createPlayrollInputType),
+	UpdatePlayrollInput: gqltag.LinkInput(updatePlayrollInputType),
 }
 
 type PlayrollMethods struct {
-	GetPlayroll     *utils.Query    `gql:"playroll(id: ID!): Playroll"`
-	SearchPlayrolls *utils.Query    `gql:"searchPlayrolls(query: String!): [Playroll]"`
-	ListPlayrolls   *utils.Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
-	CreatePlayroll  *utils.Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
-	UpdatePlayroll  *utils.Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
-	DeletePlayroll  *utils.Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
+	GetPlayroll     *gqltag.Query `gql:"playroll(id: ID!): Playroll"`
+	SearchPlayrolls *gqltag.Query `gql:"searchPlayrolls(query: String!): [Playroll]"`
+	//TODO: Add ListInput to schema
+	// ListPlayrolls   *Query    `gql:"listPlayrolls(options: ListInput!): [Playroll]"`
+	CreatePlayroll *gqltag.Mutation `gql:"createPlayroll(playroll: CreatePlayrollInput!): Playroll"`
+	UpdatePlayroll *gqltag.Mutation `gql:"updatePlayroll(playroll: UpdatePlayrollInput!): Playroll"`
+	DeletePlayroll *gqltag.Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
-func getPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	playroll := &Playroll{}
-	id, ok := params.Args["id"].(string)
-	if !ok {
-		err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
-		fmt.Println(err)
-		return nil, errors.New(err)
-	}
-
-	if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
-		fmt.Println("Error getting playroll: " + err.Error())
-		return nil, err
-	}
-	return playroll, nil
+func initPlayroll(db *gorm.DB) *models.Playroll {
+	playroll := &models.Playroll{}
+	playroll.SetDB(db)
+	return playroll
 }
 
-func searchPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return []*Playroll{&Playroll{}, &Playroll{}}, nil
+var getPlayroll = gqltag.Method{
+	Scope:       "User",
+	Description: `[Get Playroll Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
+		id, ok := params.Args["id"].(string)
+		if !ok {
+			err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
+			fmt.Println(err)
+			return nil, errors.New(err)
+		}
+		return playroll.Get(id)
+	},
 }
 
-
-func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	var playrolls []Playroll
-	// currently does not handle offset and count
-	page := params.Args["options"].(map[string]interface{})["page"].(int)
-	limit := params.Args["options"].(map[string]interface{})["limit"].(int)
-	orderBy := params.Args["options"].(map[string]interface{})["orderBy"].([]interface{})
-	paginator := pagination.Paginator{DB: db}
-	options := pagination.Options{OrderBy: orderBy, Page: page, Limit: limit}
-	err := paginator.Paginate(&playrolls, &options) // review actually returning a response for performance purposes
-	if err != nil {
-		fmt.Println("Error listing playrolls: " + err.Error())
-		return nil, err
-	}
-	return playrolls, nil
+var searchPlayrolls = gqltag.Method{
+	Scope:       "User",
+	Description: `[Search Playrolls Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
+		return playroll.Search()
+	},
 }
 
-	type CreatePlayrollInput struct {
-		Name string `gql:"name: String"`
-	}
+var listPlayrolls = gqltag.Method{
+	Scope:       "User",
+	Description: `[List Playrolls Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
+		page := params.Args["options"].(map[string]interface{})["page"].(int)
+		limit := params.Args["options"].(map[string]interface{})["limit"].(int)
+		orderBy := params.Args["options"].(map[string]interface{})["orderBy"].([]interface{})
+		return playroll.List(pagination.Options{Page: page, Limit: limit, OrderBy: orderBy})
+	},
+}
 
-	func createPlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+var createPlayroll = gqltag.Method{
+	Scope:       "User",
+	Description: `[Create Playroll Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
 		name, ok := params.Args["playroll"].(map[string]interface{})["name"].(string)
 		if !ok {
 			err := fmt.Sprintf("Expected name of type(string) but got type %T", ok)
 			fmt.Println(err)
 			return nil, errors.New(err)
 		}
+		input := models.CreatePlayrollInput{Name: name}
+		return playroll.Create(input)
+	},
+}
 
-		playRoll := &Playroll{Name: name}
-		if err := db.Create(&playRoll).Error; err != nil {
-			fmt.Println("Error creating playroll: " + err.Error())
-			return nil, err
-		}
-		return playRoll, nil
-	}
-
-	type UpdatePlayrollInput struct {
-		ID   string `gql:"id: ID!"`
-		Name string `gql:"name: String"`
-	}
-
-	func updatePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		playroll := &Playroll{}
+var updatePlayroll = gqltag.Method{
+	Scope:       "User",
+	Description: `[Update Playroll Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
 		id, ok := params.Args["playroll"].(map[string]interface{})["id"].(string)
 		if !ok {
 			err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
@@ -100,49 +124,31 @@ func listPlayrolls(params graphql.ResolveParams, db *gorm.DB) (interface{}, erro
 			fmt.Println(err)
 			return nil, errors.New(err)
 		}
+		input := models.UpdatePlayrollInput{ID: id, Name: name}
+		return playroll.Update(input)
+	},
+}
 
-		if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
-			fmt.Println("getting playroll to update: " + err.Error())
-			return nil, err
-		}
-		playroll.Name = name
-		if err := db.Save(&playroll).Error; err != nil {
-			fmt.Println("error updating playroll: " + err.Error())
-			return nil, err
-		}
-		return playroll, nil
-	}
-
-	func deletePlayroll(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		playroll := &Playroll{}
+var deletePlayroll = gqltag.Method{
+	Scope:       "User",
+	Description: `[Delete Playroll Description Goes Here]`,
+	Request: func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		playroll := initPlayroll(db)
 		id, ok := params.Args["id"].(string)
 		if !ok {
 			err := fmt.Sprintf("Expected id of type(string) but got type %T", ok)
 			fmt.Println(err)
 			return nil, errors.New(err)
 		}
+		return playroll.Delete(id)
+	},
+}
 
-		if err := db.Where("id = ?", id).First(&playroll).Error; err != nil {
-			fmt.Println("Error deleting playroll: " + err.Error())
-			return nil, err
-		}
-		db.Delete(&playroll)
-		return playroll, nil
-	}
-
-	var PlayrollEntity = &utils.Entity{
-		Name:  "Playroll",
-		Model: &Playroll{},
-		Methods: &PlayrollMethods{
-			GetPlayroll:     &utils.Query{Request: getPlayroll, Scope: "User"},
-			SearchPlayrolls: &utils.Query{Request: searchPlayrolls, Scope: "User"},
-			ListPlayrolls:   &utils.Query{Request: listPlayrolls, Scope: "User"},
-			CreatePlayroll:  &utils.Mutation{Request: createPlayroll, Scope: "User"},
-			UpdatePlayroll:  &utils.Mutation{Request: updatePlayroll, Scope: "User"},
-			DeletePlayroll:  &utils.Mutation{Request: deletePlayroll, Scope: "User"},
-		},
-		Types: &[]*utils.Type{
-			&utils.Type{Name: "CreatePlayrollInput", IsInput: true, Model: &CreatePlayrollInput{}},
-			&utils.Type{Name: "UpdatePlayrollInput", IsInput: true, Model: &UpdatePlayrollInput{}},
-		},
-	}
+var LinkedPlayrollMethods = PlayrollMethods{
+	GetPlayroll:     gqltag.LinkQuery(getPlayroll),
+	SearchPlayrolls: gqltag.LinkQuery(searchPlayrolls),
+	// ListPlayrolls:  LinkQuery(listPlayrolls),
+	CreatePlayroll: gqltag.LinkMutation(createPlayroll),
+	UpdatePlayroll: gqltag.LinkMutation(updatePlayroll),
+	DeletePlayroll: gqltag.LinkMutation(deletePlayroll),
+}

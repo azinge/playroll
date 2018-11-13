@@ -3,9 +3,11 @@
  */
 
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Image } from "react-native";
 import HeaderBar from "../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
+
+import { musicSources } from "../../static/mockData";
 
 export default class Home extends React.Component {
   render() {
@@ -16,11 +18,17 @@ export default class Home extends React.Component {
         <HomeCarousel />
         <Text>Popular | New | Recommended</Text>
         <ScrollView horizontal={true}>
-          <Text>Hello </Text>
-          <Text>Hello </Text>
-          <Text>Hello </Text>
-          <Text>Hello </Text>
-          <Text>Hello </Text>
+          {musicSources.map((val, idx) => {
+            return (
+              <View style={{ width: 100, margin: 10 }} key={idx}>
+                <Image
+                  style={{ width: 100, height: 100 }}
+                  source={{ uri: val.cover }}
+                />
+                <Text>{val.name}</Text>
+              </View>
+            );
+          })}
         </ScrollView>
       </View>
     );

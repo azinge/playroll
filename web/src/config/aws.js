@@ -15,13 +15,10 @@ export default {
         endpoints: [
           {
             name: "graphql",
-            endpoint: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev",
-            region: "us-west-2",
+            endpoint: "http://localhost:4444/graphql",
           },
         ],
-        graphql_endpoint:
-          "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql",
-        graphql_endpoint_iam_region: "us-west-2",
+        graphql_endpoint: "http://localhost:4444/graphql",
       },
     },
   },

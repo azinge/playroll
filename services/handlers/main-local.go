@@ -23,12 +23,11 @@ func HandleLocalErrors(context string) {
 
 func localHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("called")
-	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
+	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PASS"),
 	)
 
 	db, err := gorm.Open("postgres", host)

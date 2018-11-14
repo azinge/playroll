@@ -18,6 +18,17 @@ type Model struct {
 	CreatedAt time.Time  `gql:"createdAt: String"`
 	UpdatedAt time.Time  `gql:"updatedAt: String"`
 	DeletedAt *time.Time `gql:"deletedAt: String"`
+
+	// Internal Database Reference
+	db *gorm.DB `gorm:"-"`
+}
+
+func (m *Model) DB() *gorm.DB {
+	return m.db
+}
+
+func (m *Model) SetDB(db *gorm.DB) {
+	m.db = db
 }
 
 type Type struct {

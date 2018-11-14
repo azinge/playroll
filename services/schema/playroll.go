@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/pagination"
 
 	"github.com/cazinge/playroll/services/models"

@@ -6,12 +6,14 @@ type Types struct {
 
 type Methods struct {
 	PlayrollMethods `gql:"GROUP"`
+
+	OmniSearch `gql:"omniSearch(query: String!): [MusicSource]"`
 }
 
-var LinkedTypes = gqltag.Types{
+var LinkedTypes = Types{
 	PlayrollTypes: LinkedPlayrollTypes,
 }
 
-var LinkedMethods = gqltag.Methods{
+var LinkedMethods = Methods{
 	PlayrollMethods: LinkedPlayrollMethods,
 }

@@ -23,7 +23,7 @@ type PlayrollMethods struct {
 func initPlayroll(db *gorm.DB) *models.Playroll {
 	playroll := &models.Playroll{}
 	playroll.SetEntity(playroll)
-	playroll.SetDB(db)
+	playroll.SetDB(db.Preload("Rolls"))
 	return playroll
 }
 
@@ -60,11 +60,9 @@ func formatPlayrolls(val interface{}, err error) (*[]models.PlayrollOutput, erro
 var getPlayroll = gqltag.Method{
 	Description: `[Get Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db)
 		type getPlayrollParams struct {
 			ID string
 		}
-
 		params := &getPlayrollParams{}
 		err := mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
@@ -72,6 +70,7 @@ var getPlayroll = gqltag.Method{
 			return nil, err
 		}
 
+		p := initPlayroll(db)
 		id := utils.StringIDToNumber(params.ID)
 		return formatPlayroll(p.Get(id))
 	},

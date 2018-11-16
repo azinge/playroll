@@ -7,7 +7,7 @@ type Playroll struct {
 	Name   string
 	UserID uint
 	User   User
-	Rolls  []Roll `gorm:"auto_preload"`
+	Rolls  []Roll
 }
 
 type PlayrollInput struct {
@@ -20,7 +20,7 @@ type PlayrollOutput struct {
 	Name   string `gql:"name: String"`
 	UserID uint   `gql:"userID: ID"`
 	User   User   `gql:"user: User"`
-	Rolls  []Roll `gql:"rolls: [Roll]" gorm:"auto_preload"`
+	Rolls  []Roll `gql:"rolls: [Roll]"`
 }
 
 func (pi *PlayrollInput) ToModel() (*Playroll, error) {

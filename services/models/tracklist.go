@@ -4,7 +4,7 @@ type Tracklist struct {
 	Model
 	Starred       bool
 	Primary       bool
-	CompiledRolls []CompiledRoll `gorm:"auto_preload"`
+	CompiledRolls []CompiledRoll
 }
 
 type TracklistInput struct {

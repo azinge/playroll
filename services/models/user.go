@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 type User struct {
 	Model
 	Name                string
@@ -14,7 +16,7 @@ type UserInput struct {
 type UserOutput struct {
 	Model               `gql:"MODEL"`
 	Name                string               `gql:"name: String"`
-	Playrolls           []Playroll           `gql:"playroll: Playroll"`
+	Playrolls           []Playroll           `gql:"playrolls: [Playroll]"`
 	ExternalCredentials []ExternalCredential `gql:"externalCredentials: [ExternalCredential]"`
 }
 
@@ -25,6 +27,7 @@ func (ui *UserInput) ToModel() (*User, error) {
 }
 
 func (u *User) ToOutput() (*UserOutput, error) {
+	fmt.Printf("%#v\n", u)
 	uo := &UserOutput{}
 	uo.Model = u.Model
 	uo.Name = u.Name

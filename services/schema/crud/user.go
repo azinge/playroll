@@ -80,7 +80,7 @@ var getUser = gqltag.Method{
 var listUsers = gqltag.Method{
 	Description: `[List Users Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		u := initUser(db)
+		u := initUser(db.Preload("ExternalCredentials").Preload("Playrolls"))
 		type listUsersParams struct {
 			Offset uint
 			Count  uint

@@ -23,7 +23,7 @@ type TracklistMethods struct {
 func initTracklist(db *gorm.DB) *models.Tracklist {
 	tracklist := &models.Tracklist{}
 	tracklist.SetEntity(tracklist)
-	tracklist.SetDB(db)
+	tracklist.SetDB(db.Preload("CompiledRolls"))
 	return tracklist
 }
 

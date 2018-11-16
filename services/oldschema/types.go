@@ -1,4 +1,4 @@
-package schema
+package oldschema
 
 import (
 	"database/sql/driver"

@@ -13,6 +13,16 @@ type RollLength struct {
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
 
+type RollLengthInput struct {
+	Type          string   `gql:"type: String" json:"type"`
+	Modifications []string `gql:"modifications: [String]" json:"modifications"`
+}
+
+type RollLengthOutput struct {
+	Type          string   `gql:"type: String" json:"type"`
+	Modifications []string `gql:"modifications: [String]" json:"modifications"`
+}
+
 func (rl RollLength) Value() (driver.Value, error) {
 	value, err := json.Marshal(rl)
 	if err != nil {

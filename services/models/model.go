@@ -60,7 +60,7 @@ func (m *Model) Get(id uint) (interface{}, error) {
 	entity := m.getNewEntity()
 	db := m.DB()
 	if err := db.First(entity, id).Error; err != nil {
-		fmt.Printf("error getting %s: %s", m.getEntityType(), err.Error())
+		fmt.Printf("error getting %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	return entity, nil
@@ -70,7 +70,7 @@ func (m *Model) List() (interface{}, error) {
 	entities := m.getNewEntitySlice()
 	db := m.DB()
 	if err := db.Find(entities).Error; err != nil {
-		fmt.Printf("error getting %s: %s", m.getEntityType(), err.Error())
+		fmt.Printf("error getting %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	fmt.Printf("%#v\n", entities)
@@ -80,7 +80,7 @@ func (m *Model) List() (interface{}, error) {
 func (m *Model) Create(entity Entity) (interface{}, error) {
 	db := m.DB()
 	if err := db.Create(entity).Error; err != nil {
-		fmt.Printf("error creating %s: %s", m.getEntityType(), err.Error())
+		fmt.Printf("error creating %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	return entity, nil
@@ -90,12 +90,12 @@ func (m *Model) Update(entity Entity) (interface{}, error) {
 	db := m.DB()
 	first := m.getNewEntity()
 	if err := db.Where("id = ?", entity.GetID()).First(first).Error; err != nil {
-		fmt.Printf("error retrieving %s from DB: %s", m.getEntityType(), err.Error())
+		fmt.Printf("error retrieving %s from DB: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	//TODO: Change to possibly only overwrite non-nil attributes?
 	if err := db.Save(entity).Error; err != nil {
-		fmt.Println("error updating playroll: " + err.Error())
+		fmt.Println("error updating %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	return entity, nil
@@ -105,7 +105,7 @@ func (m *Model) Delete(id uint) (interface{}, error) {
 	entity := m.getNewEntity()
 	db := m.DB()
 	if err := db.Where("id = ?", id).First(entity).Error; err != nil {
-		fmt.Println("Error deleting playroll: " + err.Error())
+		fmt.Println("error deleting %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
 	db.Delete(entity)

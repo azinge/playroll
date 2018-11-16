@@ -35,7 +35,6 @@ func formatRoll(val interface{}, err error) (*models.RollOutput, error) {
 	if !ok {
 		return nil, fmt.Errorf("error converting to Roll")
 	}
-	fmt.Printf("%#v\n", r)
 	return r.ToOutput()
 }
 
@@ -55,7 +54,6 @@ func formatRolls(val interface{}, err error) (*[]models.RollOutput, error) {
 		}
 		output = append(output, *ro)
 	}
-	fmt.Printf("%#v\n", output)
 	return &output, nil
 }
 

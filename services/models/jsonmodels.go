@@ -1,13 +1,25 @@
 package models
 
 import (
-	"database/sql/driver"
-	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/lib/pq"
+)
+
+type SourceType string
+
+const (
+	SongType   SourceType = "Song"
+	AlbumType  SourceType = "Album"
+	ArtistType SourceType = "Artist"
+)
+
+type ProviderType string
+
+const (
+	SpotifyType    ProviderType = "Spotify"
+	AppleMusicType ProviderType = "AppleMusic"
 )
 
 type Song struct {
@@ -35,45 +47,6 @@ type Album struct {
 
 func (a *Album) String() string {
 	return fmt.Sprintf("ALBUM<%s (%s)>", a.Name, a.MusicSource)
-}
-
-type SourceType string
-
-const (
-	SongType   SourceType = "Song"
-	AlbumType  SourceType = "Album"
-	ArtistType SourceType = "Artist"
-)
-
-type ProviderType string
-
-const (
-	SpotifyType    ProviderType = "Spotify"
-	AppleMusicType ProviderType = "AppleMusic"
-)
-
-type Token struct {
-	AccessToken  string    `gql:"accessToken: String" json:"accessToken"`
-	RefreshToken string    `gql:"refreshToken: String" json:"refreshToken"`
-	TokenType    string    `gql:"tokenType: String" json:"tokenType"`
-	Expiry       time.Time `gql:"expiry: String" json:"expiry"`
-}
-
-func (token Token) Value() (driver.Value, error) {
-	value, err := json.Marshal(token)
-	if err != nil {
-		fmt.Println("Error trying to Marshal Token: " + err.Error())
-		return nil, err
-	}
-	return string(value), nil
-}
-
-func (token *Token) Scan(value interface{}) error {
-	if err := json.Unmarshal(value.([]byte), &token); err != nil {
-		fmt.Println("Error trying to Unmarshal Token: " + err.Error())
-		return err
-	}
-	return nil
 }
 
 type PaginationInput struct {

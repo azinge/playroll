@@ -14,6 +14,16 @@ type RollFilter struct {
 	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
 }
 
+type RollFilterInput struct {
+	Type          string   `gql:"type: String" json:"type"`
+	Modifications []string `gql:"modifications: [String]" json:"modifications"`
+}
+
+type RollFilterOutput struct {
+	Type          string   `gql:"type: String" json:"type"`
+	Modifications []string `gql:"modifications: [String]" json:"modifications"`
+}
+
 func (rf RollFilter) Value() (driver.Value, error) {
 	value, err := json.Marshal(rf)
 	if err != nil {

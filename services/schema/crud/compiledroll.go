@@ -54,7 +54,6 @@ func formatCompiledRolls(val interface{}, err error) (*[]models.CompiledRollOutp
 		}
 		output = append(output, *cro)
 	}
-	fmt.Printf("%#v\n", output)
 	return &output, nil
 }
 
@@ -111,13 +110,11 @@ var createCompiledRoll = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("%#v\n", params)
 
 		compiledRoll, err := params.Input.ToModel()
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println("Hello1")
 		return formatCompiledRoll(cr.Create(compiledRoll))
 	},
 }

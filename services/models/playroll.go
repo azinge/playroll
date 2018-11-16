@@ -9,7 +9,16 @@ type Playroll struct {
 }
 
 type PlayrollInput struct {
-	Name string `gql:"name: String" mapstructure:"name"`
+	Name   string `gql:"name: String"`
+	UserID uint   `gql:"userID: ID"`
+}
+
+type PlayrollOutput struct {
+	Model  `gql:"MODEL"`
+	Name   string `gql:"name: String"`
+	UserID uint   `gql:"userID: ID"`
+	User   User   `gql:"user: User"`
+	Rolls  []Roll `gql:"rolls: [Roll]" gorm:"auto_preload"`
 }
 
 func (pi *PlayrollInput) CreatePlayrollFromInputFields() *Playroll {

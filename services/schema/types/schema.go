@@ -1,5 +1,9 @@
 package types
 
+import (
+	"github.com/cazinge/playroll/services/schema/types/jsontypes"
+)
+
 type Types struct {
 	PlayrollTypes           `gql:"GROUP"`
 	RollTypes               `gql:"GROUP"`
@@ -7,7 +11,7 @@ type Types struct {
 	CompiledRollTypes       `gql:"GROUP"`
 	ExternalCredentialTypes `gql:"GROUP"`
 	UserTypes               `gql:"GROUP"`
-	JsonTypes               `gql:"GROUP"`
+	jsontypes.JSONTypes     `gql:"GROUP"`
 }
 
 var LinkedTypes = Types{
@@ -17,5 +21,5 @@ var LinkedTypes = Types{
 	CompiledRollTypes:       LinkedCompiledRollTypes,
 	ExternalCredentialTypes: LinkedExternalCredentialTypes,
 	UserTypes:               LinkedUserTypes,
-	JsonTypes:               LinkedJsonTypes,
+	JSONTypes:               jsontypes.LinkedJSONTypes,
 }

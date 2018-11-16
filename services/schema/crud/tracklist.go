@@ -27,6 +27,36 @@ func initTracklist(db *gorm.DB) *models.Tracklist {
 	return tracklist
 }
 
+func formatTracklist(val interface{}, err error) (*models.TracklistOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	t, ok := val.(*models.Tracklist)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Tracklist")
+	}
+	return t.ToOutput()
+}
+
+func formatTracklists(val interface{}, err error) (*[]models.TracklistOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	ts, ok := val.(*[]models.Tracklist)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Tracklist Slice")
+	}
+	output := []models.TracklistOutput{}
+	for _, t := range *ts {
+		to, err := t.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *to)
+	}
+	return &output, nil
+}
+
 var getTracklist = gqltag.Method{
 	Description: `[Get Tracklist Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -43,7 +73,7 @@ var getTracklist = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return t.Get(id)
+		return formatTracklist(t.Get(id))
 	},
 }
 
@@ -63,7 +93,7 @@ var listTracklists = gqltag.Method{
 			return nil, err
 		}
 
-		return t.List()
+		return formatTracklists(t.List())
 	},
 }
 
@@ -82,8 +112,11 @@ var createTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		tracklist := params.Input.CreateTracklistFromInputFields()
-		return t.Create(tracklist)
+		tracklist, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+		return formatTracklist(t.Create(tracklist))
 	},
 }
 
@@ -103,9 +136,12 @@ var updateTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		tracklist := params.Input.CreateTracklistFromInputFields()
+		tracklist, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
 		tracklist.ID = utils.StringIDToNumber(params.ID)
-		return t.Update(tracklist)
+		return formatTracklist(t.Update(tracklist))
 	},
 }
 
@@ -125,7 +161,7 @@ var deleteTracklist = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return t.Delete(id)
+		return formatTracklist(t.Delete(id))
 	},
 }
 

@@ -27,6 +27,36 @@ func initUser(db *gorm.DB) *models.User {
 	return user
 }
 
+func formatUser(val interface{}, err error) (*models.UserOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	u, ok := val.(*models.User)
+	if !ok {
+		return nil, fmt.Errorf("error converting to User")
+	}
+	return u.ToOutput()
+}
+
+func formatUsers(val interface{}, err error) (*[]models.UserOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	us, ok := val.(*[]models.User)
+	if !ok {
+		return nil, fmt.Errorf("error converting to User Slice")
+	}
+	output := []models.UserOutput{}
+	for _, u := range *us {
+		uo, err := u.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *uo)
+	}
+	return &output, nil
+}
+
 var getUser = gqltag.Method{
 	Description: `[Get User Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -43,7 +73,7 @@ var getUser = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return u.Get(id)
+		return formatUser(u.Get(id))
 	},
 }
 
@@ -63,7 +93,7 @@ var listUsers = gqltag.Method{
 			return nil, err
 		}
 
-		return u.List()
+		return formatUsers(u.List())
 	},
 }
 
@@ -82,8 +112,11 @@ var createUser = gqltag.Method{
 			return nil, err
 		}
 
-		user := params.Input.CreateUserFromInputFields()
-		return u.Create(user)
+		user, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+		return formatUser(u.Create(user))
 	},
 }
 
@@ -103,9 +136,12 @@ var updateUser = gqltag.Method{
 			return nil, err
 		}
 
-		user := params.Input.CreateUserFromInputFields()
+		user, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
 		user.ID = utils.StringIDToNumber(params.ID)
-		return u.Update(user)
+		return formatUser(u.Update(user))
 	},
 }
 
@@ -125,7 +161,7 @@ var deleteUser = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return u.Delete(id)
+		return formatUser(u.Delete(id))
 	},
 }
 

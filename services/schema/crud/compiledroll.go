@@ -73,7 +73,6 @@ var getCompiledRoll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-
 		return formatCompiledRoll(cr.Get(id))
 	},
 }

@@ -27,6 +27,36 @@ func initPlayroll(db *gorm.DB) *models.Playroll {
 	return playroll
 }
 
+func formatPlayroll(val interface{}, err error) (*models.PlayrollOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	p, ok := val.(*models.Playroll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Playroll")
+	}
+	return p.ToOutput()
+}
+
+func formatPlayrolls(val interface{}, err error) (*[]models.PlayrollOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	ps, ok := val.(*[]models.Playroll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Playroll Slice")
+	}
+	output := []models.PlayrollOutput{}
+	for _, p := range *ps {
+		po, err := p.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *po)
+	}
+	return &output, nil
+}
+
 var getPlayroll = gqltag.Method{
 	Description: `[Get Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -43,7 +73,7 @@ var getPlayroll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return p.Get(id)
+		return formatPlayroll(p.Get(id))
 	},
 }
 
@@ -63,7 +93,7 @@ var listPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		return p.List()
+		return formatPlayrolls(p.List())
 	},
 }
 
@@ -83,8 +113,11 @@ var createPlayroll = gqltag.Method{
 			return nil, err
 		}
 
-		playroll := params.Input.CreatePlayrollFromInputFields()
-		return p.Create(playroll)
+		playroll, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+		return formatPlayroll(p.Create(playroll))
 	},
 }
 
@@ -104,9 +137,12 @@ var updatePlayroll = gqltag.Method{
 			return nil, err
 		}
 
-		playroll := params.Input.CreatePlayrollFromInputFields()
+		playroll, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
 		playroll.ID = utils.StringIDToNumber(params.ID)
-		return p.Update(playroll)
+		return formatPlayroll(p.Update(playroll))
 	},
 }
 
@@ -126,7 +162,7 @@ var deletePlayroll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return p.Delete(id)
+		return formatPlayroll(p.Delete(id))
 	},
 }
 

@@ -27,6 +27,36 @@ func initExternalCredential(db *gorm.DB) *models.ExternalCredential {
 	return externalCredential
 }
 
+func formatExternalCredential(val interface{}, err error) (*models.ExternalCredentialOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	ec, ok := val.(*models.ExternalCredential)
+	if !ok {
+		return nil, fmt.Errorf("error converting to ExternalCredential")
+	}
+	return ec.ToOutput()
+}
+
+func formatExternalCredentials(val interface{}, err error) (*[]models.ExternalCredentialOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	ecs, ok := val.(*[]models.ExternalCredential)
+	if !ok {
+		return nil, fmt.Errorf("error converting to ExternalCredential Slice")
+	}
+	output := []models.ExternalCredentialOutput{}
+	for _, ec := range *ecs {
+		eco, err := ec.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *eco)
+	}
+	return &output, nil
+}
+
 var getExternalCredential = gqltag.Method{
 	Description: `[Get ExternalCredential Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -43,7 +73,7 @@ var getExternalCredential = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return ec.Get(id)
+		return formatExternalCredential(ec.Get(id))
 	},
 }
 
@@ -63,7 +93,7 @@ var listExternalCredentials = gqltag.Method{
 			return nil, err
 		}
 
-		return ec.List()
+		return formatExternalCredentials(ec.List())
 	},
 }
 
@@ -82,8 +112,11 @@ var createExternalCredential = gqltag.Method{
 			return nil, err
 		}
 
-		externalCredential := params.Input.CreateExternalCredentialFromInputFields()
-		return ec.Create(externalCredential)
+		externalCredential, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+		return formatExternalCredential(ec.Create(externalCredential))
 	},
 }
 
@@ -103,9 +136,12 @@ var updateExternalCredential = gqltag.Method{
 			return nil, err
 		}
 
-		externalCredential := params.Input.CreateExternalCredentialFromInputFields()
+		externalCredential, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
 		externalCredential.ID = utils.StringIDToNumber(params.ID)
-		return ec.Update(externalCredential)
+		return formatExternalCredential(ec.Update(externalCredential))
 	},
 }
 
@@ -125,7 +161,7 @@ var deleteExternalCredential = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return ec.Delete(id)
+		return formatExternalCredential(ec.Delete(id))
 	},
 }
 

@@ -6,11 +6,11 @@ import (
 )
 
 type Roll struct {
-	Model      `gql:"MODEL"`
-	Data       jsonmodels.RollData `gql:"data: RollData"`
-	PlayrollID uint                `gql:"playrollID: ID"`
-	Order      uint                `gql:"order: Int"`
-	Playroll   Playroll            `gql:"playroll: Playroll"`
+	Model
+	Data       jsonmodels.RollData
+	PlayrollID uint
+	Order      uint
+	Playroll   Playroll
 }
 
 type RollInput struct {

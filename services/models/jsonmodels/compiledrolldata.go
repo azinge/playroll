@@ -7,7 +7,7 @@ import (
 )
 
 type CompiledRollData struct {
-	Tracks []byte `gql:"tracks: [MusicSource]" json:"tracks" gorm:"type: jsonb"`
+	Tracks []byte `json:"tracks" gorm:"type: jsonb"`
 }
 
 type CompiledRollDataInput struct {

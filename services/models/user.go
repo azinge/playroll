@@ -1,10 +1,10 @@
 package models
 
 type User struct {
-	Model               `gql:"MODEL"`
-	Name                string               `gql:"name: String"`
-	Playrolls           []Playroll           `gql:"playroll: Playroll"`
-	ExternalCredentials []ExternalCredential `gql:"externalCredentials: [ExternalCredential]"`
+	Model
+	Name                string
+	Playrolls           []Playroll
+	ExternalCredentials []ExternalCredential
 }
 
 type UserInput struct {

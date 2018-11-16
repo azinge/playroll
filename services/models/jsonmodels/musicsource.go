@@ -7,10 +7,10 @@ import (
 )
 
 type MusicSource struct {
-	Type       string `gql:"type: String" json:"type"`
-	Name       string `gql:"name: String" json:"name"`
-	Provider   string `gql:"provider: String" json:"provider"`
-	ProviderID string `gql:"providerID: String" json:"providerID"`
+	Type       string `json:"type"`
+	Name       string `json:"name"`
+	Provider   string `json:"provider"`
+	ProviderID string `json:"providerID"`
 }
 
 type MusicSourceInput struct {

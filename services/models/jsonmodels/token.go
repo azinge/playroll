@@ -8,10 +8,10 @@ import (
 )
 
 type Token struct {
-	AccessToken  string    `gql:"accessToken: String" json:"accessToken"`
-	RefreshToken string    `gql:"refreshToken: String" json:"refreshToken"`
-	TokenType    string    `gql:"tokenType: String" json:"tokenType"`
-	Expiry       time.Time `gql:"expiry: String" json:"expiry"`
+	AccessToken  string    `json:"accessToken"`
+	RefreshToken string    `json:"refreshToken"`
+	TokenType    string    `json:"tokenType"`
+	Expiry       time.Time `json:"expiry"`
 }
 
 type TokenInput struct {

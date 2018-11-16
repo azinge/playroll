@@ -6,11 +6,11 @@ import (
 )
 
 type ExternalCredential struct {
-	Model    `gql:"MODEL"`
-	Provider string           `gql:"provider: String"`
-	User     User             `gql:"user: User"`
-	UserID   uint             `gql:"userID: ID"`
-	Token    jsonmodels.Token `gql:"token: Token" gorm:"type: jsonb;not null"`
+	Model
+	Provider string
+	User     User
+	UserID   uint
+	Token    jsonmodels.Token `gorm:"type: jsonb"`
 }
 
 type ExternalCredentialInput struct {
@@ -24,7 +24,7 @@ type ExternalCredentialOutput struct {
 	Provider string                 `gql:"provider: String"`
 	User     User                   `gql:"user: User"`
 	UserID   uint                   `gql:"userID: ID"`
-	Token    jsonmodels.TokenOutput `gql:"token: Token" gorm:"type: jsonb;not null"`
+	Token    jsonmodels.TokenOutput `gql:"token: Token"`
 }
 
 func (eci *ExternalCredentialInput) ToModel() (*ExternalCredential, error) {

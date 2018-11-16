@@ -1,10 +1,10 @@
 package models
 
 type Tracklist struct {
-	Model         `gql:"MODEL"`
-	Starred       bool           `gql:"starred: Boolean"`
-	Primary       bool           `gql:"primary: Boolean"`
-	CompiledRolls []CompiledRoll `gql:"compiledRolls: [CompiledRoll]"`
+	Model
+	Starred       bool
+	Primary       bool
+	CompiledRolls []CompiledRoll `gorm:"auto_preload"`
 }
 
 type TracklistInput struct {

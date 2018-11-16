@@ -6,11 +6,11 @@ import (
 )
 
 type CompiledRoll struct {
-	Model       `gql:"MODEL"`
-	Order       string                      `gql:"order: String"`
-	Data        jsonmodels.CompiledRollData `gql:"data: CompiledRollData"`
-	TracklistID uint                        `gql:"tracklistID: ID"`
-	Tracklist   Tracklist                   `gql:"tracklist: Tracklist"`
+	Model
+	Order       string
+	Data        jsonmodels.CompiledRollData
+	TracklistID uint
+	Tracklist   Tracklist
 }
 
 type CompiledRollInput struct {

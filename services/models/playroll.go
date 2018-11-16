@@ -3,11 +3,11 @@ package models
 import "github.com/cazinge/playroll/services/utils"
 
 type Playroll struct {
-	Model  `gql:"MODEL"`
-	Name   string `gql:"name: String"`
-	UserID uint   `gql:"userID: ID"`
-	User   User   `gql:"user: User"`
-	Rolls  []Roll `gql:"rolls: [Roll]" gorm:"auto_preload"`
+	Model
+	Name   string
+	UserID uint
+	User   User
+	Rolls  []Roll `gorm:"auto_preload"`
 }
 
 type PlayrollInput struct {

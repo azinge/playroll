@@ -9,8 +9,8 @@ import (
 )
 
 type RollLength struct {
-	Type          string         `gql:"type: String" json:"type"`
-	Modifications pq.StringArray `gql:"modifications: [String]" json:"modifications"`
+	Type          string         `json:"type"`
+	Modifications pq.StringArray `json:"modifications"`
 }
 
 type RollLengthInput struct {

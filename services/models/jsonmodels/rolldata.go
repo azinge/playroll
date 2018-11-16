@@ -7,9 +7,9 @@ import (
 )
 
 type RollData struct {
-	Sources []byte `gql:"sources: [MusicSource]" json:"sources" gorm:"type: jsonb"`
-	Filter  []byte `gql:"filter: RollFilter" json:"filter" gorm:"type: jsonb"`
-	Length  []byte `gql:"length: RollLength" json:"length" gorm:"type: jsonb"`
+	Sources []byte `json:"sources" gorm:"type: jsonb"`
+	Filter  []byte `json:"filter" gorm:"type: jsonb"`
+	Length  []byte `json:"length" gorm:"type: jsonb"`
 }
 
 type RollDataInput struct {

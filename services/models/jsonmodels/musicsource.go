@@ -13,6 +13,38 @@ type MusicSource struct {
 	ProviderID string `gql:"providerID: String" json:"providerID"`
 }
 
+type MusicSourceInput struct {
+	Type       string `gql:"type: String" json:"type"`
+	Name       string `gql:"name: String" json:"name"`
+	Provider   string `gql:"provider: String" json:"provider"`
+	ProviderID string `gql:"providerID: String" json:"providerID"`
+}
+
+type MusicSourceOutput struct {
+	Type       string `gql:"type: String" json:"type"`
+	Name       string `gql:"name: String" json:"name"`
+	Provider   string `gql:"provider: String" json:"provider"`
+	ProviderID string `gql:"providerID: String" json:"providerID"`
+}
+
+func (msi *MusicSourceInput) ToModel() (*MusicSource, error) {
+	ms := &MusicSource{}
+	ms.Type = msi.Type
+	ms.Name = msi.Name
+	ms.Provider = msi.Provider
+	ms.ProviderID = msi.ProviderID
+	return ms, nil
+}
+
+func (ms *MusicSource) ToOutput() (*MusicSourceOutput, error) {
+	mso := &MusicSourceOutput{}
+	mso.Type = ms.Type
+	mso.Name = ms.Name
+	mso.Provider = ms.Provider
+	mso.ProviderID = ms.ProviderID
+	return mso, nil
+}
+
 func (ms MusicSource) Value() (driver.Value, error) {
 	value, err := json.Marshal(ms)
 	if err != nil {

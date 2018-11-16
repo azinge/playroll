@@ -12,7 +12,7 @@ type PlayrollTypes struct {
 
 var playrollType = gqltag.Type{
 	Description: `[Playroll Type Description Goes Here]`,
-	Fields:      &models.Playroll{},
+	Fields:      &models.PlayrollOutput{},
 }
 
 var playrollInputType = gqltag.Type{

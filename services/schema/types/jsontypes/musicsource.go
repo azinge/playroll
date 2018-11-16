@@ -12,10 +12,15 @@ type MusicSourceTypes struct {
 
 var musicSourceType = gqltag.Type{
 	Description: `[MusicSource Type Description Goes Here]`,
-	Fields:      &jsonmodels.MusicSource{},
+	Fields:      &jsonmodels.MusicSourceOutput{},
+}
+
+var musicSourceInputType = gqltag.Type{
+	Description: `[MusicSourceInput Type Description Goes Here]`,
+	Fields:      &jsonmodels.MusicSourceInput{},
 }
 
 var LinkedMusicSourceTypes = MusicSourceTypes{
 	MusicSource:      gqltag.LinkOutput(musicSourceType),
-	MusicSourceInput: gqltag.LinkInput(musicSourceType),
+	MusicSourceInput: gqltag.LinkInput(musicSourceInputType),
 }

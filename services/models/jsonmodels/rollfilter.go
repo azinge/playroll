@@ -24,6 +24,20 @@ type RollFilterOutput struct {
 	Modifications []string `gql:"modifications: [String]" json:"modifications"`
 }
 
+func (rfi *RollFilterInput) ToModel() (*RollFilter, error) {
+	rf := &RollFilter{}
+	rf.Type = rfi.Type
+	rf.Modifications = rfi.Modifications
+	return rf, nil
+}
+
+func (rf *RollFilter) ToOutput() (*RollFilterOutput, error) {
+	rfo := &RollFilterOutput{}
+	rfo.Type = rf.Type
+	rfo.Modifications = rf.Modifications
+	return rfo, nil
+}
+
 func (rf RollFilter) Value() (driver.Value, error) {
 	value, err := json.Marshal(rf)
 	if err != nil {

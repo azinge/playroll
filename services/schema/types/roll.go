@@ -12,7 +12,7 @@ type RollTypes struct {
 
 var rollType = gqltag.Type{
 	Description: `[Roll Type Description Goes Here]`,
-	Fields:      &models.Roll{},
+	Fields:      &models.RollOutput{},
 }
 
 var rollInputType = gqltag.Type{

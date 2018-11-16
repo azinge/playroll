@@ -12,7 +12,7 @@ type TracklistTypes struct {
 
 var tracklistType = gqltag.Type{
 	Description: `[Tracklist Type Description Goes Here]`,
-	Fields:      &models.Tracklist{},
+	Fields:      &models.TracklistOutput{},
 }
 
 var tracklistInputType = gqltag.Type{

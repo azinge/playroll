@@ -12,7 +12,7 @@ type UserTypes struct {
 
 var userType = gqltag.Type{
 	Description: `[User Type Description Goes Here]`,
-	Fields:      &models.User{},
+	Fields:      &models.UserOutput{},
 }
 
 var userInputType = gqltag.Type{

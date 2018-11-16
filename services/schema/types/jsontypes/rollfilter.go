@@ -12,10 +12,15 @@ type RollFilterTypes struct {
 
 var rollFilterType = gqltag.Type{
 	Description: `[RollFilter Description Goes Here]`,
-	Fields:      &jsonmodels.RollFilter{},
+	Fields:      &jsonmodels.RollFilterOutput{},
+}
+
+var rollFilterInputType = gqltag.Type{
+	Description: `[RollFilterInput Description Goes Here]`,
+	Fields:      &jsonmodels.RollFilterInput{},
 }
 
 var LinkedRollFilterTypes = RollFilterTypes{
 	RollFilter:      gqltag.LinkOutput(rollFilterType),
-	RollFilterInput: gqltag.LinkInput(rollFilterType),
+	RollFilterInput: gqltag.LinkInput(rollFilterInputType),
 }

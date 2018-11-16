@@ -12,10 +12,15 @@ type TokenTypes struct {
 
 var tokenType = gqltag.Type{
 	Description: `[Token Description Goes Here]`,
-	Fields:      &jsonmodels.Token{},
+	Fields:      &jsonmodels.TokenOutput{},
+}
+
+var tokenInputType = gqltag.Type{
+	Description: `[TokenInput Description Goes Here]`,
+	Fields:      &jsonmodels.TokenInput{},
 }
 
 var LinkedTokenTypes = TokenTypes{
 	Token:      gqltag.LinkOutput(tokenType),
-	TokenInput: gqltag.LinkInput(tokenType),
+	TokenInput: gqltag.LinkInput(tokenInputType),
 }

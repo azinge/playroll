@@ -12,7 +12,7 @@ type CompiledRollTypes struct {
 
 var compiledRollType = gqltag.Type{
 	Description: `[CompiledRoll Type Description Goes Here]`,
-	Fields:      &models.CompiledRoll{},
+	Fields:      &models.CompiledRollOutput{},
 }
 
 var compiledRollInputType = gqltag.Type{

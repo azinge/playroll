@@ -12,7 +12,7 @@ type ExternalCredentialTypes struct {
 
 var externalCredentialType = gqltag.Type{
 	Description: `[ExternalCredential Type Description Goes Here]`,
-	Fields:      &models.ExternalCredential{},
+	Fields:      &models.ExternalCredentialOutput{},
 }
 
 var externalCredentialInputType = gqltag.Type{

@@ -23,6 +23,20 @@ type RollLengthOutput struct {
 	Modifications []string `gql:"modifications: [String]" json:"modifications"`
 }
 
+func (rli *RollLengthInput) ToModel() (*RollLength, error) {
+	rl := &RollLength{}
+	rl.Type = rli.Type
+	rl.Modifications = rli.Modifications
+	return rl, nil
+}
+
+func (rl *RollLength) ToOutput() (*RollLengthOutput, error) {
+	rlo := &RollLengthOutput{}
+	rlo.Type = rl.Type
+	rlo.Modifications = rl.Modifications
+	return rlo, nil
+}
+
 func (rl RollLength) Value() (driver.Value, error) {
 	value, err := json.Marshal(rl)
 	if err != nil {

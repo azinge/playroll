@@ -93,7 +93,7 @@ func (m *Model) Update(entity Entity) (interface{}, error) {
 		fmt.Printf("error retrieving %s from DB: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
-	//TODO: Change to possibly only overwrite non-nil attributes?
+	// TODO: Change to possibly only overwrite non-nil attributes?
 	if err := db.Save(entity).Error; err != nil {
 		fmt.Println("error updating %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err

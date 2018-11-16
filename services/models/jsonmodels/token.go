@@ -28,6 +28,24 @@ type TokenOutput struct {
 	Expiry       time.Time `gql:"expiry: String" json:"expiry"`
 }
 
+func (ti *TokenInput) ToModel() (*Token, error) {
+	t := &Token{}
+	t.AccessToken = ti.AccessToken
+	t.RefreshToken = ti.RefreshToken
+	t.TokenType = ti.TokenType
+	t.Expiry = ti.Expiry
+	return t, nil
+}
+
+func (t *Token) ToOutput() (*TokenOutput, error) {
+	to := &TokenOutput{}
+	to.AccessToken = t.AccessToken
+	to.RefreshToken = t.RefreshToken
+	to.TokenType = t.TokenType
+	to.Expiry = t.Expiry
+	return to, nil
+}
+
 func (token Token) Value() (driver.Value, error) {
 	value, err := json.Marshal(token)
 	if err != nil {

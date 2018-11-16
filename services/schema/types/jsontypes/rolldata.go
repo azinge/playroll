@@ -12,7 +12,7 @@ type RollDataTypes struct {
 
 var rollDataType = gqltag.Type{
 	Description: `[RollData Description Goes Here]`,
-	Fields:      &jsonmodels.RollData{},
+	Fields:      &jsonmodels.RollDataOutput{},
 }
 
 var rollDataInputType = gqltag.Type{

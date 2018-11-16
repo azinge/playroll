@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,8 +20,10 @@ type Model struct {
 	UpdatedAt time.Time  `gql:"updatedAt: String"`
 	DeletedAt *time.Time `gql:"deletedAt: String"`
 
-	// Internal Database Reference
-	db *gorm.DB `gorm:"-"`
+	// For Internal Reference and Method Functions.
+	// In order to get Model's functions to work, these values must be populated
+	db          *gorm.DB    `gorm:"-"`
+	parentModel interface{} `gorm:"-"`
 }
 
 func (m *Model) DB() *gorm.DB {
@@ -52,6 +55,11 @@ type Query struct {
 type Mutation struct {
 	Request func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
 	Scope   string
+}
+
+func StringIDToNumber(id string) uint {
+	num, _ := strconv.ParseUint(id, 10, 64)
+	return uint(num)
 }
 
 func generateResolveFromMethod(method *structs.Field, db *gorm.DB) func(params graphql.ResolveParams) (interface{}, error) {

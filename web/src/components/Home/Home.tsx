@@ -8,7 +8,7 @@ import awsconfig from "../../config/aws.js";
 Amplify.configure(awsconfig.dev.amplify);
 
 function graphQLFetcher(graphQLParams) {
-  return API.graphql(graphQLParams) as Promise<any>;
+  return (API.graphql(graphQLParams) as Promise<any>).catch(err => err);
 }
 
 class Home extends React.Component {

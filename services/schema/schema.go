@@ -1,19 +1,21 @@
 package schema
 
-type Types struct {
-	PlayrollTypes `gql:"GROUP"`
-}
+import (
+	"github.com/cazinge/playroll/services/schema/crud"
+	"github.com/cazinge/playroll/services/schema/methods"
+	"github.com/cazinge/playroll/services/schema/types"
+)
+
+type Types = types.Types
+
+var LinkedTypes = types.LinkedTypes
 
 type Methods struct {
-	PlayrollMethods `gql:"GROUP"`
-
-	OmniSearch `gql:"omniSearch(query: String!): [MusicSource]"`
-}
-
-var LinkedTypes = Types{
-	PlayrollTypes: LinkedPlayrollTypes,
+	crud.CRUDMethods       `gql:"GROUP"`
+	methods.GeneralMethods `gql:"GROUP"`
 }
 
 var LinkedMethods = Methods{
-	PlayrollMethods: LinkedPlayrollMethods,
+	CRUDMethods:    crud.LinkedCRUDMethods,
+	GeneralMethods: methods.LinkedGeneralMethods,
 }

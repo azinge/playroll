@@ -8,8 +8,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/cazinge/playroll/services/gqltag"
+	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
-	"github.com/cazinge/playroll/services/utils"
 
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -23,7 +24,8 @@ func HandleLocalErrors(context string) {
 
 func localHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("called")
-	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v sslmode=disable",
+	host := fmt.Sprintf(
+		"host=%v port=%v user=%v dbname=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
@@ -39,39 +41,45 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	db.AutoMigrate(
-		schema.PlayrollEntity.Model,
-		schema.RollEntity.Model,
-		schema.MusicSourceEntity.Model,
-		schema.TracklistEntity.Model,
-		schema.RollOutputEntity.Model,
-		schema.UserEntity.Model,
-		schema.ExternalCredentialsEntity.Model,
+		models.Playroll{},
+		models.Roll{},
+		models.User{},
+		models.Tracklist{},
+		models.CompiledRoll{},
+		models.ExternalCredential{},
 	)
 
-	schema, err := utils.GenerateGraphQLSchema(
-		&[]*utils.Entity{
-			schema.PlayrollEntity,
-			schema.RollEntity,
-			schema.MusicSourceEntity,
-			schema.TracklistEntity,
-			schema.RollOutputEntity,
-			schema.UserEntity,
-			schema.ExternalCredentialsEntity,
-		},
-		&[]*utils.Type{
-			schema.RollInputType,
-			schema.RollFilterType,
-			schema.RollFilterInputType,
-			schema.RollLengthType,
-			schema.RollLengthInputType,
-			schema.MusicSourceInputType,
-			schema.RollOutputInputType,
-			schema.SearchInputType,
-			schema.PaginationInputType,
-			schema.TokenType,
-		},
+	// schema, err := utils.GenerateGraphQLSchema(
+	// 	&[]*utils.Entity{
+	// 		schema.PlayrollEntity,
+	// 		schema.RollEntity,
+	// 		schema.MusicSourceEntity,
+	// 		schema.TracklistEntity,
+	// 		schema.RollOutputEntity,
+	// 		schema.UserEntity,
+	// 		schema.ExternalCredentialsEntity,
+	// 	},
+	// 	&[]*utils.Type{
+	// 		schema.RollInputType,
+	// 		schema.RollFilterType,
+	// 		schema.RollFilterInputType,
+	// 		schema.RollLengthType,
+	// 		schema.RollLengthInputType,
+	// 		schema.MusicSourceInputType,
+	// 		schema.RollOutputInputType,
+	// 		schema.SearchInputType,
+	// 		schema.PaginationInputType,
+	// 		schema.TokenType,
+	// 	},
+	// 	db,
+	// )
+
+	schema, err := gqltag.GenerateGraphQLSchema(
+		schema.LinkedTypes,
+		schema.LinkedMethods,
 		db,
 	)
+
 	if err != nil {
 		HandleLocalErrors("error generating schema: " + err.Error())
 	}

@@ -48,6 +48,7 @@ func addFieldToTypeMap(typeName string, isInput bool, field *structs.Field, type
 func initializeTypeMapFromStruct(struc interface{}, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) {
 	types := structs.New(struc)
 	typelist := types.Fields()
+
 	for _, t := range typelist {
 		if t.Tag("gql") == "GROUP" {
 			initializeTypeMapFromStruct(t.Value(), typeMap, inputTypeMap)
@@ -125,7 +126,7 @@ func populateMethodsFromStruct(struc interface{}, db *gorm.DB, rootQuery, rootMu
 }
 
 //TODO: Support internal Methods/Resolvers
-func GenerateGraphQLSchemaAlt(types interface{}, methods interface{}, db *gorm.DB) (graphql.Schema, error) {
+func GenerateGraphQLSchema(types interface{}, methods interface{}, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
 
@@ -165,7 +166,7 @@ func parseGraphQLInputField(t string, typeMap *map[string]*graphql.Object, input
 	m := getParams(fieldRegexp, t)
 
 	field := &graphql.InputObjectFieldConfig{}
-	field.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
+	field.Type, _ = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
 	return m["Name"], field
 }
 
@@ -174,42 +175,54 @@ func parseGraphQLField(t string, typeMap *map[string]*graphql.Object, inputTypeM
 	m := getParams(fieldRegexp, t)
 
 	field := &graphql.Field{}
-	field.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
+	field.Type, _ = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
 	if m["Args"] != "" {
 		field.Args = parseGraphQLArguments(m["Args"], typeMap, inputTypeMap)
 	}
 	return m["Name"], field
 }
 
-func parseGraphQLType(s string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) graphql.Type {
+func parseGraphQLType(s string, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) (graphql.Type, error) {
 	nonNullRegexp := regexp.MustCompile(`^(?P<Match>.*)!$`)
 	listRegexp := regexp.MustCompile(`^\[(?P<Match>[^\]]+)\]$`)
 	if (*typeMap)[s] != nil {
-		return (*typeMap)[s]
+		return (*typeMap)[s], nil
 	}
 	if (*inputTypeMap)[s] != nil {
-		return (*inputTypeMap)[s]
+		return (*inputTypeMap)[s], nil
 	}
 	if m := getParams(nonNullRegexp, s); len(m) != 0 {
-		return graphql.NewNonNull(parseGraphQLType(m["Match"], typeMap, inputTypeMap))
+		t, err := parseGraphQLType(m["Match"], typeMap, inputTypeMap)
+		if err != nil {
+			return nil, err
+		}
+		return graphql.NewNonNull(t), nil
 	}
 	if m := getParams(listRegexp, s); len(m) != 0 {
-		return graphql.NewList(parseGraphQLType(m["Match"], typeMap, inputTypeMap))
+		t, err := parseGraphQLType(m["Match"], typeMap, inputTypeMap)
+		if err != nil {
+			return nil, err
+		}
+		return graphql.NewList(t), nil
 	}
 	switch s {
 	case "Int":
-		return graphql.Int
+		return graphql.Int, nil
 	case "Float":
-		return graphql.Float
+		return graphql.Float, nil
 	case "String":
-		return graphql.String
+		return graphql.String, nil
 	case "Boolean":
-		return graphql.Boolean
+		return graphql.Boolean, nil
 	case "ID":
-		return graphql.ID
+		return graphql.ID, nil
 	default:
-		// TODO: throw error
-		return graphql.NewObject(graphql.ObjectConfig{})
+		err := fmt.Errorf("Could not find type: %s", s)
+		// TODO: Investigate why multiple errors are getting created with ""
+		if s != "" {
+			fmt.Println(err)
+		}
+		return nil, err
 	}
 }
 
@@ -219,7 +232,7 @@ func parseGraphQLArguments(s string, typeMap *map[string]*graphql.Object, inputT
 	for _, argParams := range strings.Split(s, ",") {
 		m := getParams(argumentRegexp, argParams)
 		arg := &graphql.ArgumentConfig{}
-		arg.Type = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
+		arg.Type, _ = parseGraphQLType(m["Type"], typeMap, inputTypeMap)
 		if m["Default"] != "" {
 			arg.DefaultValue = m["Default"]
 		}

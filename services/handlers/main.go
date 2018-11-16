@@ -8,7 +8,6 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/cazinge/playroll/services/schema"
 	"github.com/cazinge/playroll/services/utils"
 
 	"github.com/graphql-go/graphql"
@@ -40,36 +39,36 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	defer db.Close()
 
 	db.AutoMigrate(
-		schema.PlayrollEntity.Model,
-		schema.RollEntity.Model,
-		schema.MusicSourceEntity.Model,
-		schema.TracklistEntity.Model,
-		schema.RollOutputEntity.Model,
-		schema.UserEntity.Model,
-		schema.ExternalCredentialsEntity.Model,
+	// schema.PlayrollEntity.Model,
+	// schema.RollEntity.Model,
+	// schema.MusicSourceEntity.Model,
+	// schema.TracklistEntity.Model,
+	// schema.RollOutputEntity.Model,
+	// schema.UserEntity.Model,
+	// schema.ExternalCredentialsEntity.Model,
 	)
 
 	schema, err := utils.GenerateGraphQLSchema(
 		&[]*utils.Entity{
-			schema.PlayrollEntity,
-			schema.RollEntity,
-			schema.MusicSourceEntity,
-			schema.TracklistEntity,
-			schema.RollOutputEntity,
-			schema.UserEntity,
-			schema.ExternalCredentialsEntity,
+			// schema.PlayrollEntity,
+			// schema.RollEntity,
+			// schema.MusicSourceEntity,
+			// schema.TracklistEntity,
+			// schema.RollOutputEntity,
+			// schema.UserEntity,
+			// schema.ExternalCredentialsEntity,
 		},
 		&[]*utils.Type{
-			schema.RollInputType,
-			schema.RollFilterType,
-			schema.RollFilterInputType,
-			schema.RollLengthType,
-			schema.RollLengthInputType,
-			schema.MusicSourceInputType,
-			schema.RollOutputInputType,
-			schema.SearchInputType,
-			schema.PaginationInputType,
-			schema.TokenType,
+			// schema.RollInputType,
+			// schema.RollFilterType,
+			// schema.RollFilterInputType,
+			// schema.RollLengthType,
+			// schema.RollLengthInputType,
+			// schema.MusicSourceInputType,
+			// schema.RollOutputInputType,
+			// schema.SearchInputType,
+			// schema.PaginationInputType,
+			// schema.TokenType,
 		},
 		db,
 	)

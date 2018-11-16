@@ -15,10 +15,10 @@ export default {
         endpoints: [
           {
             name: "graphql",
-            endpoint: "http://localhost:4444/graphql",
+            endpoint: "http://localhost:4445/graphql",
           },
         ],
-        graphql_endpoint: "http://localhost:4444/graphql",
+        graphql_endpoint: "http://localhost:4445/graphql",
       },
     },
   },

@@ -79,7 +79,7 @@ var getPlayroll = gqltag.Method{
 var listPlayrolls = gqltag.Method{
 	Description: `[List Playrolls Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db)
+		p := initPlayroll(db.Preload("Rolls").Preload("Tracklists"))
 		type listPlayrollsParams struct {
 			Offset uint
 			Count  uint

@@ -8,14 +8,16 @@ import (
 type CompiledRoll struct {
 	Model
 	Order       string
-	Data        jsonmodels.CompiledRollData
+	Data        jsonmodels.CompiledRollData `gorm:"type: jsonb"`
+	RollID      uint
+	Roll        Roll
 	TracklistID uint
-	Tracklist   Tracklist
 }
 
 type CompiledRollInput struct {
 	Order       string                           `gql:"order: String"`
 	Data        jsonmodels.CompiledRollDataInput `gql:"data: CompiledRollDataInput"`
+	RollID      string                           `gql:"rollID: ID"`
 	TracklistID string                           `gql:"tracklistID: ID"`
 }
 
@@ -23,13 +25,15 @@ type CompiledRollOutput struct {
 	Model       `gql:"MODEL"`
 	Order       string                            `gql:"order: String"`
 	Data        jsonmodels.CompiledRollDataOutput `gql:"data: CompiledRollData"`
+	RollID      uint                              `gql:"rollID: ID"`
+	Roll        Roll                              `gql:"roll: Roll"`
 	TracklistID uint                              `gql:"tracklistID: ID"`
-	Tracklist   Tracklist                         `gql:"tracklist: Tracklist"`
 }
 
 func (cri *CompiledRollInput) ToModel() (*CompiledRoll, error) {
 	cr := &CompiledRoll{}
 	cr.TracklistID = utils.StringIDToNumber(cri.TracklistID)
+	cr.RollID = utils.StringIDToNumber(cri.RollID)
 	cr.Order = cri.Order
 	data, err := cri.Data.ToModel()
 	if err != nil {
@@ -43,6 +47,8 @@ func (cr *CompiledRoll) ToOutput() (*CompiledRollOutput, error) {
 	cro := &CompiledRollOutput{}
 	cro.Model = cr.Model
 	cro.TracklistID = cr.TracklistID
+	cro.RollID = cr.RollID
+	cro.Roll = cr.Roll
 	cro.Order = cr.Order
 	data, err := cr.Data.ToOutput()
 	if err != nil {

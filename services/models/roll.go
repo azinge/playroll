@@ -7,7 +7,7 @@ import (
 
 type Roll struct {
 	Model
-	Data       jsonmodels.RollData
+	Data       jsonmodels.RollData `gorm:"type: jsonb"`
 	PlayrollID uint
 	Order      uint
 	Playroll   Playroll
@@ -24,7 +24,7 @@ type RollOutput struct {
 	Data       jsonmodels.RollDataOutput `gql:"data: RollData"`
 	PlayrollID uint                      `gql:"playrollID: ID"`
 	Order      uint                      `gql:"order: Int"`
-	Playroll   Playroll                  `gql:"playroll: Playroll"`
+	Playroll   PlayrollOutput            `gql:"playroll: Playroll"`
 }
 
 func (ri *RollInput) ToModel() (*Roll, error) {

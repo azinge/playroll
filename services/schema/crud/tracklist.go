@@ -80,7 +80,7 @@ var getTracklist = gqltag.Method{
 var listTracklists = gqltag.Method{
 	Description: `[List Tracklists Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := initTracklist(db)
+		t := initTracklist(db.Preload("CompiledRolls"))
 		type listTracklistsParams struct {
 			Offset uint
 			Count  uint

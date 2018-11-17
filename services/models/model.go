@@ -73,7 +73,6 @@ func (m *Model) List() (interface{}, error) {
 		fmt.Printf("error getting %s: %s", m.getEntityType().Name(), err.Error())
 		return nil, err
 	}
-	fmt.Printf("%#v\n", entities)
 	return entities, nil
 }
 

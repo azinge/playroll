@@ -1,13 +1,18 @@
 package models
 
-import "github.com/cazinge/playroll/services/utils"
+import (
+	"fmt"
+
+	"github.com/cazinge/playroll/services/utils"
+)
 
 type Playroll struct {
 	Model
-	Name   string
-	UserID uint
-	User   User
-	Rolls  []Roll
+	Name       string
+	UserID     uint
+	User       User
+	Rolls      []Roll
+	Tracklists []Tracklist
 }
 
 type PlayrollInput struct {
@@ -16,11 +21,12 @@ type PlayrollInput struct {
 }
 
 type PlayrollOutput struct {
-	Model  `gql:"MODEL"`
-	Name   string `gql:"name: String"`
-	UserID uint   `gql:"userID: ID"`
-	User   User   `gql:"user: User"`
-	Rolls  []Roll `gql:"rolls: [Roll]"`
+	Model      `gql:"MODEL"`
+	Name       string       `gql:"name: String"`
+	UserID     uint         `gql:"userID: ID"`
+	User       User         `gql:"user: User"`
+	Rolls      []RollOutput `gql:"rolls: [Roll]"`
+	Tracklists []Tracklist  `gql:"tracklists: [Tracklist]"`
 }
 
 func (pi *PlayrollInput) ToModel() (*Playroll, error) {
@@ -30,13 +36,37 @@ func (pi *PlayrollInput) ToModel() (*Playroll, error) {
 	return p, nil
 }
 
+func formatRolls(val interface{}, err error) (*[]RollOutput, error) {
+	if err != nil {
+		return nil, err
+	}
+	rs, ok := val.([]Roll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Roll Slice")
+	}
+	output := []RollOutput{}
+	for _, r := range rs {
+		ro, err := r.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *ro)
+	}
+	return &output, nil
+}
+
 func (p *Playroll) ToOutput() (*PlayrollOutput, error) {
 	po := &PlayrollOutput{}
 	po.Model = p.Model
 	po.Name = p.Name
 	po.UserID = p.UserID
 	po.User = p.User
-	po.Rolls = p.Rolls
+	rolls, err := formatRolls(p.Rolls, nil)
+	if err != nil {
+		return nil, err
+	}
+	po.Rolls = *rolls
+	po.Tracklists = p.Tracklists
 	return po, nil
 }
 

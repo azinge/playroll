@@ -9,19 +9,31 @@ export default StyleSheet.create({
   },
   welcome: {
       fontSize: 20,
-      textAlign: 'center',
-      margin: 100,
+      color: '#6A0070',
+      marginLeft: 50      
+      // textAlign: 'center',
+      // margin: 100,
   },
   instructions: {
       textAlign: 'center',
       color: '#333333',
       marginBottom: 5,
+      
   },
   headline: {
       textAlign: 'left',
       color: '#ffffff',
       fontSize: 25,
       margin: 30,
+  },
+  modaldata: {
+    marginLeft: 50, 
+    marginRight: 50, 
+    marginTop: 10,
+    marginBottom: 10,
+    shadowColor: "black", 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.3
   },
   footercontent: {
       backgroundColor: '#00ffff',
@@ -43,5 +55,24 @@ export default StyleSheet.create({
   formfooter: {
     alignSelf: 'flex-end',
     marginRight: 15,
+  }
+});
+
+export const pickerStyle = StyleSheet.create({
+  inputIOS: {
+    marginTop: 10,
+    width: 100,
+    height: 40,
+    // margin: 10,
+    fontSize: 12,
+    paddingTop: 13,
+    paddingHorizontal: 10,
+    paddingBottom: 12,
+    borderWidth: 1,
+    borderColor: '#6A0070',
+    borderRadius: 4,
+    backgroundColor: 'white',
+    color: 'black',
+    alignItems: 'flex-end',
   }
 });

@@ -5758,6 +5758,13 @@ react-native-navigation@^1.1.488:
   dependencies:
     lodash "4.x.x"
 
+react-native-picker-select@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-5.1.0.tgz#528cb6a4bd113d8329ea795a8f4497c14f9d3433"
+  integrity sha512-8CEUwhLthfSr67FailEqW1Cz3e/Bqq+NHpe3FF5bchwfF35Gw0RMXgqQqndS8jMb4lBDm0V9iTfwlHsd04s7Sw==
+  dependencies:
+    lodash.isequal "^4.5.0"
+
 react-native-safe-area-view@0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.11.0.tgz#4f3dda43c2bace37965e7c6aef5fc83d4f19d174"

@@ -29,6 +29,7 @@
     "react-native-material-bottom-navigation": "^1.0.1",
     "react-native-material-kit": "git+https://github.com/xinthink/react-native-material-kit.git#14c53e492cfe8c59fbcb46dc8f329c1bfff6250d",
     "react-native-navigation": "^1.1.488",
+    "react-native-picker-select": "^5.1.0",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-vector-icons": "^6.0.2",
     "react-navigation": "^2.18.0"

@@ -19,6 +19,7 @@ import (
 type SpotifyMethods struct {
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): ExternalCredential"`
+	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID): [String]"`
 }
 
 func initExternalCredential(db *gorm.DB) *models.ExternalCredential {
@@ -50,6 +51,7 @@ var searchSpotify = gqltag.Method{
 		token := &oauth2.Token{}
 		mapstructure.Decode(ec.Token, &token)
 		client := spotify.NewAuthenticator("").NewClient(token)
+
 		var searchResult *spotify.SearchResult
 		switch params.SearchType {
 		case "Track":
@@ -181,7 +183,72 @@ var registerSpotifyAuthCode = gqltag.Method{
 	},
 }
 
+var generatePlaylist = gqltag.Method{
+	Description: `[Generate Playlist Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		type generatePlaylistParams struct {
+			TracklistID string
+		}
+		params := &generatePlaylistParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		id := utils.StringIDToNumber(params.TracklistID)
+		compiledRolls := []models.CompiledRoll{}
+		if err = db.Where(&models.CompiledRoll{TracklistID: id}).Find(&compiledRolls).Error; err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		tracks := []jsonmodels.MusicSource{}
+		for _, compiledRoll := range compiledRolls {
+			compiledRollOutput, err := compiledRoll.ToOutput()
+			if err != nil {
+				fmt.Println(err)
+				return nil, err
+			}
+			tracks = append(tracks, compiledRollOutput.Data.Tracks...)
+		}
+
+		trackIDs := []spotify.ID{}
+		for _, track := range tracks {
+			trackIDs = append(trackIDs, spotify.ID(track.ProviderID))
+		}
+
+		ec := &models.ExternalCredential{}
+		if err = db.Where(&models.ExternalCredential{Provider: "Spotify", UserID: 1}).Last(ec).Error; err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		token := &oauth2.Token{}
+		mapstructure.Decode(ec.Token, &token)
+		client := spotify.NewAuthenticator("").NewClient(token)
+
+		user, err := client.CurrentUser()
+		if err != nil {
+			fmt.Println("Error fetching user: ", err.Error())
+			return nil, err
+		}
+		fmt.Println("User: ", user)
+		playlist, err := client.CreatePlaylistForUser(user.ID, "PLAYROLL_TEST", "", true)
+		if err != nil {
+			fmt.Println("Error creating playlist for user: ", err.Error())
+			return nil, err
+		}
+		_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs...)
+		if err != nil {
+			fmt.Println("Error adding songs for user: ", err.Error())
+			return nil, err
+		}
+		return trackIDs, nil
+	},
+}
+
 var LinkedSpotifyMethods = SpotifyMethods{
 	SearchSpotify:           gqltag.LinkQuery(searchSpotify),
 	RegisterSpotifyAuthCode: gqltag.LinkMutation(registerSpotifyAuthCode),
+	GeneratePlaylist:        gqltag.LinkMutation(generatePlaylist),
 }

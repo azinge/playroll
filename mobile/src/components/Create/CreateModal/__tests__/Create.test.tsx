@@ -1,9 +1,9 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-import Create from "../Create"
+import CreateModal from "../CreateModal"
 
 it("renders correctly", () => {
-  const tree = renderer.create(<Create />).toJSON()
+  const tree = renderer.create(<CreateModal />).toJSON()
   expect(tree).toMatchSnapshot()
 })

@@ -66,7 +66,7 @@ export default StyleSheet.create({
     backgroundColor: "white",
     position: 'absolute'
     // margin: 50
-  }
+  },
 });
 
 export const pickerStyle = StyleSheet.create({

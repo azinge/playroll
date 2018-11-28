@@ -7,4 +7,12 @@ export default StyleSheet.create({
       fontSize: 25,
       margin: 30,
   },
+  modalbackground: {
+    flex: .6,
+    flexDirection: "column",
+    borderRadius: 20,
+    backgroundColor: "white",
+    position: 'absolute'
+    // margin: 50
+  }
 });

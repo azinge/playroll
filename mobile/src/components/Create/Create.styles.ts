@@ -53,8 +53,25 @@ export default StyleSheet.create({
     marginLeft: 15,
   },
   formfooter: {
-    alignSelf: 'flex-end',
-    marginRight: 15,
+    display: 'flex', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    bottom: 10
+  }, 
+  modalposition: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(52, 52, 52, 0.6)"
+  },
+  modalbackground: {
+    flex: .6,
+    flexDirection: "column",
+    borderRadius: 20,
+    backgroundColor: "white",
+    position: 'absolute'
+    // margin: 50
   }
 });
 

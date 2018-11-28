@@ -2,7 +2,7 @@
  * Application component for Playroll mobile application.
  */
 import React from "react";
-import CreateModal from './CreateModal';
+import CreateModal from './CreateModal/CreateModal';
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Container, Header, Item, Input, Button, Text } from "native-base"; //NUKE THIS SHIT

@@ -10,7 +10,7 @@ import {
   Image,
   TextInput
 } from "react-native";
-import styles, { pickerStyle } from "./Create.styles";
+import styles, { pickerStyle } from "./CreateModal.styles";
 
 export default class CreateModal extends React.Component<any, any> {
   render() {

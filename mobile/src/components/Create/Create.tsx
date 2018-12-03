@@ -2,14 +2,14 @@
  * Application component for Playroll mobile application.
  */
 import React from "react";
-import CreateModal from './CreateModal/CreateModal';
+// import CreateModal from "./CreateModal/CreateModal";
 import { View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Container, Header, Item, Input, Button, Text } from "native-base"; //NUKE THIS SHIT
 
 import styles from "./Create.styles";
 
-export interface Props{}
+export interface Props {}
 
 interface State {
   modalVisible: boolean;
@@ -19,11 +19,10 @@ export default class Create extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      modalVisible: false
+      modalVisible: false,
     };
     this.setModalVisible = this.setModalVisible.bind(this);
   }
-  
 
   setModalVisible(visible: boolean) {
     this.setState({ modalVisible: visible });
@@ -54,7 +53,10 @@ export default class Create extends React.Component<Props, State> {
             color="#ffffff"
           />
         </View>
-        <CreateModal setModalVisible={this.setModalVisible} modalVisible={this.state.modalVisible} />
+        {/* <CreateModal
+          setModalVisible={this.setModalVisible}
+          modalVisible={this.state.modalVisible}
+        /> */}
         <Header searchBar rounded>
           <Item>
             <Icon type="ionicon" name="ios-search" />
@@ -76,4 +78,3 @@ export default class Create extends React.Component<Props, State> {
     );
   }
 }
-

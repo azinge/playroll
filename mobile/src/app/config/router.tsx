@@ -7,6 +7,8 @@ import Playrolls from "../../components/Playrolls";
 import Search from "../../components/Search";
 import AlertModal from "../../components/shared/AlertModal";
 import Create from "../../components/Create";
+import TracklistStyles from "components/Tracklist/Tracklist.styles";
+import Tracklist from "../../components/Tracklist";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
@@ -49,7 +51,7 @@ export const Tabs = createBottomTabNavigator({
   Search: {
     screen: Search,
   },
-  Create: {
-    screen: Create,
+  Tracklist: {
+    screen: Tracklist,
   },
 });

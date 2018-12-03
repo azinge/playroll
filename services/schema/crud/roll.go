@@ -38,7 +38,7 @@ func formatRoll(val interface{}, err error) (*models.RollOutput, error) {
 	return r.ToOutput()
 }
 
-func formatRolls(val interface{}, err error) (*[]models.RollOutput, error) {
+func formatRolls(val interface{}, err error) ([]models.RollOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatRolls(val interface{}, err error) (*[]models.RollOutput, error) {
 		}
 		output = append(output, *ro)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getRoll = gqltag.Method{

@@ -49,31 +49,6 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 		models.ExternalCredential{},
 	)
 
-	// schema, err := utils.GenerateGraphQLSchema(
-	// 	&[]*utils.Entity{
-	// 		schema.PlayrollEntity,
-	// 		schema.RollEntity,
-	// 		schema.MusicSourceEntity,
-	// 		schema.TracklistEntity,
-	// 		schema.RollOutputEntity,
-	// 		schema.UserEntity,
-	// 		schema.ExternalCredentialsEntity,
-	// 	},
-	// 	&[]*utils.Type{
-	// 		schema.RollInputType,
-	// 		schema.RollFilterType,
-	// 		schema.RollFilterInputType,
-	// 		schema.RollLengthType,
-	// 		schema.RollLengthInputType,
-	// 		schema.MusicSourceInputType,
-	// 		schema.RollOutputInputType,
-	// 		schema.SearchInputType,
-	// 		schema.PaginationInputType,
-	// 		schema.TokenType,
-	// 	},
-	// 	db,
-	// )
-
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,

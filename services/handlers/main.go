@@ -8,7 +8,9 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/cazinge/playroll/services/utils"
+	"github.com/cazinge/playroll/services/gqltag"
+	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/schema"
 
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -39,39 +41,20 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	defer db.Close()
 
 	db.AutoMigrate(
-	// schema.PlayrollEntity.Model,
-	// schema.RollEntity.Model,
-	// schema.MusicSourceEntity.Model,
-	// schema.TracklistEntity.Model,
-	// schema.RollOutputEntity.Model,
-	// schema.UserEntity.Model,
-	// schema.ExternalCredentialsEntity.Model,
+		models.Playroll{},
+		models.Roll{},
+		models.User{},
+		models.Tracklist{},
+		models.CompiledRoll{},
+		models.ExternalCredential{},
 	)
 
-	schema, err := utils.GenerateGraphQLSchema(
-		&[]*utils.Entity{
-			// schema.PlayrollEntity,
-			// schema.RollEntity,
-			// schema.MusicSourceEntity,
-			// schema.TracklistEntity,
-			// schema.RollOutputEntity,
-			// schema.UserEntity,
-			// schema.ExternalCredentialsEntity,
-		},
-		&[]*utils.Type{
-			// schema.RollInputType,
-			// schema.RollFilterType,
-			// schema.RollFilterInputType,
-			// schema.RollLengthType,
-			// schema.RollLengthInputType,
-			// schema.MusicSourceInputType,
-			// schema.RollOutputInputType,
-			// schema.SearchInputType,
-			// schema.PaginationInputType,
-			// schema.TokenType,
-		},
+	schema, err := gqltag.GenerateGraphQLSchema(
+		schema.LinkedTypes,
+		schema.LinkedMethods,
 		db,
 	)
+
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{

@@ -38,7 +38,7 @@ func formatUser(val interface{}, err error) (*models.UserOutput, error) {
 	return u.ToOutput()
 }
 
-func formatUsers(val interface{}, err error) (*[]models.UserOutput, error) {
+func formatUsers(val interface{}, err error) ([]models.UserOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatUsers(val interface{}, err error) (*[]models.UserOutput, error) {
 		}
 		output = append(output, *uo)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getUser = gqltag.Method{

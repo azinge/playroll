@@ -96,9 +96,10 @@ func formatTracklist(val interface{}, err error) (*models.TracklistOutput, error
 	return t.ToOutput()
 }
 
-func createTrack(name string, provider string, providerID string) jsonmodels.MusicSource {
+func createTrack(cover string, name string, provider string, providerID string) jsonmodels.MusicSource {
 	// TODO: Add cover
 	return jsonmodels.MusicSource{
+		Cover:      cover,
 		Type:       "Track",
 		Name:       name,
 		Provider:   provider,
@@ -140,14 +141,14 @@ var generateTracklist = gqltag.Method{
 				source := sources[0]
 				switch source.Type {
 				case "Track":
-					tracks = append(tracks, createTrack(source.Name, source.Provider, source.ProviderID))
+					tracks = append(tracks, createTrack(source.Cover, source.Name, source.Provider, source.ProviderID))
 				case "Album":
 					simpleTrackPage, err := client.GetAlbumTracksOpt(spotify.ID(source.ProviderID), 50, 0)
 					if err != nil {
 						return nil, err
 					}
 					for _, track := range simpleTrackPage.Tracks {
-						tracks = append(tracks, createTrack(track.Name, source.Provider, string(track.ID)))
+						tracks = append(tracks, createTrack(source.Cover, track.Name, source.Provider, string(track.ID)))
 					}
 				case "Artist":
 					fullTracks, err := client.GetArtistsTopTracks(spotify.ID(source.ProviderID), "US")
@@ -155,7 +156,7 @@ var generateTracklist = gqltag.Method{
 						return nil, err
 					}
 					for _, track := range fullTracks {
-						tracks = append(tracks, createTrack(track.Name, source.Provider, string(track.ID)))
+						tracks = append(tracks, createTrack(source.Cover, track.Name, source.Provider, string(track.ID)))
 					}
 				}
 			}
@@ -166,7 +167,7 @@ var generateTracklist = gqltag.Method{
 		}
 
 		tx := db.Begin()
-		tracklistInput := models.TracklistInput{Starred: false, Primary: true, PlayrollID: string(id)}
+		tracklistInput := models.TracklistInput{Starred: false, Primary: true, PlayrollID: params.PlayrollID}
 		tracklist, err := tracklistInput.ToModel()
 		if err != nil {
 			tx.Rollback()
@@ -191,7 +192,6 @@ var generateTracklist = gqltag.Method{
 				return nil, err
 			}
 			compiledRoll.Data = jsonmodels.CompiledRollData{Tracks: tracks}
-			fmt.Printf("%#v\n", compiledRoll)
 			_, err = cr.Create(compiledRoll)
 			if err != nil {
 				tx.Rollback()

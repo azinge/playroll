@@ -11,6 +11,7 @@ type Tracklist struct {
 	Starred       bool
 	Primary       bool
 	CompiledRolls []CompiledRoll
+	Playroll      Playroll
 	PlayrollID    uint
 }
 

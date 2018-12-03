@@ -23,7 +23,7 @@ type PlayrollMethods struct {
 func initPlayroll(db *gorm.DB) *models.Playroll {
 	playroll := &models.Playroll{}
 	playroll.SetEntity(playroll)
-	playroll.SetDB(db.Preload("Rolls"))
+	playroll.SetDB(db.Preload("Rolls").Preload("Tracklists"))
 	return playroll
 }
 

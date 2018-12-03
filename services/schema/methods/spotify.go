@@ -19,7 +19,7 @@ import (
 type SpotifyMethods struct {
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): ExternalCredential"`
-	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID): [String]"`
+	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
 }
 
 func initExternalCredential(db *gorm.DB) *models.ExternalCredential {
@@ -166,6 +166,10 @@ var registerSpotifyAuthCode = gqltag.Method{
 		fmt.Println(url)
 		// TEMPORARY
 
+		if params.Code == "" {
+			return nil, fmt.Errorf(fmt.Sprintf("Please log in: " + url))
+		}
+
 		oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(params.Code)
 		fmt.Println("Recieved Token")
 		if err != nil {
@@ -192,7 +196,8 @@ var generatePlaylist = gqltag.Method{
 	Description: `[Generate Playlist Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		type generatePlaylistParams struct {
-			TracklistID string
+			TracklistID  string
+			PlaylistName string
 		}
 		params := &generatePlaylistParams{}
 		err := mapstructure.Decode(resolveParams.Args, params)
@@ -237,8 +242,7 @@ var generatePlaylist = gqltag.Method{
 			fmt.Println("Error fetching user: ", err.Error())
 			return nil, err
 		}
-		fmt.Println("User: ", user)
-		playlist, err := client.CreatePlaylistForUser(user.ID, "PLAYROLL_TEST", "", true)
+		playlist, err := client.CreatePlaylistForUser(user.ID, "Playroll: "+params.PlaylistName, "", true)
 		if err != nil {
 			fmt.Println("Error creating playlist for user: ", err.Error())
 			return nil, err

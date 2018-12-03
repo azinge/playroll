@@ -97,6 +97,7 @@ func formatTracklist(val interface{}, err error) (*models.TracklistOutput, error
 }
 
 func createTrack(name string, provider string, providerID string) jsonmodels.MusicSource {
+	// TODO: Add cover
 	return jsonmodels.MusicSource{
 		Type:       "Track",
 		Name:       name,

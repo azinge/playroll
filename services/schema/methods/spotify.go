@@ -43,6 +43,10 @@ var searchSpotify = gqltag.Method{
 			return nil, err
 		}
 
+		if params.Query == "" {
+			return []jsonmodels.MusicSource{}, nil
+		}
+
 		ec := &models.ExternalCredential{}
 		if err = db.Where(&models.ExternalCredential{Provider: "Spotify", UserID: 1}).Last(ec).Error; err != nil {
 			fmt.Println(err)
@@ -107,7 +111,7 @@ var searchSpotify = gqltag.Method{
 					cover = images[0].URL
 				}
 				ms := jsonmodels.MusicSource{
-					Type:       "Track",
+					Type:       "Artist",
 					Name:       artist.Name,
 					Cover:      cover,
 					Provider:   "Spotify",
@@ -163,6 +167,7 @@ var registerSpotifyAuthCode = gqltag.Method{
 		// TEMPORARY
 
 		oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(params.Code)
+		fmt.Println("Recieved Token")
 		if err != nil {
 			fmt.Println(err)
 			return nil, err

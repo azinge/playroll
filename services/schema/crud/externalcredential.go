@@ -38,7 +38,7 @@ func formatExternalCredential(val interface{}, err error) (*models.ExternalCrede
 	return ec.ToOutput()
 }
 
-func formatExternalCredentials(val interface{}, err error) (*[]models.ExternalCredentialOutput, error) {
+func formatExternalCredentials(val interface{}, err error) ([]models.ExternalCredentialOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatExternalCredentials(val interface{}, err error) (*[]models.ExternalCr
 		}
 		output = append(output, *eco)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getExternalCredential = gqltag.Method{

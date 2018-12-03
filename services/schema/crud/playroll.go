@@ -38,7 +38,7 @@ func formatPlayroll(val interface{}, err error) (*models.PlayrollOutput, error) 
 	return p.ToOutput()
 }
 
-func formatPlayrolls(val interface{}, err error) (*[]models.PlayrollOutput, error) {
+func formatPlayrolls(val interface{}, err error) ([]models.PlayrollOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatPlayrolls(val interface{}, err error) (*[]models.PlayrollOutput, erro
 		}
 		output = append(output, *po)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getPlayroll = gqltag.Method{

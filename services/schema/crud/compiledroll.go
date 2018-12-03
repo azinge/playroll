@@ -38,7 +38,7 @@ func formatCompiledRoll(val interface{}, err error) (*models.CompiledRollOutput,
 	return cr.ToOutput()
 }
 
-func formatCompiledRolls(val interface{}, err error) (*[]models.CompiledRollOutput, error) {
+func formatCompiledRolls(val interface{}, err error) ([]models.CompiledRollOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatCompiledRolls(val interface{}, err error) (*[]models.CompiledRollOutp
 		}
 		output = append(output, *cro)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getCompiledRoll = gqltag.Method{

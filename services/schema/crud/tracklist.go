@@ -38,7 +38,7 @@ func formatTracklist(val interface{}, err error) (*models.TracklistOutput, error
 	return t.ToOutput()
 }
 
-func formatTracklists(val interface{}, err error) (*[]models.TracklistOutput, error) {
+func formatTracklists(val interface{}, err error) ([]models.TracklistOutput, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func formatTracklists(val interface{}, err error) (*[]models.TracklistOutput, er
 		}
 		output = append(output, *to)
 	}
-	return &output, nil
+	return output, nil
 }
 
 var getTracklist = gqltag.Method{

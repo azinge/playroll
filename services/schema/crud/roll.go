@@ -1,15 +1,9 @@
 package crud
 
 import (
-	"fmt"
-
 	"github.com/cazinge/playroll/services/gqltag"
-	"github.com/cazinge/playroll/services/utils"
-	"github.com/mitchellh/mapstructure"
 
 	"github.com/cazinge/playroll/services/models"
-	"github.com/graphql-go/graphql"
-	"github.com/jinzhu/gorm"
 )
 
 type RollMethods struct {
@@ -22,133 +16,27 @@ type RollMethods struct {
 
 var getRoll = gqltag.Method{
 	Description: `[Get Roll Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := models.InitRollDAO(db)
-		type getRollParams struct {
-			ID string
-		}
-
-		params := &getRollParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		id := utils.StringIDToNumber(params.ID)
-
-		rawRoll, err := r.Get(id)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatRoll(rawRoll)
-	},
+	Request:     GenerateGetEntityMethod(&models.Roll{}),
 }
 
 var listRolls = gqltag.Method{
 	Description: `[List Rolls Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := models.InitRollDAO(db)
-		type listRollsParams struct {
-			Offset uint
-			Count  uint
-		}
-
-		params := &listRollsParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		rawRoll, err := r.List()
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatRoll(rawRoll)
-	},
+	Request:     GenerateListEntityMethod(&models.Roll{}),
 }
 
 var createRoll = gqltag.Method{
 	Description: `[Create Roll Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := models.InitRollDAO(db)
-		type createRollParams struct {
-			Input models.RollInput
-		}
-
-		params := &createRollParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			return nil, err
-		}
-
-		roll, err := params.Input.ToModel()
-		if err != nil {
-			return nil, err
-		}
-
-		rawRoll, err := r.Create(roll)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatRoll(rawRoll)
-	},
+	Request:     GenerateCreateEntityMethod(&models.Roll{}, &models.RollInput{}),
 }
 
 var updateRoll = gqltag.Method{
 	Description: `[Update Roll Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := models.InitRollDAO(db)
-		type updateRollParams struct {
-			ID    string
-			Input models.RollInput
-		}
-
-		params := &updateRollParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		roll, err := params.Input.ToModel()
-		if err != nil {
-			return nil, err
-		}
-		roll.ID = utils.StringIDToNumber(params.ID)
-
-		rawRoll, err := r.Update(roll)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatRoll(rawRoll)
-	},
+	Request:     GenerateUpdateEntityMethod(&models.Roll{}, &models.RollInput{}),
 }
 
 var deleteRoll = gqltag.Method{
 	Description: `[Delete Roll Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := models.InitRollDAO(db)
-		type deleteRollParams struct {
-			ID string
-		}
-
-		params := &deleteRollParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		id := utils.StringIDToNumber(params.ID)
-
-		rawRoll, err := r.Delete(id)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatRoll(rawRoll)
-	},
+	Request:     GenerateDeleteEntityMethod(&models.Roll{}),
 }
 
 var LinkedRollMethods = RollMethods{

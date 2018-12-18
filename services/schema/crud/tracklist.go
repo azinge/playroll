@@ -1,15 +1,9 @@
 package crud
 
 import (
-	"fmt"
-
 	"github.com/cazinge/playroll/services/gqltag"
-	"github.com/cazinge/playroll/services/utils"
-	"github.com/mitchellh/mapstructure"
 
 	"github.com/cazinge/playroll/services/models"
-	"github.com/graphql-go/graphql"
-	"github.com/jinzhu/gorm"
 )
 
 type TracklistMethods struct {
@@ -22,133 +16,27 @@ type TracklistMethods struct {
 
 var getTracklist = gqltag.Method{
 	Description: `[Get Tracklist Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := models.InitTracklistDAO(db)
-		type getTracklistParams struct {
-			ID string
-		}
-
-		params := &getTracklistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		id := utils.StringIDToNumber(params.ID)
-
-		rawTracklist, err := t.Get(id)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatTracklist(rawTracklist)
-	},
+	Request:     GenerateGetEntityMethod(&models.Tracklist{}),
 }
 
 var listTracklists = gqltag.Method{
 	Description: `[List Tracklists Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := models.InitTracklistDAO(db.Preload("CompiledRolls"))
-		type listTracklistsParams struct {
-			Offset uint
-			Count  uint
-		}
-
-		params := &listTracklistsParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		rawTracklist, err := t.List()
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatTracklist(rawTracklist)
-	},
+	Request:     GenerateListEntityMethod(&models.Tracklist{}),
 }
 
 var createTracklist = gqltag.Method{
 	Description: `[Create Tracklist Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := models.InitTracklistDAO(db)
-		type createTracklistParams struct {
-			Input models.TracklistInput
-		}
-
-		params := &createTracklistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		tracklist, err := params.Input.ToModel()
-		if err != nil {
-			return nil, err
-		}
-		rawTracklist, err := t.Create(tracklist)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatTracklist(rawTracklist)
-	},
+	Request:     GenerateCreateEntityMethod(&models.Tracklist{}, &models.TracklistInput{}),
 }
 
 var updateTracklist = gqltag.Method{
 	Description: `[Update Tracklist Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := models.InitTracklistDAO(db)
-		type updateTracklistParams struct {
-			ID    string
-			Input models.TracklistInput
-		}
-
-		params := &updateTracklistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		tracklist, err := params.Input.ToModel()
-		if err != nil {
-			return nil, err
-		}
-		tracklist.ID = utils.StringIDToNumber(params.ID)
-
-		rawTracklist, err := t.Update(tracklist)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatTracklist(rawTracklist)
-	},
+	Request:     GenerateUpdateEntityMethod(&models.Tracklist{}, &models.TracklistInput{}),
 }
 
 var deleteTracklist = gqltag.Method{
 	Description: `[Delete Tracklist Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		t := models.InitTracklistDAO(db)
-		type deleteTracklistParams struct {
-			ID string
-		}
-
-		params := &deleteTracklistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		id := utils.StringIDToNumber(params.ID)
-
-		rawTracklist, err := t.Delete(id)
-		if err != nil {
-			return nil, err
-		}
-		return models.FormatTracklist(rawTracklist)
-	},
+	Request:     GenerateDeleteEntityMethod(&models.Tracklist{}),
 }
 
 var LinkedTracklistMethods = TracklistMethods{

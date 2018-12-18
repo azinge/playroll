@@ -46,7 +46,7 @@ var searchSpotify = gqltag.Method{
 			fmt.Println(err)
 			return nil, err
 		}
-		eco, err := ec.ToOutput()
+		eco, err := models.ExternalCredentialModelToOutput(ec)
 		if err != nil {
 			fmt.Println("Error creating output object for External Credential: ", err.Error())
 			return nil, err
@@ -232,7 +232,7 @@ var generatePlaylist = gqltag.Method{
 
 		tracks := []jsonmodels.MusicSource{}
 		for _, compiledRoll := range compiledRolls {
-			compiledRollOutput, err := compiledRoll.ToOutput()
+			compiledRollOutput, err := models.CompiledRollModelToOutput(&compiledRoll)
 			if err != nil {
 				fmt.Println(err)
 				return nil, err
@@ -250,7 +250,7 @@ var generatePlaylist = gqltag.Method{
 			fmt.Println(err)
 			return nil, err
 		}
-		eco, err := ec.ToOutput()
+		eco, err := models.ExternalCredentialModelToOutput(ec)
 		if err != nil {
 			fmt.Println("Error fetching token: ", err.Error())
 			return nil, err

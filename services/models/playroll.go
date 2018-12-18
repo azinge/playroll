@@ -30,6 +30,8 @@ type PlayrollOutput struct {
 	Tracklists []Tracklist  `gql:"tracklists: [Tracklist]"`
 }
 
+// Entity Specific Methods
+
 func PlayrollInputToModel(pi *PlayrollInput) (*Playroll, error) {
 	p := &Playroll{}
 	p.Name = pi.Name
@@ -37,11 +39,11 @@ func PlayrollInputToModel(pi *PlayrollInput) (*Playroll, error) {
 	return p, nil
 }
 
-func (pi *PlayrollInput) ToModel() (Entity, error) {
-	return PlayrollInputToModel(pi)
+func PlayrollOutputToModel(po *PlayrollOutput) (*Playroll, error) {
+	return nil, fmt.Errorf("PlayrollOutputToModel Not Implemented")
 }
 
-func (p *Playroll) ToOutput() (*PlayrollOutput, error) {
+func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 	po := &PlayrollOutput{}
 	po.Model = p.Model
 	po.Name = p.Name
@@ -63,20 +65,12 @@ func InitPlayrollDAO(db *gorm.DB) Entity {
 	return playroll
 }
 
-func (_ *Playroll) InitDAO(db *gorm.DB) Entity {
-	return InitPlayrollDAO(db)
-}
-
 func FormatPlayroll(val interface{}) (*PlayrollOutput, error) {
 	p, ok := val.(*Playroll)
 	if !ok {
 		return nil, fmt.Errorf("error converting to Playroll")
 	}
-	return p.ToOutput()
-}
-
-func (_ *Playroll) Format(val interface{}) (interface{}, error) {
-	return FormatPlayroll(val)
+	return PlayrollModelToOutput(p)
 }
 
 func FormatPlayrollSlice(val interface{}) ([]PlayrollOutput, error) {
@@ -86,13 +80,35 @@ func FormatPlayrollSlice(val interface{}) ([]PlayrollOutput, error) {
 	}
 	output := []PlayrollOutput{}
 	for _, p := range *ps {
-		po, err := p.ToOutput()
+		po, err := PlayrollModelToOutput(&p)
 		if err != nil {
 			return nil, err
 		}
 		output = append(output, *po)
 	}
 	return output, nil
+}
+
+// Interface Generalization Methods
+
+func (pi *PlayrollInput) ToModel() (Entity, error) {
+	return PlayrollInputToModel(pi)
+}
+
+func (po *PlayrollOutput) ToModel() (Entity, error) {
+	return PlayrollOutputToModel(po)
+}
+
+func (p *Playroll) ToOutput() (EntityOutput, error) {
+	return PlayrollModelToOutput(p)
+}
+
+func (_ *Playroll) InitDAO(db *gorm.DB) Entity {
+	return InitPlayrollDAO(db)
+}
+
+func (_ *Playroll) Format(val interface{}) (EntityOutput, error) {
+	return FormatPlayroll(val)
 }
 
 func (_ *Playroll) FormatSlice(val interface{}) (interface{}, error) {

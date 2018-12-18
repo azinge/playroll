@@ -30,7 +30,9 @@ type TracklistOutput struct {
 	PlayrollID    uint                 `gql:"playrollID: ID"`
 }
 
-func (ti *TracklistInput) ToModel() (*Tracklist, error) {
+// Entity Specific Methods
+
+func TracklistInputToModel(ti *TracklistInput) (*Tracklist, error) {
 	t := &Tracklist{}
 	t.Starred = ti.Starred
 	t.Primary = ti.Primary
@@ -38,7 +40,11 @@ func (ti *TracklistInput) ToModel() (*Tracklist, error) {
 	return t, nil
 }
 
-func (t *Tracklist) ToOutput() (*TracklistOutput, error) {
+func TracklistOutputToModel(to *TracklistOutput) (*Tracklist, error) {
+	return nil, fmt.Errorf("TracklistOutputToModel Not Implemented")
+}
+
+func TracklistModelToOutput(t *Tracklist) (*TracklistOutput, error) {
 	to := &TracklistOutput{}
 	to.Model = t.Model
 	to.Starred = t.Starred
@@ -59,20 +65,12 @@ func InitTracklistDAO(db *gorm.DB) *Tracklist {
 	return tracklist
 }
 
-func (_ *Tracklist) InitDAO(db *gorm.DB) Entity {
-	return InitTracklistDAO(db)
-}
-
 func FormatTracklist(val interface{}) (*TracklistOutput, error) {
 	t, ok := val.(*Tracklist)
 	if !ok {
 		return nil, fmt.Errorf("error converting to Tracklist")
 	}
-	return t.ToOutput()
-}
-
-func (_ *Tracklist) Format(val interface{}) (interface{}, error) {
-	return FormatTracklist(val)
+	return TracklistModelToOutput(t)
 }
 
 func FormatTracklistSlice(val interface{}) ([]TracklistOutput, error) {
@@ -82,13 +80,35 @@ func FormatTracklistSlice(val interface{}) ([]TracklistOutput, error) {
 	}
 	output := []TracklistOutput{}
 	for _, t := range *ts {
-		to, err := t.ToOutput()
+		to, err := TracklistModelToOutput(&t)
 		if err != nil {
 			return nil, err
 		}
 		output = append(output, *to)
 	}
 	return output, nil
+}
+
+// Interface Generalization Methods
+
+func (ti *TracklistInput) ToModel() (Entity, error) {
+	return TracklistInputToModel(ti)
+}
+
+func (to *TracklistOutput) ToModel() (Entity, error) {
+	return TracklistOutputToModel(to)
+}
+
+func (t *Tracklist) ToOutput() (EntityOutput, error) {
+	return TracklistModelToOutput(t)
+}
+
+func (_ *Tracklist) InitDAO(db *gorm.DB) Entity {
+	return InitTracklistDAO(db)
+}
+
+func (_ *Tracklist) Format(val interface{}) (EntityOutput, error) {
+	return FormatTracklist(val)
 }
 
 func (_ *Tracklist) FormatSlice(val interface{}) (interface{}, error) {

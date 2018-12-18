@@ -33,7 +33,9 @@ type CompiledRollOutput struct {
 	TracklistID uint                              `gql:"tracklistID: ID"`
 }
 
-func (cri *CompiledRollInput) ToModel() (*CompiledRoll, error) {
+// Entity Specific Methods
+
+func CompiledRollInputToModel(cri *CompiledRollInput) (*CompiledRoll, error) {
 	cr := &CompiledRoll{}
 	cr.TracklistID = utils.StringIDToNumber(cri.TracklistID)
 	cr.RollID = utils.StringIDToNumber(cri.RollID)
@@ -46,7 +48,11 @@ func (cri *CompiledRollInput) ToModel() (*CompiledRoll, error) {
 	return cr, nil
 }
 
-func (cr *CompiledRoll) ToOutput() (*CompiledRollOutput, error) {
+func CompiledRollOutputToModel(po *CompiledRollOutput) (*CompiledRoll, error) {
+	return nil, fmt.Errorf("CompiledRollOutputToModel Not Implemented")
+}
+
+func CompiledRollModelToOutput(cr *CompiledRoll) (*CompiledRollOutput, error) {
 	cro := &CompiledRollOutput{}
 	cro.Model = cr.Model
 	cro.TracklistID = cr.TracklistID
@@ -73,7 +79,7 @@ func FormatCompiledRoll(val interface{}) (*CompiledRollOutput, error) {
 	if !ok {
 		return nil, fmt.Errorf("error converting to CompiledRoll")
 	}
-	return cr.ToOutput()
+	return CompiledRollModelToOutput(cr)
 }
 
 func FormatCompiledRollSlice(val interface{}) ([]CompiledRollOutput, error) {
@@ -83,7 +89,7 @@ func FormatCompiledRollSlice(val interface{}) ([]CompiledRollOutput, error) {
 	}
 	output := []CompiledRollOutput{}
 	for _, cr := range *crs {
-		cro, err := cr.ToOutput()
+		cro, err := CompiledRollModelToOutput(&cr)
 		if err != nil {
 			return nil, err
 		}
@@ -92,11 +98,25 @@ func FormatCompiledRollSlice(val interface{}) ([]CompiledRollOutput, error) {
 	return output, nil
 }
 
+// Interface Generalization Methods
+
+func (cri *CompiledRollInput) ToModel() (Entity, error) {
+	return CompiledRollInputToModel(cri)
+}
+
+func (cro *CompiledRollOutput) ToModel() (Entity, error) {
+	return CompiledRollOutputToModel(cro)
+}
+
+func (cr *CompiledRoll) ToOutput() (EntityOutput, error) {
+	return CompiledRollModelToOutput(cr)
+}
+
 func (_ *CompiledRoll) InitDAO(db *gorm.DB) Entity {
 	return InitCompiledRollDAO(db)
 }
 
-func (_ *CompiledRoll) Format(val interface{}) (interface{}, error) {
+func (_ *CompiledRoll) Format(val interface{}) (EntityOutput, error) {
 	return FormatCompiledRoll(val)
 }
 

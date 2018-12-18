@@ -30,7 +30,9 @@ type RollOutput struct {
 	Playroll   PlayrollOutput            `gql:"playroll: Playroll"`
 }
 
-func (ri *RollInput) ToModel() (*Roll, error) {
+// Entity Specific Methods
+
+func RollInputToModel(ri *RollInput) (*Roll, error) {
 	r := &Roll{}
 	r.PlayrollID = utils.StringIDToNumber(ri.PlayrollID)
 	r.Order = ri.Order
@@ -42,7 +44,11 @@ func (ri *RollInput) ToModel() (*Roll, error) {
 	return r, nil
 }
 
-func (r *Roll) ToOutput() (*RollOutput, error) {
+func RollOutputToModel(ro *RollOutput) (*Roll, error) {
+	return nil, fmt.Errorf("RollOutputToModel Not Implemented")
+}
+
+func RollModelToOutput(r *Roll) (*RollOutput, error) {
 	ro := &RollOutput{}
 	ro.Model = r.Model
 	ro.PlayrollID = r.PlayrollID
@@ -62,20 +68,12 @@ func InitRollDAO(db *gorm.DB) *Roll {
 	return roll
 }
 
-func (_ *Roll) InitDAO(db *gorm.DB) Entity {
-	return InitRollDAO(db)
-}
-
 func FormatRoll(val interface{}) (*RollOutput, error) {
 	r, ok := val.(*Roll)
 	if !ok {
 		return nil, fmt.Errorf("error converting to Roll")
 	}
-	return r.ToOutput()
-}
-
-func (_ *Roll) Format(val interface{}) (interface{}, error) {
-	return FormatRoll(val)
+	return RollModelToOutput(r)
 }
 
 func FormatRollSlice(val interface{}) ([]RollOutput, error) {
@@ -85,13 +83,35 @@ func FormatRollSlice(val interface{}) ([]RollOutput, error) {
 	}
 	output := []RollOutput{}
 	for _, r := range *rs {
-		ro, err := r.ToOutput()
+		ro, err := RollModelToOutput(&r)
 		if err != nil {
 			return nil, err
 		}
 		output = append(output, *ro)
 	}
 	return output, nil
+}
+
+// Interface Generalization Methods
+
+func (ri *RollInput) ToModel() (Entity, error) {
+	return RollInputToModel(ri)
+}
+
+func (ro *RollOutput) ToModel() (Entity, error) {
+	return RollOutputToModel(ro)
+}
+
+func (r *Roll) ToOutput() (EntityOutput, error) {
+	return RollModelToOutput(r)
+}
+
+func (_ *Roll) InitDAO(db *gorm.DB) Entity {
+	return InitRollDAO(db)
+}
+
+func (_ *Roll) Format(val interface{}) (EntityOutput, error) {
+	return FormatRoll(val)
 }
 
 func (_ *Roll) FormatSlice(val interface{}) (interface{}, error) {

@@ -24,13 +24,19 @@ type UserOutput struct {
 	ExternalCredentials []ExternalCredential `gql:"externalCredentials: [ExternalCredential]"`
 }
 
-func (ui *UserInput) ToModel() (*User, error) {
+// Entity Specific Methods
+
+func UserInputToModel(ui *UserInput) (*User, error) {
 	u := &User{}
 	u.Name = ui.Name
 	return u, nil
 }
 
-func (u *User) ToOutput() (*UserOutput, error) {
+func UserOutputToModel(uo *UserOutput) (*User, error) {
+	return nil, fmt.Errorf("UserOutputToModel Not Implemented")
+}
+
+func UserModelToOutput(u *User) (*UserOutput, error) {
 	fmt.Printf("%#v\n", u)
 	uo := &UserOutput{}
 	uo.Model = u.Model
@@ -47,20 +53,12 @@ func InitUserDAO(db *gorm.DB) *User {
 	return user
 }
 
-func (_ *User) InitDAO(db *gorm.DB) Entity {
-	return InitUserDAO(db)
-}
-
 func FormatUser(val interface{}) (*UserOutput, error) {
 	u, ok := val.(*User)
 	if !ok {
 		return nil, fmt.Errorf("error converting to User")
 	}
-	return u.ToOutput()
-}
-
-func (_ *User) Format(val interface{}) (interface{}, error) {
-	return FormatUser(val)
+	return UserModelToOutput(u)
 }
 
 func FormatUserSlice(val interface{}) ([]UserOutput, error) {
@@ -70,13 +68,35 @@ func FormatUserSlice(val interface{}) ([]UserOutput, error) {
 	}
 	output := []UserOutput{}
 	for _, u := range *us {
-		uo, err := u.ToOutput()
+		uo, err := UserModelToOutput(&u)
 		if err != nil {
 			return nil, err
 		}
 		output = append(output, *uo)
 	}
 	return output, nil
+}
+
+// Interface Generalization Methods
+
+func (ui *UserInput) ToModel() (Entity, error) {
+	return UserInputToModel(ui)
+}
+
+func (uo *UserOutput) ToModel() (Entity, error) {
+	return UserOutputToModel(uo)
+}
+
+func (u *User) ToOutput() (EntityOutput, error) {
+	return UserModelToOutput(u)
+}
+
+func (_ *User) InitDAO(db *gorm.DB) Entity {
+	return InitUserDAO(db)
+}
+
+func (_ *User) Format(val interface{}) (EntityOutput, error) {
+	return FormatUser(val)
 }
 
 func (_ *User) FormatSlice(val interface{}) (interface{}, error) {

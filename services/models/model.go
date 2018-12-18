@@ -9,21 +9,33 @@ import (
 )
 
 type Entity interface {
+	// Implemented by Model.
 	DB() *gorm.DB
 	SetDB(*gorm.DB)
 	SetEntity(Entity)
 	GetID() uint
 	SetID(uint)
 
+	// Implement these methods on new Entities.
 	InitDAO(*gorm.DB) Entity
-	Format(interface{}) (interface{}, error)
+	Format(interface{}) (EntityOutput, error)
 	FormatSlice(interface{}) (interface{}, error)
+	ToOutput() (EntityOutput, error)
 
+	// Call InitDAO first before calling these methods.
 	Get(uint) (interface{}, error)
 	List() (interface{}, error)
 	Create(Entity) (interface{}, error)
 	Update(Entity) (interface{}, error)
 	Delete(uint) (interface{}, error)
+}
+
+type EntityInput interface {
+	ToModel() (Entity, error)
+}
+
+type EntityOutput interface {
+	ToModel() (Entity, error)
 }
 
 type Model struct {

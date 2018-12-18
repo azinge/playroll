@@ -57,18 +57,14 @@ func GenerateListEntityMethod(e models.Entity) func(resolveParams graphql.Resolv
 	}
 }
 
-type InputStruct interface {
-	ToModel() (models.Entity, error)
-}
-
-func GenerateCreateEntityMethod(e models.Entity, inputStruct InputStruct) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+func GenerateCreateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		dao := e.InitDAO(db)
 
 		type createEntityParams struct {
-			Input InputStruct
+			Input models.EntityInput
 		}
-		params := &createEntityParams{Input: inputStruct}
+		params := &createEntityParams{Input: entityInput}
 		err := mapstructure.Decode(resolveParams.Args, params)
 		fmt.Printf("%#v\n", params)
 		fmt.Printf("%#v\n", params.Input)
@@ -91,15 +87,15 @@ func GenerateCreateEntityMethod(e models.Entity, inputStruct InputStruct) func(r
 	}
 }
 
-func GenerateUpdateEntityMethod(e models.Entity, inputStruct InputStruct) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+func GenerateUpdateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		dao := e.InitDAO(db)
 
 		type updateEntityParams struct {
 			ID    string
-			Input InputStruct
+			Input models.EntityInput
 		}
-		params := &updateEntityParams{Input: inputStruct}
+		params := &updateEntityParams{Input: entityInput}
 		err := mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)

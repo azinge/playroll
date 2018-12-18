@@ -30,14 +30,20 @@ type ExternalCredentialOutput struct {
 	Token    oauth2.Token `gql:"token: Token"`
 }
 
-func (eci *ExternalCredentialInput) ToModel() (*ExternalCredential, error) {
+// Entity Specific Methods
+
+func ExternalCredentialInputToModel(eci *ExternalCredentialInput) (*ExternalCredential, error) {
 	ec := &ExternalCredential{}
 	ec.Provider = eci.Provider
 	ec.UserID = utils.StringIDToNumber(eci.UserID)
 	return ec, nil
 }
 
-func (ec *ExternalCredential) ToOutput() (*ExternalCredentialOutput, error) {
+func ExternalCredentialOutputToModel(eco *ExternalCredentialOutput) (*ExternalCredential, error) {
+	return nil, fmt.Errorf("ExternalCredentialOutputToModel Not Implemented")
+}
+
+func ExternalCredentialModelToOutput(ec *ExternalCredential) (*ExternalCredentialOutput, error) {
 	eco := &ExternalCredentialOutput{}
 	eco.Model = ec.Model
 	eco.Provider = ec.Provider
@@ -59,20 +65,12 @@ func InitExternalCredentialDAO(db *gorm.DB) Entity {
 	return externalCredential
 }
 
-func (_ *ExternalCredential) InitDAO(db *gorm.DB) Entity {
-	return InitExternalCredentialDAO(db)
-}
-
 func FormatExternalCredential(val interface{}) (*ExternalCredentialOutput, error) {
 	ec, ok := val.(*ExternalCredential)
 	if !ok {
 		return nil, fmt.Errorf("error converting to ExternalCredential")
 	}
-	return ec.ToOutput()
-}
-
-func (_ *ExternalCredential) Format(val interface{}) (interface{}, error) {
-	return FormatExternalCredential(val)
+	return ExternalCredentialModelToOutput(ec)
 }
 
 func FormatExternalCredentialSlice(val interface{}) ([]ExternalCredentialOutput, error) {
@@ -82,13 +80,35 @@ func FormatExternalCredentialSlice(val interface{}) ([]ExternalCredentialOutput,
 	}
 	output := []ExternalCredentialOutput{}
 	for _, ec := range *ecs {
-		eco, err := ec.ToOutput()
+		eco, err := ExternalCredentialModelToOutput(&ec)
 		if err != nil {
 			return nil, err
 		}
 		output = append(output, *eco)
 	}
 	return output, nil
+}
+
+// Interface Generalization Methods
+
+func (eci *ExternalCredentialInput) ToModel() (Entity, error) {
+	return ExternalCredentialInputToModel(eci)
+}
+
+func (eco *ExternalCredentialOutput) ToModel() (Entity, error) {
+	return ExternalCredentialOutputToModel(eco)
+}
+
+func (ec *ExternalCredential) ToOutput() (EntityOutput, error) {
+	return ExternalCredentialModelToOutput(ec)
+}
+
+func (_ *ExternalCredential) InitDAO(db *gorm.DB) Entity {
+	return InitExternalCredentialDAO(db)
+}
+
+func (_ *ExternalCredential) Format(val interface{}) (EntityOutput, error) {
+	return FormatExternalCredential(val)
 }
 
 func (_ *ExternalCredential) FormatSlice(val interface{}) (interface{}, error) {

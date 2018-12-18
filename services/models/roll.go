@@ -1,8 +1,11 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/cazinge/playroll/services/utils"
+	"github.com/jinzhu/gorm"
 )
 
 type Roll struct {
@@ -52,10 +55,45 @@ func (r *Roll) ToOutput() (*RollOutput, error) {
 	return ro, nil
 }
 
-func (ri *RollInput) CreateRollFromInputFields() *Roll {
+func InitRollDAO(db *gorm.DB) *Roll {
 	roll := &Roll{}
-	// roll.Data = ri.Data
-	roll.PlayrollID = utils.StringIDToNumber(ri.PlayrollID)
-	roll.Order = ri.Order
+	roll.SetEntity(roll)
+	roll.SetDB(db)
 	return roll
+}
+
+func (_ *Roll) InitDAO(db *gorm.DB) Entity {
+	return InitRollDAO(db)
+}
+
+func FormatRoll(val interface{}) (*RollOutput, error) {
+	r, ok := val.(*Roll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Roll")
+	}
+	return r.ToOutput()
+}
+
+func (_ *Roll) Format(val interface{}) (interface{}, error) {
+	return FormatRoll(val)
+}
+
+func FormatRollSlice(val interface{}) ([]RollOutput, error) {
+	rs, ok := val.(*[]Roll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Roll Slice")
+	}
+	output := []RollOutput{}
+	for _, r := range *rs {
+		ro, err := r.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *ro)
+	}
+	return output, nil
+}
+
+func (_ *Roll) FormatSlice(val interface{}) (interface{}, error) {
+	return FormatRollSlice(val)
 }

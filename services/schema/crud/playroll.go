@@ -20,43 +20,6 @@ type PlayrollMethods struct {
 	DeletePlayroll *gqltag.Mutation `gql:"deletePlayroll(id: ID!): Playroll"`
 }
 
-func initPlayroll(db *gorm.DB) *models.Playroll {
-	playroll := &models.Playroll{}
-	playroll.SetEntity(playroll)
-	playroll.SetDB(db.Preload("Rolls").Preload("Tracklists"))
-	return playroll
-}
-
-func formatPlayroll(val interface{}, err error) (*models.PlayrollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	p, ok := val.(*models.Playroll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Playroll")
-	}
-	return p.ToOutput()
-}
-
-func formatPlayrolls(val interface{}, err error) ([]models.PlayrollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	ps, ok := val.(*[]models.Playroll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Playroll Slice")
-	}
-	output := []models.PlayrollOutput{}
-	for _, p := range *ps {
-		po, err := p.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *po)
-	}
-	return output, nil
-}
-
 var getPlayroll = gqltag.Method{
 	Description: `[Get Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -70,16 +33,21 @@ var getPlayroll = gqltag.Method{
 			return nil, err
 		}
 
-		p := initPlayroll(db)
+		p := models.InitPlayrollDAO(db)
 		id := utils.StringIDToNumber(params.ID)
-		return formatPlayroll(p.Get(id))
+
+		rawPlayroll, err := p.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatPlayroll(rawPlayroll)
 	},
 }
 
 var listPlayrolls = gqltag.Method{
 	Description: `[List Playrolls Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db.Preload("Rolls").Preload("Tracklists"))
+		p := models.InitPlayrollDAO(db.Preload("Rolls").Preload("Tracklists"))
 		type listPlayrollsParams struct {
 			Offset uint
 			Count  uint
@@ -92,14 +60,18 @@ var listPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		return formatPlayrolls(p.List())
+		rawPlayroll, err := p.List()
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatPlayrollSlice(rawPlayroll)
 	},
 }
 
 var createPlayroll = gqltag.Method{
 	Description: `[Create Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db)
+		p := models.InitPlayrollDAO(db)
 		type createPlayrollParams struct {
 			ID    string
 			Input models.PlayrollInput
@@ -116,14 +88,19 @@ var createPlayroll = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		return formatPlayroll(p.Create(playroll))
+
+		rawPlayroll, err := p.Create(playroll)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatPlayroll(rawPlayroll)
 	},
 }
 
 var updatePlayroll = gqltag.Method{
 	Description: `[Update Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db)
+		p := models.InitPlayrollDAO(db)
 		type updatePlayrollParams struct {
 			ID    string
 			Input models.PlayrollInput
@@ -141,14 +118,19 @@ var updatePlayroll = gqltag.Method{
 			return nil, err
 		}
 		playroll.ID = utils.StringIDToNumber(params.ID)
-		return formatPlayroll(p.Update(playroll))
+
+		rawPlayroll, err := p.Update(playroll)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatPlayroll(rawPlayroll)
 	},
 }
 
 var deletePlayroll = gqltag.Method{
 	Description: `[Delete Playroll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		p := initPlayroll(db)
+		p := models.InitPlayrollDAO(db)
 		type deletePlayrollParams struct {
 			ID string
 		}
@@ -161,7 +143,12 @@ var deletePlayroll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatPlayroll(p.Delete(id))
+
+		rawPlayroll, err := p.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatPlayroll(rawPlayroll)
 	},
 }
 

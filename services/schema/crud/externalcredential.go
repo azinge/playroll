@@ -20,47 +20,10 @@ type ExternalCredentialMethods struct {
 	DeleteExternalCredential *gqltag.Mutation `gql:"deleteExternalCredential(id: ID!): ExternalCredential"`
 }
 
-func initExternalCredential(db *gorm.DB) *models.ExternalCredential {
-	externalCredential := &models.ExternalCredential{}
-	externalCredential.SetEntity(externalCredential)
-	externalCredential.SetDB(db)
-	return externalCredential
-}
-
-func formatExternalCredential(val interface{}, err error) (*models.ExternalCredentialOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	ec, ok := val.(*models.ExternalCredential)
-	if !ok {
-		return nil, fmt.Errorf("error converting to ExternalCredential")
-	}
-	return ec.ToOutput()
-}
-
-func formatExternalCredentials(val interface{}, err error) ([]models.ExternalCredentialOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	ecs, ok := val.(*[]models.ExternalCredential)
-	if !ok {
-		return nil, fmt.Errorf("error converting to ExternalCredential Slice")
-	}
-	output := []models.ExternalCredentialOutput{}
-	for _, ec := range *ecs {
-		eco, err := ec.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *eco)
-	}
-	return output, nil
-}
-
 var getExternalCredential = gqltag.Method{
 	Description: `[Get ExternalCredential Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		ec := initExternalCredential(db)
+		ec := models.InitExternalCredentialDAO(db)
 		type getExternalCredentialParams struct {
 			ID string
 		}
@@ -73,14 +36,19 @@ var getExternalCredential = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatExternalCredential(ec.Get(id))
+
+		rawExternalCredential, err := ec.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredential(rawExternalCredential)
 	},
 }
 
 var listExternalCredentials = gqltag.Method{
 	Description: `[List ExternalCredentials Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		ec := initExternalCredential(db)
+		ec := models.InitExternalCredentialDAO(db)
 		type listExternalCredentialsParams struct {
 			Offset uint
 			Count  uint
@@ -93,14 +61,18 @@ var listExternalCredentials = gqltag.Method{
 			return nil, err
 		}
 
-		return formatExternalCredentials(ec.List())
+		rawExternalCredential, err := ec.List()
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredentialSlice(rawExternalCredential)
 	},
 }
 
 var createExternalCredential = gqltag.Method{
 	Description: `[Create ExternalCredential Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		ec := initExternalCredential(db)
+		ec := models.InitExternalCredentialDAO(db)
 		type createExternalCredentialParams struct {
 			Input models.ExternalCredentialInput
 		}
@@ -116,14 +88,19 @@ var createExternalCredential = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		return formatExternalCredential(ec.Create(externalCredential))
+
+		rawExternalCredential, err := ec.Create(externalCredential)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredential(rawExternalCredential)
 	},
 }
 
 var updateExternalCredential = gqltag.Method{
 	Description: `[Update ExternalCredential Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		ec := initExternalCredential(db)
+		ec := models.InitExternalCredentialDAO(db)
 		type updateExternalCredentialParams struct {
 			ID    string
 			Input models.ExternalCredentialInput
@@ -141,14 +118,19 @@ var updateExternalCredential = gqltag.Method{
 			return nil, err
 		}
 		externalCredential.ID = utils.StringIDToNumber(params.ID)
-		return formatExternalCredential(ec.Update(externalCredential))
+
+		rawExternalCredential, err := ec.Update(externalCredential)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredential(rawExternalCredential)
 	},
 }
 
 var deleteExternalCredential = gqltag.Method{
 	Description: `[Delete ExternalCredential Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		ec := initExternalCredential(db)
+		ec := models.InitExternalCredentialDAO(db)
 		type deleteExternalCredentialParams struct {
 			ID string
 		}
@@ -161,7 +143,12 @@ var deleteExternalCredential = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatExternalCredential(ec.Delete(id))
+
+		rawExternalCredential, err := ec.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredential(rawExternalCredential)
 	},
 }
 

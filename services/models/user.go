@@ -1,6 +1,10 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/jinzhu/gorm"
+)
 
 type User struct {
 	Model
@@ -36,8 +40,45 @@ func (u *User) ToOutput() (*UserOutput, error) {
 	return uo, nil
 }
 
-func (ui *UserInput) CreateUserFromInputFields() *User {
+func InitUserDAO(db *gorm.DB) *User {
 	user := &User{}
-	user.Name = ui.Name
+	user.SetEntity(user)
+	user.SetDB(db)
 	return user
+}
+
+func (_ *User) InitDAO(db *gorm.DB) Entity {
+	return InitUserDAO(db)
+}
+
+func FormatUser(val interface{}) (*UserOutput, error) {
+	u, ok := val.(*User)
+	if !ok {
+		return nil, fmt.Errorf("error converting to User")
+	}
+	return u.ToOutput()
+}
+
+func (_ *User) Format(val interface{}) (interface{}, error) {
+	return FormatUser(val)
+}
+
+func FormatUserSlice(val interface{}) ([]UserOutput, error) {
+	us, ok := val.(*[]User)
+	if !ok {
+		return nil, fmt.Errorf("error converting to User Slice")
+	}
+	output := []UserOutput{}
+	for _, u := range *us {
+		uo, err := u.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *uo)
+	}
+	return output, nil
+}
+
+func (_ *User) FormatSlice(val interface{}) (interface{}, error) {
+	return FormatUserSlice(val)
 }

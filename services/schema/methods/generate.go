@@ -12,7 +12,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 	"github.com/zmb3/spotify"
-	"golang.org/x/oauth2"
 )
 
 type GenerateMethods struct {
@@ -53,51 +52,7 @@ var getTracklistSongs = gqltag.Method{
 	},
 }
 
-func initPlayroll(db *gorm.DB) *models.Playroll {
-	playroll := &models.Playroll{}
-	playroll.SetEntity(playroll)
-	playroll.SetDB(db.Preload("Rolls"))
-	return playroll
-}
-
-func initTracklist(db *gorm.DB) *models.Tracklist {
-	tracklist := &models.Tracklist{}
-	tracklist.SetEntity(tracklist)
-	tracklist.SetDB(db.Preload("CompiledRolls"))
-	return tracklist
-}
-
-func initCompiledRoll(db *gorm.DB) *models.CompiledRoll {
-	compiledRoll := &models.CompiledRoll{}
-	compiledRoll.SetEntity(compiledRoll)
-	compiledRoll.SetDB(db)
-	return compiledRoll
-}
-
-func formatPlayroll(val interface{}, err error) (*models.PlayrollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	p, ok := val.(*models.Playroll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Playroll")
-	}
-	return p.ToOutput()
-}
-
-func formatTracklist(val interface{}, err error) (*models.TracklistOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	t, ok := val.(*models.Tracklist)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Tracklist")
-	}
-	return t.ToOutput()
-}
-
 func createTrack(cover string, name string, provider string, providerID string) jsonmodels.MusicSource {
-	// TODO: Add cover
 	return jsonmodels.MusicSource{
 		Cover:      cover,
 		Type:       "Track",
@@ -120,18 +75,40 @@ var generateTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		p := initPlayroll(db.Preload("Rolls"))
+		p := models.InitPlayrollDAO(db.Preload("Rolls"))
 		id := utils.StringIDToNumber(params.PlayrollID)
-		playroll, err := formatPlayroll(p.Get(id))
+		rawPlayroll, err := p.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		playroll, err := models.FormatPlayroll(rawPlayroll)
 
 		ec := &models.ExternalCredential{}
 		if err = db.Where(&models.ExternalCredential{Provider: "Spotify", UserID: 1}).Last(ec).Error; err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
-		token := &oauth2.Token{}
-		mapstructure.Decode(ec.Token, &token)
+
+		eco, err := ec.ToOutput()
+		if err != nil {
+			fmt.Println("Error creating output object for External Credential: ", err.Error())
+			return nil, err
+		}
+		token := &eco.Token
+
+		// token := &oauth2.Token{}
+		// mapstructure.Decode(ec.Token, &token)
 		client := spotify.NewAuthenticator("").NewClient(token)
+		token, err = client.Token()
+		if err != nil {
+			fmt.Println("Error fetching token: ", err.Error())
+			return nil, err
+		}
+
+		ec2 := models.InitExternalCredentialDAO(db)
+		ec.Token, err = json.Marshal(token)
+
+		ec2.Update(ec)
 
 		compiledRolls := []models.CompiledRollOutput{}
 
@@ -173,14 +150,19 @@ var generateTracklist = gqltag.Method{
 			tx.Rollback()
 			return nil, err
 		}
-		t := initTracklist(tx)
-		tracklistOutput, err := formatTracklist(t.Create(tracklist))
+		t := models.InitTracklistDAO(tx)
+
+		rawTracklist, err := t.Create(tracklist)
+		if err != nil {
+			return nil, err
+		}
+		tracklistOutput, err := models.FormatTracklist(rawTracklist)
 		tracklistOutput.CompiledRolls = compiledRolls
 		if err != nil {
 			tx.Rollback()
 			return nil, err
 		}
-		cr := initCompiledRoll(tx)
+		cr := models.InitCompiledRollDAO(tx)
 		for _, compiledRollOutput := range compiledRolls {
 			compiledRoll := &models.CompiledRoll{}
 			compiledRoll.TracklistID = tracklistOutput.ID

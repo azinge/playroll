@@ -20,47 +20,10 @@ type UserMethods struct {
 	DeleteUser *gqltag.Mutation `gql:"deleteUser(id: ID!): User"`
 }
 
-func initUser(db *gorm.DB) *models.User {
-	user := &models.User{}
-	user.SetEntity(user)
-	user.SetDB(db)
-	return user
-}
-
-func formatUser(val interface{}, err error) (*models.UserOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	u, ok := val.(*models.User)
-	if !ok {
-		return nil, fmt.Errorf("error converting to User")
-	}
-	return u.ToOutput()
-}
-
-func formatUsers(val interface{}, err error) ([]models.UserOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	us, ok := val.(*[]models.User)
-	if !ok {
-		return nil, fmt.Errorf("error converting to User Slice")
-	}
-	output := []models.UserOutput{}
-	for _, u := range *us {
-		uo, err := u.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *uo)
-	}
-	return output, nil
-}
-
 var getUser = gqltag.Method{
 	Description: `[Get User Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		u := initUser(db)
+		u := models.InitUserDAO(db)
 		type getUserParams struct {
 			ID string
 		}
@@ -73,7 +36,12 @@ var getUser = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatUser(u.Get(id))
+
+		rawUser, err := u.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatUser(rawUser)
 	},
 }
 
@@ -91,15 +59,20 @@ var listUsers = gqltag.Method{
 			return nil, err
 		}
 
-		u := initUser(db)
-		return formatUsers(u.List())
+		u := models.InitUserDAO(db)
+
+		rawUser, err := u.List()
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatUser(rawUser)
 	},
 }
 
 var createUser = gqltag.Method{
 	Description: `[Create User Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		u := initUser(db)
+		u := models.InitUserDAO(db)
 		type createUserParams struct {
 			Input models.UserInput
 		}
@@ -115,14 +88,19 @@ var createUser = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		return formatUser(u.Create(user))
+
+		rawUser, err := u.Create(user)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatUser(rawUser)
 	},
 }
 
 var updateUser = gqltag.Method{
 	Description: `[Update User Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		u := initUser(db)
+		u := models.InitUserDAO(db)
 		type updateUserParams struct {
 			ID    string
 			Input models.UserInput
@@ -140,14 +118,19 @@ var updateUser = gqltag.Method{
 			return nil, err
 		}
 		user.ID = utils.StringIDToNumber(params.ID)
-		return formatUser(u.Update(user))
+
+		rawUser, err := u.Update(user)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatUser(rawUser)
 	},
 }
 
 var deleteUser = gqltag.Method{
 	Description: `[Delete User Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		u := initUser(db)
+		u := models.InitUserDAO(db)
 		type deleteUserParams struct {
 			ID string
 		}
@@ -160,7 +143,12 @@ var deleteUser = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatUser(u.Delete(id))
+
+		rawUser, err := u.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatUser(rawUser)
 	},
 }
 

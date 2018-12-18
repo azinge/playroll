@@ -20,47 +20,10 @@ type CompiledRollMethods struct {
 	DeleteCompiledRoll *gqltag.Mutation `gql:"deleteCompiledRoll(id: ID!): CompiledRoll"`
 }
 
-func initCompiledRoll(db *gorm.DB) *models.CompiledRoll {
-	compiledRoll := &models.CompiledRoll{}
-	compiledRoll.SetEntity(compiledRoll)
-	compiledRoll.SetDB(db)
-	return compiledRoll
-}
-
-func formatCompiledRoll(val interface{}, err error) (*models.CompiledRollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	cr, ok := val.(*models.CompiledRoll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to CompiledRoll")
-	}
-	return cr.ToOutput()
-}
-
-func formatCompiledRolls(val interface{}, err error) ([]models.CompiledRollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	crs, ok := val.(*[]models.CompiledRoll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to CompiledRoll Slice")
-	}
-	output := []models.CompiledRollOutput{}
-	for _, cr := range *crs {
-		cro, err := cr.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *cro)
-	}
-	return output, nil
-}
-
 var getCompiledRoll = gqltag.Method{
 	Description: `[Get CompiledRoll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		cr := initCompiledRoll(db)
+		cr := models.InitCompiledRollDAO(db)
 		type getCompiledRollParams struct {
 			ID string
 		}
@@ -73,14 +36,19 @@ var getCompiledRoll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatCompiledRoll(cr.Get(id))
+
+		rawCompiledRoll, err := cr.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return cr.Format(rawCompiledRoll)
 	},
 }
 
 var listCompiledRolls = gqltag.Method{
 	Description: `[List CompiledRolls Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		cr := initCompiledRoll(db)
+		cr := models.InitCompiledRollDAO(db)
 		type listCompiledRollsParams struct {
 			Offset uint
 			Count  uint
@@ -92,14 +60,18 @@ var listCompiledRolls = gqltag.Method{
 			return nil, err
 		}
 
-		return formatCompiledRolls(cr.List())
+		rawCompiledRolls, err := cr.List()
+		if err != nil {
+			return nil, err
+		}
+		return cr.FormatSlice(rawCompiledRolls)
 	},
 }
 
 var createCompiledRoll = gqltag.Method{
 	Description: `[Create CompiledRoll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		cr := initCompiledRoll(db)
+		cr := models.InitCompiledRollDAO(db)
 		type createCompiledRollParams struct {
 			Input models.CompiledRollInput
 		}
@@ -114,14 +86,19 @@ var createCompiledRoll = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		return formatCompiledRoll(cr.Create(compiledRoll))
+
+		rawCompiledRoll, err := cr.Create(compiledRoll)
+		if err != nil {
+			return nil, err
+		}
+		return cr.Format(rawCompiledRoll)
 	},
 }
 
 var updateCompiledRoll = gqltag.Method{
 	Description: `[Update CompiledRoll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		cr := initCompiledRoll(db)
+		cr := models.InitCompiledRollDAO(db)
 		type updateCompiledRollParams struct {
 			ID    string
 			Input models.CompiledRollInput
@@ -137,14 +114,19 @@ var updateCompiledRoll = gqltag.Method{
 			return nil, err
 		}
 		compiledRoll.ID = utils.StringIDToNumber(params.ID)
-		return formatCompiledRoll(cr.Update(compiledRoll))
+
+		rawCompiledRoll, err := cr.Update(compiledRoll)
+		if err != nil {
+			return nil, err
+		}
+		return cr.Format(rawCompiledRoll)
 	},
 }
 
 var deleteCompiledRoll = gqltag.Method{
 	Description: `[Delete CompiledRoll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		cr := initCompiledRoll(db)
+		cr := models.InitCompiledRollDAO(db)
 		type deleteCompiledRollParams struct {
 			ID string
 		}
@@ -156,7 +138,12 @@ var deleteCompiledRoll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatCompiledRoll(cr.Delete(id))
+
+		rawCompiledRoll, err := cr.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return cr.Format(rawCompiledRoll)
 	},
 }
 

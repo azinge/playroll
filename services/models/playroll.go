@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cazinge/playroll/services/utils"
+	"github.com/jinzhu/gorm"
 )
 
 type Playroll struct {
@@ -36,42 +37,60 @@ func (pi *PlayrollInput) ToModel() (*Playroll, error) {
 	return p, nil
 }
 
-func formatRolls(val interface{}, err error) (*[]RollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	rs, ok := val.([]Roll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Roll Slice")
-	}
-	output := []RollOutput{}
-	for _, r := range rs {
-		ro, err := r.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *ro)
-	}
-	return &output, nil
-}
-
 func (p *Playroll) ToOutput() (*PlayrollOutput, error) {
 	po := &PlayrollOutput{}
 	po.Model = p.Model
 	po.Name = p.Name
 	po.UserID = p.UserID
 	po.User = p.User
-	rolls, err := formatRolls(p.Rolls, nil)
+	rolls, err := FormatRollSlice(&p.Rolls)
 	if err != nil {
 		return nil, err
 	}
-	po.Rolls = *rolls
+	po.Rolls = rolls
 	po.Tracklists = p.Tracklists
 	return po, nil
 }
 
-func (pi *PlayrollInput) CreatePlayrollFromInputFields() *Playroll {
+func InitPlayrollDAO(db *gorm.DB) Entity {
 	playroll := &Playroll{}
-	playroll.Name = pi.Name
+	playroll.SetEntity(playroll)
+	playroll.SetDB(db.Preload("Rolls").Preload("Tracklists"))
 	return playroll
+}
+
+func (_ *Playroll) InitDAO(db *gorm.DB) Entity {
+	return InitPlayrollDAO(db)
+}
+
+func FormatPlayroll(val interface{}) (*PlayrollOutput, error) {
+	p, ok := val.(*Playroll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Playroll")
+	}
+	return p.ToOutput()
+}
+
+func (_ *Playroll) Format(val interface{}) (interface{}, error) {
+	return FormatPlayroll(val)
+}
+
+func FormatPlayrollSlice(val interface{}) ([]PlayrollOutput, error) {
+	ps, ok := val.(*[]Playroll)
+	if !ok {
+		return nil, fmt.Errorf("error converting to Playroll Slice")
+	}
+	output := []PlayrollOutput{}
+	for _, p := range *ps {
+		po, err := p.ToOutput()
+		if err != nil {
+			return nil, err
+		}
+		output = append(output, *po)
+	}
+	return output, nil
+}
+
+func (_ *Playroll) FormatSlice(val interface{}) (interface{}, error) {
+	return FormatPlayrollSlice(val)
 }

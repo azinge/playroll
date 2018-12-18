@@ -20,47 +20,10 @@ type RollMethods struct {
 	DeleteRoll *gqltag.Mutation `gql:"deleteRoll(id: ID!): Roll"`
 }
 
-func initRoll(db *gorm.DB) *models.Roll {
-	roll := &models.Roll{}
-	roll.SetEntity(roll)
-	roll.SetDB(db)
-	return roll
-}
-
-func formatRoll(val interface{}, err error) (*models.RollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	r, ok := val.(*models.Roll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Roll")
-	}
-	return r.ToOutput()
-}
-
-func formatRolls(val interface{}, err error) ([]models.RollOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	rs, ok := val.(*[]models.Roll)
-	if !ok {
-		return nil, fmt.Errorf("error converting to Roll Slice")
-	}
-	output := []models.RollOutput{}
-	for _, r := range *rs {
-		ro, err := r.ToOutput()
-		if err != nil {
-			return nil, err
-		}
-		output = append(output, *ro)
-	}
-	return output, nil
-}
-
 var getRoll = gqltag.Method{
 	Description: `[Get Roll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := initRoll(db)
+		r := models.InitRollDAO(db)
 		type getRollParams struct {
 			ID string
 		}
@@ -73,14 +36,19 @@ var getRoll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatRoll(r.Get(id))
+
+		rawRoll, err := r.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatRoll(rawRoll)
 	},
 }
 
 var listRolls = gqltag.Method{
 	Description: `[List Rolls Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := initRoll(db)
+		r := models.InitRollDAO(db)
 		type listRollsParams struct {
 			Offset uint
 			Count  uint
@@ -93,14 +61,18 @@ var listRolls = gqltag.Method{
 			return nil, err
 		}
 
-		return formatRolls(r.List())
+		rawRoll, err := r.List()
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatRoll(rawRoll)
 	},
 }
 
 var createRoll = gqltag.Method{
 	Description: `[Create Roll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := initRoll(db)
+		r := models.InitRollDAO(db)
 		type createRollParams struct {
 			Input models.RollInput
 		}
@@ -115,14 +87,19 @@ var createRoll = gqltag.Method{
 		if err != nil {
 			return nil, err
 		}
-		return formatRoll(r.Create(roll))
+
+		rawRoll, err := r.Create(roll)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatRoll(rawRoll)
 	},
 }
 
 var updateRoll = gqltag.Method{
 	Description: `[Update Roll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := initRoll(db)
+		r := models.InitRollDAO(db)
 		type updateRollParams struct {
 			ID    string
 			Input models.RollInput
@@ -140,14 +117,19 @@ var updateRoll = gqltag.Method{
 			return nil, err
 		}
 		roll.ID = utils.StringIDToNumber(params.ID)
-		return formatRoll(r.Update(roll))
+
+		rawRoll, err := r.Update(roll)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatRoll(rawRoll)
 	},
 }
 
 var deleteRoll = gqltag.Method{
 	Description: `[Delete Roll Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		r := initRoll(db)
+		r := models.InitRollDAO(db)
 		type deleteRollParams struct {
 			ID string
 		}
@@ -160,7 +142,12 @@ var deleteRoll = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.ID)
-		return formatRoll(r.Delete(id))
+
+		rawRoll, err := r.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatRoll(rawRoll)
 	},
 }
 

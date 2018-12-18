@@ -32,6 +32,8 @@ const fetcher = async (uri, { method, body }) => {
     path,
   };
 
+  // console.warn("REQUEST:", formatted);
+
   const signedRequest = Signer.sign(formatted, {
     access_key: accessKeyId,
     secret_key: secretAccessKey,
@@ -45,7 +47,8 @@ const fetcher = async (uri, { method, body }) => {
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/",
+    // uri: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/",
+    uri: "http://localhost:4445/graphql",
     fetch: fetcher,
   }),
   cache: new InMemoryCache(),

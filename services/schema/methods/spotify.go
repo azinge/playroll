@@ -1,6 +1,7 @@
 package methods
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"golang.org/x/oauth2"
@@ -20,13 +21,6 @@ type SpotifyMethods struct {
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): ExternalCredential"`
 	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
-}
-
-func initExternalCredential(db *gorm.DB) *models.ExternalCredential {
-	ec := &models.ExternalCredential{}
-	ec.SetEntity(ec)
-	ec.SetDB(db)
-	return ec
 }
 
 var searchSpotify = gqltag.Method{
@@ -52,9 +46,33 @@ var searchSpotify = gqltag.Method{
 			fmt.Println(err)
 			return nil, err
 		}
-		token := &oauth2.Token{}
-		mapstructure.Decode(ec.Token, &token)
-		client := spotify.NewAuthenticator("").NewClient(token)
+		eco, err := ec.ToOutput()
+		if err != nil {
+			fmt.Println("Error creating output object for External Credential: ", err.Error())
+			return nil, err
+		}
+		token := &eco.Token
+
+		redirectURL := "http://localhost:8888/callback"
+		spotifyScopes := []string{
+			spotify.ScopeUserReadPrivate,
+			spotify.ScopeUserLibraryRead,
+			spotify.ScopeUserReadEmail,
+			spotify.ScopePlaylistModifyPublic,
+			spotify.ScopePlaylistModifyPrivate,
+		}
+
+		client := spotify.NewAuthenticator(redirectURL, spotifyScopes...).NewClient(token)
+		token, err = client.Token()
+		if err != nil {
+			fmt.Println("Error fetching token: ", err.Error())
+			return nil, err
+		}
+
+		ec2 := models.InitExternalCredentialDAO(db)
+		ec.Token, err = json.Marshal(token)
+
+		ec2.Update(ec)
 
 		var searchResult *spotify.SearchResult
 		switch params.SearchType {
@@ -126,17 +144,6 @@ var searchSpotify = gqltag.Method{
 	},
 }
 
-func formatExternalCredential(val interface{}, err error) (*models.ExternalCredentialOutput, error) {
-	if err != nil {
-		return nil, err
-	}
-	ec, ok := val.(*models.ExternalCredential)
-	if !ok {
-		return nil, fmt.Errorf("error converting to ExternalCredential")
-	}
-	return ec.ToOutput()
-}
-
 var registerSpotifyAuthCode = gqltag.Method{
 	Description: `[Register Spotify Auth Code Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
@@ -171,24 +178,34 @@ var registerSpotifyAuthCode = gqltag.Method{
 		}
 
 		oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(params.Code)
-		fmt.Println("Recieved Token")
+
+		fmt.Printf("Recieved Token: %#v\n", oauthToken)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
 
-		ec := initExternalCredential(db)
+		t2 := &oauth2.Token{}
+
+		b, e := json.Marshal(oauthToken)
+		fmt.Println(e)
+		json.Unmarshal(b, t2)
+		fmt.Printf("Translated Token: %#v\n", t2)
+
+		ec := models.InitExternalCredentialDAO(db)
 		externalCredential := &models.ExternalCredential{
 			Provider: "Spotify",
 			UserID:   utils.StringIDToNumber(params.UserID),
-			Token: jsonmodels.Token{
-				AccessToken:  oauthToken.AccessToken,
-				RefreshToken: oauthToken.RefreshToken,
-				TokenType:    oauthToken.TokenType,
-				Expiry:       oauthToken.Expiry,
-			},
+			Token:    b,
 		}
-		return formatExternalCredential(ec.Create(externalCredential))
+
+		fmt.Printf("Saved Token: %#v\n", externalCredential)
+
+		rawExternalCredential, err := ec.Create(externalCredential)
+		if err != nil {
+			return nil, err
+		}
+		return models.FormatExternalCredential(rawExternalCredential)
 	},
 }
 
@@ -233,9 +250,22 @@ var generatePlaylist = gqltag.Method{
 			fmt.Println(err)
 			return nil, err
 		}
-		token := &oauth2.Token{}
-		mapstructure.Decode(ec.Token, &token)
-		client := spotify.NewAuthenticator("").NewClient(token)
+		eco, err := ec.ToOutput()
+		if err != nil {
+			fmt.Println("Error fetching token: ", err.Error())
+			return nil, err
+		}
+		client := spotify.NewAuthenticator("").NewClient(&eco.Token)
+		token, err := client.Token()
+		if err != nil {
+			fmt.Println("Error fetching token: ", err.Error())
+			return nil, err
+		}
+
+		ec2 := models.InitExternalCredentialDAO(db)
+		ec.Token, err = json.Marshal(token)
+
+		ec2.Update(ec)
 
 		user, err := client.CurrentUser()
 		if err != nil {

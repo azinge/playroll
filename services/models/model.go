@@ -9,7 +9,20 @@ import (
 )
 
 type Entity interface {
+	DB() *gorm.DB
+	SetDB(*gorm.DB)
+	SetEntity(Entity)
 	GetID() uint
+
+	InitDAO(*gorm.DB) Entity
+	Format(interface{}) (interface{}, error)
+	FormatSlice(interface{}) (interface{}, error)
+
+	Get(uint) (interface{}, error)
+	List() (interface{}, error)
+	Create(Entity) (interface{}, error)
+	Update(Entity) (interface{}, error)
+	Delete(uint) (interface{}, error)
 }
 
 type Model struct {

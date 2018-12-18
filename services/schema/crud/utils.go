@@ -1,0 +1,147 @@
+package crud
+
+import (
+	"fmt"
+
+	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/utils"
+	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
+	"github.com/mitchellh/mapstructure"
+)
+
+func GenerateGetEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		dao := e.InitDAO(db)
+
+		type getEntityParams struct {
+			ID string
+		}
+		params := &getEntityParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		id := utils.StringIDToNumber(params.ID)
+
+		rawEntity, err := dao.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		return dao.Format(rawEntity)
+	}
+}
+
+func GenerateListEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		dao := e.InitDAO(db)
+
+		type listEntityParams struct {
+			Offset uint
+			Count  uint
+		}
+		params := &listEntityParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		rawEntities, err := dao.List()
+		if err != nil {
+			return nil, err
+		}
+		return dao.FormatSlice(rawEntities)
+	}
+}
+
+type InputStruct interface {
+	ToModel() (models.Entity, error)
+}
+
+func GenerateCreateEntityMethod(e models.Entity, inputStruct InputStruct) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		dao := e.InitDAO(db)
+
+		type createEntityParams struct {
+			Input InputStruct
+		}
+		params := &createEntityParams{Input: inputStruct}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		fmt.Printf("%#v\n", params)
+		fmt.Printf("%#v\n", params.Input)
+
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		entity, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+
+		rawEntity, err := dao.Create(entity)
+		if err != nil {
+			return nil, err
+		}
+		return dao.Format(rawEntity)
+	}
+}
+
+func GenerateUpdateEntityMethod(e models.Entity, inputStruct InputStruct) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		dao := e.InitDAO(db)
+
+		type updateEntityParams struct {
+			ID    string
+			Input InputStruct
+		}
+		params := &updateEntityParams{Input: inputStruct}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		entity, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+		id := utils.StringIDToNumber(params.ID)
+		entity.SetID(id)
+
+		rawEntity, err := dao.Update(entity)
+		if err != nil {
+			return nil, err
+		}
+		return dao.Format(rawEntity)
+	}
+}
+
+func GenerateDeleteEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		dao := e.InitDAO(db)
+
+		type deleteEntityParams struct {
+			ID string
+		}
+
+		params := &deleteEntityParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		id := utils.StringIDToNumber(params.ID)
+
+		rawEntity, err := dao.Delete(id)
+		if err != nil {
+			return nil, err
+		}
+		return dao.Format(rawEntity)
+	}
+}

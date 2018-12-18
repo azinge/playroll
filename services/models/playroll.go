@@ -30,11 +30,15 @@ type PlayrollOutput struct {
 	Tracklists []Tracklist  `gql:"tracklists: [Tracklist]"`
 }
 
-func (pi *PlayrollInput) ToModel() (*Playroll, error) {
+func PlayrollInputToModel(pi *PlayrollInput) (*Playroll, error) {
 	p := &Playroll{}
 	p.Name = pi.Name
 	p.UserID = utils.StringIDToNumber(pi.UserID)
 	return p, nil
+}
+
+func (pi *PlayrollInput) ToModel() (Entity, error) {
+	return PlayrollInputToModel(pi)
 }
 
 func (p *Playroll) ToOutput() (*PlayrollOutput, error) {

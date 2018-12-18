@@ -13,6 +13,7 @@ type Entity interface {
 	SetDB(*gorm.DB)
 	SetEntity(Entity)
 	GetID() uint
+	SetID(uint)
 
 	InitDAO(*gorm.DB) Entity
 	Format(interface{}) (interface{}, error)
@@ -51,6 +52,10 @@ func (m *Model) SetEntity(entity Entity) {
 
 func (m *Model) GetID() (id uint) {
 	return m.ID
+}
+
+func (m *Model) SetID(id uint) {
+	m.ID = id
 }
 
 func (m *Model) getEntityType() reflect.Type {

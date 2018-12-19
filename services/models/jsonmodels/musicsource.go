@@ -30,6 +30,18 @@ type MusicSourceOutput struct {
 	ProviderID string `gql:"providerID: String" json:"providerID"`
 }
 
+func CreateTrack(cover string, name string, provider string, providerID string) *MusicSource {
+	return &MusicSource{
+		Cover:      cover,
+		Type:       "Track",
+		Name:       name,
+		Provider:   provider,
+		ProviderID: providerID,
+	}
+}
+
+// Entity Specific Methods
+
 func (msi *MusicSourceInput) ToModel() (*MusicSource, error) {
 	ms := &MusicSource{}
 	ms.Type = msi.Type
@@ -49,6 +61,8 @@ func (ms *MusicSource) ToOutput() (*MusicSourceOutput, error) {
 	mso.ProviderID = ms.ProviderID
 	return mso, nil
 }
+
+// Interface Generalization Methods
 
 func (ms MusicSource) Value() (driver.Value, error) {
 	value, err := json.Marshal(ms)

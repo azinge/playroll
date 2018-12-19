@@ -1,17 +1,17 @@
 package methods
 
 import (
-	"encoding/json"
 	"fmt"
 
+	"github.com/cazinge/playroll/services/generate"
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
-	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
-	"github.com/zmb3/spotify"
+
+	spotifyhelpers "github.com/cazinge/playroll/services/spotify"
 )
 
 type GenerateMethods struct {
@@ -32,32 +32,15 @@ var getTracklistSongs = gqltag.Method{
 			return nil, err
 		}
 
-		id := utils.StringIDToNumber(params.TracklistID)
+		tracklistID := utils.StringIDToNumber(params.TracklistID)
 
-		compiledRolls, err := models.FindCompiledRollsByTracklistID(id, db)
+		tracks, err := models.GetTracksByTracklistID(tracklistID, db)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
-
-		tracks, err := models.GetTracksFromCompiledRolls(compiledRolls)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
 		return *tracks, nil
 	},
-}
-
-func createTrack(cover string, name string, provider string, providerID string) jsonmodels.MusicSource {
-	return jsonmodels.MusicSource{
-		Cover:      cover,
-		Type:       "Track",
-		Name:       name,
-		Provider:   provider,
-		ProviderID: providerID,
-	}
 }
 
 var generateTracklist = gqltag.Method{
@@ -73,116 +56,39 @@ var generateTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		p := models.InitPlayrollDAO(db.Preload("Rolls"))
-		id := utils.StringIDToNumber(params.PlayrollID)
-		rawPlayroll, err := p.Get(id)
+		playrollID := utils.StringIDToNumber(params.PlayrollID)
+
+		pDAO := models.InitPlayrollDAO(db.Preload("Rolls"))
+		rawPlayroll, err := pDAO.Get(playrollID)
 		if err != nil {
+			fmt.Println("Error getting playroll: ", err.Error())
 			return nil, err
 		}
+
 		playroll, err := models.FormatPlayroll(rawPlayroll)
-
-		ec := &models.ExternalCredential{}
-		if err = db.Where(&models.ExternalCredential{Provider: "Spotify", UserID: 1}).Last(ec).Error; err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-
-		eco, err := models.ExternalCredentialModelToOutput(ec)
 		if err != nil {
-			fmt.Println("Error creating output object for External Credential: ", err.Error())
+			fmt.Println("Error formatting playroll: ", err.Error())
 			return nil, err
 		}
-		token := &eco.Token
 
-		// token := &oauth2.Token{}
-		// mapstructure.Decode(ec.Token, &token)
-		client := spotify.NewAuthenticator("").NewClient(token)
-		token, err = client.Token()
+		client, err := spotifyhelpers.GetSpotifyClientForUser(1, db)
 		if err != nil {
 			fmt.Println("Error fetching token: ", err.Error())
 			return nil, err
 		}
 
-		ec2 := models.InitExternalCredentialDAO(db)
-		ec.Token, err = json.Marshal(token)
-
-		ec2.Update(ec)
-
-		compiledRolls := []models.CompiledRollOutput{}
-
-		for _, roll := range playroll.Rolls {
-			tracks := []jsonmodels.MusicSource{}
-			if sources := roll.Data.Sources; len(sources) > 0 {
-				source := sources[0]
-				switch source.Type {
-				case "Track":
-					tracks = append(tracks, createTrack(source.Cover, source.Name, source.Provider, source.ProviderID))
-				case "Album":
-					simpleTrackPage, err := client.GetAlbumTracksOpt(spotify.ID(source.ProviderID), 50, 0)
-					if err != nil {
-						return nil, err
-					}
-					for _, track := range simpleTrackPage.Tracks {
-						tracks = append(tracks, createTrack(source.Cover, track.Name, source.Provider, string(track.ID)))
-					}
-				case "Artist":
-					fullTracks, err := client.GetArtistsTopTracks(spotify.ID(source.ProviderID), "US")
-					if err != nil {
-						return nil, err
-					}
-					for _, track := range fullTracks {
-						tracks = append(tracks, createTrack(source.Cover, track.Name, source.Provider, string(track.ID)))
-					}
-				}
-			}
-			compiledRolls = append(compiledRolls, models.CompiledRollOutput{
-				Data:   jsonmodels.CompiledRollDataOutput{Tracks: tracks},
-				RollID: roll.ID,
-			})
-		}
-
-		tx := db.Begin()
-		tracklistInput := models.TracklistInput{Starred: false, Primary: true, PlayrollID: params.PlayrollID}
-		tracklist, err := tracklistInput.ToModel()
+		compiledRolls, err := generate.CompileRolls(&playroll.Rolls, client)
 		if err != nil {
-			tx.Rollback()
+			fmt.Println("Error compiling rolls: ", err.Error())
 			return nil, err
 		}
-		t := models.InitTracklistDAO(tx)
 
-		rawTracklist, err := t.Create(tracklist)
+		tracklist, err := models.CreateTracklistWithCompiledRolls(compiledRolls, playrollID, db)
 		if err != nil {
+			fmt.Println("Error creating tracklist: ", err.Error())
 			return nil, err
 		}
-		tracklistOutput, err := models.FormatTracklist(rawTracklist)
-		tracklistOutput.CompiledRolls = compiledRolls
-		if err != nil {
-			tx.Rollback()
-			return nil, err
-		}
-		cr := models.InitCompiledRollDAO(tx)
-		for _, compiledRollOutput := range compiledRolls {
-			compiledRoll := &models.CompiledRoll{}
-			compiledRoll.TracklistID = tracklistOutput.ID
-			compiledRoll.Order = compiledRollOutput.Order
-			compiledRoll.RollID = compiledRollOutput.RollID
-			tracks, err := json.Marshal(compiledRollOutput.Data.Tracks)
-			if err != nil {
-				tx.Rollback()
-				return nil, err
-			}
-			compiledRoll.Data = jsonmodels.CompiledRollData{Tracks: tracks}
-			_, err = cr.Create(compiledRoll)
-			if err != nil {
-				tx.Rollback()
-				return nil, err
-			}
-		}
-		err = tx.Commit().Error
-		if err != nil {
-			return nil, err
-		}
-		return tracklistOutput, nil
+		return tracklist, nil
 	},
 }
 

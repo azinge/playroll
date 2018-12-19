@@ -36,23 +36,23 @@ type CompiledRollOutput struct {
 // Utility Functions
 
 func FindCompiledRollsByTracklistID(id uint, db *gorm.DB) (*[]CompiledRoll, error) {
-	compiledRolls := &[]CompiledRoll{}
-	if err := db.Where(&CompiledRoll{TracklistID: id}).Find(&compiledRolls).Error; err != nil {
+	crs := &[]CompiledRoll{}
+	if err := db.Where(&CompiledRoll{TracklistID: id}).Find(&crs).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	return compiledRolls, nil
+	return crs, nil
 }
 
-func GetTracksFromCompiledRolls(compiledRolls *[]CompiledRoll) (*[]jsonmodels.MusicSource, error) {
+func GetTracksFromCompiledRolls(crs *[]CompiledRoll) (*[]jsonmodels.MusicSource, error) {
 	tracks := []jsonmodels.MusicSource{}
-	for _, compiledRoll := range *compiledRolls {
-		compiledRollOutput, err := CompiledRollModelToOutput(&compiledRoll)
+	for _, cr := range *crs {
+		cro, err := CompiledRollModelToOutput(&cr)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
-		tracks = append(tracks, compiledRollOutput.Data.Tracks...)
+		tracks = append(tracks, cro.Data.Tracks...)
 	}
 	return &tracks, nil
 }

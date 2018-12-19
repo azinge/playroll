@@ -30,6 +30,15 @@ type ExternalCredentialOutput struct {
 	Token    oauth2.Token `gql:"token: Token"`
 }
 
+func FindExternalCredentialByUserID(id uint, db *gorm.DB) (*ExternalCredential, error) {
+	ec := &ExternalCredential{}
+	if err := db.Where(&ExternalCredential{Provider: "Spotify", UserID: id}).Last(ec).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return ec, nil
+}
+
 // Entity Specific Methods
 
 func ExternalCredentialInputToModel(eci *ExternalCredentialInput) (*ExternalCredential, error) {

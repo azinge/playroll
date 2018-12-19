@@ -1,8 +1,10 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 
+	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/jinzhu/gorm"
 )
@@ -28,6 +30,67 @@ type TracklistOutput struct {
 	Primary       bool                 `gql:"primary: Boolean"`
 	CompiledRolls []CompiledRollOutput `gql:"compiledRolls: [CompiledRoll]"`
 	PlayrollID    uint                 `gql:"playrollID: ID"`
+}
+
+// Utility Functions
+func GetTracksByTracklistID(id uint, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	compiledRolls, err := FindCompiledRollsByTracklistID(id, db)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	tracks, err := GetTracksFromCompiledRolls(compiledRolls)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return tracks, nil
+}
+
+func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playrollID uint, db *gorm.DB) (*TracklistOutput, error) {
+	tx := db.Begin()
+	tracklistInput := TracklistInput{Starred: false, Primary: true, PlayrollID: string(playrollID)}
+	tracklist, err := tracklistInput.ToModel()
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	tDAO := InitTracklistDAO(tx)
+
+	rawTracklist, err := tDAO.Create(tracklist)
+	if err != nil {
+		return nil, err
+	}
+	tracklistOutput, err := FormatTracklist(rawTracklist)
+	tracklistOutput.CompiledRolls = *compiledRolls
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	crDAO := InitCompiledRollDAO(tx)
+	for _, compiledRollOutput := range *compiledRolls {
+		compiledRoll := &CompiledRoll{}
+		compiledRoll.TracklistID = tracklistOutput.ID
+		compiledRoll.Order = compiledRollOutput.Order
+		compiledRoll.RollID = compiledRollOutput.RollID
+		tracks, err := json.Marshal(compiledRollOutput.Data.Tracks)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+		compiledRoll.Data = jsonmodels.CompiledRollData{Tracks: tracks}
+		_, err = crDAO.Create(compiledRoll)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, err
+	}
+	return tracklistOutput, nil
 }
 
 // Entity Specific Methods

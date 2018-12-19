@@ -33,22 +33,20 @@ var getTracklistSongs = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.TracklistID)
-		compiledRolls := []models.CompiledRoll{}
-		if err = db.Where(&models.CompiledRoll{TracklistID: id}).Find(&compiledRolls).Error; err != nil {
+
+		compiledRolls, err := models.FindCompiledRollsByTracklistID(id, db)
+		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
 
-		tracks := []jsonmodels.MusicSource{}
-		for _, compiledRoll := range compiledRolls {
-			compiledRollOutput, err := models.CompiledRollModelToOutput(&compiledRoll)
-			if err != nil {
-				fmt.Println(err)
-				return nil, err
-			}
-			tracks = append(tracks, compiledRollOutput.Data.Tracks...)
+		tracks, err := models.GetTracksFromCompiledRolls(compiledRolls)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
 		}
-		return tracks, nil
+
+		return *tracks, nil
 	},
 }
 

@@ -33,6 +33,30 @@ type CompiledRollOutput struct {
 	TracklistID uint                              `gql:"tracklistID: ID"`
 }
 
+// Utility Functions
+
+func FindCompiledRollsByTracklistID(id uint, db *gorm.DB) (*[]CompiledRoll, error) {
+	compiledRolls := &[]CompiledRoll{}
+	if err := db.Where(&CompiledRoll{TracklistID: id}).Find(&compiledRolls).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return compiledRolls, nil
+}
+
+func GetTracksFromCompiledRolls(compiledRolls *[]CompiledRoll) (*[]jsonmodels.MusicSource, error) {
+	tracks := []jsonmodels.MusicSource{}
+	for _, compiledRoll := range *compiledRolls {
+		compiledRollOutput, err := CompiledRollModelToOutput(&compiledRoll)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		tracks = append(tracks, compiledRollOutput.Data.Tracks...)
+	}
+	return &tracks, nil
+}
+
 // Entity Specific Methods
 
 func CompiledRollInputToModel(cri *CompiledRollInput) (*CompiledRoll, error) {

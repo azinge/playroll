@@ -33,6 +33,12 @@ func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models
 					return nil, err
 				}
 				tracks = append(tracks, (*result)...)
+			case "Playlist":
+				result, err := spotifyhelpers.GetSpotifyPlaylistTracks(&source, client)
+				if err != nil {
+					return nil, err
+				}
+				tracks = append(tracks, (*result)...)
 			}
 		}
 		compiledRolls = append(compiledRolls, models.CompiledRollOutput{

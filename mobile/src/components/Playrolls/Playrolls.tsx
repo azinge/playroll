@@ -50,7 +50,7 @@ export default class Playrolls extends React.Component<Props, State> {
     return (
       <Query query={GET_PLAYROLLS}>
         {({ loading, error, data }) => {
-          error && console.log(error);
+          error && console.warn(error);
           return (
             <View style={{ flex: 1, marginTop: 20 }}>
               <View>

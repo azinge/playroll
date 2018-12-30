@@ -108,6 +108,8 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 		searchResult, err = client.Search(query, spotify.SearchTypeAlbum)
 	case "Artist":
 		searchResult, err = client.Search(query, spotify.SearchTypeArtist)
+	case "Playlist":
+		searchResult, err = client.Search(query, spotify.SearchTypePlaylist)
 	default:
 		return nil, fmt.Errorf("Search Type Not Found")
 	}
@@ -160,6 +162,21 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 				Cover:      cover,
 				Provider:   "Spotify",
 				ProviderID: string(artist.ID),
+			}
+			output = append(output, ms)
+		}
+	case "Playlist":
+		for _, playlist := range searchResult.Playlists.Playlists {
+			cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
+			if images := playlist.Images; len(images) > 0 {
+				cover = images[0].URL
+			}
+			ms := jsonmodels.MusicSource{
+				Type:       "Playlist",
+				Name:       playlist.Name,
+				Cover:      cover,
+				Provider:   "Spotify",
+				ProviderID: string(playlist.ID),
 			}
 			output = append(output, ms)
 		}
@@ -225,6 +242,23 @@ func GetSpotifyArtistTracks(source *jsonmodels.MusicSource, client *spotify.Clie
 	}
 	for _, track := range fullTracks {
 		tracks = append(tracks, *jsonmodels.CreateTrack(source.Cover, track.Name, source.Provider, string(track.ID)))
+	}
+	return &tracks, nil
+}
+
+func GetSpotifyPlaylistTracks(source *jsonmodels.MusicSource, client *spotify.Client) (*[]jsonmodels.MusicSource, error) {
+	tracks := []jsonmodels.MusicSource{}
+	playlistTrackPage, err := client.GetPlaylistTracks(spotify.ID(source.ProviderID))
+	if err != nil {
+		return nil, err
+	}
+	for _, playlistTrack := range playlistTrackPage.Tracks {
+		cover := source.Cover
+		track := playlistTrack.Track
+		if images := track.Album.Images; len(images) > 0 {
+			cover = images[0].URL
+		}
+		tracks = append(tracks, *jsonmodels.CreateTrack(cover, track.Name, source.Provider, string(track.ID)))
 	}
 	return &tracks, nil
 }

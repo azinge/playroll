@@ -76,6 +76,7 @@ export default class Search extends React.Component<Props, State> {
             { label: "Artist", value: "Artist" },
             { label: "Album", value: "Album" },
             { label: "Track", value: "Track" },
+            { label: "Playlist", value: "Playlist" },
           ]}
           onValueChange={value => {
             this.setState({

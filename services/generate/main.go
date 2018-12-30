@@ -5,7 +5,7 @@ import (
 	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/zmb3/spotify"
 
-	spotifyhelpers "github.com/cazinge/playroll/services/spotify"
+	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
 
 func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models.CompiledRollOutput, error) {

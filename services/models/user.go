@@ -9,19 +9,22 @@ import (
 type User struct {
 	Model
 	Name                string
+	Avatar              string
 	Playrolls           []Playroll
 	ExternalCredentials []ExternalCredential
 }
 
 type UserInput struct {
-	Name string `gql:"name: String"`
+	Name   string `gql:"name: String"`
+	Avatar string `gql:"avatar: String"`
 }
 
 type UserOutput struct {
 	Model               `gql:"MODEL"`
-	Name                string               `gql:"name: String"`
-	Playrolls           []Playroll           `gql:"playrolls: [Playroll]"`
-	ExternalCredentials []ExternalCredential `gql:"externalCredentials: [ExternalCredential]"`
+	Name                string                     `gql:"name: String"`
+	Avatar              string                     `gql:"avatar: String"`
+	Playrolls           []PlayrollOutput           `gql:"playrolls: [Playroll]"`
+	ExternalCredentials []ExternalCredentialOutput `gql:"externalCredentials: [ExternalCredential]"`
 }
 
 // Entity Specific Methods
@@ -29,6 +32,7 @@ type UserOutput struct {
 func UserInputToModel(ui *UserInput) (*User, error) {
 	u := &User{}
 	u.Name = ui.Name
+	u.Avatar = ui.Avatar
 	return u, nil
 }
 
@@ -41,8 +45,17 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 	uo := &UserOutput{}
 	uo.Model = u.Model
 	uo.Name = u.Name
-	uo.Playrolls = u.Playrolls
-	uo.ExternalCredentials = u.ExternalCredentials
+	uo.Avatar = u.Avatar
+	playrolls, err := FormatPlayrollSlice(&u.Playrolls)
+	if err != nil {
+		return nil, err
+	}
+	uo.Playrolls = playrolls
+	externalCredentials, err := FormatExternalCredentialSlice(&u.ExternalCredentials)
+	if err != nil {
+		return nil, err
+	}
+	uo.ExternalCredentials = externalCredentials
 	return uo, nil
 }
 

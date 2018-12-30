@@ -29,7 +29,7 @@ type CompiledRollOutput struct {
 	Order       string                            `gql:"order: String"`
 	Data        jsonmodels.CompiledRollDataOutput `gql:"data: CompiledRollData"`
 	RollID      uint                              `gql:"rollID: ID"`
-	Roll        Roll                              `gql:"roll: Roll"`
+	Roll        RollOutput                        `gql:"roll: Roll"`
 	TracklistID uint                              `gql:"tracklistID: ID"`
 }
 
@@ -81,7 +81,11 @@ func CompiledRollModelToOutput(cr *CompiledRoll) (*CompiledRollOutput, error) {
 	cro.Model = cr.Model
 	cro.TracklistID = cr.TracklistID
 	cro.RollID = cr.RollID
-	cro.Roll = cr.Roll
+	roll, err := FormatRoll(cr.Roll)
+	if err != nil {
+		return nil, err
+	}
+	cro.Roll = *roll
 	cro.Order = cr.Order
 	data, err := cr.Data.ToOutput()
 	if err != nil {

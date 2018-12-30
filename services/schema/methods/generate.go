@@ -11,7 +11,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 
-	spotifyhelpers "github.com/cazinge/playroll/services/spotify"
+	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
 
 type GenerateMethods struct {

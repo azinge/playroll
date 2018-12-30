@@ -25,7 +25,7 @@ type ExternalCredentialInput struct {
 type ExternalCredentialOutput struct {
 	Model    `gql:"MODEL"`
 	Provider string       `gql:"provider: String"`
-	User     User         `gql:"user: User"`
+	User     UserOutput   `gql:"user: User"`
 	UserID   uint         `gql:"userID: ID"`
 	Token    oauth2.Token `gql:"token: Token"`
 }
@@ -56,7 +56,11 @@ func ExternalCredentialModelToOutput(ec *ExternalCredential) (*ExternalCredentia
 	eco := &ExternalCredentialOutput{}
 	eco.Model = ec.Model
 	eco.Provider = ec.Provider
-	eco.User = ec.User
+	user, err := FormatUser(ec.User)
+	if err != nil {
+		return nil, err
+	}
+	eco.User = *user
 	eco.UserID = ec.UserID
 	token := oauth2.Token{}
 	if err := json.Unmarshal(ec.Token, &token); err != nil {

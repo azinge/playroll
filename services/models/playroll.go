@@ -23,11 +23,11 @@ type PlayrollInput struct {
 
 type PlayrollOutput struct {
 	Model      `gql:"MODEL"`
-	Name       string       `gql:"name: String"`
-	UserID     uint         `gql:"userID: ID"`
-	User       User         `gql:"user: User"`
-	Rolls      []RollOutput `gql:"rolls: [Roll]"`
-	Tracklists []Tracklist  `gql:"tracklists: [Tracklist]"`
+	Name       string            `gql:"name: String"`
+	UserID     uint              `gql:"userID: ID"`
+	User       User              `gql:"user: User"`
+	Rolls      []RollOutput      `gql:"rolls: [Roll]"`
+	Tracklists []TracklistOutput `gql:"tracklists: [Tracklist]"`
 }
 
 // Entity Specific Methods
@@ -54,7 +54,11 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 		return nil, err
 	}
 	po.Rolls = rolls
-	po.Tracklists = p.Tracklists
+	tracklists, err := FormatTracklistSlice(&p.Tracklists)
+	if err != nil {
+		return nil, err
+	}
+	po.Tracklists = tracklists
 	return po, nil
 }
 

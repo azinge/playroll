@@ -8,19 +8,19 @@ import (
 
 type RollData struct {
 	Sources []byte `json:"sources" gorm:"type: jsonb"`
-	Filter  []byte `json:"filter" gorm:"type: jsonb"`
+	Filters []byte `json:"filters" gorm:"type: jsonb"`
 	Length  []byte `json:"length" gorm:"type: jsonb"`
 }
 
 type RollDataInput struct {
 	Sources []MusicSource `gql:"sources: [MusicSourceInput]" json:"sources"`
-	Filter  RollFilter    `gql:"filter: RollFilterInput" json:"filter"`
+	Filters []RollFilter  `gql:"filters: [RollFilterInput]" json:"filters"`
 	Length  RollLength    `gql:"length: RollLengthInput" json:"length"`
 }
 
 type RollDataOutput struct {
 	Sources []MusicSource `gql:"sources: [MusicSource]" json:"sources"`
-	Filter  RollFilter    `gql:"filter: RollFilter" json:"filter"`
+	Filters []RollFilter  `gql:"filters: [RollFilter]" json:"filters"`
 	Length  RollLength    `gql:"length: RollLength" json:"length"`
 }
 
@@ -30,9 +30,9 @@ func (rdi *RollDataInput) ToModel() (*RollData, error) {
 		fmt.Println("error trying to Marshal RollData Sources: " + err.Error())
 		return nil, err
 	}
-	filter, err := json.Marshal(rdi.Filter)
+	filters, err := json.Marshal(rdi.Filters)
 	if err != nil {
-		fmt.Println("error trying to Marshal RollData Filter: " + err.Error())
+		fmt.Println("error trying to Marshal RollData Filters: " + err.Error())
 		return nil, err
 	}
 	length, err := json.Marshal(rdi.Length)
@@ -42,14 +42,14 @@ func (rdi *RollDataInput) ToModel() (*RollData, error) {
 	}
 	model := &RollData{}
 	model.Sources = sources
-	model.Filter = filter
+	model.Filters = filters
 	model.Length = length
 	return model, nil
 }
 
 func (rd RollData) ToOutput() (*RollDataOutput, error) {
 	sources := []MusicSource{}
-	filter := RollFilter{}
+	filters := []RollFilter{}
 	length := RollLength{}
 	if rd.Sources != nil {
 		if err := json.Unmarshal(rd.Sources, &sources); err != nil {
@@ -57,8 +57,8 @@ func (rd RollData) ToOutput() (*RollDataOutput, error) {
 			return nil, err
 		}
 	}
-	if rd.Filter != nil {
-		if err := json.Unmarshal(rd.Filter, &filter); err != nil {
+	if rd.Filters != nil {
+		if err := json.Unmarshal(rd.Filters, &filters); err != nil {
 			fmt.Println("Error trying to Unmarshal RollData Filter: " + err.Error())
 			return nil, err
 		}
@@ -73,7 +73,7 @@ func (rd RollData) ToOutput() (*RollDataOutput, error) {
 
 	output := &RollDataOutput{
 		Sources: sources,
-		Filter:  filter,
+		Filters: filters,
 		Length:  length,
 	}
 	return output, nil

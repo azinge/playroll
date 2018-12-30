@@ -11,23 +11,23 @@ import (
 
 type Tracklist struct {
 	Model
-	Starred       bool
-	Primary       bool
+	IsStarred     bool
+	IsPrimary     bool
 	CompiledRolls []CompiledRoll
 	Playroll      Playroll
 	PlayrollID    uint
 }
 
 type TracklistInput struct {
-	Starred    bool   `gql:"starred: Boolean"`
-	Primary    bool   `gql:"primary: Boolean"`
+	IsStarred  bool   `gql:"isStarred: Boolean"`
+	IsPrimary  bool   `gql:"isPrimary: Boolean"`
 	PlayrollID string `gql:"playrollID: ID"`
 }
 
 type TracklistOutput struct {
 	Model         `gql:"MODEL"`
-	Starred       bool                 `gql:"starred: Boolean"`
-	Primary       bool                 `gql:"primary: Boolean"`
+	IsStarred     bool                 `gql:"isStarred: Boolean"`
+	IsPrimary     bool                 `gql:"isPrimary: Boolean"`
 	CompiledRolls []CompiledRollOutput `gql:"compiledRolls: [CompiledRoll]"`
 	PlayrollID    uint                 `gql:"playrollID: ID"`
 }
@@ -50,7 +50,7 @@ func GetTracksByTracklistID(id uint, db *gorm.DB) (*[]jsonmodels.MusicSource, er
 
 func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playrollID uint, db *gorm.DB) (*TracklistOutput, error) {
 	tx := db.Begin()
-	tracklistInput := TracklistInput{Starred: false, Primary: true, PlayrollID: string(playrollID)}
+	tracklistInput := TracklistInput{IsStarred: false, IsPrimary: true, PlayrollID: string(playrollID)}
 	tracklist, err := tracklistInput.ToModel()
 	if err != nil {
 		tx.Rollback()
@@ -97,8 +97,8 @@ func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playr
 
 func TracklistInputToModel(ti *TracklistInput) (*Tracklist, error) {
 	t := &Tracklist{}
-	t.Starred = ti.Starred
-	t.Primary = ti.Primary
+	t.IsStarred = ti.IsStarred
+	t.IsPrimary = ti.IsPrimary
 	t.PlayrollID = utils.StringIDToNumber(ti.PlayrollID)
 	return t, nil
 }
@@ -110,8 +110,8 @@ func TracklistOutputToModel(to *TracklistOutput) (*Tracklist, error) {
 func TracklistModelToOutput(t *Tracklist) (*TracklistOutput, error) {
 	to := &TracklistOutput{}
 	to.Model = t.Model
-	to.Starred = t.Starred
-	to.Primary = t.Primary
+	to.IsStarred = t.IsStarred
+	to.IsPrimary = t.IsPrimary
 	compiledRolls, err := FormatCompiledRollSlice(&t.CompiledRolls)
 	if err != nil {
 		return nil, err
@@ -122,10 +122,10 @@ func TracklistModelToOutput(t *Tracklist) (*TracklistOutput, error) {
 }
 
 func InitTracklistDAO(db *gorm.DB) *Tracklist {
-	tracklist := &Tracklist{}
-	tracklist.SetEntity(tracklist)
-	tracklist.SetDB(db.Preload("CompiledRolls"))
-	return tracklist
+	dao := &Tracklist{}
+	dao.SetEntity(dao)
+	dao.SetDB(db.Preload("CompiledRolls"))
+	return dao
 }
 
 func FormatTracklist(val interface{}) (*TracklistOutput, error) {

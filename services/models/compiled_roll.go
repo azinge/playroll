@@ -96,10 +96,10 @@ func CompiledRollModelToOutput(cr *CompiledRoll) (*CompiledRollOutput, error) {
 }
 
 func InitCompiledRollDAO(db *gorm.DB) *CompiledRoll {
-	compiledRoll := &CompiledRoll{}
-	compiledRoll.SetEntity(compiledRoll)
-	compiledRoll.SetDB(db)
-	return compiledRoll
+	dao := &CompiledRoll{}
+	dao.SetEntity(dao)
+	dao.SetDB(db)
+	return dao
 }
 
 func FormatCompiledRoll(val interface{}) (*CompiledRollOutput, error) {

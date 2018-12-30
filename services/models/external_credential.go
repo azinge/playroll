@@ -72,10 +72,10 @@ func ExternalCredentialModelToOutput(ec *ExternalCredential) (*ExternalCredentia
 }
 
 func InitExternalCredentialDAO(db *gorm.DB) Entity {
-	externalCredential := &ExternalCredential{}
-	externalCredential.SetEntity(externalCredential)
-	externalCredential.SetDB(db)
-	return externalCredential
+	dao := &ExternalCredential{}
+	dao.SetEntity(dao)
+	dao.SetDB(db)
+	return dao
 }
 
 func FormatExternalCredential(val interface{}) (*ExternalCredentialOutput, error) {

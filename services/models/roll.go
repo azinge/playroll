@@ -62,10 +62,10 @@ func RollModelToOutput(r *Roll) (*RollOutput, error) {
 }
 
 func InitRollDAO(db *gorm.DB) *Roll {
-	roll := &Roll{}
-	roll.SetEntity(roll)
-	roll.SetDB(db)
-	return roll
+	dao := &Roll{}
+	dao.SetEntity(dao)
+	dao.SetDB(db)
+	return dao
 }
 
 func FormatRoll(val interface{}) (*RollOutput, error) {

@@ -63,10 +63,10 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 }
 
 func InitPlayrollDAO(db *gorm.DB) Entity {
-	playroll := &Playroll{}
-	playroll.SetEntity(playroll)
-	playroll.SetDB(db.Preload("Rolls").Preload("Tracklists"))
-	return playroll
+	dao := &Playroll{}
+	dao.SetEntity(dao)
+	dao.SetDB(db.Preload("Rolls").Preload("Tracklists"))
+	return dao
 }
 
 func FormatPlayroll(val interface{}) (*PlayrollOutput, error) {

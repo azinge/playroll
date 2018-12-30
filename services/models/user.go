@@ -60,10 +60,10 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 }
 
 func InitUserDAO(db *gorm.DB) *User {
-	user := &User{}
-	user.SetEntity(user)
-	user.SetDB(db)
-	return user
+	dao := &User{}
+	dao.SetEntity(dao)
+	dao.SetDB(db)
+	return dao
 }
 
 func FormatUser(val interface{}) (*UserOutput, error) {

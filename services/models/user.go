@@ -12,6 +12,9 @@ type User struct {
 	Avatar              string
 	Playrolls           []Playroll
 	ExternalCredentials []ExternalCredential
+	Friendships         []Friendship
+	Recommendations     []Recommendation
+	DiscoveryQueue      *DiscoveryQueue
 }
 
 type UserInput struct {
@@ -25,6 +28,9 @@ type UserOutput struct {
 	Avatar              string                     `gql:"avatar: String"`
 	Playrolls           []PlayrollOutput           `gql:"playrolls: [Playroll]"`
 	ExternalCredentials []ExternalCredentialOutput `gql:"externalCredentials: [ExternalCredential]"`
+	Friendships         []FriendshipOutput         `gql:"friendships: [Friendship]"`
+	Recommendations     []RecommendationOutput     `gql:"recommendation: [Recommendation]"`
+	DiscoveryQueue      *DiscoveryQueueOutput      `gql:"discoveryQueue: [DiscoveryQueue]"`
 }
 
 // Entity Specific Methods
@@ -56,6 +62,21 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 		return nil, err
 	}
 	uo.ExternalCredentials = externalCredentials
+	friendships, err := FormatFriendshipSlice(&u.Friendships)
+	if err != nil {
+		return nil, err
+	}
+	uo.Friendships = friendships
+	recommendations, err := FormatRecommendationSlice(&u.Recommendations)
+	if err != nil {
+		return nil, err
+	}
+	uo.Recommendations = recommendations
+	discoveryQueue, err := FormatDiscoveryQueue(&u.DiscoveryQueue)
+	if err != nil {
+		return nil, err
+	}
+	uo.DiscoveryQueue = discoveryQueue
 	return uo, nil
 }
 

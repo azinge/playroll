@@ -43,7 +43,6 @@ var searchSpotify = gqltag.Method{
 			fmt.Println("Error getting spotify client: ", err.Error())
 			return nil, err
 		}
-
 		output, err := spotifyhelpers.SearchSpotify(params.Query, params.SearchType, client)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())

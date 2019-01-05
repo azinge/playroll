@@ -81,7 +81,7 @@ func CompiledRollModelToOutput(cr *CompiledRoll) (*CompiledRollOutput, error) {
 	cro.Model = cr.Model
 	cro.TracklistID = cr.TracklistID
 	cro.RollID = cr.RollID
-	roll, err := FormatRoll(cr.Roll)
+	roll, err := FormatRoll(&cr.Roll)
 	if err != nil {
 		return nil, err
 	}

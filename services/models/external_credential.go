@@ -56,7 +56,7 @@ func ExternalCredentialModelToOutput(ec *ExternalCredential) (*ExternalCredentia
 	eco := &ExternalCredentialOutput{}
 	eco.Model = ec.Model
 	eco.Provider = ec.Provider
-	user, err := FormatUser(ec.User)
+	user, err := FormatUser(&ec.User)
 	if err != nil {
 		return nil, err
 	}

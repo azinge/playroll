@@ -30,7 +30,7 @@ type UserOutput struct {
 	ExternalCredentials []ExternalCredentialOutput `gql:"externalCredentials: [ExternalCredential]"`
 	Friendships         []FriendshipOutput         `gql:"friendships: [Friendship]"`
 	Recommendations     []RecommendationOutput     `gql:"recommendation: [Recommendation]"`
-	DiscoveryQueue      *DiscoveryQueueOutput      `gql:"discoveryQueue: [DiscoveryQueue]"`
+	DiscoveryQueue      *DiscoveryQueueOutput      `gql:"discoveryQueue: DiscoveryQueue"`
 }
 
 // Entity Specific Methods
@@ -72,11 +72,13 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 		return nil, err
 	}
 	uo.Recommendations = recommendations
-	discoveryQueue, err := FormatDiscoveryQueue(&u.DiscoveryQueue)
-	if err != nil {
-		return nil, err
-	}
-	uo.DiscoveryQueue = discoveryQueue
+
+	// discoveryQueue, err := FormatDiscoveryQueue(u.DiscoveryQueue)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// uo.DiscoveryQueue = discoveryQueue
+
 	return uo, nil
 }
 

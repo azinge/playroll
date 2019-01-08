@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cp -r ~/code/scripts/react-scripts/react-native/GENERIC_COMPONENT "$1"
+
+cd "$1"
+mv GENERIC_COMPONENT.tsx "$1.tsx" && sed -i "" "s/GENERIC_COMPONENT/$1/g" "$1.tsx"
+mv GENERIC_COMPONENT.styles.ts "$1.styles.ts" && sed -i "" "s/GENERIC_COMPONENT/$1/g" "$1.styles.ts"
+mv __tests__/GENERIC_COMPONENT.test.tsx "__tests__/$1.test.tsx" && sed -i "" "s/GENERIC_COMPONENT/$1/g" "__tests__/$1.test.tsx"
+sed -i "" "s/GENERIC_COMPONENT/$1/g" "index.ts"
+cd ..

@@ -1,0 +1,2 @@
+import GENERIC_COMPONENT from "./GENERIC_COMPONENT";
+export default GENERIC_COMPONENT;

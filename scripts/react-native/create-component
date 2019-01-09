@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp -r ~/code/scripts/react-scripts/react-native/GENERIC_COMPONENT "$1"
+cp -r "$PLAYROLL_SCRIPTS/react-native/GENERIC_COMPONENT" "$1"
 
 cd "$1"
 mv GENERIC_COMPONENT.tsx "$1.tsx" && sed -i "" "s/GENERIC_COMPONENT/$1/g" "$1.tsx"

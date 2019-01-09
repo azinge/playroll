@@ -2,13 +2,14 @@ import React from "react";
 import { createBottomTabNavigator } from "react-navigation";
 import { Icon } from "react-native-elements";
 
-import Home from "../../components/Home";
-import Playrolls from "../../components/Playrolls";
-import Search from "../../components/Search";
-import AlertModal from "../../components/shared/AlertModal";
-import Create from "../../components/Create";
+import Home from "../components/Home";
+import Playrolls from "../components/Playrolls";
+import Search from "../components/Search";
+import AlertModal from "../components/shared/AlertModal";
+import Create from "../components/Create";
 import TracklistStyles from "components/Tracklist/Tracklist.styles";
-import Tracklist from "../../components/Tracklist";
+import Tracklist from "../components/Tracklist";
+import LoginScreen from "../components/LoginScreen";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
@@ -34,8 +35,8 @@ export const Tabs = createBottomTabNavigator({
       ),
     },
   },
-  User: {
-    screen: Home,
+  Login: {
+    screen: LoginScreen,
     navigationOptions: {
       tabBarLabel: "User",
       tabBarIcon: ({ tintColor }) => (

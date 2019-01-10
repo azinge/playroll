@@ -19,18 +19,24 @@ import {
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import { Query } from "react-apollo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
+import { GET_PLAYROLLS } from "./Playrolls.requests";
 import {
-  GET_PLAYROLLS,
-  GENERATE_TRACKLIST_MUTATION,
   GenerateTracklistMutation,
+  GENERATE_TRACKLIST_MUTATION,
+} from "../../graphql/requests/Playrolls/GenerateTracklist";
+import {
   DeleteRollMutation,
   DELETE_ROLL_MUTATION,
+} from "../../graphql/requests/Playrolls/DeleteRoll";
+import {
   DeletePlayrollMutation,
   DELETE_PLAYROLL_MUTATION,
+} from "../../graphql/requests/Playrolls/DeletePlayroll";
+import {
   CreatePlayrollMutation,
   CREATE_PLAYROLL_MUTATION,
-} from "./Playrolls.requests";
+} from "../../graphql/requests/Playrolls/CreatePlayroll";
+
 import styles from "./Playrolls.styles";
 
 export interface Props {}

@@ -20,11 +20,12 @@ import { Query } from "react-apollo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import {
+  GENERATE_PLAYLIST_MUTATION,
+  GeneratePlaylistMutation,
   GET_TRACKLIST_QUERY,
   GetTracklistQuery,
-  GeneratePlaylistMutation,
-  GENERATE_PLAYLIST_MUTATION,
-} from "./Tracklist.requests";
+} from "../../graphql/requests/Tracklist";
+
 import styles from "./Tracklist.styles";
 
 export default class Tracklist extends React.Component {

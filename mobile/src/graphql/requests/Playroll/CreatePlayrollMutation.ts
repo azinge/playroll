@@ -1,10 +1,6 @@
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
-
-export interface PlayrollInput {
-  name: string;
-  userID: number;
-}
+import { PlayrollInput } from "../../types";
 
 export const CREATE_PLAYROLL_MUTATION = gql`
   mutation CREATE_PLAYROLL($input: PlayrollInput!) {

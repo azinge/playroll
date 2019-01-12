@@ -11,19 +11,13 @@ import {
   TextInput,
 } from "react-native";
 import styles, { pickerStyle } from "./CreateModal.styles";
-// import {
-//   MusicSource,
-//   CREATE_ROLL_MUTATION,
-//   CreateRollMutation,
-//   RollDataInput,
-// } from "../Search.requests";
+
+import { MusicSource } from "../../../graphql/types";
 
 import {
-  MusicSource,
   CREATE_ROLL_MUTATION,
   CreateRollMutation,
-  RollDataInput,
-} from "../../../graphql/requests/Spotify/CreateRoll";
+} from "../../../graphql/requests/Roll";
 
 export interface Props {
   currentSource: MusicSource;

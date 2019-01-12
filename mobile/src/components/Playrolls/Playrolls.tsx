@@ -19,23 +19,23 @@ import {
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import { Query } from "react-apollo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import { GET_PLAYROLLS } from "./Playrolls.requests";
+
 import {
   GenerateTracklistMutation,
   GENERATE_TRACKLIST_MUTATION,
-} from "../../graphql/requests/Playrolls/GenerateTracklist";
+} from "../../graphql/requests/Tracklist/";
 import {
   DeleteRollMutation,
   DELETE_ROLL_MUTATION,
-} from "../../graphql/requests/Playrolls/DeleteRoll";
+} from "../../graphql/requests/Roll";
 import {
   DeletePlayrollMutation,
   DELETE_PLAYROLL_MUTATION,
-} from "../../graphql/requests/Playrolls/DeletePlayroll";
-import {
   CreatePlayrollMutation,
   CREATE_PLAYROLL_MUTATION,
-} from "../../graphql/requests/Playrolls/CreatePlayroll";
+  ListPlayrollsQuery,
+  LIST_PLAYROLLS_QUERY,
+} from "../../graphql/requests/Playroll/";
 
 import styles from "./Playrolls.styles";
 
@@ -54,7 +54,7 @@ export default class Playrolls extends React.Component<Props, State> {
   }
   render() {
     return (
-      <Query query={GET_PLAYROLLS}>
+      <ListPlayrollsQuery query={LIST_PLAYROLLS_QUERY}>
         {({ loading, error, data }) => {
           error && console.warn(error);
           return (
@@ -64,121 +64,126 @@ export default class Playrolls extends React.Component<Props, State> {
               </View>
               {!loading && !error && (
                 <ScrollView>
-                  {data.listPlayrolls.map(playroll => {
-                    console.log(playroll);
-                    return (
-                      <Card
-                        title={playroll.name}
-                        // image={require("../../assets/wack.jpg")}
-                        key={playroll.id}
-                      >
-                        <GenerateTracklistMutation
-                          mutation={GENERATE_TRACKLIST_MUTATION}
-                          variables={{
-                            playrollID: playroll.id,
-                          }}
-                          onCompleted={data => {
-                            const { navigate } = this.props.navigation;
-                            navigate("Tracklist", {
-                              tracklistID:
-                                data &&
-                                data.generateTracklist &&
-                                data.generateTracklist.id,
-                              playrollName: playroll.name,
-                            });
-                          }}
-                          refetchQueries={["GET_PLAYROLLS"]}
+                  {data &&
+                    data.listPlayrolls &&
+                    data.listPlayrolls.map(playroll => {
+                      console.log(playroll);
+                      return (
+                        <Card
+                          title={playroll.name}
+                          // image={require("../../assets/wack.jpg")}
+                          key={playroll.id}
                         >
-                          {(generateTracklist, { data }) => (
-                            <Button
-                              title="Generate Tracklist"
-                              onPress={() => {
-                                generateTracklist();
-                              }}
-                            />
-                          )}
-                        </GenerateTracklistMutation>
-                        <Button
-                          onPress={() => {
-                            console.log(playroll.tracklists);
-                            const tracklist =
-                              playroll.tracklists[
-                                playroll.tracklists.length - 1
-                              ];
-
-                            if (tracklist) {
-                              const tracklistID = tracklist.id;
+                          <GenerateTracklistMutation
+                            mutation={GENERATE_TRACKLIST_MUTATION}
+                            variables={{
+                              playrollID: playroll.id,
+                            }}
+                            onCompleted={data => {
                               const { navigate } = this.props.navigation;
                               navigate("Tracklist", {
-                                tracklistID,
+                                tracklistID:
+                                  data &&
+                                  data.generateTracklist &&
+                                  data.generateTracklist.id,
                                 playrollName: playroll.name,
                               });
-                            }
-                          }}
-                          title="Go to Tracklist"
-                        />
-                        <DeletePlayrollMutation
-                          mutation={DELETE_PLAYROLL_MUTATION}
-                          variables={{
-                            id: playroll.id,
-                          }}
-                          refetchQueries={["GET_PLAYROLLS"]}
-                        >
-                          {(deletePlayroll, { data }) => (
-                            <Button
-                              title="Delete Playroll"
-                              onPress={() => {
-                                deletePlayroll();
-                              }}
-                            />
-                          )}
-                        </DeletePlayrollMutation>
+                            }}
+                            refetchQueries={["GET_PLAYROLLS"]}
+                          >
+                            {(generateTracklist, { data }) => (
+                              <Button
+                                title="Generate Tracklist"
+                                onPress={() => {
+                                  generateTracklist();
+                                }}
+                              />
+                            )}
+                          </GenerateTracklistMutation>
+                          {/* <Button
+                            onPress={() => {
+                              console.log(playroll.tracklists);
+                              const tracklist =
+                                playroll.tracklists[
+                                  playroll.tracklists.length - 1
+                                ];
 
-                        {playroll.rolls.map(roll => {
-                          const source =
-                            roll && roll.data && roll.data.sources[0];
-                          console.log(source);
-                          return (
-                            source && (
-                              <View key={roll.id}>
-                                <Image
-                                  style={{ width: 100, height: 100 }}
-                                  source={{ uri: source.cover }}
-                                />
-                                <Text>{source.name}</Text>
-                                <Text>{source.type}</Text>
-                                <DeleteRollMutation
-                                  mutation={DELETE_ROLL_MUTATION}
-                                  variables={{
-                                    id: roll.id,
-                                  }}
-                                  refetchQueries={["GET_PLAYROLLS"]}
-                                >
-                                  {(deleteRoll, { data }) => (
-                                    <Button
-                                      title="Delete Roll"
-                                      onPress={() => {
-                                        deleteRoll();
-                                      }}
-                                    />
-                                  )}
-                                </DeleteRollMutation>
-                              </View>
-                            )
-                          );
-                        })}
-                        <Button
-                          onPress={() => {
-                            const { navigate } = this.props.navigation;
-                            navigate("Search", {
-                              playrollID: playroll.id,
-                            });
-                          }}
-                          title="Add Roll"
-                        />
-                      </Card>
-                    );
-                  })}
+                              if (tracklist) {
+                                const tracklistID = tracklist.id;
+                                const { navigate } = this.props.navigation;
+                                navigate("Tracklist", {
+                                  tracklistID,
+                                  playrollName: playroll.name,
+                                });
+                              }
+                            }}
+                            title="Go to Tracklist"
+                          /> */}
+                          <DeletePlayrollMutation
+                            mutation={DELETE_PLAYROLL_MUTATION}
+                            variables={{
+                              id: playroll.id,
+                            }}
+                            refetchQueries={["GET_PLAYROLLS"]}
+                          >
+                            {(deletePlayroll, { data }) => (
+                              <Button
+                                title="Delete Playroll"
+                                onPress={() => {
+                                  deletePlayroll();
+                                }}
+                              />
+                            )}
+                          </DeletePlayrollMutation>
+
+                          {playroll.rolls.map(roll => {
+                            const source =
+                              roll &&
+                              roll.data &&
+                              roll.data.sources &&
+                              roll.data.sources[0];
+                            console.log(source);
+                            return (
+                              source && (
+                                <View key={roll.id}>
+                                  <Image
+                                    style={{ width: 100, height: 100 }}
+                                    source={{ uri: source.cover }}
+                                  />
+                                  <Text>{source.name}</Text>
+                                  <Text>{source.type}</Text>
+                                  <DeleteRollMutation
+                                    mutation={DELETE_ROLL_MUTATION}
+                                    variables={{
+                                      id: roll.id,
+                                    }}
+                                    refetchQueries={["GET_PLAYROLLS"]}
+                                  >
+                                    {(deleteRoll, { data }) => (
+                                      <Button
+                                        title="Delete Roll"
+                                        onPress={() => {
+                                          deleteRoll();
+                                        }}
+                                      />
+                                    )}
+                                  </DeleteRollMutation>
+                                </View>
+                              )
+                            );
+                          })}
+                          <Button
+                            onPress={() => {
+                              const { navigate } = this.props.navigation;
+                              navigate("Search", {
+                                playrollID: playroll.id,
+                              });
+                            }}
+                            title="Add Roll"
+                          />
+                        </Card>
+                      );
+                    })}
                   <TextInput
                     style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
                     onChangeText={text =>
@@ -207,7 +212,7 @@ export default class Playrolls extends React.Component<Props, State> {
             </View>
           );
         }}
-      </Query>
+      </ListPlayrollsQuery>
     );
   }
 }

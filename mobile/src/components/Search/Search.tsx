@@ -13,17 +13,11 @@ import {
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { pickerStyle } from "./Search.styles";
-// import {
-//   SEARCH_SPOTIFY_QUERY,
-//   SearchSpotifyQuery,
-//   MusicSource,
-// } from "./Search.requests";
-
+import { MusicSource } from "../../graphql/types";
 import {
   SEARCH_SPOTIFY_QUERY,
   SearchSpotifyQuery,
-  MusicSource,
-} from "../../graphql/requests/Spotify/SearchSpotify";
+} from "../../graphql/requests/Spotify/";
 import CreateModal from "./CreateModal/CreateModal";
 
 export interface Props {}

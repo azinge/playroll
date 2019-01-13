@@ -17,7 +17,12 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="home" size={35} color={tintColor} />
+        <Icon
+          type="material-community"
+          name="home"
+          size={35}
+          color={tintColor}
+        />
       ),
     },
   },
@@ -28,7 +33,7 @@ export const Tabs = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Icon
           type="material-community"
-          name="language-go"
+          name="playlist-play"
           size={35}
           color={tintColor}
         />
@@ -42,7 +47,7 @@ export const Tabs = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => (
         <Icon
           type="material-community"
-          name="karate"
+          name="account"
           size={35}
           color={tintColor}
         />
@@ -51,8 +56,30 @@ export const Tabs = createBottomTabNavigator({
   },
   Search: {
     screen: Search,
+    navigationOptions: {
+      tabBarLabel: "Search",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon
+          type="material-community"
+          name="spotify"
+          size={35}
+          color={tintColor}
+        />
+      ),
+    },
   },
   Tracklist: {
     screen: Tracklist,
+    navigationOptions: {
+      tabBarLabel: "Tracklist",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon
+          type="material-community"
+          name="animation"
+          size={35}
+          color={tintColor}
+        />
+      ),
+    },
   },
 });

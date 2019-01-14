@@ -10,6 +10,7 @@ import Create from "../components/Create";
 import TracklistStyles from "components/Tracklist/Tracklist.styles";
 import Tracklist from "../components/Tracklist";
 import LoginScreen from "../components/LoginScreen";
+import SignUpScreen from "../components/SignUpScreen";
 
 export const Tabs = createBottomTabNavigator({
   Home: {
@@ -76,6 +77,20 @@ export const Tabs = createBottomTabNavigator({
         <Icon
           type="material-community"
           name="animation"
+          size={35}
+          color={tintColor}
+        />
+      ),
+    },
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      tabBarLabel: "Sign Up",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon
+          type="material-community"
+          name="clipboard-account"
           size={35}
           color={tintColor}
         />

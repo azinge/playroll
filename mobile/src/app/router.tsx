@@ -12,7 +12,7 @@ import Tracklist from "../components/Tracklist";
 import LoginScreen from "../components/LoginScreen";
 import SignUpScreen from "../components/SignUpScreen";
 
-export const Tabs = createBottomTabNavigator({
+export const Navigator = createBottomTabNavigator({
   Home: {
     screen: Home, // TODO: change back to Home
     navigationOptions: {

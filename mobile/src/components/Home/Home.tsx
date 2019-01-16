@@ -3,9 +3,13 @@
  */
 
 import React from "react";
-import { Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image, Button } from "react-native";
 import HeaderBar from "../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
+import {
+  SIGN_OUT_MUTATION,
+  SignOutMutation,
+} from "../../graphql/requests/Auth";
 
 import { musicSources } from "../../static/mockData";
 
@@ -30,6 +34,18 @@ export default class Home extends React.Component {
             );
           })}
         </ScrollView>
+        <SignOutMutation mutation={SIGN_OUT_MUTATION}>
+          {(signOut, { data }) => {
+            return (
+              <Button
+                title="Sign Out"
+                onPress={() => {
+                  signOut().then(this.props.screenProps);
+                }}
+              />
+            );
+          }}
+        </SignOutMutation>
       </View>
     );
   }

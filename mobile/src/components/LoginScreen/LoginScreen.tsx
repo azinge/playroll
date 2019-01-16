@@ -5,13 +5,12 @@
 import * as React from "react";
 import { Text, View, Button, TextInput, Switch } from "react-native";
 import { Auth } from "aws-amplify";
-import {
-  SIGN_OUT_MUTATION,
-  SignOutMutation,
-} from "../../graphql/requests/Auth";
 import { SIGN_IN_MUTATION, SignInMutation } from "../../graphql/requests/Auth";
 
-export interface Props {}
+export interface Props {
+  onLoginPress?: () => void;
+  onLogoutPress?: () => void;
+}
 
 interface State {
   username: string;
@@ -99,22 +98,12 @@ export default class LoginScreen extends React.Component<Props, State> {
               <Button
                 title="Sign In"
                 onPress={() => {
-                  signIn();
+                  signIn().then(this.props.onLoginPress);
                 }}
               />
             );
           }}
         </SignInMutation>
-        <SignOutMutation mutation={SIGN_OUT_MUTATION}>
-          {(signOut, { data }) => (
-            <Button
-              title="Sign Out"
-              onPress={() => {
-                signOut();
-              }}
-            />
-          )}
-        </SignOutMutation>
       </View>
     );
   }

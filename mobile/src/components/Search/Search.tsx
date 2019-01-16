@@ -20,7 +20,9 @@ import {
 } from "../../graphql/requests/Spotify/";
 import CreateModal from "./CreateModal/CreateModal";
 
-export interface Props {}
+export interface Props {
+  navigation: any;
+}
 
 interface State {
   text: string;

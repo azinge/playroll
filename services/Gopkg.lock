@@ -9,8 +9,8 @@
     "lambda/messages",
     "lambdacontext"
   ]
-  revision = "2d482ef09017ae953b1e8d5a6ddac5b696663a3c"
-  version = "v1.6.0"
+  revision = "928161204cad89472f9e6b5dd49ce16bc91230de"
+  version = "v1.8.1"
 
 [[projects]]
   name = "github.com/fatih/structs"
@@ -39,8 +39,8 @@
     "language/typeInfo",
     "language/visitor"
   ]
-  revision = "5c1be0872a56fba73b279434ea95dfda735abedd"
-  version = "v0.7.6"
+  revision = "08943645bf265d192b32f2100cdff2428f7ae7c5"
+  version = "v0.7.7"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
@@ -48,8 +48,8 @@
     ".",
     "dialects/postgres"
   ]
-  revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
-  version = "v1.9.1"
+  revision = "472c70caa40267cb89fd8facb07fe6454b578626"
+  version = "v1.9.2"
 
 [[projects]]
   branch = "master"
@@ -92,7 +92,7 @@
     "context",
     "context/ctxhttp"
   ]
-  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
+  revision = "ed066c81e75eba56dd9bd2139ade88125b855585"
 
 [[projects]]
   branch = "master"
@@ -101,7 +101,7 @@
     ".",
     "internal"
   ]
-  revision = "f42d05182288abf10faef86d16c0d07b8d40ea2d"
+  revision = "5dab4167f31cbd76b407f1486c86b40748bc5073"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -114,8 +114,8 @@
     "internal/urlfetch",
     "urlfetch"
   ]
-  revision = "4a4468ece617fc8205e99368fa2200e9d1fad421"
-  version = "v1.3.0"
+  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
+  version = "v1.4.0"
 
 [solve-meta]
   analyzer-name = "dep"

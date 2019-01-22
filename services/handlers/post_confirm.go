@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/cazinge/playroll/services/models"
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,17 +19,29 @@ func PostConfirmHandler(context context.Context, request events.CognitoEventUser
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PASS"),
 	)
+	resp := events.CognitoEventUserPoolsPostConfirmationResponse{}
 
 	db, err := gorm.Open("postgres", host)
 	if err != nil {
 		fmt.Println("error opening db: " + err.Error())
-		return events.CognitoEventUserPoolsPostConfirmationResponse{}, err
+		return resp, err
 	}
-	fmt.Println("PostConfirm!")
-	fmt.Printf("%#v\n", context)
+	// tx := db.Begin()
+	userInput := models.UserInput{Name: "testing"}
+	user, err := userInput.ToModel()
+	if err != nil {
+		return resp, err
+	}
+	tDAO := models.InitUserDAO(db)
+
+	rawuser, err := tDAO.Create(user)
+	if err != nil {
+		return resp, err
+	}
+	_, err = models.FormatUser(rawuser)
 	defer db.Close()
 
-	return events.CognitoEventUserPoolsPostConfirmationResponse{}, nil
+	return resp, nil
 }
 
 func main() {

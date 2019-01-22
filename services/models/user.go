@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//TODO: store email
 type User struct {
 	Model
 	Name                string

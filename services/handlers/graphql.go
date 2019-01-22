@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cazinge/playroll/services/gqltag"
-	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
 
 	"github.com/graphql-go/graphql"
@@ -39,15 +38,6 @@ func GraphqlHandler(context context.Context, request events.APIGatewayProxyReque
 		}, err
 	}
 	defer db.Close()
-
-	db.AutoMigrate(
-		models.Playroll{},
-		models.Roll{},
-		models.User{},
-		models.Tracklist{},
-		models.CompiledRoll{},
-		models.ExternalCredential{},
-	)
 
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,

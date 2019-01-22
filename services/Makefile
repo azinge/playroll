@@ -12,6 +12,7 @@ clean:
 .PHONY: deploy
 deploy: clean build
 	sls deploy --verbose
+	sls invoke --function automigrate
 
 .PHONY: deploy-local
 deploy-local: clean build

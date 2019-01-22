@@ -11,13 +11,11 @@ import (
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
-
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func MainHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -106,5 +104,5 @@ func MainHandler(context context.Context, request events.APIGatewayProxyRequest)
 }
 
 func main() {
-	lambda.Start(MainHandler)
+	lambda.Start(AdminGraphqlHandler)
 }

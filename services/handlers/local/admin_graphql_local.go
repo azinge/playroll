@@ -2,16 +2,20 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/schema"
+	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 )
 
-func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse, error) {
+func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -34,16 +38,51 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 	}
 	defer db.Close()
 
-	err = db.AutoMigrate(
+	db.AutoMigrate(
 		models.Playroll{},
 		models.Roll{},
 		models.User{},
 		models.Tracklist{},
 		models.CompiledRoll{},
 		models.ExternalCredential{},
-	).Error
+	)
+
+	schema, err := gqltag.GenerateGraphQLSchema(
+		schema.LinkedTypes,
+		schema.LinkedMethods,
+		db,
+	)
+
 	if err != nil {
-		fmt.Println("error auto migrating db: " + err.Error())
+		fmt.Println("error generating schema: " + err.Error())
+		return events.APIGatewayProxyResponse{
+			Headers: map[string]string{
+				"Access-Control-Allow-Origin":      "*",
+				"Access-Control-Allow-Credentials": "true",
+			},
+			Body:       err.Error(),
+			StatusCode: 500,
+		}, err
+	}
+
+	body := map[string]interface{}{}
+	json.Unmarshal([]byte(request.Body), &body)
+
+	requestString, _ := body["query"].(string)
+	variableValues, _ := body["variables"].(map[string]interface{})
+	operationName, _ := body["operationName"].(string)
+
+	result := graphql.Do(graphql.Params{
+		Schema:         schema,
+		RequestString:  requestString,
+		VariableValues: variableValues,
+		OperationName:  operationName,
+		Context:        context,
+	})
+
+	out, err := json.Marshal(result)
+	if err != nil {
+		fmt.Println("json.Marshal failed: " + err.Error())
 		return events.APIGatewayProxyResponse{
 			Headers: map[string]string{
 				"Access-Control-Allow-Origin":      "*",
@@ -59,11 +98,11 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 			"Access-Control-Allow-Origin":      "*",
 			"Access-Control-Allow-Credentials": "true",
 		},
-		Body:       "db successfully migrated",
+		Body:       string(out),
 		StatusCode: 200,
 	}, nil
 }
 
 func main() {
-	lambda.Start(AutoMigrateHandler)
+	lambda.Start(AdminGraphqlHandler)
 }

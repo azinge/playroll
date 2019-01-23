@@ -10,7 +10,7 @@ clean:
 	rm -rf ./bin ./vendor Gopkg.lock
 
 .PHONY: deploy
-deploy: clean build
+deploy: build
 	sls deploy --verbose
 	sls invoke --function automigrate
 

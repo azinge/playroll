@@ -33,6 +33,7 @@ type TracklistOutput struct {
 }
 
 // Utility Functions
+
 func GetTracksByTracklistID(id uint, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
 	compiledRolls, err := FindCompiledRollsByTracklistID(id, db)
 	if err != nil {

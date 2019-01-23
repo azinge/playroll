@@ -16,27 +16,27 @@ type UserMethods struct {
 
 var getUser = gqltag.Method{
 	Description: `[Get User Description Goes Here]`,
-	Request:     GenerateGetEntityMethod(&models.Playroll{}),
+	Request:     GenerateGetEntityMethod(&models.User{}),
 }
 
 var listUsers = gqltag.Method{
 	Description: `[List Users Description Goes Here]`,
-	Request:     GenerateListEntityMethod(&models.Playroll{}),
+	Request:     GenerateListEntityMethod(&models.User{}),
 }
 
 var createUser = gqltag.Method{
 	Description: `[Create User Description Goes Here]`,
-	Request:     GenerateCreateEntityMethod(&models.Playroll{}, &models.PlayrollInput{}),
+	Request:     GenerateCreateEntityMethod(&models.User{}, &models.UserInput{}),
 }
 
 var updateUser = gqltag.Method{
 	Description: `[Update User Description Goes Here]`,
-	Request:     GenerateUpdateEntityMethod(&models.Playroll{}, &models.PlayrollInput{}),
+	Request:     GenerateUpdateEntityMethod(&models.User{}, &models.UserInput{}),
 }
 
 var deleteUser = gqltag.Method{
 	Description: `[Delete User Description Goes Here]`,
-	Request:     GenerateDeleteEntityMethod(&models.Playroll{}),
+	Request:     GenerateDeleteEntityMethod(&models.User{}),
 }
 
 var LinkedUserMethods = UserMethods{

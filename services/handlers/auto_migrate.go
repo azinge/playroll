@@ -41,7 +41,12 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 		models.Tracklist{},
 		models.CompiledRoll{},
 		models.ExternalCredential{},
+		models.DiscoveryQueue{},
+		models.DiscoveryQueueEntry{},
+		models.Friendship{},
+		models.Recommendation{},
 	).Error
+
 	if err != nil {
 		fmt.Println("error auto migrating db: " + err.Error())
 		return events.APIGatewayProxyResponse{

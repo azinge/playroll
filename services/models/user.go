@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/jinzhu/gorm"
 )
@@ -35,8 +36,8 @@ type UserOutput struct {
 	Email                   string                         `gql:"email: String"`
 	AccountType             string                         `gql:"accountType: String"`
 	Playrolls               []PlayrollOutput               `gql:"playrolls: [Playroll]"`
-	IdentityCredentials     []IdentityCredentialOutput     `gql:"externalCredentials: [IdentityCredential]"`
-	MusicServiceCredentials []MusicServiceCredentialOutput `gql:"externalCredentials: [MusicServiceCredential]"`
+	IdentityCredentials     []IdentityCredentialOutput     `gql:"identityCredentials: [IdentityCredential]"`
+	MusicServiceCredentials []MusicServiceCredentialOutput `gql:"musicServiceCredentials: [MusicServiceCredential]"`
 	ExternalCredentials     []ExternalCredentialOutput     `gql:"externalCredentials: [ExternalCredential]"` //DEPRECATED
 	Friendships             []FriendshipOutput             `gql:"friendships: [Friendship]"`
 	Recommendations         []RecommendationOutput         `gql:"recommendation: [Recommendation]"`
@@ -62,7 +63,7 @@ func CreateUserWithIdentityCredential(userInput *UserInput, identityCredentialIn
 
 	icDAO := InitIdentityCredentialDAO(tx)
 
-	identityCredentialInput.UserID = string(userOutput.ID)
+	identityCredentialInput.UserID = strconv.Itoa(int(userOutput.ID))
 	identityCredential, err := identityCredentialInput.ToModel()
 	if err != nil {
 		tx.Rollback()
@@ -79,7 +80,7 @@ func CreateUserWithIdentityCredential(userInput *UserInput, identityCredentialIn
 		return nil, err
 	}
 	userOutput.IdentityCredentials = append(userOutput.IdentityCredentials, *identityCredentialOutput)
-
+	fmt.Println(userOutput)
 	return userOutput, nil
 }
 

@@ -37,7 +37,7 @@ type CognitoUserAttributes struct {
 	Picture string `json:"picture"`
 }
 
-func PostConfirmHandler(context context.Context, request CognitoEventRequest) (CognitoEventResponse, error) {
+func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*CognitoEventResponse, error) {
 	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -45,32 +45,22 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (C
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PASS"),
 	)
-	resp := CognitoEventResponse{
-		Version:       1,
-		TriggerSource: request.TriggerSource,
-		Region:        request.Region,
-		UserPoolID:    request.UserPoolID,
-		Username:      request.Username,
-	}
 
 	db, err := gorm.Open("postgres", host)
 	if err != nil {
 		fmt.Println("error opening db: " + err.Error())
-		return resp, err
+		return nil, err
 	}
-
-	fmt.Printf("%#v\n", context)
-	fmt.Printf("%#v\n", request)
+	defer db.Close()
 
 	type cognitoEventInternalRequest struct {
 		UserAttributes CognitoUserAttributes
 	}
-
 	intReq := &cognitoEventInternalRequest{}
-	err = mapstructure.Decode(request, intReq)
+	err = mapstructure.Decode(request.Request, intReq)
 	if err != nil {
 		fmt.Println(err)
-		return resp, err
+		return nil, err
 	}
 
 	attrs := intReq.UserAttributes
@@ -78,8 +68,13 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (C
 	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", ProviderID: attrs.Sub}
 	models.CreateUserWithIdentityCredential(userInput, identityCredentialInput, db)
 
-	defer db.Close()
-	return resp, nil
+	return &CognitoEventResponse{
+		Version:       1,
+		TriggerSource: request.TriggerSource,
+		Region:        request.Region,
+		UserPoolID:    request.UserPoolID,
+		Username:      request.Username,
+	}, nil
 }
 
 func main() {

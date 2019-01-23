@@ -41,6 +41,8 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 		models.Tracklist{},
 		models.CompiledRoll{},
 		models.ExternalCredential{},
+		models.IdentityCredential{},
+		models.MusicServiceCredential{},
 		models.DiscoveryQueue{},
 		models.DiscoveryQueueEntry{},
 		models.Friendship{},

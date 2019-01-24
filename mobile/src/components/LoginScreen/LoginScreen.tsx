@@ -3,7 +3,14 @@
  */
 
 import * as React from "react";
-import { Text, View, Button, TextInput, Switch } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  TextInput,
+  Switch,
+  SafeAreaView,
+} from "react-native";
 import { Auth } from "aws-amplify";
 import { SIGN_IN_MUTATION, SignInMutation } from "../../graphql/requests/Auth";
 
@@ -16,6 +23,7 @@ interface State {
   username: string;
   password: string;
   showPassword: boolean;
+  signedUp: boolean;
 }
 
 export default class LoginScreen extends React.Component<Props, State> {
@@ -25,35 +33,23 @@ export default class LoginScreen extends React.Component<Props, State> {
       username: "Mai",
       password: "Sakurajima123!",
       showPassword: true,
+      signedUp: true,
     };
     this.toggleSwitch = this.toggleSwitch.bind(this);
+    this.toggleSignUp = this.toggleSignUp.bind(this);
   }
 
   toggleSwitch() {
     this.setState({ showPassword: !this.state.showPassword });
   }
 
-  componentDidMount() {
-    // Auth.signIn("test", "Password123!").then(user => console.log(user));
-    // Auth.signIn("Mai", "Sakurajima123!").then(user => console.log(user));
-    // Auth.currentUserInfo().then(user => console.log(user));
-    // Auth.signOut().then(user => console.log(user));
-    // Auth.currentUserInfo().then(user => console.log(user));
-    //   Auth.signUp({
-    //     username: "Mai",
-    //     password: "Sakurajima123!",
-    //     attributes: {
-    //       email: "luker@for4mail.com",
-    //     },
-    //   })
-    //     .then(data => console.log(data))
-    //     .catch(err => console.log(err));
-    // Auth.confirmSignUp("Mai", "255141").then(user => console.log(user));
+  toggleSignUp() {
+    this.setState({ signedUp: !this.state.signedUp });
   }
   render() {
     return (
       <View>
-        <Text>LoginScreen</Text>
+        <Text>Log In</Text>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           autoCapitalize="none"
@@ -70,7 +66,12 @@ export default class LoginScreen extends React.Component<Props, State> {
           <TextInput
             secureTextEntry={this.state.showPassword}
             autoCapitalize="none"
-            style={{ flex: 4, height: 40, borderColor: "gray", borderWidth: 1 }}
+            style={{
+              flex: 4,
+              height: 40,
+              borderColor: "gray",
+              borderWidth: 1,
+            }}
             onChangeText={(password: string) => this.setState({ password })}
             value={this.state.password}
           />
@@ -98,12 +99,16 @@ export default class LoginScreen extends React.Component<Props, State> {
               <Button
                 title="Sign In"
                 onPress={() => {
-                  signIn().then(this.props.onLoginPress);
+                  signIn();
                 }}
               />
             );
           }}
         </SignInMutation>
+        <Button
+          title="Don't have an account? Sign up here"
+          onPress={this.toggleSignUp}
+        />
       </View>
     );
   }

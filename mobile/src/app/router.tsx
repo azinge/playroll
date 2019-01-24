@@ -9,7 +9,6 @@ import AlertModal from "../components/shared/AlertModal";
 import Create from "../components/Create";
 import TracklistStyles from "components/Tracklist/Tracklist.styles";
 import Tracklist from "../components/Tracklist";
-import LoginScreen from "../components/LoginScreen";
 import SignUpScreen from "../components/SignUpScreen";
 
 export const Navigator = createBottomTabNavigator({
@@ -35,20 +34,6 @@ export const Navigator = createBottomTabNavigator({
         <Icon
           type="material-community"
           name="playlist-play"
-          size={35}
-          color={tintColor}
-        />
-      ),
-    },
-  },
-  Login: {
-    screen: LoginScreen,
-    navigationOptions: {
-      tabBarLabel: "User",
-      tabBarIcon: ({ tintColor }) => (
-        <Icon
-          type="material-community"
-          name="account"
           size={35}
           color={tintColor}
         />

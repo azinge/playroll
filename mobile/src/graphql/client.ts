@@ -6,6 +6,7 @@ import * as config from "../config/aws.js";
 import { fetcher } from "../lib/apiutils/fetcher";
 import { withClientState } from "apollo-link-state";
 import { resolvers } from "./resolvers";
+import { defaults } from "./defaults";
 
 // This is the same cache you pass into new ApolloClient
 const cache = new InMemoryCache();
@@ -13,6 +14,7 @@ const cache = new InMemoryCache();
 const stateLink = withClientState({
   cache,
   resolvers,
+  defaults,
 });
 
 const httpLink = new HttpLink({

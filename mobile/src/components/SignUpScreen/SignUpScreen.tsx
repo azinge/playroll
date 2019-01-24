@@ -10,7 +10,9 @@ import {
   CONFIRM_SIGN_UP_MUTATION,
   ConfirmSignUpMutation,
 } from "../../graphql/requests/Auth";
-export interface Props {}
+export interface Props {
+  toggleSignUp: () => void;
+}
 
 interface State {
   username: string;
@@ -127,6 +129,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             );
           }}
         </ConfirmSignUpMutation>
+        <Button title="Go back to Login" onPress={this.props.toggleSignUp} />
       </View>
     );
   }

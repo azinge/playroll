@@ -15,7 +15,7 @@ export default class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      isLoggedIn: false,
+      isLoggedIn: true,
     };
     this.onLoginPress = this.onLoginPress.bind(this);
     this.onLogoutPress = this.onLogoutPress.bind(this);

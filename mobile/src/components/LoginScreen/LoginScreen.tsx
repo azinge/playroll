@@ -12,11 +12,15 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Auth } from "aws-amplify";
+import { Query } from "react-apollo";
+import { GET_AUTHENTICATION_STATUS } from "../../graphql/requests/Auth/GetAuthenticationStatus";
+
 import { SIGN_IN_MUTATION, SignInMutation } from "../../graphql/requests/Auth";
 
 export interface Props {
   onLoginPress?: () => void;
   onLogoutPress?: () => void;
+  navigation: any;
 }
 
 interface State {
@@ -44,11 +48,12 @@ export default class LoginScreen extends React.Component<Props, State> {
   }
 
   toggleSignUp() {
-    this.setState({ signedUp: !this.state.signedUp });
+    this.props.navigation.navigate("SignUp");
   }
+
   render() {
     return (
-      <View>
+      <SafeAreaView style={{ backgroundColor: "white", flex: 2 }}>
         <Text>Log In</Text>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
@@ -99,7 +104,7 @@ export default class LoginScreen extends React.Component<Props, State> {
               <Button
                 title="Sign In"
                 onPress={() => {
-                  signIn();
+                  signIn().then(() => this.props.navigation.navigate("App"));
                 }}
               />
             );
@@ -109,7 +114,7 @@ export default class LoginScreen extends React.Component<Props, State> {
           title="Don't have an account? Sign up here"
           onPress={this.toggleSignUp}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

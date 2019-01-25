@@ -40,7 +40,7 @@ export default class Home extends React.Component {
               <Button
                 title="Sign Out"
                 onPress={() => {
-                  signOut().then(this.props.screenProps);
+                  signOut().then(() => this.props.navigation.navigate("Login"));
                 }}
               />
             );

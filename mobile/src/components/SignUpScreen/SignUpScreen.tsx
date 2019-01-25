@@ -3,7 +3,14 @@
  */
 
 import * as React from "react";
-import { Text, View, TextInput, Button, Switch } from "react-native";
+import {
+  Text,
+  SafeAreaView,
+  View,
+  TextInput,
+  Button,
+  Switch,
+} from "react-native";
 
 import { SIGN_UP_MUTATION, SignUpMutation } from "../../graphql/requests/Auth";
 import {
@@ -42,7 +49,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
   render() {
     return (
-      <View>
+      <SafeAreaView style={{ backgroundColor: "white", flex: 2 }}>
         <Text>SignUpScreen</Text>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
@@ -98,14 +105,14 @@ export default class SignUpScreen extends React.Component<Props, State> {
           }}
         </SignUpMutation>
         <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          style={{ height: 40, borderColor: "black", borderWidth: 1 }}
           autoCapitalize="none"
           placeholder="Username"
           onChangeText={(confirmUser: string) => this.setState({ confirmUser })}
           value={this.state.confirmUser}
         />
         <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+          style={{ height: 40, borderColor: "black", borderWidth: 1 }}
           autoCapitalize="none"
           placeholder="Code"
           onChangeText={(authCode: string) => this.setState({ authCode })}
@@ -129,8 +136,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             );
           }}
         </ConfirmSignUpMutation>
-        <Button title="Go back to Login" onPress={this.props.toggleSignUp} />
-      </View>
+      </SafeAreaView>
     );
   }
 }

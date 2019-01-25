@@ -1,10 +1,6 @@
 import { Auth } from "aws-amplify";
 import { GET_AUTHENTICATION_STATUS } from "../../requests/Auth/GetAuthenticationStatus";
-export const signIn = async (
-  _,
-  { username, password },
-  { cache, getCacheKey }
-) => {
+export const signIn = async (_, { username, password }, { cache }) => {
   try {
     console.log("signing in");
     await Auth.signIn(username, password);

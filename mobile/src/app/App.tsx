@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import { AppNavigator, AuthNavigator } from "./router";
 import { ApolloProvider } from "react-apollo";
-import { SafeAreaView, View } from "react-native";
 import { client } from "../graphql/client";
-import LoginScreen from "../components/LoginScreen";
-import { Query } from "react-apollo";
-import { GET_AUTHENTICATION_STATUS } from "../graphql/requests/Auth/GetAuthenticationStatus";
 import { AppContainer } from "./router";
+import LoadingScreen from "../components/LoadingScreen";
+
 export default class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <AppContainer />
+        <LoadingScreen />
+        {/* <AppContainer /> */}
         {/* <AuthNavigator /> */}
 
         {/* <Query query={GET_AUTHENTICATION_STATUS}>

@@ -49,7 +49,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
   render() {
     return (
-      <SafeAreaView style={{ backgroundColor: "white", flex: 2 }}>
+      <View style={{ backgroundColor: "white", flex: 2 }}>
         <Text>SignUpScreen</Text>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
@@ -136,7 +136,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             );
           }}
         </ConfirmSignUpMutation>
-      </SafeAreaView>
+      </View>
     );
   }
 }

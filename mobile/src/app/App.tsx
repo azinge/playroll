@@ -24,7 +24,7 @@ export default class App extends React.Component<Props, State> {
     this.setState({ appState: "loading" });
     setTimeout(() => {
       this.setState({ appState: "ready" });
-    }, 2000);
+    }, 1250);
   }
   render() {
     return (

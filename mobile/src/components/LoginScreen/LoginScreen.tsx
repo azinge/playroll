@@ -53,7 +53,7 @@ export default class LoginScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <SafeAreaView style={{ backgroundColor: "white", flex: 2 }}>
+      <View style={{ backgroundColor: "white", flex: 2 }}>
         <Text>Log In</Text>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
@@ -110,11 +110,11 @@ export default class LoginScreen extends React.Component<Props, State> {
             );
           }}
         </SignInMutation>
-        <Button
+        {/* <Button
           title="Don't have an account? Sign up here"
           onPress={this.toggleSignUp}
-        />
-      </SafeAreaView>
+        /> */}
+      </View>
     );
   }
 }

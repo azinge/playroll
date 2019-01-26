@@ -13,6 +13,7 @@ import Search from "../components/Search";
 import Tracklist from "../components/Tracklist";
 import SignUpScreen from "../components/SignUpScreen";
 import LoginScreen from "../components/LoginScreen";
+import LandingScreen from "../components/LandingScreen";
 
 export const AuthNavigator = createStackNavigator(
   {
@@ -23,9 +24,23 @@ export const AuthNavigator = createStackNavigator(
         header: null,
       }),
     },
-    SignUp: { screen: SignUpScreen },
+    SignUp: {
+      screen: SignUpScreen,
+      navigationOptions: () => ({
+        title: `SignUp`,
+        header: null,
+      }),
+    },
+    Landing: {
+      screen: LandingScreen,
+      navigationOptions: () => ({
+        title: `Landing`,
+        header: null,
+      }),
+    },
   },
   {
+    initialRouteName: "Landing",
     headerMode: "screen",
   }
 );
@@ -89,7 +104,13 @@ export const AppNavigator = createBottomTabNavigator({
   },
 });
 
-export const AppContainer = createSwitchNavigator({
-  Auth: AuthNavigator,
-  App: AppNavigator,
-});
+export const AppContainer = createSwitchNavigator(
+  {
+    Auth: AuthNavigator,
+    App: AppNavigator,
+  },
+  {
+    // initialRouteName: "Auth",
+    initialRouteName: "App", // for debug
+  }
+);

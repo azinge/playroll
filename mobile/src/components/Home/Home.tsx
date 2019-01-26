@@ -149,13 +149,26 @@ export default class Home extends React.Component {
                   style={{
                     fontFamily: "Avenir",
                     fontWeight: "bold",
-                    fontSize: 13,
+                    fontSize: 10,
                     color: "grey",
                   }}
                   numberOfLines={2}
                 >
                   {val.name}
                 </Text>
+                {val.creator && (
+                  <Text
+                    style={{
+                      fontFamily: "Avenir",
+                      fontWeight: "bold",
+                      fontSize: 10,
+                      color: "lightgrey",
+                    }}
+                    numberOfLines={2}
+                  >
+                    {val.creator}
+                  </Text>
+                )}
               </View>
             );
           })}

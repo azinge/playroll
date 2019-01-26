@@ -45,7 +45,10 @@ export default class HomeCarousel extends React.Component<Props, State> {
             shadowRadius: 1,
           }}
         >
-          <Text style={{ fontFamily: "Avenir" }} numberOfLines={2}>
+          <Text
+            style={{ fontFamily: "Avenir", color: "white" }}
+            numberOfLines={2}
+          >
             {item.name}
           </Text>
         </View>

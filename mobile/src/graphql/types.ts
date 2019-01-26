@@ -50,6 +50,7 @@ export type Tracklist = {
 
 export type MusicSource = {
   cover?: string;
+  creator?: string;
   name?: string;
   provider?: string;
   providerID?: string;

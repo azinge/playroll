@@ -1,30 +1,41 @@
-import React, { Component } from "react";
-import { ApolloProvider } from "react-apollo";
+import React from "react";
+import { SafeAreaView } from "react-native";
+import { ApolloProvider, Query } from "react-apollo";
 import { client } from "../graphql/client";
-import { AppContainer } from "./router";
+import { AppContainer, AuthNavigator, AppNavigator } from "./router";
 import LoadingScreen from "../components/LoadingScreen";
+import LoginScreen from "../components/LoginScreen";
+import { GET_AUTHENTICATION_STATUS } from "../graphql/requests/Auth/GetAuthenticationStatus";
 
-export default class App extends Component {
+export interface Props {}
+
+interface State {
+  appState: "dormant" | "loading" | "ready";
+}
+
+export default class App extends React.Component<Props, State> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      appState: "dormant",
+    };
+  }
+  componentDidMount() {
+    this.setState({ appState: "loading" });
+    setTimeout(() => {
+      this.setState({ appState: "ready" });
+    }, 2000);
+  }
   render() {
     return (
       <ApolloProvider client={client}>
-        <LoadingScreen />
-        {/* <AppContainer /> */}
-        {/* <AuthNavigator /> */}
-
-        {/* <Query query={GET_AUTHENTICATION_STATUS}>
-            {({ data, client }) => {
-              console.log(data);
-              console.log(data.coreData.isAuthenticated);
-              if (!data.coreData.isAuthenticated) {
-                console.log("Logged in");
-                return <AppNavigator />;
-              } else {
-                console.log("Logged out");
-                return <LoginScreen />;
-              }
-            }}
-          </Query> */}
+        {this.state.appState != "ready" ? (
+          <LoadingScreen />
+        ) : (
+          <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+            <AppContainer />
+          </SafeAreaView>
+        )}
       </ApolloProvider>
     );
   }

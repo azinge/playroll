@@ -2,30 +2,34 @@ export interface MusicSource {
   name: string;
   type: string;
   cover: string;
+  creator?: string;
   provider: string;
   providerID: string;
 }
 
 export const musicSources: MusicSource[] = [
   {
-    name: "Big Pun - Still Not A Player",
+    name: "Still Not A Player",
     type: "Track",
     cover: "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+    creator: "Big Pun",
     provider: "Spotify",
     providerID: "3GKL13lkM5nRc4zC1lIOrR",
   },
   {
     name:
-      'Watanabe Saki (CV: Risa Taneda) - TV Anime "Shinsekai Yori" ED Shudaika "Wareta Ringo" "Yuki ni Saku Hana"',
+      'TV Anime "Shinsekai Yori" ED Shudaika "Wareta Ringo" "Yuki ni Saku Hana"',
     type: "Album",
     cover: "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+    creator: "Watanabe Saki (CV: Risa Taneda)",
     provider: "Spotify",
     providerID: "0Kaz0Nu3VKmzUS3hmNX5fD",
   },
   {
-    name: "AmaLee - Life Will Change (Persona 5)",
+    name: "Life Will Change (Persona 5)",
     type: "Track",
     cover: "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+    creator: "AmaLee",
     provider: "Spotify",
     providerID: "3JGQ8LZqQusCMpDluqqKhc",
   },
@@ -37,9 +41,10 @@ export const musicSources: MusicSource[] = [
     providerID: "5K4W6rqBFWDnAN6FQUkS6x",
   },
   {
-    name: "Travis Scott - ASTROWORLD",
+    name: "ASTROWORLD",
     type: "Album",
     cover: "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+    creator: "Travis Scott",
     provider: "Spotify",
     providerID: "41GuZcammIkupMPKH2OJ6I",
   },
@@ -54,6 +59,7 @@ export const musicSources: MusicSource[] = [
     name: "Transistor Original Soundtrack",
     type: "Album",
     cover: "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+    creator: "Darren Korb",
     provider: "Spotify",
     providerID: "3B0PgLmgaW0gJth55ApWbw",
   },
@@ -75,6 +81,7 @@ export interface Roll {
 export interface Playroll {
   name: string;
   cover: string;
+  creator?: string;
   rolls: Roll[];
 }
 

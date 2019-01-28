@@ -23,11 +23,11 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import {
   GenerateTracklistMutation,
   GENERATE_TRACKLIST_MUTATION,
-} from "../../graphql/requests/Tracklist/";
+} from "../../../graphql/requests/Tracklist/";
 import {
   DeleteRollMutation,
   DELETE_ROLL_MUTATION,
-} from "../../graphql/requests/Roll";
+} from "../../../graphql/requests/Roll";
 import {
   DeletePlayrollMutation,
   DELETE_PLAYROLL_MUTATION,
@@ -35,7 +35,7 @@ import {
   CREATE_PLAYROLL_MUTATION,
   ListPlayrollsQuery,
   LIST_PLAYROLLS_QUERY,
-} from "../../graphql/requests/Playroll/";
+} from "../../../graphql/requests/Playroll/";
 
 import styles from "./Playrolls.styles";
 import PlayrollCard from "./PlayrollCard";

@@ -6,7 +6,7 @@ import React from "react";
 import { Text, View, Image, Dimensions } from "react-native";
 import Carousel from "react-native-snap-carousel";
 
-import { playrolls, Playroll } from "../../../static/mockData";
+import { playrolls, Playroll } from "../../../../static/mockData";
 
 import styles from "./HomeCarousel.styles";
 

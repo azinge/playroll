@@ -4,14 +4,14 @@
 
 import React from "react";
 import { Text, View, ScrollView, Image, Button } from "react-native";
-import HeaderBar from "../../components/shared/HeaderBar";
+import HeaderBar from "../../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
 import {
   SIGN_OUT_MUTATION,
   SignOutMutation,
-} from "../../graphql/requests/Auth";
+} from "../../../graphql/requests/Auth";
 
-import { musicSources } from "../../static/mockData";
+import { musicSources } from "../../../static/mockData";
 
 export default class Home extends React.Component {
   render() {

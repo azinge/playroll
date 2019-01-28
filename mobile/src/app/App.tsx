@@ -2,9 +2,8 @@ import React from "react";
 import { SafeAreaView } from "react-native";
 import { ApolloProvider, Query } from "react-apollo";
 import { client } from "../graphql/client";
-import { AppContainer, AuthNavigator, AppNavigator } from "./router";
-import LoadingScreen from "../components/LoadingScreen";
-import LoginScreen from "../components/LoginScreen";
+import { AppContainer } from "../components/router";
+import LoadingScreen from "../components/Auth/LoadingScreen";
 import { GET_AUTHENTICATION_STATUS } from "../graphql/requests/Auth/GetAuthenticationStatus";
 
 export interface Props {}

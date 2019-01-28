@@ -12,12 +12,12 @@ import {
 } from "react-native";
 import styles, { pickerStyle } from "./CreateModal.styles";
 
-import { MusicSource } from "../../../graphql/types";
+import { MusicSource } from "../../../../graphql/types";
 
 import {
   CREATE_ROLL_MUTATION,
   CreateRollMutation,
-} from "../../../graphql/requests/Roll";
+} from "../../../../graphql/requests/Roll";
 
 export interface Props {
   currentSource: MusicSource;

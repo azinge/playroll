@@ -13,9 +13,12 @@ import {
 } from "react-native";
 import { Auth } from "aws-amplify";
 import { Query } from "react-apollo";
-import { GET_AUTHENTICATION_STATUS } from "../../graphql/requests/Auth/GetAuthenticationStatus";
+import { GET_AUTHENTICATION_STATUS } from "../../../graphql/requests/Auth/GetAuthenticationStatus";
 
-import { SIGN_IN_MUTATION, SignInMutation } from "../../graphql/requests/Auth";
+import {
+  SIGN_IN_MUTATION,
+  SignInMutation,
+} from "../../../graphql/requests/Auth";
 
 export interface Props {
   onLoginPress?: () => void;

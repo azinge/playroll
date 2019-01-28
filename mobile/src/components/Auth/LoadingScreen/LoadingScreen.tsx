@@ -26,7 +26,7 @@ export default class LoadingScreen extends React.Component {
         }}
       >
         <ImageBackground
-          source={require("../../assets/loading.png")}
+          source={require("../../../assets/loading.png")}
           resizeMode="cover"
           style={{ height: height, width: width }}
         />

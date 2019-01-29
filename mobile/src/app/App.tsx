@@ -31,7 +31,7 @@ export default class App extends React.Component<Props, State> {
         {/* {this.state.appState != "ready" ? (
           <LoadingScreen />
         ) : (
-          <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}> */}
+           */}
         <AppContainer />
         {/* </SafeAreaView>
         )} */}

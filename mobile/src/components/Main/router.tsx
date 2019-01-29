@@ -6,14 +6,15 @@ import {
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 
-import Home from "./Home";
+import HomeScreen from "./HomeScreen";
+import PlayrollsScreen from "./PlayrollsScreen";
 import Search from "./Search";
-import Playrolls from "../Playrolls_/Playrolls";
+import ProfileScreen from "./ProfileScreen";
 
 export const MainNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: Home, // TODO: change back to Home
+      screen: HomeScreen,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
@@ -27,13 +28,27 @@ export const MainNavigator = createBottomTabNavigator(
       },
     },
     Playrolls: {
-      screen: Playrolls,
+      screen: PlayrollsScreen,
       navigationOptions: {
         tabBarLabel: "Playrolls",
         tabBarIcon: ({ tintColor }) => (
           <Icon
             type="material-community"
             name="playlist-play"
+            size={35}
+            color={tintColor}
+          />
+        ),
+      },
+    },
+    Profile: {
+      screen: ProfileScreen,
+      navigationOptions: {
+        tabBarLabel: "Profile",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon
+            type="material-community"
+            name="account"
             size={35}
             color={tintColor}
           />

@@ -8,11 +8,13 @@ import { Icon } from "react-native-elements";
 
 import { AuthNavigator } from "./Auth/router";
 import { MainNavigator } from "./Main/router";
+import { PlayrollsNavigator } from "./Playrolls/router";
 
 export const AppContainer = createSwitchNavigator(
   {
     Auth: AuthNavigator,
     Main: MainNavigator,
+    Playrolls: PlayrollsNavigator,
   },
   {
     // initialRouteName: "Auth",

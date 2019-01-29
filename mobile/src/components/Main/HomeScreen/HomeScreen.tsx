@@ -11,6 +11,8 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
+
 import HeaderBar from "../../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
 import {
@@ -20,7 +22,12 @@ import {
 
 import { musicSources } from "../../../static/mockData";
 
-export default class Home extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+export default class Home extends React.Component<Props, State> {
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>

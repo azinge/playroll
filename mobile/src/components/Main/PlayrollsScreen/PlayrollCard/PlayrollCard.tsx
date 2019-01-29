@@ -5,12 +5,15 @@
 import * as React from "react";
 import { Text, View, Dimensions, Image, Button } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { Playroll, Roll, MusicSource } from "../../../graphql/types";
 import { Card } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
+
+import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 
 export interface Props {
   playroll: Playroll;
   editPlayroll: () => void;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {}

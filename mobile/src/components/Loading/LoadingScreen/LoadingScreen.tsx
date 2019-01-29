@@ -11,25 +11,25 @@ import {
   Dimensions,
   ImageBackground,
 } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
-export default class LoadingScreen extends React.Component {
+import styles from "./LoadingScreen.styles";
+
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+export default class LoadingScreen extends React.Component<Props, State> {
   componentDidMount() {
     setTimeout(() => {
-      this.props.navigation.navigate("Main");
+      this.props.navigation && this.props.navigation.navigate("Auth");
     }, 1250);
   }
   render() {
     const { width, height } = Dimensions.get("window");
-
     return (
-      <View
-        style={{
-          backgroundColor: "purple",
-          flex: 2,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <View style={styles.container}>
         <ImageBackground
           source={require("../../../assets/loading.png")}
           resizeMode="cover"

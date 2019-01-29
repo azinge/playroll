@@ -10,7 +10,6 @@ import {
   View,
   Image,
   ScrollView,
-  Button,
   Alert,
   FlatList,
   TouchableOpacity,
@@ -19,7 +18,11 @@ import {
 } from "react-native";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import { Query } from "react-apollo";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import {
+  createStackNavigator,
+  createAppContainer,
+  NavigationScreenProp,
+} from "react-navigation";
 
 import {
   GenerateTracklistMutation,
@@ -41,7 +44,9 @@ import {
 import styles from "./PlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
 
-export interface Props {}
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
 
 interface State {
   addPlayrollName: string;
@@ -63,7 +68,7 @@ export default class PlayrollsScreen extends React.Component<Props, State> {
             return (
               <View style={{ flex: 1, marginTop: 20 }}>
                 <View>
-                  <Text style={styles.headline}>Playrolls</Text>
+                  <Text>Playrolls</Text>
                 </View>
                 {!loading && !error && (
                   <ScrollView>
@@ -75,7 +80,8 @@ export default class PlayrollsScreen extends React.Component<Props, State> {
                           <PlayrollCard
                             playroll={playroll}
                             editPlayroll={() => {
-                              this.props.navigation.navigate("Tracklist");
+                              this.props.navigation &&
+                                this.props.navigation.navigate("Tracklist");
                             }}
                             key={playroll.id}
                           />

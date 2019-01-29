@@ -17,7 +17,7 @@ export const MainNavigator = createBottomTabNavigator(
       screen: HomeScreen,
       navigationOptions: {
         tabBarLabel: "Home",
-        tabBarIcon: ({ tintColor }) => (
+        tabBarIcon: ({ tintColor = "" }) => (
           <Icon
             type="material-community"
             name="home"
@@ -31,7 +31,7 @@ export const MainNavigator = createBottomTabNavigator(
       screen: PlayrollsScreen,
       navigationOptions: {
         tabBarLabel: "Playrolls",
-        tabBarIcon: ({ tintColor }) => (
+        tabBarIcon: ({ tintColor = "" }) => (
           <Icon
             type="material-community"
             name="playlist-play"
@@ -45,7 +45,7 @@ export const MainNavigator = createBottomTabNavigator(
       screen: ProfileScreen,
       navigationOptions: {
         tabBarLabel: "Profile",
-        tabBarIcon: ({ tintColor }) => (
+        tabBarIcon: ({ tintColor = "" }) => (
           <Icon
             type="material-community"
             name="account"
@@ -59,7 +59,7 @@ export const MainNavigator = createBottomTabNavigator(
       screen: Search,
       navigationOptions: {
         tabBarLabel: "Search",
-        tabBarIcon: ({ tintColor }) => (
+        tabBarIcon: ({ tintColor = "" }) => (
           <Icon
             type="material-community"
             name="spotify"

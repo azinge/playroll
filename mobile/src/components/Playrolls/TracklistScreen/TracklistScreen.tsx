@@ -3,22 +3,9 @@
  */
 
 import React from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  // Button,
-  Alert,
-  FlatList,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
-import { Card, ListItem, Button, Icon } from "react-native-elements";
-import { Query } from "react-apollo";
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { Text, View, Image, ScrollView, SafeAreaView } from "react-native";
+import { Card, Button } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
 
 import {
   GENERATE_PLAYLIST_MUTATION,
@@ -29,7 +16,13 @@ import {
 
 import styles from "./TracklistScreen.styles";
 
-export default class TracklistScreen extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+
+export default class TracklistScreen extends React.Component<Props, State> {
   render() {
     const nav = this.props.navigation;
     const tracklistID =
@@ -37,7 +30,7 @@ export default class TracklistScreen extends React.Component {
     const playlistName =
       nav && nav.state && nav.state.params && nav.state.params.playrollName;
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <SafeAreaView style={styles.screenContainer}>
         <GetTracklistQuery
           query={GET_TRACKLIST_QUERY}
           variables={{ id: tracklistID }}
@@ -47,9 +40,7 @@ export default class TracklistScreen extends React.Component {
             return (
               <View style={{ flex: 1, marginTop: 20 }}>
                 <View>
-                  <Text
-                    style={styles.headline}
-                  >{`${playlistName} - Tracklist`}</Text>
+                  <Text>{`${playlistName} - Tracklist`}</Text>
                   <GeneratePlaylistMutation
                     mutation={GENERATE_PLAYLIST_MUTATION}
                     variables={{

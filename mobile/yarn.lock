@@ -788,6 +788,14 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-navigation@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-3.0.1.tgz#374db42a441f4fc50cc0c86a399e41ce4680bfd3"
+  integrity sha512-+43aJYMY9gTMpBjH6jtLzLU2imUVXons8h5Q1Tz0IrNq/cx1wYiqDyzXAQZurC8W7eW811CKIuCtC5vK0XkMZw==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-test-renderer@^16.0.2":
   version "16.0.2"
   resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-16.0.2.tgz#2715eae40df08f80b3620c498598c8615693b6c6"

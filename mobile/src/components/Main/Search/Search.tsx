@@ -10,6 +10,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { pickerStyle } from "./Search.styles";

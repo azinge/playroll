@@ -11,7 +11,11 @@ import {
   Dimensions,
   ImageBackground,
 } from "react-native";
-import { NavigationScreenProp } from "react-navigation";
+import {
+  NavigationScreenProp,
+  StackActions,
+  NavigationActions,
+} from "react-navigation";
 
 import styles from "./LoadingScreen.styles";
 
@@ -23,7 +27,14 @@ interface State {}
 export default class LoadingScreen extends React.Component<Props, State> {
   componentDidMount() {
     setTimeout(() => {
-      this.props.navigation && this.props.navigation.navigate("Main");
+      this.props.navigation &&
+        this.props.navigation.dispatch(
+          StackActions.reset({
+            key: null,
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: "Auth" })],
+          })
+        );
     }, 1250);
   }
   render() {

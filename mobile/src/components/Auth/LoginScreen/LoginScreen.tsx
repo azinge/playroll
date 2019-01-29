@@ -12,7 +12,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Auth } from "aws-amplify";
-import { NavigationScreenProp } from "react-navigation";
+import {
+  NavigationScreenProp,
+  StackActions,
+  NavigationActions,
+} from "react-navigation";
 
 import {
   SIGN_IN_MUTATION,
@@ -101,7 +105,15 @@ export default class LoginScreen extends React.Component<Props, State> {
                     signIn().then(
                       () =>
                         this.props.navigation &&
-                        this.props.navigation.navigate("Main")
+                        this.props.navigation.dispatch(
+                          StackActions.reset({
+                            key: null,
+                            index: 0,
+                            actions: [
+                              NavigationActions.navigate({ routeName: "Main" }),
+                            ],
+                          })
+                        )
                     );
                   }}
                 />

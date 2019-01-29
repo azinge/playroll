@@ -10,7 +10,6 @@ import HomeScreen from "./HomeScreen";
 import BrowsePlayrollsScreen from "./BrowsePlayrollsScreen";
 import Search from "./Search";
 import ProfileScreen from "./ProfileScreen";
-import { PlayrollsNavigator } from "../../components/Playrolls/router";
 
 export const MainNavigator = createBottomTabNavigator(
   {
@@ -73,7 +72,6 @@ export const MainNavigator = createBottomTabNavigator(
         ),
       },
     },
-    Playrolls: PlayrollsNavigator,
   },
   {
     // initialRouteName: "Home",

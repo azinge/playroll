@@ -8,16 +8,21 @@ import { Icon } from "react-native-elements";
 
 import { AuthNavigator } from "./Auth/router";
 import { MainNavigator } from "./Main/router";
+import { PlayrollsNavigator } from "./Playrolls/router";
 import { LoadingNavigator } from "./Loading/router";
 
-export const AppContainer = createSwitchNavigator(
+export const AppContainer = createStackNavigator(
   {
     Auth: AuthNavigator,
     Loading: LoadingNavigator,
     Main: MainNavigator,
+    Playrolls: PlayrollsNavigator,
   },
   {
-    // initialRouteName: "Auth",
-    initialRouteName: "Loading", // for debug
+    initialRouteName: "Loading",
+    headerMode: "screen",
+    navigationOptions: {
+      header: null,
+    },
   }
 );

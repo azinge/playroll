@@ -84,7 +84,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                             playroll={playroll}
                             editPlayroll={() => {
                               this.props.navigation &&
-                                this.props.navigation.navigate("Playrolls");
+                                this.props.navigation.navigate("Tracklist");
                             }}
                             key={playroll.id}
                           />

@@ -3,14 +3,14 @@
  */
 
 import * as React from "react";
-import { Text, View } from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 
 export default class ManagePlayrollScreen extends React.Component {
   render() {
     return (
-      <View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <Text>ManagePlayrollScreen</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 }

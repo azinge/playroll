@@ -3,13 +3,38 @@
  */
 
 import * as React from "react";
-import { Text, View } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  Dimensions,
+  ImageBackground,
+} from "react-native";
 
 export default class LoadingScreen extends React.Component {
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.navigation.navigate("Main");
+    }, 1250);
+  }
   render() {
+    const { width, height } = Dimensions.get("window");
+
     return (
-      <View>
-        <Text>LoadingScreen</Text>
+      <View
+        style={{
+          backgroundColor: "purple",
+          flex: 2,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ImageBackground
+          source={require("../../../assets/loading.png")}
+          resizeMode="cover"
+          style={{ height: height, width: width }}
+        />
       </View>
     );
   }

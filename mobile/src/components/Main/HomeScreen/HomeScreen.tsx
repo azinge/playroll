@@ -3,7 +3,14 @@
  */
 
 import React from "react";
-import { Text, View, ScrollView, Image, Button } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Button,
+  SafeAreaView,
+} from "react-native";
 import HeaderBar from "../../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
 import {
@@ -16,7 +23,7 @@ import { musicSources } from "../../../static/mockData";
 export default class Home extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <HeaderBar />
         <View
           style={{
@@ -185,7 +192,7 @@ export default class Home extends React.Component {
             );
           }}
         </SignOutMutation> */}
-      </View>
+      </SafeAreaView>
     );
   }
 }

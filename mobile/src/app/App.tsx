@@ -28,13 +28,13 @@ export default class App extends React.Component<Props, State> {
   render() {
     return (
       <ApolloProvider client={client}>
-        {this.state.appState != "ready" ? (
+        {/* {this.state.appState != "ready" ? (
           <LoadingScreen />
         ) : (
-          <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-            <AppContainer />
-          </SafeAreaView>
-        )}
+          <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}> */}
+        <AppContainer />
+        {/* </SafeAreaView>
+        )} */}
       </ApolloProvider>
     );
   }

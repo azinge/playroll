@@ -56,68 +56,70 @@ export default class LoginScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{ backgroundColor: "white", flex: 2 }}>
-        <Text>Log In</Text>
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          autoCapitalize="none"
-          onChangeText={(username: string) => this.setState({ username })}
-          value={this.state.username}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={{ backgroundColor: "white", flex: 2 }}>
+          <Text>Log In</Text>
           <TextInput
-            secureTextEntry={this.state.showPassword}
+            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
             autoCapitalize="none"
+            onChangeText={(username: string) => this.setState({ username })}
+            value={this.state.username}
+          />
+          <View
             style={{
-              flex: 4,
-              height: 40,
-              borderColor: "gray",
-              borderWidth: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            onChangeText={(password: string) => this.setState({ password })}
-            value={this.state.password}
-          />
-          <Switch
-            onValueChange={this.toggleSwitch}
-            value={!this.state.showPassword}
-          />
-        </View>
+          >
+            <TextInput
+              secureTextEntry={this.state.showPassword}
+              autoCapitalize="none"
+              style={{
+                flex: 4,
+                height: 40,
+                borderColor: "gray",
+                borderWidth: 1,
+              }}
+              onChangeText={(password: string) => this.setState({ password })}
+              value={this.state.password}
+            />
+            <Switch
+              onValueChange={this.toggleSwitch}
+              value={!this.state.showPassword}
+            />
+          </View>
 
-        <Button
-          title="Current info"
-          onPress={() => {
-            Auth.currentUserInfo().then(user => console.log(user));
-          }}
-        />
-        <SignInMutation
-          mutation={SIGN_IN_MUTATION}
-          variables={{
-            username: this.state.username,
-            password: this.state.password,
-          }}
-        >
-          {(signIn, { data }) => {
-            return (
-              <Button
-                title="Sign In"
-                onPress={() => {
-                  signIn().then(() => this.props.navigation.navigate("App"));
-                }}
-              />
-            );
-          }}
-        </SignInMutation>
-        {/* <Button
+          <Button
+            title="Current info"
+            onPress={() => {
+              Auth.currentUserInfo().then(user => console.log(user));
+            }}
+          />
+          <SignInMutation
+            mutation={SIGN_IN_MUTATION}
+            variables={{
+              username: this.state.username,
+              password: this.state.password,
+            }}
+          >
+            {(signIn, { data }) => {
+              return (
+                <Button
+                  title="Sign In"
+                  onPress={() => {
+                    signIn().then(() => this.props.navigation.navigate("App"));
+                  }}
+                />
+              );
+            }}
+          </SignInMutation>
+          {/* <Button
           title="Don't have an account? Sign up here"
           onPress={this.toggleSignUp}
         /> */}
-      </View>
+        </View>
+      </SafeAreaView>
     );
   }
 }

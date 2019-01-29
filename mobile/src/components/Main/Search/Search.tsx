@@ -63,7 +63,7 @@ export default class Search extends React.Component<Props, State> {
     const playrollID =
       nav && nav.state && nav.state.params && nav.state.params.playrollID;
     return (
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <TextInput
           style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
           onChangeText={(text: string) => this.setState({ text })}
@@ -129,7 +129,7 @@ export default class Search extends React.Component<Props, State> {
             );
           }}
         </SearchSpotifyQuery>
-      </View>
+      </SafeAreaView>
     );
   }
 }

@@ -52,94 +52,103 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
   render() {
     return (
-      <View style={{ backgroundColor: "white", flex: 2 }}>
-        <Text>SignUpScreen</Text>
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          autoCapitalize="none"
-          placeholder="Username"
-          onChangeText={(username: string) => this.setState({ username })}
-          value={this.state.username}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={{ backgroundColor: "white", flex: 2 }}>
+          <Text>SignUpScreen</Text>
           <TextInput
-            secureTextEntry={this.state.showPassword}
+            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
             autoCapitalize="none"
-            placeholder="Password"
-            style={{ flex: 4, height: 40, borderColor: "gray", borderWidth: 1 }}
-            onChangeText={(password: string) => this.setState({ password })}
-            value={this.state.password}
+            placeholder="Username"
+            onChangeText={(username: string) => this.setState({ username })}
+            value={this.state.username}
           />
-          <Switch
-            onValueChange={this.toggleSwitch}
-            value={!this.state.showPassword}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <TextInput
+              secureTextEntry={this.state.showPassword}
+              autoCapitalize="none"
+              placeholder="Password"
+              style={{
+                flex: 4,
+                height: 40,
+                borderColor: "gray",
+                borderWidth: 1,
+              }}
+              onChangeText={(password: string) => this.setState({ password })}
+              value={this.state.password}
+            />
+            <Switch
+              onValueChange={this.toggleSwitch}
+              value={!this.state.showPassword}
+            />
+          </View>
+          <TextInput
+            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            autoCapitalize="none"
+            placeholder="Email"
+            onChangeText={(email: string) => this.setState({ email })}
+            value={this.state.email}
           />
+          <SignUpMutation
+            mutation={SIGN_UP_MUTATION}
+            variables={{
+              username: this.state.username,
+              password: this.state.password,
+              email: this.state.email,
+            }}
+          >
+            {(signUp, { data }) => {
+              return (
+                <Button
+                  title="Sign Up"
+                  onPress={() => {
+                    signUp();
+                  }}
+                />
+              );
+            }}
+          </SignUpMutation>
+          <TextInput
+            style={{ height: 40, borderColor: "black", borderWidth: 1 }}
+            autoCapitalize="none"
+            placeholder="Username"
+            onChangeText={(confirmUser: string) =>
+              this.setState({ confirmUser })
+            }
+            value={this.state.confirmUser}
+          />
+          <TextInput
+            style={{ height: 40, borderColor: "black", borderWidth: 1 }}
+            autoCapitalize="none"
+            placeholder="Code"
+            onChangeText={(authCode: string) => this.setState({ authCode })}
+            value={this.state.authCode}
+          />
+          <ConfirmSignUpMutation
+            mutation={CONFIRM_SIGN_UP_MUTATION}
+            variables={{
+              username: this.state.confirmUser,
+              code: this.state.authCode,
+            }}
+          >
+            {(confirmSignUp, { data }) => {
+              return (
+                <Button
+                  title="Confirm Sign Up"
+                  onPress={() => {
+                    confirmSignUp();
+                  }}
+                />
+              );
+            }}
+          </ConfirmSignUpMutation>
         </View>
-        <TextInput
-          style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-          autoCapitalize="none"
-          placeholder="Email"
-          onChangeText={(email: string) => this.setState({ email })}
-          value={this.state.email}
-        />
-        <SignUpMutation
-          mutation={SIGN_UP_MUTATION}
-          variables={{
-            username: this.state.username,
-            password: this.state.password,
-            email: this.state.email,
-          }}
-        >
-          {(signUp, { data }) => {
-            return (
-              <Button
-                title="Sign Up"
-                onPress={() => {
-                  signUp();
-                }}
-              />
-            );
-          }}
-        </SignUpMutation>
-        <TextInput
-          style={{ height: 40, borderColor: "black", borderWidth: 1 }}
-          autoCapitalize="none"
-          placeholder="Username"
-          onChangeText={(confirmUser: string) => this.setState({ confirmUser })}
-          value={this.state.confirmUser}
-        />
-        <TextInput
-          style={{ height: 40, borderColor: "black", borderWidth: 1 }}
-          autoCapitalize="none"
-          placeholder="Code"
-          onChangeText={(authCode: string) => this.setState({ authCode })}
-          value={this.state.authCode}
-        />
-        <ConfirmSignUpMutation
-          mutation={CONFIRM_SIGN_UP_MUTATION}
-          variables={{
-            username: this.state.confirmUser,
-            code: this.state.authCode,
-          }}
-        >
-          {(confirmSignUp, { data }) => {
-            return (
-              <Button
-                title="Confirm Sign Up"
-                onPress={() => {
-                  confirmSignUp();
-                }}
-              />
-            );
-          }}
-        </ConfirmSignUpMutation>
-      </View>
+      </SafeAreaView>
     );
   }
 }

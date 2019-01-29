@@ -7,15 +7,17 @@ import {
 import { Icon } from "react-native-elements";
 
 import HomeScreen from "./HomeScreen";
-import PlayrollsScreen from "./PlayrollsScreen";
+import BrowsePlayrollsScreen from "./BrowsePlayrollsScreen";
 import Search from "./Search";
 import ProfileScreen from "./ProfileScreen";
+import { PlayrollsNavigator } from "../../components/Playrolls/router";
 
 export const MainNavigator = createBottomTabNavigator(
   {
     Home: {
       screen: HomeScreen,
       navigationOptions: {
+        title: `Home`,
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor = "" }) => (
           <Icon
@@ -27,9 +29,10 @@ export const MainNavigator = createBottomTabNavigator(
         ),
       },
     },
-    Playrolls: {
-      screen: PlayrollsScreen,
+    BrowsePlayrolls: {
+      screen: BrowsePlayrollsScreen,
       navigationOptions: {
+        title: `BrowsePlayrolls`,
         tabBarLabel: "Playrolls",
         tabBarIcon: ({ tintColor = "" }) => (
           <Icon
@@ -44,6 +47,7 @@ export const MainNavigator = createBottomTabNavigator(
     Profile: {
       screen: ProfileScreen,
       navigationOptions: {
+        title: `Profile`,
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor = "" }) => (
           <Icon
@@ -69,6 +73,7 @@ export const MainNavigator = createBottomTabNavigator(
         ),
       },
     },
+    Playrolls: PlayrollsNavigator,
   },
   {
     // initialRouteName: "Home",

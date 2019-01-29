@@ -23,7 +23,7 @@ interface State {}
 export default class LoadingScreen extends React.Component<Props, State> {
   componentDidMount() {
     setTimeout(() => {
-      this.props.navigation && this.props.navigation.navigate("Auth");
+      this.props.navigation && this.props.navigation.navigate("Main");
     }, 1250);
   }
   render() {

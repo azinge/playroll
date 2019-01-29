@@ -41,7 +41,7 @@ import {
   LIST_PLAYROLLS_QUERY,
 } from "../../../graphql/requests/Playroll/";
 
-import styles from "./PlayrollsScreen.styles";
+import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
 
 export interface Props {
@@ -52,7 +52,10 @@ interface State {
   addPlayrollName: string;
 }
 
-export default class PlayrollsScreen extends React.Component<Props, State> {
+export default class BrowsePlayrollsScreen extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -81,7 +84,7 @@ export default class PlayrollsScreen extends React.Component<Props, State> {
                             playroll={playroll}
                             editPlayroll={() => {
                               this.props.navigation &&
-                                this.props.navigation.navigate("Tracklist");
+                                this.props.navigation.navigate("Playrolls");
                             }}
                             key={playroll.id}
                           />

@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import PlayrollsScreen from "../PlayrollsScreen";
+import BrowsePlayrollsScreen from "../BrowsePlayrollsScreen";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<PlayrollsScreen />).toJSON();
+  const tree = renderer.create(<BrowsePlayrollsScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

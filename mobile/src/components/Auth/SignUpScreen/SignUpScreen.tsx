@@ -11,6 +11,7 @@ import {
   Button,
   Switch,
 } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
 import {
   SIGN_UP_MUTATION,
@@ -20,8 +21,11 @@ import {
   CONFIRM_SIGN_UP_MUTATION,
   ConfirmSignUpMutation,
 } from "../../../graphql/requests/Auth";
+
+import styles from "./SignUpScreen.styles";
 export interface Props {
   toggleSignUp: () => void;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
@@ -52,33 +56,22 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={{ backgroundColor: "white", flex: 2 }}>
+      <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.optionsContainer}>
           <Text>SignUpScreen</Text>
           <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            style={styles.usernameField}
             autoCapitalize="none"
             placeholder="Username"
             onChangeText={(username: string) => this.setState({ username })}
             value={this.state.username}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <View style={styles.passwordContainer}>
             <TextInput
               secureTextEntry={this.state.showPassword}
               autoCapitalize="none"
               placeholder="Password"
-              style={{
-                flex: 4,
-                height: 40,
-                borderColor: "gray",
-                borderWidth: 1,
-              }}
+              style={styles.passwordField}
               onChangeText={(password: string) => this.setState({ password })}
               value={this.state.password}
             />
@@ -88,7 +81,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             />
           </View>
           <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            style={styles.emailField}
             autoCapitalize="none"
             placeholder="Email"
             onChangeText={(email: string) => this.setState({ email })}
@@ -114,7 +107,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             }}
           </SignUpMutation>
           <TextInput
-            style={{ height: 40, borderColor: "black", borderWidth: 1 }}
+            style={styles.confirmUsernameField}
             autoCapitalize="none"
             placeholder="Username"
             onChangeText={(confirmUser: string) =>
@@ -123,7 +116,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
             value={this.state.confirmUser}
           />
           <TextInput
-            style={{ height: 40, borderColor: "black", borderWidth: 1 }}
+            style={styles.confirmCodeField}
             autoCapitalize="none"
             placeholder="Code"
             onChangeText={(authCode: string) => this.setState({ authCode })}

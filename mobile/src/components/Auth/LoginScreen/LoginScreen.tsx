@@ -12,18 +12,19 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Auth } from "aws-amplify";
-import { Query } from "react-apollo";
-import { GET_AUTHENTICATION_STATUS } from "../../../graphql/requests/Auth/GetAuthenticationStatus";
+import { NavigationScreenProp } from "react-navigation";
 
 import {
   SIGN_IN_MUTATION,
   SignInMutation,
 } from "../../../graphql/requests/Auth";
 
+import styles from "./LoginScreen.styles";
+
 export interface Props {
   onLoginPress?: () => void;
   onLogoutPress?: () => void;
-  navigation: any;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
@@ -51,36 +52,25 @@ export default class LoginScreen extends React.Component<Props, State> {
   }
 
   toggleSignUp() {
-    this.props.navigation.navigate("SignUp");
+    this.props.navigation && this.props.navigation.navigate("SignUp");
   }
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={{ backgroundColor: "white", flex: 2 }}>
+      <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.optionsContainer}>
           <Text>Log In</Text>
           <TextInput
-            style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
+            style={styles.usernameField}
             autoCapitalize="none"
             onChangeText={(username: string) => this.setState({ username })}
             value={this.state.username}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <View style={styles.passwordContainer}>
             <TextInput
               secureTextEntry={this.state.showPassword}
               autoCapitalize="none"
-              style={{
-                flex: 4,
-                height: 40,
-                borderColor: "gray",
-                borderWidth: 1,
-              }}
+              style={styles.passwordField}
               onChangeText={(password: string) => this.setState({ password })}
               value={this.state.password}
             />
@@ -108,7 +98,11 @@ export default class LoginScreen extends React.Component<Props, State> {
                 <Button
                   title="Sign In"
                   onPress={() => {
-                    signIn().then(() => this.props.navigation.navigate("App"));
+                    signIn().then(
+                      () =>
+                        this.props.navigation &&
+                        this.props.navigation.navigate("Main")
+                    );
                   }}
                 />
               );

@@ -3,24 +3,33 @@
  */
 
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, SafeAreaView } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
-export default class LandingScreen extends React.Component {
+import styles from "./LandingScreen.styles";
+
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+
+export default class LandingScreen extends React.Component<Props, State> {
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <View style={{ backgroundColor: "white", flex: 2 }}>
+      <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.optionsContainer}>
           <Text>Playroll</Text>
           <Button
             title="Sign In"
             onPress={() => {
-              this.props.navigation.navigate("Login");
+              this.props.navigation && this.props.navigation.navigate("Login");
             }}
           />
           <Button
             title="Sign Up"
             onPress={() => {
-              this.props.navigation.navigate("SignUp");
+              this.props.navigation && this.props.navigation.navigate("SignUp");
             }}
           />
         </View>

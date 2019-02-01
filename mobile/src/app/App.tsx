@@ -1,69 +1,41 @@
-import React, { Component } from "react";
-import { Tabs } from "./config/router";
-import { ApolloProvider } from "react-apollo";
-import Amplify, { Auth } from "aws-amplify";
-import Signer from "aws-appsync/lib/link/signer/signer";
-import awsconfig from "../config/aws.js";
-import Url from "url";
-import ApolloClient from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
+import React from "react";
 import { SafeAreaView } from "react-native";
+import { ApolloProvider, Query } from "react-apollo";
+import { client } from "../graphql/client";
+import { AppContainer } from "../components/router";
+import LoadingScreen from "../components/Auth/LoadingScreen";
+import { GET_AUTHENTICATION_STATUS } from "../graphql/requests/Auth/GetAuthenticationStatus";
 
-Amplify.configure(awsconfig.dev.amplify);
+export interface Props {}
 
-const fetcher = async (uri, { method, body }) => {
-  const {
-    accessKeyId,
-    secretAccessKey,
-    sessionToken,
-  } = await Auth.currentCredentials();
+interface State {
+  appState: "dormant" | "loading" | "ready";
+}
 
-  console.log("Hello");
-
-  // console.warn("CREDENTIALS:", { accessKeyId, secretAccessKey, sessionToken });
-
-  const { host, path } = Url.parse(uri);
-  const formatted = {
-    method,
-    body,
-    service: "execute-api",
-    region: "us-west-2",
-    url: uri,
-    host,
-    path,
-  };
-
-  // console.warn("REQUEST:", formatted);
-
-  const signedRequest = Signer.sign(formatted, {
-    access_key: accessKeyId,
-    secret_key: secretAccessKey,
-    session_token: sessionToken,
-  });
-
-  // console.warn({ ...signedRequest, headers: "", body: "" });
-
-  return fetch(uri, signedRequest);
-};
-
-export const client = new ApolloClient({
-  link: new HttpLink({
-    // uri: "https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/",
-    uri: "http://localhost:4445/graphql",
-    fetch: fetcher,
-  }),
-  cache: new InMemoryCache(),
-});
-
-export default class App extends Component {
+export default class App extends React.Component<Props, State> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      appState: "dormant",
+    };
+  }
+  componentDidMount() {
+    this.setState({ appState: "loading" });
+    setTimeout(() => {
+      this.setState({ appState: "ready" });
+    }, 1250);
+  }
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-        <ApolloProvider client={client}>
-          <Tabs />
-        </ApolloProvider>
-      </SafeAreaView>
+      <ApolloProvider client={client}>
+        {/* {this.state.appState != "ready" ? (
+          <LoadingScreen />
+        ) : (
+           */}
+        <AppContainer />
+        {/* </SafeAreaView>
+        )} */}
+      </ApolloProvider>
     );
   }
 }

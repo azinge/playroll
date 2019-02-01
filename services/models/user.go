@@ -2,35 +2,86 @@ package models
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/jinzhu/gorm"
 )
 
 type User struct {
 	Model
-	Name                string
-	Avatar              string
-	Playrolls           []Playroll
-	ExternalCredentials []ExternalCredential
-	Friendships         []Friendship
-	Recommendations     []Recommendation
-	DiscoveryQueue      *DiscoveryQueue
+	Name                    string
+	Avatar                  string
+	Email                   string
+	AccountType             string
+	Playrolls               []Playroll
+	IdentityCredentials     []IdentityCredential
+	MusicServiceCredentials []MusicServiceCredential
+	ExternalCredentials     []ExternalCredential
+	Friendships             []Friendship
+	Recommendations         []Recommendation
+	DiscoveryQueue          *DiscoveryQueue
 }
 
 type UserInput struct {
-	Name   string `gql:"name: String"`
-	Avatar string `gql:"avatar: String"`
+	Name        string `gql:"name: String"`
+	Avatar      string `gql:"avatar: String"`
+	Email       string `gql:"email: String"`
+	AccountType string `gql:"accountType: String"`
 }
 
 type UserOutput struct {
-	Model               `gql:"MODEL"`
-	Name                string                     `gql:"name: String"`
-	Avatar              string                     `gql:"avatar: String"`
-	Playrolls           []PlayrollOutput           `gql:"playrolls: [Playroll]"`
-	ExternalCredentials []ExternalCredentialOutput `gql:"externalCredentials: [ExternalCredential]"`
-	Friendships         []FriendshipOutput         `gql:"friendships: [Friendship]"`
-	Recommendations     []RecommendationOutput     `gql:"recommendation: [Recommendation]"`
-	DiscoveryQueue      *DiscoveryQueueOutput      `gql:"discoveryQueue: DiscoveryQueue"`
+	Model                   `gql:"MODEL"`
+	Name                    string                         `gql:"name: String"`
+	Avatar                  string                         `gql:"avatar: String"`
+	Email                   string                         `gql:"email: String"`
+	AccountType             string                         `gql:"accountType: String"`
+	Playrolls               []PlayrollOutput               `gql:"playrolls: [Playroll]"`
+	IdentityCredentials     []IdentityCredentialOutput     `gql:"identityCredentials: [IdentityCredential]"`
+	MusicServiceCredentials []MusicServiceCredentialOutput `gql:"musicServiceCredentials: [MusicServiceCredential]"`
+	ExternalCredentials     []ExternalCredentialOutput     `gql:"externalCredentials: [ExternalCredential]"` //DEPRECATED
+	Friendships             []FriendshipOutput             `gql:"friendships: [Friendship]"`
+	Recommendations         []RecommendationOutput         `gql:"recommendation: [Recommendation]"`
+	DiscoveryQueue          *DiscoveryQueueOutput          `gql:"discoveryQueue: DiscoveryQueue"`
+}
+
+// Utility Methods
+
+func CreateUserWithIdentityCredential(userInput *UserInput, identityCredentialInput *IdentityCredentialInput, db *gorm.DB) (*UserOutput, error) {
+	tx := db.Begin()
+	uDAO := InitUserDAO(tx)
+
+	user, err := userInput.ToModel()
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	rawUser, err := uDAO.Create(user)
+	if err != nil {
+		return nil, err
+	}
+	userOutput, err := FormatUser(rawUser)
+
+	icDAO := InitIdentityCredentialDAO(tx)
+
+	identityCredentialInput.UserID = strconv.Itoa(int(userOutput.ID))
+	identityCredential, err := identityCredentialInput.ToModel()
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	rawIdentityCredential, err := icDAO.Create(identityCredential)
+	if err != nil {
+		return nil, err
+	}
+	identityCredentialOutput, err := FormatIdentityCredential(rawIdentityCredential)
+
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, err
+	}
+	userOutput.IdentityCredentials = append(userOutput.IdentityCredentials, *identityCredentialOutput)
+	fmt.Println(userOutput)
+	return userOutput, nil
 }
 
 // Entity Specific Methods
@@ -39,6 +90,8 @@ func UserInputToModel(ui *UserInput) (*User, error) {
 	u := &User{}
 	u.Name = ui.Name
 	u.Avatar = ui.Avatar
+	u.Email = ui.Email
+	u.AccountType = ui.AccountType
 	return u, nil
 }
 
@@ -47,11 +100,12 @@ func UserOutputToModel(uo *UserOutput) (*User, error) {
 }
 
 func UserModelToOutput(u *User) (*UserOutput, error) {
-	fmt.Printf("%#v\n", u)
 	uo := &UserOutput{}
 	uo.Model = u.Model
 	uo.Name = u.Name
 	uo.Avatar = u.Avatar
+	uo.Email = u.Email
+	uo.AccountType = u.AccountType
 	playrolls, err := FormatPlayrollSlice(&u.Playrolls)
 	if err != nil {
 		return nil, err
@@ -62,6 +116,16 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 		return nil, err
 	}
 	uo.ExternalCredentials = externalCredentials
+	identityCredentials, err := FormatIdentityCredentialSlice(&u.IdentityCredentials)
+	if err != nil {
+		return nil, err
+	}
+	uo.IdentityCredentials = identityCredentials
+	musicServiceCredentials, err := FormatMusicServiceCredentialSlice(&u.MusicServiceCredentials)
+	if err != nil {
+		return nil, err
+	}
+	uo.MusicServiceCredentials = musicServiceCredentials
 	friendships, err := FormatFriendshipSlice(&u.Friendships)
 	if err != nil {
 		return nil, err

@@ -9,6 +9,7 @@ import (
 type MusicSource struct {
 	Type       string `json:"type"`
 	Name       string `json:"name"`
+	Creator    string `gql:"creator: String" json:"creator"`
 	Cover      string `json:"cover"`
 	Provider   string `json:"provider"`
 	ProviderID string `json:"providerID"`
@@ -17,6 +18,7 @@ type MusicSource struct {
 type MusicSourceInput struct {
 	Type       string `gql:"type: String" json:"type"`
 	Name       string `gql:"name: String" json:"name"`
+	Creator    string `gql:"creator: String" json:"creator"`
 	Cover      string `gql:"cover: String" json:"cover"`
 	Provider   string `gql:"provider: String" json:"provider"`
 	ProviderID string `gql:"providerID: String" json:"providerID"`
@@ -25,12 +27,13 @@ type MusicSourceInput struct {
 type MusicSourceOutput struct {
 	Type       string `gql:"type: String" json:"type"`
 	Name       string `gql:"name: String" json:"name"`
+	Creator    string `gql:"creator: String" json:"creator"`
 	Cover      string `gql:"cover: String" json:"cover"`
 	Provider   string `gql:"provider: String" json:"provider"`
 	ProviderID string `gql:"providerID: String" json:"providerID"`
 }
 
-func CreateTrack(cover string, name string, provider string, providerID string) *MusicSource {
+func CreateTrack(cover, name, creator, provider, providerID string) *MusicSource {
 	return &MusicSource{
 		Cover:      cover,
 		Type:       "Track",

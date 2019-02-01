@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"github.com/cazinge/playroll/services/gqltag"
-	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
 
 	"github.com/graphql-go/graphql"
@@ -39,15 +38,6 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Connected to DB!")
 
 	defer db.Close()
-
-	db.AutoMigrate(
-		models.Playroll{},
-		models.Roll{},
-		models.User{},
-		models.Tracklist{},
-		models.CompiledRoll{},
-		models.ExternalCredential{},
-	)
 
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,

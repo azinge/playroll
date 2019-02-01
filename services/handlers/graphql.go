@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cazinge/playroll/services/gqltag"
-	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
 
 	"github.com/graphql-go/graphql"
@@ -17,7 +16,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func Handler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func GraphqlHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
@@ -40,21 +39,14 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 	}
 	defer db.Close()
 
-	db.AutoMigrate(
-		models.Playroll{},
-		models.Roll{},
-		models.User{},
-		models.Tracklist{},
-		models.CompiledRoll{},
-		models.ExternalCredential{},
-	)
+	fmt.Printf("%#v\n", request)
 
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,
 		db,
 	)
-
+	fmt.Println("halp")
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{
@@ -106,5 +98,5 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 }
 
 func main() {
-	lambda.Start(Handler)
+	lambda.Start(GraphqlHandler)
 }

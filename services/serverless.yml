@@ -27,20 +27,20 @@ provider:
   region: us-west-2
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+# iamRoleStatements:
+#   - Effect: "Allow"
+#     Action:
+#       - "cloudwatch:*"
+#    Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#  - Effect: "Allow"
+#    Action:
+#      - "s3:PutObject"
+#    Resource:
+#      Fn::Join:
+#        - ""
+#        - - "arn:aws:s3:::"
+#          - "Ref" : "ServerlessDeploymentBucket"
+#  - "/*"
 
 # you can define service wide environment variables here
 
@@ -77,6 +77,72 @@ functions:
           method: post
           authorizer: aws_iam
           cors: true
+  admingraphql:
+    vpc:
+      securityGroupIds:
+        - sg-02e861cee93b94d2a
+      subnetIds:
+        # - subnet-99d88be0
+        # - subnet-c9740882
+        # - subnet-e47f52be
+        - subnet-073e82f463fce2a4c
+        - subnet-0c30b6128a9d398d7
+        - subnet-0e9b5194763683428
+    environment:
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
+      DB_NAME: ${env:DB_NAME}
+      DB_USER: ${env:DB_USER}
+      DB_PASS: ${env:DB_PASS}
+      SPOTIFY_ID: ${env:SPOTIFY_ID}
+      SPOTIFY_SECRET: ${env:SPOTIFY_SECRET}
+    handler: bin/admin_graphql
+    events:
+      - http:
+          path: admin_graphql
+          method: post
+          authorizer: aws_iam
+          cors: true
+  postconfirm:
+    vpc:
+      securityGroupIds:
+        - sg-02e861cee93b94d2a
+      subnetIds:
+        # - subnet-99d88be0
+        # - subnet-c9740882
+        # - subnet-e47f52be
+        - subnet-073e82f463fce2a4c
+        - subnet-0c30b6128a9d398d7
+        - subnet-0e9b5194763683428
+    environment:
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
+      DB_NAME: ${env:DB_NAME}
+      DB_USER: ${env:DB_USER}
+      DB_PASS: ${env:DB_PASS}
+      SPOTIFY_ID: ${env:SPOTIFY_ID}
+      SPOTIFY_SECRET: ${env:SPOTIFY_SECRET}
+    handler: bin/post_confirm
+  automigrate:
+    vpc:
+      securityGroupIds:
+        - sg-02e861cee93b94d2a
+      subnetIds:
+        # - subnet-99d88be0
+        # - subnet-c9740882
+        # - subnet-e47f52be
+        - subnet-073e82f463fce2a4c
+        - subnet-0c30b6128a9d398d7
+        - subnet-0e9b5194763683428
+    environment:
+      DB_HOST: ${env:DB_HOST}
+      DB_PORT: ${env:DB_PORT}
+      DB_NAME: ${env:DB_NAME}
+      DB_USER: ${env:DB_USER}
+      DB_PASS: ${env:DB_PASS}
+      SPOTIFY_ID: ${env:SPOTIFY_ID}
+      SPOTIFY_SECRET: ${env:SPOTIFY_SECRET}
+    handler: bin/auto_migrate
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

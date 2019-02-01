@@ -6,6 +6,7 @@ import (
 	"github.com/cazinge/playroll/services/models"
 )
 
+//DEPRECATED
 type ExternalCredentialMethods struct {
 	GetExternalCredential    *gqltag.Query    `gql:"externalCredential(id: ID!): ExternalCredential"`
 	ListExternalCredentials  *gqltag.Query    `gql:"listExternalCredentials(offset: Int, count: Int): [ExternalCredential]"`

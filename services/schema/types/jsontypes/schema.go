@@ -7,6 +7,7 @@ type JSONTypes struct {
 	RollFilterTypes       `gql:"GROUP"`
 	RollLengthTypes       `gql:"GROUP"`
 	TokenTypes            `gql:"GROUP"`
+	SearchSpotifyTypes    `gql:"GROUP"`
 }
 
 var LinkedJSONTypes = JSONTypes{
@@ -16,4 +17,5 @@ var LinkedJSONTypes = JSONTypes{
 	RollFilterTypes:       LinkedRollFilterTypes,
 	RollLengthTypes:       LinkedRollLengthTypes,
 	TokenTypes:            LinkedTokenTypes,
+	SearchSpotifyTypes:    LinkedSearchSpotifyTypes,
 }

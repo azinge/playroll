@@ -120,7 +120,7 @@ export default class CreateModal extends React.Component<Props> {
                       createRoll();
                     }}
                   >
-                    <Text>OK</Text>
+                    <Text>Add</Text>
                   </TouchableHighlight>
                 )}
               </CreateRollMutation>

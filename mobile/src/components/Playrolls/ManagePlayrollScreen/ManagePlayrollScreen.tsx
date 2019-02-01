@@ -14,13 +14,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { Header, Icon } from "react-native-elements";
-import { HeaderBackButton, NavigationScreenProp } from "react-navigation";
-
+import { NavigationScreenProp } from "react-navigation";
 import styles from "./ManagePlayrollScreen.styles";
-import {
-  CreatePlayrollMutation,
-  CREATE_PLAYROLL_MUTATION,
-} from "../../../graphql/requests/Playroll/";
+import Search from "../../Main/Search";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -67,6 +63,7 @@ export default class ManagePlayrollScreen extends React.Component<
       editPlayrollName: "",
     };
   }
+
   render() {
     return (
       <View style={styles.screenContainer}>
@@ -78,6 +75,9 @@ export default class ManagePlayrollScreen extends React.Component<
     );
   }
   renderHeader() {
+    const { navigation } = this.props;
+    const managePlayroll =
+      navigation && navigation.getParam("managePlayroll", "New Playroll");
     return (
       <Header
         backgroundColor="purple"
@@ -90,7 +90,7 @@ export default class ManagePlayrollScreen extends React.Component<
           />
         }
         centerComponent={{
-          text: "Manage Playroll",
+          text: managePlayroll,
           style: { color: "#fff", fontSize: 20 },
         }}
         rightComponent={
@@ -104,6 +104,9 @@ export default class ManagePlayrollScreen extends React.Component<
     );
   }
   renderEditingBar() {
+    const { navigation } = this.props;
+    const playrollName =
+      navigation && navigation.getParam("playrollName", "Name your playroll");
     return (
       <View
         style={{
@@ -129,7 +132,7 @@ export default class ManagePlayrollScreen extends React.Component<
         <View style={{ flex: 1 }}>
           <TextInput
             selectionColor={"purple"}
-            placeholder="Songs to Exist To"
+            placeholder={playrollName}
             placeholderTextColor="lightgrey"
             style={{ fontSize: 20 }}
           />
@@ -151,155 +154,13 @@ export default class ManagePlayrollScreen extends React.Component<
       </View>
     );
   }
+
   renderSearchMusic() {
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%",
-            backgroundColor: "#f5eeed",
-            borderTopWidth: 1,
-            borderTopColor: "lightgrey",
-            borderBottomWidth: 1,
-            borderBottomColor: "lightgrey",
-          }}
-        >
-          <Icon
-            name={"search"}
-            size={35}
-            color="lightgrey"
-            underlayColor="lightgrey"
-            containerStyle={{ paddingHorizontal: 5 }}
-          />
-          <TextInput
-            style={{ flex: 1 }}
-            selectionColor={"purple"}
-            placeholder="What are you looking for?"
-          />
-        </View>
-        <View
-          style={{
-            margin: 10,
-            flexDirection: "row",
-          }}
-        >
-          <View style={{ paddingHorizontal: 7 }}>
-            <Text
-              style={{
-                fontFamily: "Avenir",
-                fontWeight: "bold",
-                fontSize: 15,
-                color: "#993399",
-              }}
-            >
-              Popular
-            </Text>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 7,
-              borderLeftColor: "grey",
-              borderLeftWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Avenir",
-                fontSize: 15,
-                color: "grey",
-              }}
-            >
-              New
-            </Text>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 7,
-              borderLeftColor: "grey",
-              borderLeftWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Avenir",
-                fontSize: 15,
-                color: "grey",
-              }}
-            >
-              ABC
-            </Text>
-          </View>
-        </View>
-        <ScrollView>
-          {sampleData.map((val, idx) => {
-            return (
-              <View
-                style={{
-                  width: "100%",
-                  alignItems: "center",
-                }}
-                key={idx}
-              >
-                <View style={{ flexDirection: "row", width: "100%" }}>
-                  <Image
-                    style={{
-                      width: 65,
-                      height: 65,
-                      marginHorizontal: 20,
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: "lightgrey",
-                    }}
-                    source={{ uri: val.cover }}
-                  />
-                  <View style={{ flex: 1, justifyContent: "center" }}>
-                    <Text
-                      style={{
-                        fontFamily: "Avenir",
-                        fontSize: 17,
-                        color: "purple",
-                      }}
-                      numberOfLines={2}
-                    >
-                      {val.name}
-                    </Text>
-                    {val.creator && (
-                      <Text
-                        style={{
-                          fontFamily: "Avenir",
-                          fontSize: 15,
-                          color: "lightgrey",
-                        }}
-                        numberOfLines={2}
-                      >
-                        {val.creator}
-                      </Text>
-                    )}
-                  </View>
-                  <Icon
-                    size={35}
-                    name="more-vert"
-                    color="lightgrey"
-                    onPress={() => this.props.navigation.goBack(null)}
-                  />
-                </View>
-                <View
-                  style={{
-                    width: "75%",
-                    marginVertical: 10,
-                    borderBottomColor: "lightgrey",
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                  }}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-    );
+    const { navigation } = this.props;
+    const playrollID = navigation && navigation.getParam("playrollID", -1);
+    return <Search playrollID={playrollID} header={false} />;
   }
+
   renderBottomBar() {
     const iconMap: { [index: string]: string } = {
       Track: "audiotrack",

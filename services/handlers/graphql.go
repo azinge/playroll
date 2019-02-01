@@ -46,7 +46,7 @@ func GraphqlHandler(context context.Context, request events.APIGatewayProxyReque
 		schema.LinkedMethods,
 		db,
 	)
-
+	fmt.Println("halp")
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{

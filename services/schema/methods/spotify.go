@@ -16,6 +16,7 @@ import (
 
 type SpotifyMethods struct {
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
+	SearchSpotifyFull       *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
 	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): ExternalCredential"`
 	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
 }
@@ -44,6 +45,49 @@ var searchSpotify = gqltag.Method{
 			return nil, err
 		}
 		output, err := spotifyhelpers.SearchSpotify(params.Query, params.SearchType, client)
+		if err != nil {
+			fmt.Println("Error searching spotify: ", err.Error())
+			return nil, err
+		}
+		fmt.Println(&output)
+		switch params.SearchType {
+		case "Track":
+			return output.Tracks, nil
+		case "Album":
+			return output.Albums, nil
+		case "Artist":
+			return output.Artists, nil
+		case "Playlist":
+			return output.Playlists, nil
+		default:
+			return nil, fmt.Errorf("Search Type Not Found")
+		}
+	},
+}
+
+var searchSpotifyFull = gqltag.Method{
+	Description: `[Search Spotify (Full) Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
+		type searchSpotifyParams struct {
+			Query string
+		}
+		params := &searchSpotifyParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		if params.Query == "" {
+			return []jsonmodels.MusicSource{}, nil
+		}
+
+		client, err := spotifyhelpers.GetSpotifyClientForUser(1, db)
+		if err != nil {
+			fmt.Println("Error getting spotify client: ", err.Error())
+			return nil, err
+		}
+		output, err := spotifyhelpers.SearchSpotify(params.Query, "All", client)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
 			return nil, err
@@ -117,6 +161,7 @@ var generatePlaylist = gqltag.Method{
 
 var LinkedSpotifyMethods = SpotifyMethods{
 	SearchSpotify:           gqltag.LinkQuery(searchSpotify),
+	SearchSpotifyFull:       gqltag.LinkQuery(searchSpotifyFull),
 	RegisterSpotifyAuthCode: gqltag.LinkMutation(registerSpotifyAuthCode),
 	GeneratePlaylist:        gqltag.LinkMutation(generatePlaylist),
 }

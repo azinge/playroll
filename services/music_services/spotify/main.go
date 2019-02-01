@@ -98,10 +98,12 @@ func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*mod
 	return models.FormatExternalCredential(rawExternalCredential)
 }
 
-func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]jsonmodels.MusicSource, error) {
+func SearchSpotify(query string, searchType string, client *spotify.Client) (*jsonmodels.SearchSpotifyOutput, error) {
 	var searchResult *spotify.SearchResult
 	var err error
 	switch searchType {
+	case "All":
+		searchResult, err = client.Search(query, spotify.SearchTypeTrack|spotify.SearchTypeAlbum|spotify.SearchTypeArtist|spotify.SearchTypePlaylist)
 	case "Track":
 		searchResult, err = client.Search(query, spotify.SearchTypeTrack)
 	case "Album":
@@ -117,10 +119,9 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 		fmt.Println(err)
 		return nil, err
 	}
-
-	output := []jsonmodels.MusicSource{}
-	switch searchType {
-	case "Track":
+	fmt.Println("hello")
+	output := jsonmodels.SearchSpotifyOutput{}
+	if searchResult.Tracks != nil {
 		for _, track := range searchResult.Tracks.Tracks {
 			cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
 			if images := track.Album.Images; len(images) > 0 {
@@ -138,9 +139,10 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 				Provider:   "Spotify",
 				ProviderID: string(track.ID),
 			}
-			output = append(output, ms)
+			output.Tracks = append(output.Tracks, ms)
 		}
-	case "Album":
+	}
+	if searchResult.Albums != nil {
 		for _, album := range searchResult.Albums.Albums {
 			cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
 			if images := album.Images; len(images) > 0 {
@@ -158,9 +160,10 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 				Provider:   "Spotify",
 				ProviderID: string(album.ID),
 			}
-			output = append(output, ms)
+			output.Albums = append(output.Albums, ms)
 		}
-	case "Artist":
+	}
+	if searchResult.Artists != nil {
 		for _, artist := range searchResult.Artists.Artists {
 			cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
 			if images := artist.Images; len(images) > 0 {
@@ -173,9 +176,10 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 				Provider:   "Spotify",
 				ProviderID: string(artist.ID),
 			}
-			output = append(output, ms)
+			output.Artists = append(output.Artists, ms)
 		}
-	case "Playlist":
+	}
+	if searchResult.Playlists != nil {
 		for _, playlist := range searchResult.Playlists.Playlists {
 			cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
 			if images := playlist.Images; len(images) > 0 {
@@ -189,11 +193,10 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*[]
 				Provider:   "Spotify",
 				ProviderID: string(playlist.ID),
 			}
-			output = append(output, ms)
+			output.Playlists = append(output.Playlists, ms)
 		}
-	default:
-		return nil, fmt.Errorf("Search Type Not Found")
 	}
+	fmt.Println("goodbye")
 	return &output, nil
 }
 

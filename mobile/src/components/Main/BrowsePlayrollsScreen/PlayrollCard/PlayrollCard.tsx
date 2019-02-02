@@ -8,6 +8,11 @@ import Carousel from "react-native-snap-carousel";
 import { Card } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
+import {
+  DeletePlayrollMutation,
+  DELETE_PLAYROLL_MUTATION,
+} from "../../../../graphql/requests/Playroll/";
+
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 
 export interface Props {
@@ -67,7 +72,25 @@ export default class PlayrollCard extends React.Component<Props, State> {
               />
             )}
           </View>
-          <Button onPress={editPlayroll} title="Edit Playroll" />
+          <View>
+            <Button onPress={editPlayroll} title="Edit Playroll" />
+            <DeletePlayrollMutation
+              mutation={DELETE_PLAYROLL_MUTATION}
+              variables={{
+                id: playroll.id,
+              }}
+              refetchQueries={["LIST_PLAYROLLS"]}
+            >
+              {(deletePlayroll, { data }) => (
+                <Button
+                  title="Delete Playroll"
+                  onPress={() => {
+                    deletePlayroll();
+                  }}
+                />
+              )}
+            </DeletePlayrollMutation>
+          </View>
         </View>
       </Card>
     );

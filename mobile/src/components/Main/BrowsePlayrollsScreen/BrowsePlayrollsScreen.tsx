@@ -33,8 +33,6 @@ import {
   DELETE_ROLL_MUTATION,
 } from "../../../graphql/requests/Roll";
 import {
-  DeletePlayrollMutation,
-  DELETE_PLAYROLL_MUTATION,
   ListPlayrollsQuery,
   LIST_PLAYROLLS_QUERY,
 } from "../../../graphql/requests/Playroll/";

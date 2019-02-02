@@ -1,18 +1,18 @@
 export type Playroll = {
-  createdAt?: string;
-  deletedAt?: string;
-  id?: number;
-  name?: string;
-  rolls?: [Roll];
-  tracklists?: [Tracklist];
-  updatedAt?: string;
+  createdAt: string;
+  deletedAt: string;
+  id: number;
+  name: string;
+  rolls: [Roll];
+  tracklists: [Tracklist];
+  updatedAt: string;
   // user: User;
-  userID?: number;
+  userID: number;
 };
 
 export type PlayrollInput = {
-  name?: string;
-  userID?: number;
+  name: string;
+  userID: number;
 };
 
 export type Roll = {

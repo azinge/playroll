@@ -30,7 +30,7 @@ interface State {}
 export default class Home extends React.Component<Props, State> {
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <HeaderBar />
         <View
           style={{
@@ -199,7 +199,7 @@ export default class Home extends React.Component<Props, State> {
             );
           }}
         </SignOutMutation> */}
-      </View>
+      </SafeAreaView>
     );
   }
 }

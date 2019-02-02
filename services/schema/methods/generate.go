@@ -8,6 +8,7 @@ import (
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 
 	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
@@ -20,7 +21,7 @@ type GenerateMethods struct {
 
 var getTracklistSongs = gqltag.Method{
 	Description: `[Get Tracklist Songs Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		type getTracklistSongsParams struct {
 			TracklistID string
 		}
@@ -33,7 +34,7 @@ var getTracklistSongs = gqltag.Method{
 
 		tracklistID := utils.StringIDToNumber(params.TracklistID)
 
-		tracks, err := models.GetTracksByTracklistID(tracklistID, mctx.DB)
+		tracks, err := models.GetTracksByTracklistID(tracklistID, db)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -44,7 +45,7 @@ var getTracklistSongs = gqltag.Method{
 
 var generateTracklist = gqltag.Method{
 	Description: `[Generate Tracklist Description Goes Here]`,
-	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	Request: func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
 		type generateTracklistParams struct {
 			PlayrollID string
 		}
@@ -57,7 +58,7 @@ var generateTracklist = gqltag.Method{
 
 		playrollID := utils.StringIDToNumber(params.PlayrollID)
 
-		pDAO := models.InitPlayrollDAO(mctx.DB.Preload("Rolls"))
+		pDAO := models.InitPlayrollDAO(db.Preload("Rolls"))
 		rawPlayroll, err := pDAO.Get(playrollID)
 		if err != nil {
 			fmt.Println("Error getting playroll: ", err.Error())
@@ -70,7 +71,7 @@ var generateTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		client, err := spotifyhelpers.GetSpotifyClientForUser(1, mctx.DB)
+		client, err := spotifyhelpers.GetSpotifyClientForUser(1, db)
 		if err != nil {
 			fmt.Println("Error fetching token: ", err.Error())
 			return nil, err
@@ -82,7 +83,7 @@ var generateTracklist = gqltag.Method{
 			return nil, err
 		}
 
-		tracklist, err := models.CreateTracklistWithCompiledRolls(compiledRolls, playrollID, mctx.DB)
+		tracklist, err := models.CreateTracklistWithCompiledRolls(compiledRolls, playrollID, db)
 		if err != nil {
 			fmt.Println("Error creating tracklist: ", err.Error())
 			return nil, err

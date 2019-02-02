@@ -32,7 +32,7 @@ export default class LoadingScreen extends React.Component<Props, State> {
           StackActions.reset({
             key: null,
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: "Main" })],
+            actions: [NavigationActions.navigate({ routeName: "Auth" })],
           })
         );
     }, 1250);

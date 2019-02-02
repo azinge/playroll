@@ -84,20 +84,6 @@ func CreateUserWithIdentityCredential(userInput *UserInput, identityCredentialIn
 	return userOutput, nil
 }
 
-func FindUserByIdentityCredential(provider, identifier string, db *gorm.DB) (*User, error) {
-	ic := &IdentityCredential{}
-	if err := db.Where(&IdentityCredential{Provider: provider, Identifier: identifier}).First(ic).Error; err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	user := &User{}
-	if err := db.First(user, ic.UserID).Error; err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return user, nil
-}
-
 // Entity Specific Methods
 
 func UserInputToModel(ui *UserInput) (*User, error) {
@@ -163,7 +149,7 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 func InitUserDAO(db *gorm.DB) *User {
 	dao := &User{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("IdentityCredentials"))
+	dao.SetDB(db)
 	return dao
 }
 

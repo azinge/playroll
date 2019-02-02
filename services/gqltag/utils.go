@@ -1,10 +1,11 @@
 package gqltag
 
 import (
+	"github.com/aws/aws-lambda-go/events"
 	ast "github.com/graphql-go/graphql/language/ast"
+	"github.com/jinzhu/gorm"
 
 	"github.com/graphql-go/graphql"
-	"github.com/jinzhu/gorm"
 )
 
 type Type struct {
@@ -24,8 +25,12 @@ func LinkOutput(t Type) *Output {
 	return &Output{Type: t}
 }
 
+type MethodContext struct {
+	DB      *gorm.DB
+	Request events.APIGatewayProxyRequest
+}
 type Method struct {
-	Request     func(params graphql.ResolveParams, db *gorm.DB) (interface{}, error)
+	Request     func(params graphql.ResolveParams, mctx *MethodContext) (interface{}, error)
 	Description string
 	Scope       string
 }

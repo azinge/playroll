@@ -37,10 +37,14 @@ func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxy
 	}
 	defer db.Close()
 
+	mctx := &gqltag.MethodContext{
+		DB:      db,
+		Request: request,
+	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,
-		db,
+		mctx,
 	)
 
 	if err != nil {

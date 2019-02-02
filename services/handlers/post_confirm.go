@@ -65,7 +65,7 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*
 
 	attrs := intReq.UserAttributes
 	userInput := &models.UserInput{Name: request.Username, Avatar: attrs.Picture, Email: attrs.Email}
-	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", ProviderID: attrs.Sub}
+	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", Identifier: attrs.Sub}
 	models.CreateUserWithIdentityCredential(userInput, identityCredentialInput, db)
 
 	return &CognitoEventResponse{

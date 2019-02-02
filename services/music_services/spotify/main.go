@@ -119,7 +119,6 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 		fmt.Println(err)
 		return nil, err
 	}
-	fmt.Println("hello")
 	output := jsonmodels.SearchSpotifyOutput{}
 	if searchResult.Tracks != nil {
 		for _, track := range searchResult.Tracks.Tracks {
@@ -196,7 +195,6 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 			output.Playlists = append(output.Playlists, ms)
 		}
 	}
-	fmt.Println("goodbye")
 	return &output, nil
 }
 

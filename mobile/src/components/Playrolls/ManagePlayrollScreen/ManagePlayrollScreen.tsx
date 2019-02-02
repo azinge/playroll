@@ -28,6 +28,12 @@ import {
   UPDATE_PLAYROLL_MUTATION,
 } from "../../../graphql/requests/Playroll/UpdatePlayrollMutation";
 
+import {
+  GenerateTracklistMutation,
+  GENERATE_TRACKLIST_MUTATION,
+} from "../../../graphql/requests/Tracklist/GenerateTracklistMutation";
+import { playrolls } from "static/mockData";
+
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
@@ -49,7 +55,9 @@ export default class ManagePlayrollScreen extends React.Component<
 
   render() {
     const playroll: Playroll =
-      this.props.navigation && this.props.navigation.getParam("playroll");
+      this.props &&
+      this.props.navigation &&
+      this.props.navigation.getParam("playroll");
     return (
       <GetPlayrollQuery
         query={GET_PLAYROLL_QUERY}
@@ -59,7 +67,7 @@ export default class ManagePlayrollScreen extends React.Component<
           const playroll: Playroll = (data && data.playroll) || {};
           return (
             <View style={styles.screenContainer}>
-              {this.renderHeader()}
+              {this.renderHeader(playroll)}
               {this.renderEditingBar(playroll)}
               {this.renderSearchMusic(playroll)}
               {this.renderBottomBar(playroll)}
@@ -69,33 +77,48 @@ export default class ManagePlayrollScreen extends React.Component<
       </GetPlayrollQuery>
     );
   }
-  renderHeader() {
-    const { navigation } = this.props;
-    const managePlayroll =
-      navigation && navigation.getParam("managePlayroll", "New Playroll");
+  renderHeader(playroll: Playroll) {
     return (
-      <Header
-        backgroundColor="purple"
-        leftComponent={
-          <Icon
-            name="arrow-back"
-            color="white"
-            onPress={() => navigation && navigation.goBack(null)}
-            underlayColor="purple"
-          />
+      <GenerateTracklistMutation
+        mutation={GENERATE_TRACKLIST_MUTATION}
+        variables={{ playrollID: playroll.id }}
+        onCompleted={data =>
+          this.props.navigation.navigate("Tracklist", {
+            playrollName: playroll.name,
+            tracklistID:
+              data && data.generateTracklist && data.generateTracklist.id,
+          })
         }
-        centerComponent={{
-          text: managePlayroll,
-          style: styles.headerCenterComponent,
+      >
+        {(generateTracklist, { data }) => {
+          return (
+            <Header
+              backgroundColor="purple"
+              leftComponent={
+                <Icon
+                  name="arrow-back"
+                  color="white"
+                  onPress={() =>
+                    this.props.navigation && this.props.navigation.goBack(null)
+                  }
+                  underlayColor="purple"
+                />
+              }
+              centerComponent={{
+                text: playroll.name,
+                style: styles.headerCenterComponent,
+              }}
+              rightComponent={
+                <Icon
+                  name="save"
+                  color="white"
+                  onPress={() => generateTracklist()}
+                />
+              }
+            />
+          );
         }}
-        rightComponent={
-          <Icon
-            name="save"
-            color="white"
-            onPress={() => navigation && navigation.navigate("Tracklist")}
-          />
-        }
-      />
+      </GenerateTracklistMutation>
     );
   }
   renderEditingBar(playroll: Playroll) {

@@ -38,6 +38,10 @@ import {
   ListPlayrollsQuery,
   LIST_PLAYROLLS_QUERY,
 } from "../../../graphql/requests/Playroll/";
+import {
+  CreatePlayrollMutation,
+  CREATE_PLAYROLL_MUTATION,
+} from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
 
 import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
@@ -63,21 +67,38 @@ export default class BrowsePlayrollsScreen extends React.Component<
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <Header
-          backgroundColor="purple"
-          centerComponent={{
-            text: "Playrolls",
-            style: { color: "#fff", fontSize: 20 },
-          }}
-          rightComponent={
-            <Icon
-              name="add"
-              color="white"
-              underlayColor="purple"
-              onPress={() => this.props.navigation.navigate("Playrolls")}
-            />
+        <CreatePlayrollMutation
+          mutation={CREATE_PLAYROLL_MUTATION}
+          variables={{ input: { name: "New Playroll", userID: 1 } }}
+          onCompleted={data =>
+            this.props &&
+            this.props.navigation &&
+            this.props.navigation.navigate("Playrolls", {
+              playroll: data.createPlayroll,
+            })
           }
-        />
+          refetchQueries={["LIST_PLAYROLLS"]}
+        >
+          {(createPlayroll, { data }) => {
+            return (
+              <Header
+                backgroundColor="purple"
+                centerComponent={{
+                  text: "Playrolls",
+                  style: { color: "#fff", fontSize: 20 },
+                }}
+                rightComponent={
+                  <Icon
+                    name="add"
+                    color="white"
+                    underlayColor="purple"
+                    onPress={() => createPlayroll()}
+                  />
+                }
+              />
+            );
+          }}
+        </CreatePlayrollMutation>
         <ListPlayrollsQuery query={LIST_PLAYROLLS_QUERY}>
           {({ loading, error, data }) => {
             error && console.warn(error);

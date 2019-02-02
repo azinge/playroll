@@ -3,6 +3,7 @@ import { Query } from "react-apollo";
 
 export interface MusicSource {
   cover?: string;
+  creator?: string;
   name?: string;
   provider?: string;
   providerID?: string;
@@ -13,6 +14,7 @@ export const SEARCH_SPOTIFY_QUERY = gql`
   query SEARCH_SPOTIFY($query: String, $searchType: String) {
     searchSpotify(query: $query, searchType: $searchType) {
       cover
+      creator
       name
       provider
       providerID

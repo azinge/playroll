@@ -17,7 +17,12 @@ import { Header, Icon } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 import styles from "./ManagePlayrollScreen.styles";
 import Search from "../../Main/Search";
+import { Playroll, MusicSource } from "../../../graphql/types";
 
+import {
+  GetPlayrollQuery,
+  GET_PLAYROLL_QUERY,
+} from "../../../graphql/requests/Playroll/GetPlayrollQuery";
 import {
   UpdatePlayrollMutation,
   UPDATE_PLAYROLL_MUTATION,
@@ -70,13 +75,25 @@ export default class ManagePlayrollScreen extends React.Component<
   }
 
   render() {
+    const playroll: Playroll =
+      this.props.navigation && this.props.navigation.getParam("playroll");
     return (
-      <View style={styles.screenContainer}>
-        {this.renderHeader()}
-        {this.renderEditingBar()}
-        {this.renderSearchMusic()}
-        {this.renderBottomBar()}
-      </View>
+      <GetPlayrollQuery
+        query={GET_PLAYROLL_QUERY}
+        variables={{ id: playroll.id }}
+      >
+        {({ loading, error, data }) => {
+          const playroll: Playroll = (data && data.playroll) || {};
+          return (
+            <View style={styles.screenContainer}>
+              {this.renderHeader()}
+              {this.renderEditingBar()}
+              {this.renderSearchMusic()}
+              {this.renderBottomBar(playroll)}
+            </View>
+          );
+        }}
+      </GetPlayrollQuery>
     );
   }
   renderHeader() {
@@ -90,7 +107,7 @@ export default class ManagePlayrollScreen extends React.Component<
           <Icon
             name="arrow-back"
             color="white"
-            onPress={() => this.props.navigation.goBack(null)}
+            onPress={() => navigation && navigation.goBack(null)}
             underlayColor="purple"
           />
         }
@@ -102,7 +119,7 @@ export default class ManagePlayrollScreen extends React.Component<
           <Icon
             name="save"
             color="white"
-            onPress={() => this.props.navigation.navigate("Tracklist")}
+            onPress={() => navigation && navigation.navigate("Tracklist")}
           />
         }
       />
@@ -110,13 +127,7 @@ export default class ManagePlayrollScreen extends React.Component<
   }
   renderEditingBar() {
     const { navigation } = this.props;
-    const playrollName =
-      navigation && navigation.getParam("playrollName") == ""
-        ? "No name"
-        : navigation &&
-          navigation.getParam("playrollName", "Name your playroll");
-    const playrollID =
-      navigation && navigation.getParam("playrollID", "Name your playroll");
+    const playroll: Playroll = navigation && navigation.getParam("playroll");
 
     return (
       <View
@@ -137,27 +148,32 @@ export default class ManagePlayrollScreen extends React.Component<
           }}
           source={{
             uri:
-              "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
+              "https://cdn.discordapp.com/attachments/490277850633469955/492234365141516288/unknown.png",
           }}
         />
         <UpdatePlayrollMutation
           mutation={UPDATE_PLAYROLL_MUTATION}
           variables={{
-            id: playrollID,
-            input: { name: this.state.editPlayrollName, userID: 0 },
+            id: playroll.id,
+            input: {
+              name: this.state.editPlayrollName,
+              userID: playroll.userID,
+            },
           }}
-          refetchQueries={["GET_PLAYROLLS"]}
+          refetchQueries={["GET_PLAYROLL"]}
         >
           {(updatePlayroll, { data }) => (
             <View style={{ flex: 1 }}>
               <TextInput
                 selectionColor={"purple"}
-                placeholder={playrollName}
+                placeholder="Name Your Playroll"
                 placeholderTextColor="lightgrey"
                 style={{ fontSize: 20 }}
                 onChangeText={name => this.setState({ editPlayrollName: name })}
                 onSubmitEditing={() => updatePlayroll()}
-              />
+              >
+                {playroll.name}
+              </TextInput>
               <View
                 style={{
                   width: "75%",
@@ -181,11 +197,15 @@ export default class ManagePlayrollScreen extends React.Component<
 
   renderSearchMusic() {
     const { navigation } = this.props;
-    const playrollID = navigation && navigation.getParam("playrollID", -1);
-    return <Search playrollID={playrollID} header={false} />;
+    const playroll: Playroll = navigation && navigation.getParam("playroll");
+    return (
+      <View style={{ flex: 1 }}>
+        <Search playrollID={playroll.id} header={false} />
+      </View>
+    );
   }
 
-  renderBottomBar() {
+  renderBottomBar(playroll: Playroll) {
     const iconMap: { [index: string]: string } = {
       Track: "audiotrack",
       Album: "album",
@@ -193,66 +213,74 @@ export default class ManagePlayrollScreen extends React.Component<
       Playlist: "playlist-play",
     };
     return (
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={{ alignItems: "center" }}
+      <View
         style={{
-          position: "absolute",
-          bottom: 0,
+          // position: "absolute",
+          // bottom: 0,
           height: 65,
           borderTopColor: "lightgrey",
           borderTopWidth: 1,
           width: "100%",
           backgroundColor: "#f5eeed",
-          flex: 1,
         }}
       >
-        {sampleData.map((val, idx) => {
-          return (
-            <View
-              style={{
-                height: 65,
-                width: 65,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              key={idx}
-            >
-              <Image
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "lightgrey",
-                }}
-                source={{ uri: val.cover }}
-              />
-              {val.type && (
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={{ alignItems: "center" }}
+        >
+          {playroll.rolls &&
+            playroll.rolls.map((roll, idx) => {
+              const val: MusicSource =
+                (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+              return (
                 <View
                   style={{
-                    position: "absolute",
-                    bottom: 4,
-                    left: 4,
-                    borderRadius: 5,
-                    backgroundColor: "#FFFFFF9F",
+                    height: 65,
+                    width: 65,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
+                  key={idx}
                 >
-                  {
-                    <Icon
-                      name={iconMap[val.type] || iconMap["Track"]}
-                      size={20}
-                      color="purple"
-                      onPress={() => this.props.navigation.goBack(null)}
-                      underlayColor="purple"
-                    />
-                  }
+                  <Image
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: "lightgrey",
+                    }}
+                    source={{ uri: val.cover }}
+                  />
+                  {val.type && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        bottom: 4,
+                        left: 4,
+                        borderRadius: 5,
+                        backgroundColor: "#FFFFFF9F",
+                      }}
+                    >
+                      {
+                        <Icon
+                          name={iconMap[val.type] || iconMap["Track"]}
+                          size={20}
+                          color="purple"
+                          onPress={() =>
+                            this.props.navigation &&
+                            this.props.navigation.goBack(null)
+                          }
+                          underlayColor="purple"
+                        />
+                      }
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          );
-        })}
-      </ScrollView>
+              );
+            })}
+        </ScrollView>
+      </View>
     );
   }
 }

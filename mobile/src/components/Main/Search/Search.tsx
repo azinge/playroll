@@ -278,7 +278,7 @@ export default class Search extends React.Component<Props, State> {
                               >
                                 {source.name}
                               </Text>
-                              {source.creator && (
+                              {source.creator ? (
                                 <Text
                                   style={{
                                     fontFamily: "Avenir",
@@ -289,7 +289,7 @@ export default class Search extends React.Component<Props, State> {
                                 >
                                   {source.creator}
                                 </Text>
-                              )}
+                              ) : null}
                             </View>
                             <Icon
                               size={35}

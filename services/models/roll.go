@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//TODO: fix list rolls
 type Roll struct {
 	Model
 	Data       jsonmodels.RollData `gorm:"type: jsonb"`

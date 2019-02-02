@@ -9,6 +9,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// change to different types of credentials: Identity, Spotify, etc.
 type ExternalCredential struct {
 	Model
 	Provider string

@@ -18,6 +18,11 @@ import { NavigationScreenProp } from "react-navigation";
 import styles from "./ManagePlayrollScreen.styles";
 import Search from "../../Main/Search";
 
+import {
+  UpdatePlayrollMutation,
+  UPDATE_PLAYROLL_MUTATION,
+} from "../../../graphql/requests/Playroll/UpdatePlayrollMutation";
+
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
@@ -106,7 +111,13 @@ export default class ManagePlayrollScreen extends React.Component<
   renderEditingBar() {
     const { navigation } = this.props;
     const playrollName =
-      navigation && navigation.getParam("playrollName", "Name your playroll");
+      navigation && navigation.getParam("playrollName") == ""
+        ? "No name"
+        : navigation &&
+          navigation.getParam("playrollName", "Name your playroll");
+    const playrollID =
+      navigation && navigation.getParam("playrollID", "Name your playroll");
+
     return (
       <View
         style={{
@@ -129,28 +140,41 @@ export default class ManagePlayrollScreen extends React.Component<
               "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
           }}
         />
-        <View style={{ flex: 1 }}>
-          <TextInput
-            selectionColor={"purple"}
-            placeholder={playrollName}
-            placeholderTextColor="lightgrey"
-            style={{ fontSize: 20 }}
-          />
-          <View
-            style={{
-              width: "75%",
-              marginVertical: 5,
-              borderBottomColor: "lightgrey",
-              borderBottomWidth: StyleSheet.hairlineWidth,
-            }}
-          />
-          <TextInput
-            selectionColor={"purple"}
-            placeholder="#Existential #Chill #Help"
-            placeholderTextColor="lightgrey"
-            style={{ fontSize: 15 }}
-          />
-        </View>
+        <UpdatePlayrollMutation
+          mutation={UPDATE_PLAYROLL_MUTATION}
+          variables={{
+            id: playrollID,
+            input: { name: this.state.editPlayrollName, userID: 0 },
+          }}
+          refetchQueries={["GET_PLAYROLLS"]}
+        >
+          {(updatePlayroll, { data }) => (
+            <View style={{ flex: 1 }}>
+              <TextInput
+                selectionColor={"purple"}
+                placeholder={playrollName}
+                placeholderTextColor="lightgrey"
+                style={{ fontSize: 20 }}
+                onChangeText={name => this.setState({ editPlayrollName: name })}
+                onSubmitEditing={() => updatePlayroll()}
+              />
+              <View
+                style={{
+                  width: "75%",
+                  marginVertical: 5,
+                  borderBottomColor: "lightgrey",
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+              />
+              <TextInput
+                selectionColor={"purple"}
+                placeholder="#Existential #Chill #Help"
+                placeholderTextColor="lightgrey"
+                style={{ fontSize: 15 }}
+              />
+            </View>
+          )}
+        </UpdatePlayrollMutation>
       </View>
     );
   }

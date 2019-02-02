@@ -111,7 +111,7 @@ export default class CreateModal extends React.Component<Props> {
                 onCompleted={() => {
                   this.props.closeModal(true);
                 }}
-                refetchQueries={["GET_PLAYROLL"]}
+                refetchQueries={["GET_PLAYROLLS"]}
               >
                 {(createRoll, { data }) => (
                   <TouchableHighlight
@@ -120,7 +120,7 @@ export default class CreateModal extends React.Component<Props> {
                       createRoll();
                     }}
                   >
-                    <Text>Add</Text>
+                    <Text>OK</Text>
                   </TouchableHighlight>
                 )}
               </CreateRollMutation>

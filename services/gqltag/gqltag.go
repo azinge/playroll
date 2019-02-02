@@ -7,12 +7,13 @@ import (
 
 	"github.com/fatih/structs"
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 )
 
-func generateResolveFromMethod(method *structs.Field, mctx *MethodContext) func(params graphql.ResolveParams) (interface{}, error) {
+func generateResolveFromMethod(method *structs.Field, db *gorm.DB) func(params graphql.ResolveParams) (interface{}, error) {
 	return func(params graphql.ResolveParams) (interface{}, error) {
 		fmt.Printf("%s, args:%+v\n", params.Info.FieldName, params.Args)
-		return method.Field("Request").Value().(func(graphql.ResolveParams, *MethodContext) (interface{}, error))(params, mctx)
+		return method.Field("Request").Value().(func(graphql.ResolveParams, *gorm.DB) (interface{}, error))(params, db)
 	}
 }
 
@@ -103,16 +104,16 @@ func populateTypeMapFieldsFromStruct(struc interface{}, typeMap *map[string]*gra
 	}
 }
 
-func populateMethodsFromStruct(struc interface{}, mctx *MethodContext, rootQuery, rootMutation *graphql.Object, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) {
+func populateMethodsFromStruct(struc interface{}, db *gorm.DB, rootQuery, rootMutation *graphql.Object, typeMap *map[string]*graphql.Object, inputTypeMap *map[string]*graphql.InputObject) {
 	methods := structs.New(struc)
 	methodlist := methods.Fields()
 	for _, m := range methodlist {
 		tag := m.Tag("gql")
 		if tag == "GROUP" {
-			populateMethodsFromStruct(m.Value(), mctx, rootQuery, rootMutation, typeMap, inputTypeMap)
+			populateMethodsFromStruct(m.Value(), db, rootQuery, rootMutation, typeMap, inputTypeMap)
 		} else {
 			name, gqlField := parseGraphQLField(tag, typeMap, inputTypeMap)
-			gqlField.Resolve = generateResolveFromMethod(m, mctx)
+			gqlField.Resolve = generateResolveFromMethod(m, db)
 			gqlField.Description = m.Field("Description").Value().(string)
 			switch structs.Name(m.Value()) {
 			case "Query":
@@ -125,7 +126,7 @@ func populateMethodsFromStruct(struc interface{}, mctx *MethodContext, rootQuery
 }
 
 //TODO: Support internal Methods/Resolvers
-func GenerateGraphQLSchema(types interface{}, methods interface{}, mctx *MethodContext) (graphql.Schema, error) {
+func GenerateGraphQLSchema(types interface{}, methods interface{}, db *gorm.DB) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}
 
@@ -135,7 +136,7 @@ func GenerateGraphQLSchema(types interface{}, methods interface{}, mctx *MethodC
 	rootQuery := graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: graphql.Fields{}})
 	rootMutation := graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: graphql.Fields{}})
 
-	populateMethodsFromStruct(methods, mctx, rootQuery, rootMutation, &typeMap, &inputTypeMap)
+	populateMethodsFromStruct(methods, db, rootQuery, rootMutation, &typeMap, &inputTypeMap)
 
 	return graphql.NewSchema(graphql.SchemaConfig{
 		Query:    rootQuery,

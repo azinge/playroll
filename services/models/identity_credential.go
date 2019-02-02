@@ -10,23 +10,23 @@ import (
 type IdentityCredential struct {
 	Model
 	Provider   string
-	Identifier string
-	UserID     uint
+	ProviderID string
 	User       User
+	UserID     uint
 }
 
 type IdentityCredentialInput struct {
 	Provider   string `gql:"provider: String"`
-	Identifier string `gql:"identifier: String"`
+	ProviderID string `gql:"providerID: String"`
 	UserID     string `gql:"userID: String"`
 }
 
 type IdentityCredentialOutput struct {
 	Model      `gql:"MODEL"`
 	Provider   string     `gql:"provider: String"`
-	Identifier string     `gql:"identifier: String"`
-	UserID     uint       `gql:"userID: ID"`
+	ProviderID string     `gql:"providerID: String"`
 	User       UserOutput `gql:"user: User"`
+	UserID     uint       `gql:"userID: ID"`
 }
 
 // Utility Functions
@@ -45,7 +45,7 @@ func FindIdentityCredentialByUserID(id uint, db *gorm.DB) (*IdentityCredential, 
 func IdentityCredentialInputToModel(ici *IdentityCredentialInput) (*IdentityCredential, error) {
 	ic := &IdentityCredential{}
 	ic.Provider = ici.Provider
-	ic.Identifier = ici.Identifier
+	ic.ProviderID = ici.ProviderID
 	ic.UserID = utils.StringIDToNumber(ici.UserID)
 	return ic, nil
 }
@@ -58,7 +58,7 @@ func IdentityCredentialModelToOutput(ic *IdentityCredential) (*IdentityCredentia
 	ico := &IdentityCredentialOutput{}
 	ico.Model = ic.Model
 	ico.Provider = ic.Provider
-	ico.Identifier = ic.Identifier
+	ico.ProviderID = ic.ProviderID
 	user, err := FormatUser(&ic.User)
 	if err != nil {
 		return nil, err

@@ -39,18 +39,14 @@ func GraphqlHandler(context context.Context, request events.APIGatewayProxyReque
 	}
 	defer db.Close()
 
-	// fmt.Printf("%#v\n", request)
+	fmt.Printf("%#v\n", request)
 
-	mctx := &gqltag.MethodContext{
-		DB:      db,
-		Request: request,
-	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,
-		mctx,
+		db,
 	)
-
+	fmt.Println("halp")
 	if err != nil {
 		fmt.Println("error generating schema: " + err.Error())
 		return events.APIGatewayProxyResponse{

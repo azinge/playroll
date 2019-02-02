@@ -16,7 +16,7 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
-import { Card, ListItem, Button, Icon, Header } from "react-native-elements";
+import { Card, ListItem, Button, Icon } from "react-native-elements";
 import { Query } from "react-apollo";
 import {
   createStackNavigator,
@@ -35,6 +35,8 @@ import {
 import {
   DeletePlayrollMutation,
   DELETE_PLAYROLL_MUTATION,
+  CreatePlayrollMutation,
+  CREATE_PLAYROLL_MUTATION,
   ListPlayrollsQuery,
   LIST_PLAYROLLS_QUERY,
 } from "../../../graphql/requests/Playroll/";
@@ -62,27 +64,15 @@ export default class BrowsePlayrollsScreen extends React.Component<
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <Header
-          backgroundColor="purple"
-          centerComponent={{
-            text: "Playrolls",
-            style: { color: "#fff", fontSize: 20 },
-          }}
-          rightComponent={
-            <Icon
-              name="add"
-              color="white"
-              underlayColor="purple"
-              onPress={() => this.props.navigation.navigate("Playrolls")}
-            />
-          }
-        />
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <ListPlayrollsQuery query={LIST_PLAYROLLS_QUERY}>
           {({ loading, error, data }) => {
             error && console.warn(error);
             return (
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, marginTop: 20 }}>
+                <View>
+                  <Text>Playrolls</Text>
+                </View>
                 {!loading && !error && (
                   <ScrollView>
                     {data &&
@@ -94,10 +84,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                             playroll={playroll}
                             editPlayroll={() => {
                               this.props.navigation &&
-                                this.props.navigation.navigate("Playrolls", {
-                                  managePlayroll: "Manage Playroll",
-                                  playroll,
-                                });
+                                this.props.navigation.navigate("Tracklist");
                             }}
                             key={playroll.id}
                           />
@@ -218,7 +205,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //   </Card>
                         // );
                       })}
-                    {/* <TextInput
+                    <TextInput
                       style={{
                         height: 40,
                         borderColor: "gray",
@@ -228,14 +215,30 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         this.setState({ addPlayrollName: text })
                       }
                       value={this.state.addPlayrollName}
-                    /> */}
+                    />
+                    <CreatePlayrollMutation
+                      mutation={CREATE_PLAYROLL_MUTATION}
+                      variables={{
+                        input: { userID: 1, name: this.state.addPlayrollName },
+                      }}
+                      refetchQueries={["GET_PLAYROLLS"]}
+                    >
+                      {(createPlayroll, { data }) => (
+                        <Button
+                          title="Add Playroll"
+                          onPress={() => {
+                            createPlayroll();
+                          }}
+                        />
+                      )}
+                    </CreatePlayrollMutation>
                   </ScrollView>
                 )}
               </View>
             );
           }}
         </ListPlayrollsQuery>
-      </View>
+      </SafeAreaView>
     );
   }
 }

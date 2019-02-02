@@ -19,7 +19,7 @@ export const AppContainer = createStackNavigator(
     Playrolls: PlayrollsNavigator,
   },
   {
-    initialRouteName: "Main",
+    initialRouteName: "Loading",
     headerMode: "screen",
     navigationOptions: {
       header: null,

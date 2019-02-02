@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { Header, Icon } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
-import styles from "./ManagePlayrollScreen.styles";
+import styles, { rawStyles } from "./ManagePlayrollScreen.styles";
 import Search from "../../Main/Search";
 import { Playroll, MusicSource } from "../../../graphql/types";
 
@@ -35,33 +35,6 @@ export interface Props {
 interface State {
   editPlayrollName: string;
 }
-
-const sampleData = [
-  {
-    cover: "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
-    type: "Track",
-    name: "Flamingo",
-    creator: "Kero Kero Bonito",
-  },
-  {
-    cover: "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
-    type: "Album",
-    name: "Flamingo",
-    creator: "Kero Kero Bonito",
-  },
-  {
-    cover: "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
-    type: "Artist",
-    name: "Flamingo",
-    creator: "Kero Kero Bonito",
-  },
-  {
-    cover: "https://i.scdn.co/image/b5570bc477a6ec868cb7d0cb05a11e6776f34e42",
-    type: "Playlist",
-    name: "Flamingo",
-    creator: "Kero Kero Bonito",
-  },
-];
 
 export default class ManagePlayrollScreen extends React.Component<
   Props,
@@ -87,8 +60,8 @@ export default class ManagePlayrollScreen extends React.Component<
           return (
             <View style={styles.screenContainer}>
               {this.renderHeader()}
-              {this.renderEditingBar()}
-              {this.renderSearchMusic()}
+              {this.renderEditingBar(playroll)}
+              {this.renderSearchMusic(playroll)}
               {this.renderBottomBar(playroll)}
             </View>
           );
@@ -113,7 +86,7 @@ export default class ManagePlayrollScreen extends React.Component<
         }
         centerComponent={{
           text: managePlayroll,
-          style: { color: "#fff", fontSize: 20 },
+          style: styles.headerCenterComponent,
         }}
         rightComponent={
           <Icon
@@ -125,31 +98,12 @@ export default class ManagePlayrollScreen extends React.Component<
       />
     );
   }
-  renderEditingBar() {
-    const { navigation } = this.props;
-    const playroll: Playroll = navigation && navigation.getParam("playroll");
-
+  renderEditingBar(playroll: Playroll) {
     return (
-      <View
-        style={{
-          flexDirection: "row",
-          height: 100,
-          alignItems: "center",
-        }}
-      >
+      <View style={styles.editingBarContainer}>
         <Image
-          style={{
-            width: 65,
-            height: 65,
-            marginHorizontal: 20,
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: "lightgrey",
-          }}
-          source={{
-            uri:
-              "https://cdn.discordapp.com/attachments/490277850633469955/492234365141516288/unknown.png",
-          }}
+          style={rawStyles.editingBarImage}
+          source={require("../../../assets/new_playroll.png")}
         />
         <UpdatePlayrollMutation
           mutation={UPDATE_PLAYROLL_MUTATION}
@@ -163,30 +117,23 @@ export default class ManagePlayrollScreen extends React.Component<
           refetchQueries={["GET_PLAYROLL"]}
         >
           {(updatePlayroll, { data }) => (
-            <View style={{ flex: 1 }}>
+            <View style={styles.editingBarNameContainer}>
               <TextInput
                 selectionColor={"purple"}
                 placeholder="Name Your Playroll"
                 placeholderTextColor="lightgrey"
-                style={{ fontSize: 20 }}
+                style={styles.editingBarNameInput}
                 onChangeText={name => this.setState({ editPlayrollName: name })}
                 onSubmitEditing={() => updatePlayroll()}
               >
                 {playroll.name}
               </TextInput>
-              <View
-                style={{
-                  width: "75%",
-                  marginVertical: 5,
-                  borderBottomColor: "lightgrey",
-                  borderBottomWidth: StyleSheet.hairlineWidth,
-                }}
-              />
+              <View style={styles.horizontalRule} />
               <TextInput
                 selectionColor={"purple"}
                 placeholder="#Existential #Chill #Help"
                 placeholderTextColor="lightgrey"
-                style={{ fontSize: 15 }}
+                style={styles.editingBarTagInput}
               />
             </View>
           )}
@@ -195,11 +142,9 @@ export default class ManagePlayrollScreen extends React.Component<
     );
   }
 
-  renderSearchMusic() {
-    const { navigation } = this.props;
-    const playroll: Playroll = navigation && navigation.getParam("playroll");
+  renderSearchMusic(playroll: Playroll) {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.searchMusicContainer}>
         <Search playrollID={playroll.id} header={false} />
       </View>
     );
@@ -213,55 +158,23 @@ export default class ManagePlayrollScreen extends React.Component<
       Playlist: "playlist-play",
     };
     return (
-      <View
-        style={{
-          // position: "absolute",
-          // bottom: 0,
-          height: 65,
-          borderTopColor: "lightgrey",
-          borderTopWidth: 1,
-          width: "100%",
-          backgroundColor: "#f5eeed",
-        }}
-      >
+      <View style={styles.bottomBarContainer}>
         <ScrollView
           horizontal={true}
-          contentContainerStyle={{ alignItems: "center" }}
+          contentContainerStyle={styles.bottomBarScrollViewStyle}
         >
           {playroll.rolls &&
             playroll.rolls.map((roll, idx) => {
               const val: MusicSource =
                 (roll.data && roll.data.sources && roll.data.sources[0]) || {};
               return (
-                <View
-                  style={{
-                    height: 65,
-                    width: 65,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  key={idx}
-                >
+                <View style={styles.bottomBarItemContainer} key={idx}>
                   <Image
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: "lightgrey",
-                    }}
+                    style={rawStyles.bottomBarItemImage}
                     source={{ uri: val.cover }}
                   />
                   {val.type && (
-                    <View
-                      style={{
-                        position: "absolute",
-                        bottom: 4,
-                        left: 4,
-                        borderRadius: 5,
-                        backgroundColor: "#FFFFFF9F",
-                      }}
-                    >
+                    <View style={styles.bottomBarIconContainer}>
                       {
                         <Icon
                           name={iconMap[val.type] || iconMap["Track"]}

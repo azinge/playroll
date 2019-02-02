@@ -3,16 +3,17 @@ package crud
 import (
 	"fmt"
 
+	"github.com/cazinge/playroll/services/gqltag"
+
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
-	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 )
 
-func GenerateGetEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		dao := e.InitDAO(db)
+func GenerateGetEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		dao := e.InitDAO(mctx.DB)
 
 		type getEntityParams struct {
 			ID string
@@ -34,9 +35,9 @@ func GenerateGetEntityMethod(e models.Entity) func(resolveParams graphql.Resolve
 	}
 }
 
-func GenerateListEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		dao := e.InitDAO(db)
+func GenerateListEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		dao := e.InitDAO(mctx.DB)
 
 		type listEntityParams struct {
 			Offset uint
@@ -57,9 +58,9 @@ func GenerateListEntityMethod(e models.Entity) func(resolveParams graphql.Resolv
 	}
 }
 
-func GenerateCreateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		dao := e.InitDAO(db)
+func GenerateCreateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		dao := e.InitDAO(mctx.DB)
 
 		type createEntityParams struct {
 			Input models.EntityInput
@@ -87,9 +88,9 @@ func GenerateCreateEntityMethod(e models.Entity, entityInput models.EntityInput)
 	}
 }
 
-func GenerateUpdateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		dao := e.InitDAO(db)
+func GenerateUpdateEntityMethod(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		dao := e.InitDAO(mctx.DB)
 
 		type updateEntityParams struct {
 			ID    string
@@ -117,9 +118,9 @@ func GenerateUpdateEntityMethod(e models.Entity, entityInput models.EntityInput)
 	}
 }
 
-func GenerateDeleteEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-	return func(resolveParams graphql.ResolveParams, db *gorm.DB) (interface{}, error) {
-		dao := e.InitDAO(db)
+func GenerateDeleteEntityMethod(e models.Entity) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+	return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		dao := e.InitDAO(mctx.DB)
 
 		type deleteEntityParams struct {
 			ID string

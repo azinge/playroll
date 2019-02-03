@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { GeneratePlaylistMutation } from "graphql/requests/Tracklist";
 
 export const pickerStyle = StyleSheet.create({
   inputIOS: {

@@ -9,7 +9,14 @@ import { resolvers } from "./resolvers";
 import { defaults } from "./defaults";
 
 // This is the same cache you pass into new ApolloClient
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  cacheRedirects: {
+    Query: {
+      playroll: (_, args, { getCacheKey }) =>
+        getCacheKey({ __typename: "Playroll", id: args.id }),
+    },
+  },
+});
 
 const stateLink = withClientState({
   cache,

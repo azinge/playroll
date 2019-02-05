@@ -46,7 +46,7 @@ export default class Search extends React.Component<Props, State> {
     super(props);
     this.state = {
       text: "Drake",
-      query: "",
+      query: "Drake",
       searchType: "Artist",
       modalVisible: false,
       currentSource: {},

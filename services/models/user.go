@@ -122,7 +122,7 @@ func AuthorizeUser(mctx *gqltag.MethodContext) (*UserOutput, error) {
 		user, err := FindUserByIdentityCredential("CognitoUserPool", cognitoUserPoolSub, mctx.DB)
 		if err != nil {
 			fmt.Println(err)
-			return nil, err
+			return nil, fmt.Errorf("could not find matching user in database")
 		}
 		return user, nil
 	}

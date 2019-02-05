@@ -10,10 +10,10 @@ import (
 )
 
 type PlayrollMethods struct {
-	ListCurrentUsersPlayrolls *gqltag.Query `gql:"listCurrentUsersPlayrolls(offset: Int, count: Int): [Playroll]"`
+	ListCurrentUserPlayrolls *gqltag.Query `gql:"listCurrentUserPlayrolls(offset: Int, count: Int): [Playroll]"`
 }
 
-var listCurrentUsersPlayrolls = gqltag.Method{
+var listCurrentUserPlayrolls = gqltag.Method{
 	Description: `[List Current User's Playrolls Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
 		user, err := models.AuthorizeUser(mctx)
@@ -22,11 +22,11 @@ var listCurrentUsersPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		type listCurrentUsersPlayrollsParams struct {
+		type listCurrentUsersPlayrollParams struct {
 			Offset uint
 			Count  uint
 		}
-		params := &listCurrentUsersPlayrollsParams{}
+		params := &listCurrentUsersPlayrollParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)
@@ -34,7 +34,8 @@ var listCurrentUsersPlayrolls = gqltag.Method{
 		}
 
 		playrollModels := &[]models.Playroll{}
-		if err := mctx.DB.Where(models.Playroll{UserID: user.ID}).Find(playrollModels).Error; err != nil {
+		db := mctx.DB.Preload("Rolls").Preload("Tracklists")
+		if err := db.Where(models.Playroll{UserID: user.ID}).Find(playrollModels).Error; err != nil {
 			fmt.Printf("error getting playrolls: %s", err.Error())
 			return nil, err
 		}
@@ -48,5 +49,5 @@ var listCurrentUsersPlayrolls = gqltag.Method{
 }
 
 var LinkedPlayrollMethods = PlayrollMethods{
-	ListCurrentUsersPlayrolls: gqltag.LinkQuery(listCurrentUsersPlayrolls),
+	ListCurrentUserPlayrolls: gqltag.LinkQuery(listCurrentUserPlayrolls),
 }

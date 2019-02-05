@@ -184,18 +184,6 @@ export default class Home extends React.Component<Props, State> {
             );
           })}
         </ScrollView>
-        {/* <SignOutMutation>
-          {(signOut, { data }) => {
-            return (
-              <Button
-                title="Sign Out"
-                onPress={() => {
-                  signOut().then(() => this.props.navigation.navigate("Login"));
-                }}
-              />
-            );
-          }}
-        </SignOutMutation> */}
       </View>
     );
   }

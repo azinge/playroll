@@ -25,7 +25,7 @@ import {
 } from "../../../graphql/requests/Playroll";
 import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist";
 
-import { GET_PLAYROLL } from "graphql/requests/Playroll/GetPlayrollQuery";
+import { GET_PLAYROLL } from "../../../graphql/requests/Playroll/GetPlayrollQuery";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -53,7 +53,8 @@ export default class ManagePlayrollScreen extends React.Component<
       this.props.navigation.getParam("playroll");
     return (
       <GetPlayrollQuery variables={{ id: playroll.id }}>
-        {({ loading, error, data }) => {
+        {({ loading, error, data, client: { cache } }) => {
+          console.log(cache);
           const playroll: Playroll = (data && data.playroll) || {};
           return (
             <View style={styles.screenContainer}>

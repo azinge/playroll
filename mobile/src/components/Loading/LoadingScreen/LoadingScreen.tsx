@@ -18,6 +18,7 @@ import {
 } from "react-navigation";
 
 import styles from "./LoadingScreen.styles";
+import { GetCurrentUserQuery } from "../../../graphql/requests/User";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -25,28 +26,38 @@ export interface Props {
 
 interface State {}
 export default class LoadingScreen extends React.Component<Props, State> {
-  componentDidMount() {
-    setTimeout(() => {
-      this.props.navigation &&
-        this.props.navigation.dispatch(
-          StackActions.reset({
-            key: null,
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: "Main" })],
-          })
-        );
-    }, 1250);
-  }
   render() {
     const { width, height } = Dimensions.get("window");
     return (
-      <View style={styles.container}>
-        <ImageBackground
-          source={require("../../../assets/loading.png")}
-          resizeMode="cover"
-          style={{ height: height, width: width }}
-        />
-      </View>
+      <GetCurrentUserQuery>
+        {({ loading, error }) => {
+          if (!loading) {
+            setTimeout(() => {
+              this.props.navigation &&
+                this.props.navigation.dispatch(
+                  StackActions.reset({
+                    key: null,
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({
+                        routeName: error ? "Auth" : "Main",
+                      }),
+                    ],
+                  })
+                );
+            }, 1250);
+          }
+          return (
+            <View style={styles.container}>
+              <ImageBackground
+                source={require("../../../assets/loading.png")}
+                resizeMode="cover"
+                style={{ height: height, width: width }}
+              />
+            </View>
+          );
+        }}
+      </GetCurrentUserQuery>
     );
   }
 }

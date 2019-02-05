@@ -1,3 +1,11 @@
+export type User = {
+  id?: number;
+  name?: string;
+  avatar?: string;
+  email?: string;
+  accountType?: string;
+};
+
 export type Playroll = {
   createdAt?: string;
   deletedAt?: string;
@@ -6,7 +14,7 @@ export type Playroll = {
   rolls?: [Roll];
   tracklists?: [Tracklist];
   updatedAt?: string;
-  // user: User;
+  user?: User;
   userID?: number;
 };
 

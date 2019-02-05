@@ -15,7 +15,7 @@ import styles, { pickerStyle } from "./CreateModal.styles";
 import { MusicSource } from "../../../../graphql/types";
 
 import { CreateRollMutation } from "../../../../graphql/requests/Roll";
-import { GET_PLAYROLL } from "graphql/requests/Playroll/GetPlayrollQuery";
+import { GET_PLAYROLL } from "../../../../graphql/requests/Playroll/GetPlayrollQuery";
 
 export interface Props {
   currentSource: MusicSource;

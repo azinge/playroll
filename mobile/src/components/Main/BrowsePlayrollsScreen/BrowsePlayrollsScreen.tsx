@@ -21,10 +21,13 @@ import { NavigationScreenProp } from "react-navigation";
 
 import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist/";
 import { DeleteRollMutation } from "../../../graphql/requests/Roll";
-import { ListPlayrollsQuery } from "../../../graphql/requests/Playroll/";
-import { CreatePlayrollMutation } from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
+import {
+  ListCurrentUserPlayrollsQuery,
+  CreatePlayrollMutation,
+} from "../../../graphql/requests/Playroll/";
+import { GetCurrentUserQuery } from "../../../graphql/requests/User";
 
-import { LIST_PLAYROLLS } from "graphql/requests/Playroll/ListPlayrollsQuery";
+import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
 
 import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
@@ -50,38 +53,61 @@ export default class BrowsePlayrollsScreen extends React.Component<
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <CreatePlayrollMutation
-          variables={{ input: { name: "New Playroll", userID: 1 } }}
-          onCompleted={data =>
-            this.props &&
-            this.props.navigation &&
-            this.props.navigation.navigate("Playrolls", {
-              playroll: data.createPlayroll,
-            })
-          }
-          refetchQueries={[LIST_PLAYROLLS]}
-        >
-          {(createPlayroll, { data }) => {
+        <GetCurrentUserQuery>
+          {({ data }) => {
+            if (!data || !data.currentUser) {
+              return (
+                <Header
+                  backgroundColor="purple"
+                  centerComponent={{
+                    text: "Playrolls",
+                    style: { color: "#fff", fontSize: 20 },
+                  }}
+                  rightComponent={
+                    <Icon name="add" color="grey" underlayColor="purple" />
+                  }
+                />
+              );
+            }
             return (
-              <Header
-                backgroundColor="purple"
-                centerComponent={{
-                  text: "Playrolls",
-                  style: { color: "#fff", fontSize: 20 },
+              <CreatePlayrollMutation
+                variables={{
+                  input: { name: "New Playroll", userID: data.currentUser.id },
                 }}
-                rightComponent={
-                  <Icon
-                    name="add"
-                    color="white"
-                    underlayColor="purple"
-                    onPress={() => createPlayroll()}
-                  />
+                onCompleted={data =>
+                  this.props &&
+                  this.props.navigation &&
+                  this.props.navigation.navigate("Playrolls", {
+                    playroll: data.createPlayroll,
+                  })
                 }
-              />
+                refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+              >
+                {(createPlayroll, { data }) => {
+                  return (
+                    <Header
+                      backgroundColor="purple"
+                      centerComponent={{
+                        text: "Playrolls",
+                        style: { color: "#fff", fontSize: 20 },
+                      }}
+                      rightComponent={
+                        <Icon
+                          name="add"
+                          color="white"
+                          underlayColor="purple"
+                          onPress={() => createPlayroll()}
+                        />
+                      }
+                    />
+                  );
+                }}
+              </CreatePlayrollMutation>
             );
           }}
-        </CreatePlayrollMutation>
-        <ListPlayrollsQuery>
+        </GetCurrentUserQuery>
+
+        <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
             error && console.warn(error);
             return (
@@ -89,8 +115,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 {!loading && !error && (
                   <ScrollView>
                     {data &&
-                      data.listPlayrolls &&
-                      data.listPlayrolls.map(playroll => {
+                      data.listCurrentUserPlayrolls &&
+                      data.listCurrentUserPlayrolls.map(playroll => {
                         console.log(playroll);
                         return (
                           <PlayrollCard
@@ -234,7 +260,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
               </View>
             );
           }}
-        </ListPlayrollsQuery>
+        </ListCurrentUserPlayrollsQuery>
       </View>
     );
   }

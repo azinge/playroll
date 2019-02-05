@@ -91,7 +91,6 @@ export default class LoginScreen extends React.Component<Props, State> {
             }}
           />
           <SignInMutation
-            mutation={SIGN_IN_MUTATION}
             variables={{
               username: this.state.username,
               password: this.state.password,

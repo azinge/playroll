@@ -3,6 +3,9 @@ package models
 import (
 	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/cazinge/playroll/services/gqltag"
 
 	"github.com/jinzhu/gorm"
 )
@@ -84,18 +87,47 @@ func CreateUserWithIdentityCredential(userInput *UserInput, identityCredentialIn
 	return userOutput, nil
 }
 
-func FindUserByIdentityCredential(provider, identifier string, db *gorm.DB) (*User, error) {
+func FindUserByIdentityCredential(provider, identifier string, db *gorm.DB) (*UserOutput, error) {
 	ic := &IdentityCredential{}
 	if err := db.Where(&IdentityCredential{Provider: provider, Identifier: identifier}).First(ic).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-	user := &User{}
-	if err := db.First(user, ic.UserID).Error; err != nil {
+	userModel := &User{}
+	if err := db.First(userModel, ic.UserID).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
+	user, err := UserModelToOutput(userModel)
+	if err != nil {
+		return nil, err
+	}
 	return user, nil
+}
+
+func AuthorizeUser(mctx *gqltag.MethodContext) (*UserOutput, error) {
+	// Unauthenticated
+	authenticated := mctx.Request.RequestContext.Identity.CognitoAuthenticationType == "authenticated"
+	if !authenticated {
+		return nil, fmt.Errorf("current user is unauthenticated")
+	}
+
+	// Cognito User Pool
+	provider := mctx.Request.RequestContext.Identity.CognitoAuthenticationProvider
+	userPoolID := "us-west-2_u1L3OQa8W" //TODO(cazinge): Use environment variables here.
+	cognitoUserPoolPrefix := fmt.Sprintf("cognito-idp.us-west-2.amazonaws.com/%v,cognito-idp.us-west-2.amazonaws.com/%v:CognitoSignIn:", userPoolID, userPoolID)
+	if strings.HasPrefix(provider, cognitoUserPoolPrefix) {
+		cognitoUserPoolSub := strings.TrimPrefix(provider, cognitoUserPoolPrefix)
+		fmt.Println(cognitoUserPoolSub)
+		user, err := FindUserByIdentityCredential("CognitoUserPool", cognitoUserPoolSub, mctx.DB)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		return user, nil
+	}
+
+	return nil, fmt.Errorf("could not find matching user in database")
 }
 
 // Entity Specific Methods
@@ -163,7 +195,7 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 func InitUserDAO(db *gorm.DB) *User {
 	dao := &User{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("IdentityCredentials"))
+	dao.SetDB(db)
 	return dao
 }
 

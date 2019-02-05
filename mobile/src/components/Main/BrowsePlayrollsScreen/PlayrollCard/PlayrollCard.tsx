@@ -50,7 +50,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
       >
         <View style={{ flexDirection: "row" }}>
           <View style={{ height: 110 }}>
-            {playroll.rolls.length > 0 ? (
+            {playroll.rolls && playroll.rolls.length > 0 ? (
               <Carousel
                 data={playroll.rolls}
                 renderItem={this._renderItem}
@@ -75,7 +75,6 @@ export default class PlayrollCard extends React.Component<Props, State> {
           <View>
             <Button onPress={editPlayroll} title="Edit Playroll" />
             <DeletePlayrollMutation
-              mutation={DELETE_PLAYROLL_MUTATION}
               variables={{
                 id: playroll.id,
               }}

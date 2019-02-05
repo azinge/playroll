@@ -31,10 +31,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
       nav && nav.state && nav.state.params && nav.state.params.playrollName;
     return (
       <SafeAreaView style={styles.screenContainer}>
-        <GetTracklistQuery
-          query={GET_TRACKLIST_QUERY}
-          variables={{ id: tracklistID }}
-        >
+        <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
             console.log(loading, error, data);
             return (
@@ -42,7 +39,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                 <View>
                   <Text>{`${playlistName} - Tracklist`}</Text>
                   <GeneratePlaylistMutation
-                    mutation={GENERATE_PLAYLIST_MUTATION}
                     variables={{
                       tracklistID,
                       playlistName,

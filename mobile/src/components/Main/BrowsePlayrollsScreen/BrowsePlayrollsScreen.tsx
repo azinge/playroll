@@ -17,12 +17,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Card, ListItem, Button, Icon, Header } from "react-native-elements";
-import { Query } from "react-apollo";
-import {
-  createStackNavigator,
-  createAppContainer,
-  NavigationScreenProp,
-} from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 
 import {
   GenerateTracklistMutation,
@@ -32,10 +27,7 @@ import {
   DeleteRollMutation,
   DELETE_ROLL_MUTATION,
 } from "../../../graphql/requests/Roll";
-import {
-  ListPlayrollsQuery,
-  LIST_PLAYROLLS_QUERY,
-} from "../../../graphql/requests/Playroll/";
+import { ListPlayrollsQuery } from "../../../graphql/requests/Playroll/";
 import {
   CreatePlayrollMutation,
   CREATE_PLAYROLL_MUTATION,
@@ -66,7 +58,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <CreatePlayrollMutation
-          mutation={CREATE_PLAYROLL_MUTATION}
           variables={{ input: { name: "New Playroll", userID: 1 } }}
           onCompleted={data =>
             this.props &&
@@ -97,7 +88,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             );
           }}
         </CreatePlayrollMutation>
-        <ListPlayrollsQuery query={LIST_PLAYROLLS_QUERY}>
+        <ListPlayrollsQuery>
           {({ loading, error, data }) => {
             error && console.warn(error);
             return (
@@ -128,7 +119,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //     key={playroll.id}
                         //   >
                         //     <GenerateTracklistMutation
-                        //       mutation={GENERATE_TRACKLIST_MUTATION}
                         //       variables={{
                         //         playrollID: playroll.id,
                         //       }}
@@ -173,7 +163,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //       title="Go to Tracklist"
                         //     /> */}
                         //     <DeletePlayrollMutation
-                        //       mutation={DELETE_PLAYROLL_MUTATION}
                         //       variables={{
                         //         id: playroll.id,
                         //       }}
@@ -206,7 +195,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //             <Text>{source.name}</Text>
                         //             <Text>{source.type}</Text>
                         //             <DeleteRollMutation
-                        //               mutation={DELETE_ROLL_MUTATION}
                         //               variables={{
                         //                 id: roll.id,
                         //               }}

@@ -101,7 +101,6 @@ export default class CreateModal extends React.Component<Props> {
             </View>
             <View style={styles.formfooter}>
               <CreateRollMutation
-                mutation={CREATE_ROLL_MUTATION}
                 variables={{
                   input: {
                     playrollID: this.props.playrollID,

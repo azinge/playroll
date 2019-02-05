@@ -88,7 +88,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
             value={this.state.email}
           />
           <SignUpMutation
-            mutation={SIGN_UP_MUTATION}
             variables={{
               username: this.state.username,
               password: this.state.password,
@@ -123,7 +122,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
             value={this.state.authCode}
           />
           <ConfirmSignUpMutation
-            mutation={CONFIRM_SIGN_UP_MUTATION}
             variables={{
               username: this.state.confirmUser,
               code: this.state.authCode,

@@ -59,10 +59,7 @@ export default class ManagePlayrollScreen extends React.Component<
       this.props.navigation &&
       this.props.navigation.getParam("playroll");
     return (
-      <GetPlayrollQuery
-        query={GET_PLAYROLL_QUERY}
-        variables={{ id: playroll.id }}
-      >
+      <GetPlayrollQuery variables={{ id: playroll.id }}>
         {({ loading, error, data }) => {
           const playroll: Playroll = (data && data.playroll) || {};
           return (
@@ -80,9 +77,9 @@ export default class ManagePlayrollScreen extends React.Component<
   renderHeader(playroll: Playroll) {
     return (
       <GenerateTracklistMutation
-        mutation={GENERATE_TRACKLIST_MUTATION}
         variables={{ playrollID: playroll.id }}
         onCompleted={data =>
+          this.props.navigation &&
           this.props.navigation.navigate("Tracklist", {
             playrollName: playroll.name,
             tracklistID:
@@ -129,7 +126,6 @@ export default class ManagePlayrollScreen extends React.Component<
           source={require("../../../assets/new_playroll.png")}
         />
         <UpdatePlayrollMutation
-          mutation={UPDATE_PLAYROLL_MUTATION}
           variables={{
             id: playroll.id,
             input: {

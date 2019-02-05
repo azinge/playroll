@@ -187,7 +187,7 @@ export default class Home extends React.Component<Props, State> {
             );
           })}
         </ScrollView>
-        {/* <SignOutMutation mutation={SIGN_OUT_MUTATION}>
+        {/* <SignOutMutation>
           {(signOut, { data }) => {
             return (
               <Button

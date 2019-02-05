@@ -8,10 +8,7 @@ import Carousel from "react-native-snap-carousel";
 import { Card } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
-import {
-  DeletePlayrollMutation,
-  DELETE_PLAYROLL_MUTATION,
-} from "../../../../graphql/requests/Playroll/";
+import { DeletePlayrollMutation } from "../../../../graphql/requests/Playroll/";
 
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 

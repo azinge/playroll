@@ -8,9 +8,7 @@ import { Card, Button } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
 import {
-  GENERATE_PLAYLIST_MUTATION,
   GeneratePlaylistMutation,
-  GET_TRACKLIST_QUERY,
   GetTracklistQuery,
 } from "../../../graphql/requests/Tracklist";
 
@@ -43,9 +41,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                       tracklistID,
                       playlistName,
                     }}
-                    // onCompleted={data => {
-                    //   console.log(data.generateTracklist);
-                    // }
                   >
                     {(generatePlaylist, { data }) => (
                       <Button

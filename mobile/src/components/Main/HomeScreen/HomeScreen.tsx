@@ -15,10 +15,7 @@ import { NavigationScreenProp } from "react-navigation";
 
 import HeaderBar from "../../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
-import {
-  SIGN_OUT_MUTATION,
-  SignOutMutation,
-} from "../../../graphql/requests/Auth";
+import { SignOutMutation } from "../../../graphql/requests/Auth";
 
 import { musicSources } from "../../../static/mockData";
 

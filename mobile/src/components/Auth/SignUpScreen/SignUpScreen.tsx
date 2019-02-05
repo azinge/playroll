@@ -14,11 +14,7 @@ import {
 import { NavigationScreenProp } from "react-navigation";
 
 import {
-  SIGN_UP_MUTATION,
   SignUpMutation,
-} from "../../../graphql/requests/Auth";
-import {
-  CONFIRM_SIGN_UP_MUTATION,
   ConfirmSignUpMutation,
 } from "../../../graphql/requests/Auth";
 

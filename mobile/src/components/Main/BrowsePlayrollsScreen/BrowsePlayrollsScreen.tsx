@@ -19,19 +19,10 @@ import {
 import { Card, ListItem, Button, Icon, Header } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
-import {
-  GenerateTracklistMutation,
-  GENERATE_TRACKLIST_MUTATION,
-} from "../../../graphql/requests/Tracklist/";
-import {
-  DeleteRollMutation,
-  DELETE_ROLL_MUTATION,
-} from "../../../graphql/requests/Roll";
+import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist/";
+import { DeleteRollMutation } from "../../../graphql/requests/Roll";
 import { ListPlayrollsQuery } from "../../../graphql/requests/Playroll/";
-import {
-  CreatePlayrollMutation,
-  CREATE_PLAYROLL_MUTATION,
-} from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
+import { CreatePlayrollMutation } from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
 
 import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";

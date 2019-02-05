@@ -18,10 +18,7 @@ import {
   NavigationActions,
 } from "react-navigation";
 
-import {
-  SIGN_IN_MUTATION,
-  SignInMutation,
-} from "../../../graphql/requests/Auth";
+import { SignInMutation } from "../../../graphql/requests/Auth";
 
 import styles from "./LoginScreen.styles";
 

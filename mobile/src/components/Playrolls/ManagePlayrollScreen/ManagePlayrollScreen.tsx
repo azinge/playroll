@@ -21,18 +21,10 @@ import { Playroll, MusicSource } from "../../../graphql/types";
 
 import {
   GetPlayrollQuery,
-  GET_PLAYROLL_QUERY,
-} from "../../../graphql/requests/Playroll/GetPlayrollQuery";
-import {
   UpdatePlayrollMutation,
-  UPDATE_PLAYROLL_MUTATION,
-} from "../../../graphql/requests/Playroll/UpdatePlayrollMutation";
+} from "../../../graphql/requests/Playroll";
 
-import {
-  GenerateTracklistMutation,
-  GENERATE_TRACKLIST_MUTATION,
-} from "../../../graphql/requests/Tracklist/GenerateTracklistMutation";
-import { playrolls } from "static/mockData";
+import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;

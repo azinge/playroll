@@ -5,6 +5,7 @@ export const signOut = async (_, {}, { cache }) => {
   try {
     await Auth.signOut();
     console.log("signed out");
+    console.log(cache);
     cache.writeQuery({
       query: GET_AUTHENTICATION_STATUS,
       data: {
@@ -12,6 +13,7 @@ export const signOut = async (_, {}, { cache }) => {
       },
     });
     console.log(cache.readQuery({ query: GET_AUTHENTICATION_STATUS }));
+    console.log(cache.reset());
     console.log("deauthenticated");
 
     return null;

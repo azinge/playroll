@@ -13,7 +13,7 @@ import {
   GetPlayrollQuery,
 } from "../../../../graphql/requests/Playroll/";
 
-import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
+import { LIST_CURRENT_USER_PLAYROLLS } from "../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
 
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 

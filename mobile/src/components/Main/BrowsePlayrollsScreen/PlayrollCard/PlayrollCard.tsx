@@ -9,6 +9,7 @@ import { Card } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
 import { DeletePlayrollMutation } from "../../../../graphql/requests/Playroll/";
+import { LIST_PLAYROLLS } from "graphql/requests/Playroll/ListPlayrollsQuery";
 
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 
@@ -75,7 +76,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
               variables={{
                 id: playroll.id,
               }}
-              refetchQueries={["LIST_PLAYROLLS"]}
+              refetchQueries={[LIST_PLAYROLLS]}
             >
               {(deletePlayroll, { data }) => (
                 <Button

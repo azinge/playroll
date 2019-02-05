@@ -24,6 +24,8 @@ import { DeleteRollMutation } from "../../../graphql/requests/Roll";
 import { ListPlayrollsQuery } from "../../../graphql/requests/Playroll/";
 import { CreatePlayrollMutation } from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
 
+import { LIST_PLAYROLLS } from "graphql/requests/Playroll/ListPlayrollsQuery";
+
 import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
 
@@ -57,7 +59,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
               playroll: data.createPlayroll,
             })
           }
-          refetchQueries={["LIST_PLAYROLLS"]}
+          refetchQueries={[LIST_PLAYROLLS]}
         >
           {(createPlayroll, { data }) => {
             return (
@@ -123,7 +125,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //           playrollName: playroll.name,
                         //         });
                         //       }}
-                        //       refetchQueries={["GET_PLAYROLLS"]}
+                        //       refetchQueries={[LIST_PLAYROLLS]}
                         //     >
                         //       {(generateTracklist, { data }) => (
                         //         <Button
@@ -157,7 +159,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //       variables={{
                         //         id: playroll.id,
                         //       }}
-                        //       refetchQueries={["GET_PLAYROLLS"]}
+                        //       refetchQueries={[LIST_PLAYROLLS]}
                         //     >
                         //       {(deletePlayroll, { data }) => (
                         //         <Button
@@ -189,7 +191,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //               variables={{
                         //                 id: roll.id,
                         //               }}
-                        //               refetchQueries={["GET_PLAYROLLS"]}
+                        //               refetchQueries={[LIST_PLAYROLLS]}
                         //             >
                         //               {(deleteRoll, { data }) => (
                         //                 <Button

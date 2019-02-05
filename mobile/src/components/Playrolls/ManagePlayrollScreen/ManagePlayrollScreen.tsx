@@ -21,18 +21,11 @@ import { Playroll, MusicSource } from "../../../graphql/types";
 
 import {
   GetPlayrollQuery,
-  GET_PLAYROLL_QUERY,
-} from "../../../graphql/requests/Playroll/GetPlayrollQuery";
-import {
   UpdatePlayrollMutation,
-  UPDATE_PLAYROLL_MUTATION,
-} from "../../../graphql/requests/Playroll/UpdatePlayrollMutation";
+} from "../../../graphql/requests/Playroll";
+import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist";
 
-import {
-  GenerateTracklistMutation,
-  GENERATE_TRACKLIST_MUTATION,
-} from "../../../graphql/requests/Tracklist/GenerateTracklistMutation";
-import { playrolls } from "static/mockData";
+import { GET_PLAYROLL } from "../../../graphql/requests/Playroll/GetPlayrollQuery";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -59,11 +52,9 @@ export default class ManagePlayrollScreen extends React.Component<
       this.props.navigation &&
       this.props.navigation.getParam("playroll");
     return (
-      <GetPlayrollQuery
-        query={GET_PLAYROLL_QUERY}
-        variables={{ id: playroll.id }}
-      >
-        {({ loading, error, data }) => {
+      <GetPlayrollQuery variables={{ id: playroll.id }}>
+        {({ loading, error, data, client: { cache } }) => {
+          console.log(cache);
           const playroll: Playroll = (data && data.playroll) || {};
           return (
             <View style={styles.screenContainer}>
@@ -80,9 +71,9 @@ export default class ManagePlayrollScreen extends React.Component<
   renderHeader(playroll: Playroll) {
     return (
       <GenerateTracklistMutation
-        mutation={GENERATE_TRACKLIST_MUTATION}
         variables={{ playrollID: playroll.id }}
         onCompleted={data =>
+          this.props.navigation &&
           this.props.navigation.navigate("Tracklist", {
             playrollName: playroll.name,
             tracklistID:
@@ -129,7 +120,6 @@ export default class ManagePlayrollScreen extends React.Component<
           source={require("../../../assets/new_playroll.png")}
         />
         <UpdatePlayrollMutation
-          mutation={UPDATE_PLAYROLL_MUTATION}
           variables={{
             id: playroll.id,
             input: {
@@ -137,7 +127,7 @@ export default class ManagePlayrollScreen extends React.Component<
               userID: playroll.userID,
             },
           }}
-          refetchQueries={["GET_PLAYROLL"]}
+          refetchQueries={[GET_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
             <View style={styles.editingBarNameContainer}>

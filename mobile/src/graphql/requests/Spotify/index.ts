@@ -1,1 +1,1 @@
-export { SEARCH_SPOTIFY_QUERY, SearchSpotifyQuery } from "./SearchSpotifyQuery";
+export { SearchSpotifyQuery } from "./SearchSpotifyQuery";

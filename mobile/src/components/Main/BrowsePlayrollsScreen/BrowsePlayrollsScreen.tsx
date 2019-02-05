@@ -17,29 +17,17 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Card, ListItem, Button, Icon, Header } from "react-native-elements";
-import { Query } from "react-apollo";
-import {
-  createStackNavigator,
-  createAppContainer,
-  NavigationScreenProp,
-} from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 
+import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist/";
+import { DeleteRollMutation } from "../../../graphql/requests/Roll";
 import {
-  GenerateTracklistMutation,
-  GENERATE_TRACKLIST_MUTATION,
-} from "../../../graphql/requests/Tracklist/";
-import {
-  DeleteRollMutation,
-  DELETE_ROLL_MUTATION,
-} from "../../../graphql/requests/Roll";
-import {
-  ListPlayrollsQuery,
-  LIST_PLAYROLLS_QUERY,
-} from "../../../graphql/requests/Playroll/";
-import {
+  ListCurrentUserPlayrollsQuery,
   CreatePlayrollMutation,
-  CREATE_PLAYROLL_MUTATION,
-} from "../../../graphql/requests/Playroll/CreatePlayrollMutation";
+} from "../../../graphql/requests/Playroll/";
+import { GetCurrentUserQuery } from "../../../graphql/requests/User";
+
+import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
 
 import styles from "./BrowsePlayrollsScreen.styles";
 import PlayrollCard from "./PlayrollCard";
@@ -65,39 +53,61 @@ export default class BrowsePlayrollsScreen extends React.Component<
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <CreatePlayrollMutation
-          mutation={CREATE_PLAYROLL_MUTATION}
-          variables={{ input: { name: "New Playroll", userID: 1 } }}
-          onCompleted={data =>
-            this.props &&
-            this.props.navigation &&
-            this.props.navigation.navigate("Playrolls", {
-              playroll: data.createPlayroll,
-            })
-          }
-          refetchQueries={["LIST_PLAYROLLS"]}
-        >
-          {(createPlayroll, { data }) => {
+        <GetCurrentUserQuery>
+          {({ data }) => {
+            if (!data || !data.currentUser) {
+              return (
+                <Header
+                  backgroundColor="purple"
+                  centerComponent={{
+                    text: "Playrolls",
+                    style: { color: "#fff", fontSize: 20 },
+                  }}
+                  rightComponent={
+                    <Icon name="add" color="grey" underlayColor="purple" />
+                  }
+                />
+              );
+            }
             return (
-              <Header
-                backgroundColor="purple"
-                centerComponent={{
-                  text: "Playrolls",
-                  style: { color: "#fff", fontSize: 20 },
+              <CreatePlayrollMutation
+                variables={{
+                  input: { name: "New Playroll", userID: data.currentUser.id },
                 }}
-                rightComponent={
-                  <Icon
-                    name="add"
-                    color="white"
-                    underlayColor="purple"
-                    onPress={() => createPlayroll()}
-                  />
+                onCompleted={data =>
+                  this.props &&
+                  this.props.navigation &&
+                  this.props.navigation.navigate("Playrolls", {
+                    playroll: data.createPlayroll,
+                  })
                 }
-              />
+                refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+              >
+                {(createPlayroll, { data }) => {
+                  return (
+                    <Header
+                      backgroundColor="purple"
+                      centerComponent={{
+                        text: "Playrolls",
+                        style: { color: "#fff", fontSize: 20 },
+                      }}
+                      rightComponent={
+                        <Icon
+                          name="add"
+                          color="white"
+                          underlayColor="purple"
+                          onPress={() => createPlayroll()}
+                        />
+                      }
+                    />
+                  );
+                }}
+              </CreatePlayrollMutation>
             );
           }}
-        </CreatePlayrollMutation>
-        <ListPlayrollsQuery query={LIST_PLAYROLLS_QUERY}>
+        </GetCurrentUserQuery>
+
+        <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
             error && console.warn(error);
             return (
@@ -105,8 +115,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 {!loading && !error && (
                   <ScrollView>
                     {data &&
-                      data.listPlayrolls &&
-                      data.listPlayrolls.map(playroll => {
+                      data.listCurrentUserPlayrolls &&
+                      data.listCurrentUserPlayrolls.map(playroll => {
                         console.log(playroll);
                         return (
                           <PlayrollCard
@@ -128,7 +138,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //     key={playroll.id}
                         //   >
                         //     <GenerateTracklistMutation
-                        //       mutation={GENERATE_TRACKLIST_MUTATION}
                         //       variables={{
                         //         playrollID: playroll.id,
                         //       }}
@@ -142,7 +151,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //           playrollName: playroll.name,
                         //         });
                         //       }}
-                        //       refetchQueries={["GET_PLAYROLLS"]}
+                        //       refetchQueries={[LIST_PLAYROLLS]}
                         //     >
                         //       {(generateTracklist, { data }) => (
                         //         <Button
@@ -173,11 +182,10 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //       title="Go to Tracklist"
                         //     /> */}
                         //     <DeletePlayrollMutation
-                        //       mutation={DELETE_PLAYROLL_MUTATION}
                         //       variables={{
                         //         id: playroll.id,
                         //       }}
-                        //       refetchQueries={["GET_PLAYROLLS"]}
+                        //       refetchQueries={[LIST_PLAYROLLS]}
                         //     >
                         //       {(deletePlayroll, { data }) => (
                         //         <Button
@@ -206,11 +214,10 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         //             <Text>{source.name}</Text>
                         //             <Text>{source.type}</Text>
                         //             <DeleteRollMutation
-                        //               mutation={DELETE_ROLL_MUTATION}
                         //               variables={{
                         //                 id: roll.id,
                         //               }}
-                        //               refetchQueries={["GET_PLAYROLLS"]}
+                        //               refetchQueries={[LIST_PLAYROLLS]}
                         //             >
                         //               {(deleteRoll, { data }) => (
                         //                 <Button
@@ -253,7 +260,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
               </View>
             );
           }}
-        </ListPlayrollsQuery>
+        </ListCurrentUserPlayrollsQuery>
       </View>
     );
   }

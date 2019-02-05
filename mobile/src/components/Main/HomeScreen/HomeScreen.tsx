@@ -15,10 +15,7 @@ import { NavigationScreenProp } from "react-navigation";
 
 import HeaderBar from "../../../components/shared/HeaderBar";
 import HomeCarousel from "./HomeCarousel";
-import {
-  SIGN_OUT_MUTATION,
-  SignOutMutation,
-} from "../../../graphql/requests/Auth";
+import { SignOutMutation } from "../../../graphql/requests/Auth";
 
 import { musicSources } from "../../../static/mockData";
 
@@ -187,18 +184,6 @@ export default class Home extends React.Component<Props, State> {
             );
           })}
         </ScrollView>
-        {/* <SignOutMutation mutation={SIGN_OUT_MUTATION}>
-          {(signOut, { data }) => {
-            return (
-              <Button
-                title="Sign Out"
-                onPress={() => {
-                  signOut().then(() => this.props.navigation.navigate("Login"));
-                }}
-              />
-            );
-          }}
-        </SignOutMutation> */}
       </View>
     );
   }

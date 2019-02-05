@@ -18,10 +18,7 @@ import {
   NavigationActions,
 } from "react-navigation";
 
-import {
-  SIGN_IN_MUTATION,
-  SignInMutation,
-} from "../../../graphql/requests/Auth";
+import { SignInMutation } from "../../../graphql/requests/Auth";
 
 import styles from "./LoginScreen.styles";
 
@@ -91,7 +88,6 @@ export default class LoginScreen extends React.Component<Props, State> {
             }}
           />
           <SignInMutation
-            mutation={SIGN_IN_MUTATION}
             variables={{
               username: this.state.username,
               password: this.state.password,

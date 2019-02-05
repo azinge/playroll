@@ -3,8 +3,10 @@ import { Query } from "react-apollo";
 
 import { CompiledRoll } from "../../types";
 
+export const GET_TRACKLIST = "GET_TRACKLIST";
+
 export const GET_TRACKLIST_QUERY = gql`
-  query GET_TRACKLIST($id: ID!) {
+  query ${GET_TRACKLIST}($id: ID!) {
     tracklist(id: $id) {
       compiledRolls {
         id
@@ -33,4 +35,8 @@ type GetTracklistData = {
 export class GetTracklistQuery extends Query<
   GetTracklistData,
   GetTracklistVariables
-> {}
+> {
+  static defaultProps = {
+    query: GET_TRACKLIST_QUERY,
+  };
+}

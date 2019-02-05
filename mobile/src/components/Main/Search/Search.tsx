@@ -20,10 +20,7 @@ import { NavigationScreenProp } from "react-navigation";
 import RNPickerSelect from "react-native-picker-select";
 import { pickerStyle } from "./Search.styles";
 import { MusicSource } from "../../../graphql/types";
-import {
-  SEARCH_SPOTIFY_QUERY,
-  SearchSpotifyQuery,
-} from "../../../graphql/requests/Spotify/";
+import { SearchSpotifyQuery } from "../../../graphql/requests/Spotify/";
 import CreateModal from "./CreateModal/CreateModal";
 
 export interface Props {
@@ -49,7 +46,7 @@ export default class Search extends React.Component<Props, State> {
     super(props);
     this.state = {
       text: "Drake",
-      query: "",
+      query: "Drake",
       searchType: "Artist",
       modalVisible: false,
       currentSource: {},
@@ -60,6 +57,7 @@ export default class Search extends React.Component<Props, State> {
   }
 
   setModal(data: MusicSource) {
+    // @ts-ignore
     delete data.__typename;
     this.setState({ modalVisible: true, currentSource: data });
   }
@@ -85,7 +83,9 @@ export default class Search extends React.Component<Props, State> {
               <Icon
                 name="arrow-back"
                 color="white"
-                onPress={() => this.props.navigation.goBack(null)}
+                onPress={() =>
+                  this.props.navigation && this.props.navigation.goBack(null)
+                }
                 underlayColor="purple"
               />
             }
@@ -97,7 +97,10 @@ export default class Search extends React.Component<Props, State> {
               <Icon
                 name="save"
                 color="white"
-                onPress={() => this.props.navigation.navigate("Tracklist")}
+                onPress={() =>
+                  this.props.navigation &&
+                  this.props.navigation.navigate("Tracklist")
+                }
               />
             }
           />
@@ -228,7 +231,6 @@ export default class Search extends React.Component<Props, State> {
           playrollID={this.props.playrollID}
         />
         <SearchSpotifyQuery
-          query={SEARCH_SPOTIFY_QUERY}
           variables={{
             query: this.state.query,
             searchType: this.state.searchType,
@@ -295,7 +297,10 @@ export default class Search extends React.Component<Props, State> {
                               size={35}
                               name="more-vert"
                               color="lightgrey"
-                              onPress={() => this.props.navigation.goBack(null)}
+                              onPress={() =>
+                                this.props.navigation &&
+                                this.props.navigation.goBack(null)
+                              }
                             />
                           </View>
                           <View

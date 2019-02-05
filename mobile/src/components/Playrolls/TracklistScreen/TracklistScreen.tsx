@@ -8,9 +8,7 @@ import { Card, Button } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 
 import {
-  GENERATE_PLAYLIST_MUTATION,
   GeneratePlaylistMutation,
-  GET_TRACKLIST_QUERY,
   GetTracklistQuery,
 } from "../../../graphql/requests/Tracklist";
 
@@ -31,10 +29,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
       nav && nav.state && nav.state.params && nav.state.params.playrollName;
     return (
       <SafeAreaView style={styles.screenContainer}>
-        <GetTracklistQuery
-          query={GET_TRACKLIST_QUERY}
-          variables={{ id: tracklistID }}
-        >
+        <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
             console.log(loading, error, data);
             return (
@@ -42,14 +37,10 @@ export default class TracklistScreen extends React.Component<Props, State> {
                 <View>
                   <Text>{`${playlistName} - Tracklist`}</Text>
                   <GeneratePlaylistMutation
-                    mutation={GENERATE_PLAYLIST_MUTATION}
                     variables={{
                       tracklistID,
                       playlistName,
                     }}
-                    // onCompleted={data => {
-                    //   console.log(data.generateTracklist);
-                    // }
                   >
                     {(generatePlaylist, { data }) => (
                       <Button

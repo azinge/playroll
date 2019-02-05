@@ -14,10 +14,8 @@ import styles, { pickerStyle } from "./CreateModal.styles";
 
 import { MusicSource } from "../../../../graphql/types";
 
-import {
-  CREATE_ROLL_MUTATION,
-  CreateRollMutation,
-} from "../../../../graphql/requests/Roll";
+import { CreateRollMutation } from "../../../../graphql/requests/Roll";
+import { GET_PLAYROLL } from "../../../../graphql/requests/Playroll/GetPlayrollQuery";
 
 export interface Props {
   currentSource: MusicSource;
@@ -101,7 +99,6 @@ export default class CreateModal extends React.Component<Props> {
             </View>
             <View style={styles.formfooter}>
               <CreateRollMutation
-                mutation={CREATE_ROLL_MUTATION}
                 variables={{
                   input: {
                     playrollID: this.props.playrollID,
@@ -111,7 +108,7 @@ export default class CreateModal extends React.Component<Props> {
                 onCompleted={() => {
                   this.props.closeModal(true);
                 }}
-                refetchQueries={["GET_PLAYROLL"]}
+                refetchQueries={[GET_PLAYROLL]}
               >
                 {(createRoll, { data }) => (
                   <TouchableHighlight

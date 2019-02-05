@@ -10,8 +10,10 @@ import { NavigationScreenProp } from "react-navigation";
 
 import {
   DeletePlayrollMutation,
-  DELETE_PLAYROLL_MUTATION,
+  GetPlayrollQuery,
 } from "../../../../graphql/requests/Playroll/";
+
+import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
 
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 
@@ -43,56 +45,65 @@ export default class PlayrollCard extends React.Component<Props, State> {
   render() {
     const { playroll, editPlayroll } = this.props;
     return (
-      <Card
-        title={playroll.name}
-        // image={require("../../assets/wack.jpg")}
-        key={playroll.id}
+      <GetPlayrollQuery
+        variables={{ id: this.props.playroll.id }}
+        fetchPolicy="cache-only"
       >
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ height: 110 }}>
-            {playroll.rolls.length > 0 ? (
-              <Carousel
-                data={playroll.rolls}
-                renderItem={this._renderItem}
-                hasParallaxImages={false}
-                sliderWidth={110}
-                itemWidth={100}
-                itemHeight={100}
-                layout={"tinder"}
-                layoutCardOffset={5}
-                loop={true}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri:
-                    "https://www.unesale.com/ProductImages/Large/notfound.png",
-                }}
-                style={{ height: 110, width: 110, borderRadius: 5 }}
-              />
-            )}
-          </View>
-          <View>
-            <Button onPress={editPlayroll} title="Edit Playroll" />
-            <DeletePlayrollMutation
-              mutation={DELETE_PLAYROLL_MUTATION}
-              variables={{
-                id: playroll.id,
-              }}
-              refetchQueries={["LIST_PLAYROLLS"]}
+        {({ data }) => {
+          const playroll = (data && data.playroll) || {};
+          return (
+            <Card
+              title={playroll.name}
+              // image={require("../../assets/wack.jpg")}
+              key={playroll.id}
             >
-              {(deletePlayroll, { data }) => (
-                <Button
-                  title="Delete Playroll"
-                  onPress={() => {
-                    deletePlayroll();
-                  }}
-                />
-              )}
-            </DeletePlayrollMutation>
-          </View>
-        </View>
-      </Card>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ height: 110 }}>
+                  {playroll.rolls && playroll.rolls.length > 0 ? (
+                    <Carousel
+                      data={playroll.rolls}
+                      renderItem={this._renderItem}
+                      hasParallaxImages={false}
+                      sliderWidth={110}
+                      itemWidth={100}
+                      itemHeight={100}
+                      layout={"tinder"}
+                      layoutCardOffset={5}
+                      loop={true}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri:
+                          "https://www.unesale.com/ProductImages/Large/notfound.png",
+                      }}
+                      style={{ height: 110, width: 110, borderRadius: 5 }}
+                    />
+                  )}
+                </View>
+                <View>
+                  <Button onPress={editPlayroll} title="Edit Playroll" />
+                  <DeletePlayrollMutation
+                    variables={{
+                      id: playroll.id,
+                    }}
+                    refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+                  >
+                    {(deletePlayroll, { data }) => (
+                      <Button
+                        title="Delete Playroll"
+                        onPress={() => {
+                          deletePlayroll();
+                        }}
+                      />
+                    )}
+                  </DeletePlayrollMutation>
+                </View>
+              </View>
+            </Card>
+          );
+        }}
+      </GetPlayrollQuery>
     );
   }
 }

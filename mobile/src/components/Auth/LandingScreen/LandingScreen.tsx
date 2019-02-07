@@ -23,7 +23,7 @@ export default class LandingScreen extends React.Component<Props, State> {
           <Button
             title="Sign In"
             onPress={() => {
-              this.props.navigation && this.props.navigation.navigate("Login");
+              this.props.navigation && this.props.navigation.navigate("SignIn");
             }}
           />
           <Button

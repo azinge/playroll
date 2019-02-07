@@ -3,14 +3,14 @@
  */
 
 import * as React from "react";
-import { Text, View } from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 
 export default class ManageDiscoveryQueueScreen extends React.Component {
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Text>ManageDiscoveryQueueScreen</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 }

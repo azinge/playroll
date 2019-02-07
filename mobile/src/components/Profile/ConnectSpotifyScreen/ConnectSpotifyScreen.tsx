@@ -3,14 +3,14 @@
  */
 
 import * as React from "react";
-import { Text, View } from "react-native";
+import { Text, View, SafeAreaView } from "react-native";
 
 export default class ConnectSpotifyScreen extends React.Component {
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Text>ConnectSpotifyScreen</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 }

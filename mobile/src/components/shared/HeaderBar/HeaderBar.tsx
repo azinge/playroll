@@ -21,20 +21,14 @@ export default class HeaderBar extends React.Component<Props, State> {
         <Text style={styles.headline}>Playroll </Text>
         <Icon
           type="material-community"
-          name="language-go"
+          name="account-circle"
           size={35}
           color="#ffffff"
           onPress={() =>
             this.props.navigation && this.props.navigation.navigate("Profile")
           }
+          containerStyle={{ marginRight: 20 }}
         />
-        <Icon
-          type="material-community"
-          name="magnify"
-          size={35}
-          color="#ffffff"
-        />
-        <Icon type="material-community" name="menu" size={35} color="#ffffff" />
       </View>
     );
   }

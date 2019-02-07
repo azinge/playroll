@@ -3,7 +3,7 @@
  */
 
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, SafeAreaView } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 
 export interface Props {
@@ -15,7 +15,7 @@ interface State {}
 export default class BrowseFriendsScreen extends React.Component<Props, State> {
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Text>BrowseFriendsScreen</Text>
         <Button
           title="Add Friend"
@@ -24,7 +24,7 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
               this.props.navigation.navigate("AddFriend");
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

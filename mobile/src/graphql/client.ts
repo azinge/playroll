@@ -2,7 +2,7 @@ import ApolloClient from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
-import * as config from "../config/aws.js";
+import * as config from "../config/aws";
 import { fetcher } from "../lib/apiutils/fetcher";
 import { withClientState } from "apollo-link-state";
 import { resolvers } from "./resolvers";

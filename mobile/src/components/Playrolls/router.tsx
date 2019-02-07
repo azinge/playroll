@@ -5,7 +5,6 @@ import { HeaderBackButton } from "react-navigation";
 
 import ManagePlayrollScreen from "./ManagePlayrollScreen";
 import TracklistScreen from "./TracklistScreen";
-import ManageRollScreen from "./ManageRollScreen";
 
 export const PlayrollsNavigator = createStackNavigator(
   {

@@ -12,8 +12,6 @@ export const fetcher = async (uri, { method, body }) => {
     sessionToken,
   } = await Auth.currentCredentials();
 
-  console.log("Hello");
-
   // console.warn("CREDENTIALS:", { accessKeyId, secretAccessKey, sessionToken });
 
   const { host, path } = Url.parse(uri);

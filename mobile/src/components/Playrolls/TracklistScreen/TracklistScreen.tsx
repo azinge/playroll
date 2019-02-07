@@ -31,7 +31,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
       <SafeAreaView style={styles.screenContainer}>
         <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
-            console.log(loading, error, data);
             return (
               <View style={{ flex: 1, marginTop: 20 }}>
                 <View>
@@ -67,7 +66,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                             title={`Compiled roll #${compiledRoll.id}`}
                           >
                             {compiledRoll.data.tracks.map(track => {
-                              console.log(track);
                               return (
                                 track && (
                                   <View key={track.providerID}>

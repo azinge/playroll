@@ -54,7 +54,6 @@ export default class ManagePlayrollScreen extends React.Component<
     return (
       <GetPlayrollQuery variables={{ id: playroll.id }}>
         {({ loading, error, data, client: { cache } }) => {
-          console.log(cache);
           const playroll: Playroll = (data && data.playroll) || {};
           return (
             <View style={styles.screenContainer}>

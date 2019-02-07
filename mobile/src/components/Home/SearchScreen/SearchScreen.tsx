@@ -243,9 +243,6 @@ export default class SearchScreen extends React.Component<Props, State> {
           }}
         >
           {({ loading, error, data }) => {
-            console.log(loading);
-            console.log(error);
-            console.log(data && data.searchSpotify);
             return (
               <ScrollView>
                 {data &&

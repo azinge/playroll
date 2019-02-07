@@ -2,6 +2,8 @@ import ApolloClient from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+// @ts-ignore
+import apolloLogger from "apollo-link-logger";
 import * as config from "../config/aws";
 import { fetcher } from "../lib/apiutils/fetcher";
 import { withClientState } from "apollo-link-state";
@@ -31,5 +33,5 @@ const httpLink = new HttpLink({
 
 export const client = new ApolloClient({
   cache,
-  link: ApolloLink.from([stateLink, httpLink]),
+  link: ApolloLink.from([apolloLogger, stateLink, httpLink]),
 });

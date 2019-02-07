@@ -7,16 +7,18 @@ import {
 import { Icon } from "react-native-elements";
 
 import { AuthNavigator } from "./Auth/router";
-import { MainNavigator } from "./Main/router";
+import { HomeNavigator } from "./Home/router";
 import { PlayrollsNavigator } from "./Playrolls/router";
 import { LoadingNavigator } from "./Loading/router";
+import { ProfileNavigator } from "./Profile/router";
 
 export const AppContainer = createStackNavigator(
   {
     Auth: AuthNavigator,
     Loading: LoadingNavigator,
-    Main: MainNavigator,
+    Home: HomeNavigator,
     Playrolls: PlayrollsNavigator,
+    Profile: ProfileNavigator,
   },
   {
     initialRouteName: "Loading",

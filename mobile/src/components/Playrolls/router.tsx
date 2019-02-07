@@ -10,7 +10,7 @@ export const PlayrollsNavigator = createStackNavigator(
   {
     ManagePlayroll: {
       screen: ManagePlayrollScreen,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         title: `ManagePlayroll`,
         header: null,
       }),

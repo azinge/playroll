@@ -28,6 +28,7 @@ interface State {
   username: string;
   password: string;
   email: string;
+  avatar: string;
   confirmUser: string;
   authCode: string;
   showPassword: boolean;
@@ -40,6 +41,8 @@ export default class SignUpScreen extends React.Component<Props, State> {
       username: "",
       password: "",
       email: "",
+      avatar:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png",
       confirmUser: "",
       authCode: "",
       showPassword: true,
@@ -83,11 +86,19 @@ export default class SignUpScreen extends React.Component<Props, State> {
             onChangeText={(email: string) => this.setState({ email })}
             value={this.state.email}
           />
+          <TextInput //TODO: Remove Later
+            style={styles.emailField}
+            autoCapitalize="none"
+            placeholder="Avatar link"
+            onChangeText={(avatar: string) => this.setState({ avatar })}
+            value={this.state.avatar}
+          />
           <SignUpMutation
             variables={{
               username: this.state.username,
               password: this.state.password,
               email: this.state.email,
+              avatar: this.state.avatar,
             }}
           >
             {(signUp, { data }) => {

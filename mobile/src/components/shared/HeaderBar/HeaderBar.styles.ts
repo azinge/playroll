@@ -18,6 +18,7 @@ export default StyleSheet.create({
     marginBottom: 5,
   },
   headline: {
+    flex: 1,
     textAlign: "left",
     color: "#ffffff",
     fontSize: 25,

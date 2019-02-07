@@ -1,13 +1,15 @@
 import { Auth } from "aws-amplify";
 
-export const signUp = async (_, { username, password, email }) => {
+export const signUp = async (_, { username, password, email, avatar }) => {
   try {
     console.log("signing up");
+    console.log(avatar);
     Auth.signUp({
       username,
       password,
       attributes: {
         email, // optional
+        profile: avatar, // optional
       },
       validationData: [], //optional
     });

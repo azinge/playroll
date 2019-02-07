@@ -34,7 +34,7 @@ type CognitoEventResponse struct {
 type CognitoUserAttributes struct {
 	Sub     string `json:"sub"`
 	Email   string `json:"email"`
-	Picture string `json:"picture"`
+	Profile string `json:"profile"`
 }
 
 func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*CognitoEventResponse, error) {
@@ -64,7 +64,7 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*
 	}
 
 	attrs := intReq.UserAttributes
-	userInput := &models.UserInput{Name: request.Username, Avatar: attrs.Picture, Email: attrs.Email}
+	userInput := &models.UserInput{Name: request.Username, Avatar: attrs.Profile, Email: attrs.Email}
 	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", Identifier: attrs.Sub}
 	models.CreateUserWithIdentityCredential(userInput, identityCredentialInput, db)
 

@@ -7,8 +7,14 @@ import { Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 
 import styles from "./HeaderBar.styles";
+import { NavigationScreenProp } from "react-navigation";
 
-export default class Home extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+export default class HeaderBar extends React.Component<Props, State> {
   render() {
     return (
       <View style={{ backgroundColor: "#6A0070", flexDirection: "row" }}>
@@ -18,7 +24,9 @@ export default class Home extends React.Component {
           name="language-go"
           size={35}
           color="#ffffff"
-          onPress={() => this.props.navigation.navigate("Create")}
+          onPress={() =>
+            this.props.navigation && this.props.navigation.navigate("Profile")
+          }
         />
         <Icon
           type="material-community"

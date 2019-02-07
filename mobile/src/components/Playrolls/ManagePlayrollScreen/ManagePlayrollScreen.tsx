@@ -16,7 +16,7 @@ import {
 import { Header, Icon } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 import styles, { rawStyles } from "./ManagePlayrollScreen.styles";
-import Search from "../../Main/Search";
+import Search from "../../Home/SearchScreen";
 import { Playroll, MusicSource } from "../../../graphql/types";
 
 import {

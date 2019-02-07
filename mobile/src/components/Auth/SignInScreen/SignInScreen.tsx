@@ -106,7 +106,7 @@ export default class SignInScreen extends React.Component<Props, State> {
                             key: null,
                             index: 0,
                             actions: [
-                              NavigationActions.navigate({ routeName: "Main" }),
+                              NavigationActions.navigate({ routeName: "Home" }),
                             ],
                           })
                         )
@@ -116,10 +116,6 @@ export default class SignInScreen extends React.Component<Props, State> {
               );
             }}
           </SignInMutation>
-          {/* <Button
-          title="Don't have an account? Sign up here"
-          onPress={this.toggleSignUp}
-        /> */}
         </View>
       </SafeAreaView>
     );

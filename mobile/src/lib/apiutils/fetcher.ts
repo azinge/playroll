@@ -1,4 +1,4 @@
-import * as config from "../../config/aws.js";
+import * as config from "../../config/aws";
 import Amplify, { Auth } from "aws-amplify";
 import Signer from "aws-appsync/lib/link/signer/signer";
 import Url from "url";

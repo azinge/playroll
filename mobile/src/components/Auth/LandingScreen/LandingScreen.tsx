@@ -3,7 +3,13 @@
  */
 
 import * as React from "react";
-import { Text, View, Button, SafeAreaView } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 
 import styles from "./LandingScreen.styles";
@@ -19,19 +25,30 @@ export default class LandingScreen extends React.Component<Props, State> {
     return (
       <SafeAreaView style={styles.screenContainer}>
         <View style={styles.optionsContainer}>
-          <Text>Playroll</Text>
-          <Button
-            title="Sign In"
+
+          <Image
+            style={styles.image}
+            source={require("../../../assets/new_playroll.png")}
+          />
+
+          <TouchableOpacity
+            // title="Sign In"
+            style={styles.buttonContainer}
+            // color="#700073"
             onPress={() => {
               this.props.navigation && this.props.navigation.navigate("SignIn");
             }}
-          />
-          <Button
-            title="Sign Up"
+          >
+            <View style={styles.buttonView}>
+              <Text style={styles.buttonText}>Sign In</Text>
+            </View>
+          </TouchableOpacity>
+          <Text
+            style={styles.signUpText}
             onPress={() => {
               this.props.navigation && this.props.navigation.navigate("SignUp");
             }}
-          />
+          >Sign Up</Text>
         </View>
       </SafeAreaView>
     );

@@ -1,8 +1,8 @@
 import React from "react";
-import { Text } from "native-base";
 import RNPickerSelect from "react-native-picker-select";
 import {
   View,
+  Text,
   Alert,
   Modal,
   TouchableHighlight,
@@ -18,20 +18,27 @@ import { CreateRollMutation } from "../../../../graphql/requests/Roll";
 import { GET_PLAYROLL } from "../../../../graphql/requests/Playroll/GetPlayrollQuery";
 
 export interface Props {
-  currentSource: MusicSource;
-  modalVisible: boolean;
-  closeModal: (redirect?: boolean) => void;
-  manageRoll: () => void;
-  playrollID: number;
+  currentSource?: MusicSource;
+  modalVisible?: boolean;
+  closeModal?: (redirect?: boolean) => void;
+  manageRoll?: () => void;
+  playrollID?: number;
 }
 
 export default class CreateModal extends React.Component<Props> {
   render() {
+    const {
+      currentSource = {},
+      modalVisible = true,
+      playrollID = 0,
+      closeModal = () => {},
+      manageRoll = () => {},
+    } = this.props;
     return (
       <Modal
         animationType="fade"
         transparent={true}
-        visible={this.props.modalVisible}
+        visible={modalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
         }}
@@ -43,12 +50,12 @@ export default class CreateModal extends React.Component<Props> {
               <Image
                 style={{ width: 200, height: 200, borderRadius: 5 }}
                 source={{
-                  uri: this.props.currentSource.cover,
+                  uri: currentSource.cover,
                 }}
               />
             </View>
-            <Text style={styles.welcome}>{this.props.currentSource.name}</Text>
-            <Text style={styles.welcome}>{this.props.currentSource.type}</Text>
+            <Text style={styles.welcome}>{currentSource.name}</Text>
+            <Text style={styles.welcome}>{currentSource.type}</Text>
 
             <View
               style={{
@@ -102,12 +109,12 @@ export default class CreateModal extends React.Component<Props> {
               <CreateRollMutation
                 variables={{
                   input: {
-                    playrollID: this.props.playrollID,
-                    data: { sources: [this.props.currentSource] },
+                    playrollID: playrollID,
+                    data: { sources: [currentSource] },
                   },
                 }}
                 onCompleted={() => {
-                  this.props.closeModal(true);
+                  closeModal(true);
                 }}
                 refetchQueries={[GET_PLAYROLL]}
               >
@@ -115,12 +122,10 @@ export default class CreateModal extends React.Component<Props> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      this.props.playrollID
-                        ? createRoll()
-                        : this.props.manageRoll();
+                      playrollID ? createRoll() : manageRoll();
                     }}
                   >
-                    <Text>{this.props.playrollID ? "Add" : "Continue"}</Text>
+                    <Text>{playrollID ? "Add" : "Continue"}</Text>
                   </TouchableHighlight>
                 )}
               </CreateRollMutation>
@@ -128,7 +133,7 @@ export default class CreateModal extends React.Component<Props> {
               <TouchableHighlight
                 style={{ marginRight: 20 }}
                 onPress={() => {
-                  this.props.closeModal();
+                  closeModal();
                 }}
               >
                 <Text>Close</Text>

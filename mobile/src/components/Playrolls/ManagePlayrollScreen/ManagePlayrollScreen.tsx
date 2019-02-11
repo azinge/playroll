@@ -48,9 +48,10 @@ export default class ManagePlayrollScreen extends React.Component<
 
   render() {
     const playroll: Playroll =
-      this.props &&
-      this.props.navigation &&
-      this.props.navigation.getParam("playroll");
+      (this.props &&
+        this.props.navigation &&
+        this.props.navigation.getParam("playroll")) ||
+      {};
     return (
       <GetPlayrollQuery variables={{ id: playroll.id }}>
         {({ loading, error, data, client: { cache } }) => {

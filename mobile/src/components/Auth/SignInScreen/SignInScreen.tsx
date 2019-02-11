@@ -11,7 +11,6 @@ import {
   Switch,
   SafeAreaView,
 } from "react-native";
-import { Auth } from "aws-amplify";
 import {
   NavigationScreenProp,
   StackActions,
@@ -80,13 +79,6 @@ export default class SignInScreen extends React.Component<Props, State> {
               value={!this.state.showPassword}
             />
           </View>
-
-          <Button
-            title="Current info"
-            onPress={() => {
-              Auth.currentUserInfo().then(user => console.log(user));
-            }}
-          />
           <SignInMutation
             variables={{
               username: this.state.username,

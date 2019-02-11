@@ -1,3 +1,13 @@
 {
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "react-apollo": "react-apollo/react-apollo.browser.umd.js"
+        }
+      }
+    ]
+  ]
 }

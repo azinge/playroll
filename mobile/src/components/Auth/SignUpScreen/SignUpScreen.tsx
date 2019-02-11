@@ -20,7 +20,7 @@ import {
 
 import styles from "./SignUpScreen.styles";
 export interface Props {
-  toggleSignUp: () => void;
+  toggleSignUp?: () => void;
   navigation?: NavigationScreenProp<{}>;
 }
 

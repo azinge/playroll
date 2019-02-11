@@ -18,8 +18,8 @@ import { LIST_CURRENT_USER_PLAYROLLS } from "../../../../graphql/requests/Playro
 import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
 
 export interface Props {
-  playroll: Playroll;
-  editPlayroll: () => void;
+  playroll?: Playroll;
+  editPlayroll?: () => void;
   navigation?: NavigationScreenProp<{}>;
 }
 
@@ -43,10 +43,10 @@ export default class PlayrollCard extends React.Component<Props, State> {
     );
   }
   render() {
-    const { playroll, editPlayroll } = this.props;
+    const { playroll = {}, editPlayroll = () => {} } = this.props;
     return (
       <GetPlayrollQuery
-        variables={{ id: this.props.playroll.id }}
+        variables={{ id: playroll.id }}
         fetchPolicy="cache-only"
       >
         {({ data }) => {

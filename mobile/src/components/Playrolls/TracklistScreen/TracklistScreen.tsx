@@ -6,6 +6,7 @@ import React from "react";
 import { Text, View, Image, ScrollView, SafeAreaView } from "react-native";
 import { Card, Button } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
+import { MockedProvider } from "react-apollo/test-utils";
 
 import {
   GeneratePlaylistMutation,

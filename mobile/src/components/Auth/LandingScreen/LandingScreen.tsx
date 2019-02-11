@@ -27,7 +27,8 @@ export default class LandingScreen extends React.Component<Props, State> {
         <View style={styles.optionsContainer}>
 
           <Image
-            style={styles.image}  // TODO: typescript error here, not sure why: https://facebook.github.io/react-native/docs/image
+            // @ts-ignore
+            style={styles.image}  // legit prop: https://facebook.github.io/react-native/docs/image
             source={require("../../../assets/new_playroll.png")}
           />
 

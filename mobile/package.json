@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/react-native-safari-view": "^2.0.4",
     "@types/react-native-snap-carousel": "^3.7.1",
     "@types/react-navigation": "^3.0.1",
     "apollo-boost": "^0.1.16",

@@ -29,7 +29,7 @@ export default class CreateModal extends React.Component<Props> {
   render() {
     const {
       currentSource = {},
-      modalVisible = true,
+      modalVisible = false,
       playrollID = 0,
       closeModal = () => {},
       manageRoll = () => {},

@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "lint": "tslint src/**/*.ts",
+    "lint": "tslint 'src/**/*.ts?(x)'",
+    "lint:fix": "tslint 'src/**/*.ts?(x)' --fix",
     "test": "jest --watch"
   },
   "dependencies": {

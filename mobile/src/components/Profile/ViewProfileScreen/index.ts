@@ -1,2 +1,2 @@
-import ViewProfileScreen from "./ViewProfileScreen";
+import ViewProfileScreen from './ViewProfileScreen';
 export default ViewProfileScreen;

@@ -1,9 +1,9 @@
-import gql from "graphql-tag";
-import { Query } from "react-apollo";
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 
-import { CompiledRoll } from "../../types";
+import { CompiledRoll } from '../../types';
 
-export const GET_TRACKLIST = "GET_TRACKLIST";
+export const GET_TRACKLIST = 'GET_TRACKLIST';
 
 export const GET_TRACKLIST_QUERY = gql`
   query ${GET_TRACKLIST}($id: ID!) {

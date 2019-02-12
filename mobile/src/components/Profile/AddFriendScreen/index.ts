@@ -1,2 +1,2 @@
-import AddFriendScreen from "./AddFriendScreen";
+import AddFriendScreen from './AddFriendScreen';
 export default AddFriendScreen;

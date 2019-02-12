@@ -1,7 +1,7 @@
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
-export const GENERATE_PLAYLIST = "GENERATE_PLAYLIST";
+export const GENERATE_PLAYLIST = 'GENERATE_PLAYLIST';
 
 export const GENERATE_PLAYLIST_MUTATION = gql`
   mutation ${GENERATE_PLAYLIST}($tracklistID: ID!, $playlistName: String) {

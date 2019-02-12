@@ -1,8 +1,8 @@
-import gql from "graphql-tag";
-import { Query } from "react-apollo";
-import { MusicSource } from "../../types";
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import { MusicSource } from '../../types';
 
-export const SEARCH_SPOTIFY = "SEARCH_SPOTIFY";
+export const SEARCH_SPOTIFY = 'SEARCH_SPOTIFY';
 
 export const SEARCH_SPOTIFY_QUERY = gql`
   query ${SEARCH_SPOTIFY}($query: String, $searchType: String) {

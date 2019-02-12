@@ -2,20 +2,20 @@
  * Application component for Playroll mobile application.
  */
 
-import React from "react";
-import { View, ScrollView } from "react-native";
-import { Icon, Header } from "react-native-elements";
-import { NavigationScreenProp } from "react-navigation";
+import React from 'react';
+import { View, ScrollView } from 'react-native';
+import { Icon, Header } from 'react-native-elements';
+import { NavigationScreenProp } from 'react-navigation';
 
 import {
   ListCurrentUserPlayrollsQuery,
   CreatePlayrollMutation,
-} from "../../../graphql/requests/Playroll/";
-import { GetCurrentUserQuery } from "../../../graphql/requests/User";
+} from '../../../graphql/requests/Playroll/';
+import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 
-import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
+import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
-import PlayrollCard from "./PlayrollCard";
+import PlayrollCard from './PlayrollCard';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -32,24 +32,24 @@ export default class BrowsePlayrollsScreen extends React.Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      addPlayrollName: "",
+      addPlayrollName: '',
     };
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <GetCurrentUserQuery>
           {({ data }) => {
             if (!data || !data.currentUser) {
               return (
                 <Header
-                  backgroundColor="purple"
+                  backgroundColor='purple'
                   centerComponent={{
-                    text: "Playrolls",
-                    style: { color: "#fff", fontSize: 20 },
+                    text: 'Playrolls',
+                    style: { color: '#fff', fontSize: 20 },
                   }}
                   rightComponent={
-                    <Icon name="add" color="grey" underlayColor="purple" />
+                    <Icon name='add' color='grey' underlayColor='purple' />
                   }
                 />
               );
@@ -57,12 +57,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
             return (
               <CreatePlayrollMutation
                 variables={{
-                  input: { name: "New Playroll", userID: data.currentUser.id },
+                  input: { name: 'New Playroll', userID: data.currentUser.id },
                 }}
                 onCompleted={data =>
                   this.props &&
                   this.props.navigation &&
-                  this.props.navigation.navigate("Playrolls", {
+                  this.props.navigation.navigate('Playrolls', {
                     playroll: data.createPlayroll,
                   })
                 }
@@ -71,16 +71,16 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 {(createPlayroll, { data }) => {
                   return (
                     <Header
-                      backgroundColor="purple"
+                      backgroundColor='purple'
                       centerComponent={{
-                        text: "Playrolls",
-                        style: { color: "#fff", fontSize: 20 },
+                        text: 'Playrolls',
+                        style: { color: '#fff', fontSize: 20 },
                       }}
                       rightComponent={
                         <Icon
-                          name="add"
-                          color="white"
-                          underlayColor="purple"
+                          name='add'
+                          color='white'
+                          underlayColor='purple'
                           onPress={() => createPlayroll()}
                         />
                       }
@@ -106,8 +106,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
                             playroll={playroll}
                             editPlayroll={() => {
                               this.props.navigation &&
-                                this.props.navigation.navigate("Playrolls", {
-                                  managePlayroll: "Manage Playroll",
+                                this.props.navigation.navigate('Playrolls', {
+                                  managePlayroll: 'Manage Playroll',
                                   playroll,
                                 });
                             }}

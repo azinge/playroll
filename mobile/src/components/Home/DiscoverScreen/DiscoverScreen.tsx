@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-import { Text, SafeAreaView, View, ScrollView, Image } from 'react-native';
+import { Text, View, ScrollView, Image } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
-import HeaderBar from '../../../components/shared/HeaderBar';
 import DiscoverCarousel from './DiscoverCarousel';
 
 import { musicSources } from '../../../static/mockData';
+import { Header, Icon } from 'react-native-elements';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -19,8 +19,25 @@ interface State {}
 export default class DiscoverScreen extends React.Component<Props, State> {
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <HeaderBar navigation={this.props.navigation} />
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+        <Header
+          backgroundColor='purple'
+          centerComponent={{
+            text: 'Discover',
+            style: { color: '#fff', fontSize: 20 },
+          }}
+          rightComponent={
+            <Icon
+              name='account-circle'
+              color='white'
+              underlayColor='purple'
+              onPress={() =>
+                this.props.navigation &&
+                this.props.navigation.navigate('Profile')
+              }
+            />
+          }
+        />
         <View
           style={{
             flexDirection: 'row',
@@ -176,7 +193,7 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             );
           })}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 }

@@ -2,7 +2,7 @@
  * Signup component for Playroll mobile application.
  */
 
-import React from "react";
+import * as React from "react";
 import {
   Text, TextInput,
   ActivityIndicator,
@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { ConfirmSignUpMutation } from "../../../graphql/requests/Auth";
-import styles from './styles';
+import styles from './ConfirmationScreen.styles';
 
 export interface Props {
   toggleSignUp: () => void;

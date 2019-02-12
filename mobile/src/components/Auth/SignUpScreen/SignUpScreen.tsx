@@ -2,7 +2,7 @@
  * SignUpScreen
  */
 
-import React from "react";
+import * as React from "react";
 import {
   ActivityIndicator,
   Text, TextInput,
@@ -14,7 +14,7 @@ import {
 import SafariView from 'react-native-safari-view';
 import { NavigationScreenProp } from "react-navigation";
 import { SignUpMutation } from "../../../graphql/requests/Auth";
-import styles from './styles';
+import styles from './SignUpScreen.styles';
 
 export interface Props {
   toggleSignUp: () => void;

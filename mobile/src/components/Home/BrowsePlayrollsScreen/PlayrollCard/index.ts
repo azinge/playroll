@@ -1,2 +1,2 @@
-import PlayrollCard from './PlayrollCard';
+import PlayrollCard from "./PlayrollCard";
 export default PlayrollCard;

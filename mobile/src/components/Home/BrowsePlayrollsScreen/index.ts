@@ -1,2 +1,2 @@
-import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
+import BrowsePlayrollsScreen from "./BrowsePlayrollsScreen";
 export default BrowsePlayrollsScreen;

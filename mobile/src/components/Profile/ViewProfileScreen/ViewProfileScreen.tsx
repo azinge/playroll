@@ -2,17 +2,17 @@
  * ViewProfileScreen
  */
 
-import * as React from 'react';
-import { Text, View, SafeAreaView, Button, Image } from 'react-native';
+import * as React from "react";
+import { Text, View, SafeAreaView, Button, Image } from "react-native";
 
-import styles from './ViewProfileScreen.styles';
-import { SignOutMutation } from '../../../graphql/requests/Auth';
-import { GetCurrentUserQuery } from '../../../graphql/requests/User';
+import styles from "./ViewProfileScreen.styles";
+import { SignOutMutation } from "../../../graphql/requests/Auth";
+import { GetCurrentUserQuery } from "../../../graphql/requests/User";
 import {
   NavigationScreenProp,
   StackActions,
   NavigationActions,
-} from 'react-navigation';
+} from "react-navigation";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -43,45 +43,45 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
                 <Text>{data.currentUser.name}</Text>
               </View>
               <Button
-                title='Discovery Queue'
+                title="Discovery Queue"
                 onPress={() => {
                   this.props.navigation &&
-                    this.props.navigation.navigate('ManageDiscoveryQueue');
+                    this.props.navigation.navigate("ManageDiscoveryQueue");
                 }}
               />
               <Button
-                title='Friends'
+                title="Friends"
                 onPress={() => {
                   this.props.navigation &&
-                    this.props.navigation.navigate('BrowseFriends');
+                    this.props.navigation.navigate("BrowseFriends");
                 }}
               />
               <Button
-                title='Recommendations'
+                title="Recommendations"
                 onPress={() => {
                   this.props.navigation &&
-                    this.props.navigation.navigate('BrowseRecommendations');
+                    this.props.navigation.navigate("BrowseRecommendations");
                 }}
               />
               <Button
-                title='Connect to Spotify'
+                title="Connect to Spotify"
                 onPress={() => {
                   this.props.navigation &&
-                    this.props.navigation.navigate('ConnectSpotify');
+                    this.props.navigation.navigate("ConnectSpotify");
                 }}
               />
               <Button
-                title='Edit Profile'
+                title="Edit Profile"
                 onPress={() => {
                   this.props.navigation &&
-                    this.props.navigation.navigate('ManageProfile');
+                    this.props.navigation.navigate("ManageProfile");
                 }}
               />
               <SignOutMutation>
                 {(signOut, { data }) => {
                   return (
                     <Button
-                      title='Sign Out'
+                      title="Sign Out"
                       onPress={() => {
                         signOut().then(
                           () =>
@@ -92,7 +92,7 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
                                 index: 0,
                                 actions: [
                                   NavigationActions.navigate({
-                                    routeName: 'Auth',
+                                    routeName: "Auth",
                                   }),
                                 ],
                               })

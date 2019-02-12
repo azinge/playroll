@@ -1,4 +1,5 @@
-import { signIn, signOut, signUp, confirmSignUp } from './resolvers/Auth';
+import gql from "graphql-tag";
+import { signIn, signOut, signUp, confirmSignUp } from "./resolvers/Auth";
 
 export const resolvers = {
   Mutation: {

@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import { Playroll } from '../../types';
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import { Playroll } from "../../types";
 
-export const GET_PLAYROLL = 'GET_PLAYROLL';
+export const GET_PLAYROLL = "GET_PLAYROLL";
 
 export const GET_PLAYROLL_QUERY = gql`
   query ${GET_PLAYROLL}($id: ID!) {

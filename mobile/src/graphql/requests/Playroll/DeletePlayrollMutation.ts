@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
 
-export const DELETE_PLAYROLL = 'DELETE_PLAYROLL';
+export const DELETE_PLAYROLL = "DELETE_PLAYROLL";
 
 export const DELETE_PLAYROLL_MUTATION = gql`
   mutation ${DELETE_PLAYROLL}($id: ID!) {

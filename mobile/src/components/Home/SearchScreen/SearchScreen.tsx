@@ -2,7 +2,7 @@
  * SearchScreen
  */
 
-import React from 'react';
+import React from "react";
 import {
   TextInput,
   View,
@@ -10,16 +10,18 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  SafeAreaView,
   StyleSheet,
-} from 'react-native';
-import { Header, Icon } from 'react-native-elements';
-import { NavigationScreenProp } from 'react-navigation';
+  Picker,
+} from "react-native";
+import { Header, Icon } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
 
-import RNPickerSelect from 'react-native-picker-select';
-import { pickerStyle } from './SearchScreen.styles';
-import { MusicSource } from '../../../graphql/types';
-import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify/';
-import CreateModal from './CreateModal/CreateModal';
+import RNPickerSelect from "react-native-picker-select";
+import { pickerStyle } from "./SearchScreen.styles";
+import { MusicSource } from "../../../graphql/types";
+import { SearchSpotifyQuery } from "../../../graphql/requests/Spotify/";
+import CreateModal from "./CreateModal/CreateModal";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -44,9 +46,9 @@ export default class SearchScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      text: 'Drake',
-      query: 'Drake',
-      searchType: 'Artist',
+      text: "Drake",
+      query: "Drake",
+      searchType: "Artist",
       modalVisible: false,
       currentSource: {},
       headerVisible: props.header,
@@ -66,7 +68,7 @@ export default class SearchScreen extends React.Component<Props, State> {
     if (redirect) {
       this.props &&
         this.props.navigation &&
-        this.props.navigation.navigate('Tracklist');
+        this.props.navigation.navigate("Tracklist");
     }
   }
 
@@ -76,29 +78,29 @@ export default class SearchScreen extends React.Component<Props, State> {
       <View>
         {headerVisible && (
           <Header
-            backgroundColor='purple'
-            // outerContainerStyles={{ marginBottom: -1 }}
+            backgroundColor="purple"
+            outerContainerStyles={{ marginBottom: -1 }}
             leftComponent={
               <Icon
-                name='arrow-back'
-                color='white'
+                name="arrow-back"
+                color="white"
                 onPress={() =>
                   this.props.navigation && this.props.navigation.goBack(null)
                 }
-                underlayColor='purple'
+                underlayColor="purple"
               />
             }
             centerComponent={{
-              text: 'Search',
-              style: { color: '#fff', fontSize: 20 },
+              text: "Search",
+              style: { color: "#fff", fontSize: 20 },
             }}
             rightComponent={
               <Icon
-                name='save'
-                color='white'
+                name="save"
+                color="white"
                 onPress={() =>
                   this.props.navigation &&
-                  this.props.navigation.navigate('Tracklist')
+                  this.props.navigation.navigate("Tracklist")
                 }
               />
             }
@@ -106,27 +108,27 @@ export default class SearchScreen extends React.Component<Props, State> {
         )}
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            width: '100%',
-            backgroundColor: '#f5eeed',
+            flexDirection: "row",
+            alignItems: "center",
+            width: "100%",
+            backgroundColor: "#f5eeed",
             borderTopWidth: 1,
-            borderTopColor: 'lightgrey',
+            borderTopColor: "lightgrey",
             borderBottomWidth: 1,
-            borderBottomColor: 'lightgrey',
+            borderBottomColor: "lightgrey",
           }}
         >
           <Icon
-            name={'search'}
+            name={"search"}
             size={35}
-            color='lightgrey'
-            underlayColor='lightgrey'
+            color="lightgrey"
+            underlayColor="lightgrey"
             containerStyle={{ paddingHorizontal: 5 }}
           />
           <TextInput
             style={{ flex: 1, fontSize: 16 }}
-            selectionColor={'purple'}
-            placeholder='What are you looking for?'
+            selectionColor={"purple"}
+            placeholder="What are you looking for?"
             onChangeText={(text: string) => this.setState({ text })}
             onSubmitEditing={() => {
               this.setState({ query: this.state.text });
@@ -135,25 +137,25 @@ export default class SearchScreen extends React.Component<Props, State> {
           />
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: "row",
               paddingTop: 7,
-              height: '100%',
+              height: "100%",
               margin: 0,
               paddingLeft: 20,
               borderLeftWidth: 1,
-              borderLeftColor: 'lightgray',
+              borderLeftColor: "lightgray",
               width: 100,
               // height: 100%,
             }}
           >
             <RNPickerSelect
               placeholder={{}}
-              // hideIcon={true}
+              hideIcon={true}
               items={[
-                { label: 'Artist', value: 'Artist' },
-                { label: 'Album', value: 'Album' },
-                { label: 'Track', value: 'Track' },
-                { label: 'Playlist', value: 'Playlist' },
+                { label: "Artist", value: "Artist" },
+                { label: "Album", value: "Album" },
+                { label: "Track", value: "Track" },
+                { label: "Playlist", value: "Playlist" },
               ]}
               onValueChange={value => {
                 this.setState({
@@ -162,9 +164,9 @@ export default class SearchScreen extends React.Component<Props, State> {
               }}
               style={pickerStyle}
             >
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: "row" }}>
                 <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
-                <Icon name='arrow-drop-down' />
+                <Icon name="arrow-drop-down" />
               </View>
             </RNPickerSelect>
           </View>
@@ -172,16 +174,16 @@ export default class SearchScreen extends React.Component<Props, State> {
         <View
           style={{
             margin: 10,
-            flexDirection: 'row',
+            flexDirection: "row",
           }}
         >
           <View style={{ paddingHorizontal: 7 }}>
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 15,
-                color: '#993399',
+                color: "#993399",
               }}
             >
               Popular
@@ -190,15 +192,15 @@ export default class SearchScreen extends React.Component<Props, State> {
           <View
             style={{
               paddingHorizontal: 7,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
+                fontFamily: "Avenir",
                 fontSize: 15,
-                color: 'grey',
+                color: "grey",
               }}
             >
               New
@@ -207,15 +209,15 @@ export default class SearchScreen extends React.Component<Props, State> {
           <View
             style={{
               paddingHorizontal: 7,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
+                fontFamily: "Avenir",
                 fontSize: 15,
-                color: 'grey',
+                color: "grey",
               }}
             >
               ABC
@@ -231,7 +233,7 @@ export default class SearchScreen extends React.Component<Props, State> {
           manageRoll={() => {
             this.closeModal();
             this.props.navigation &&
-              this.props.navigation.navigate('ManageRoll');
+              this.props.navigation.navigate("ManageRoll");
           }}
         />
         <SearchSpotifyQuery
@@ -253,12 +255,12 @@ export default class SearchScreen extends React.Component<Props, State> {
                       >
                         <View
                           style={{
-                            width: '100%',
-                            alignItems: 'center',
+                            width: "100%",
+                            alignItems: "center",
                           }}
                           key={source.providerID}
                         >
-                          <View style={{ flexDirection: 'row', width: '100%' }}>
+                          <View style={{ flexDirection: "row", width: "100%" }}>
                             <Image
                               style={{
                                 width: 65,
@@ -266,16 +268,16 @@ export default class SearchScreen extends React.Component<Props, State> {
                                 marginHorizontal: 20,
                                 borderRadius: 5,
                                 borderWidth: 1,
-                                borderColor: 'lightgrey',
+                                borderColor: "lightgrey",
                               }}
                               source={{ uri: source.cover }}
                             />
-                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <View style={{ flex: 1, justifyContent: "center" }}>
                               <Text
                                 style={{
-                                  fontFamily: 'Avenir',
+                                  fontFamily: "Avenir",
                                   fontSize: 17,
-                                  color: 'purple',
+                                  color: "purple",
                                 }}
                                 numberOfLines={2}
                               >
@@ -284,9 +286,9 @@ export default class SearchScreen extends React.Component<Props, State> {
                               {source.creator ? (
                                 <Text
                                   style={{
-                                    fontFamily: 'Avenir',
+                                    fontFamily: "Avenir",
                                     fontSize: 15,
-                                    color: 'lightgrey',
+                                    color: "lightgrey",
                                   }}
                                   numberOfLines={2}
                                 >
@@ -296,8 +298,8 @@ export default class SearchScreen extends React.Component<Props, State> {
                             </View>
                             <Icon
                               size={35}
-                              name='more-vert'
-                              color='lightgrey'
+                              name="more-vert"
+                              color="lightgrey"
                               onPress={() =>
                                 this.props.navigation &&
                                 this.props.navigation.goBack(null)
@@ -306,9 +308,9 @@ export default class SearchScreen extends React.Component<Props, State> {
                           </View>
                           <View
                             style={{
-                              width: '75%',
+                              width: "75%",
                               marginVertical: 10,
-                              borderBottomColor: 'lightgrey',
+                              borderBottomColor: "lightgrey",
                               borderBottomWidth: StyleSheet.hairlineWidth,
                             }}
                           />

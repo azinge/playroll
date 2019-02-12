@@ -2,14 +2,21 @@
  * DiscoverScreen
  */
 
-import React from 'react';
-import { Text, View, ScrollView, Image } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
+import React from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Button,
+  SafeAreaView,
+} from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
-import DiscoverCarousel from './DiscoverCarousel';
+import HeaderBar from "../../../components/shared/HeaderBar";
+import DiscoverCarousel from "./DiscoverCarousel";
 
-import { musicSources } from '../../../static/mockData';
-import { Header, Icon } from 'react-native-elements';
+import { musicSources } from "../../../static/mockData";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -19,37 +26,20 @@ interface State {}
 export default class DiscoverScreen extends React.Component<Props, State> {
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#fff' }}>
-        <Header
-          backgroundColor='purple'
-          centerComponent={{
-            text: 'Discover',
-            style: { color: '#fff', fontSize: 20 },
-          }}
-          rightComponent={
-            <Icon
-              name='account-circle'
-              color='white'
-              underlayColor='purple'
-              onPress={() =>
-                this.props.navigation &&
-                this.props.navigation.navigate('Profile')
-              }
-            />
-          }
-        />
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <HeaderBar navigation={this.props.navigation} />
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: "row",
           }}
         >
           <View style={{ marginVertical: 5, paddingHorizontal: 10 }}>
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: '#993399',
+                color: "#993399",
               }}
             >
               Home
@@ -59,16 +49,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             style={{
               marginVertical: 5,
               paddingHorizontal: 10,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: 'grey',
+                color: "grey",
               }}
             >
               Playrolls
@@ -78,16 +68,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             style={{
               marginVertical: 5,
               paddingHorizontal: 10,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: 'grey',
+                color: "grey",
               }}
             >
               Radio
@@ -97,16 +87,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
         <DiscoverCarousel />
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: "row",
           }}
         >
           <View style={{ marginVertical: 5, paddingHorizontal: 10 }}>
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: '#993399',
+                color: "#993399",
               }}
             >
               Popular
@@ -116,16 +106,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             style={{
               marginVertical: 5,
               paddingHorizontal: 10,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: 'grey',
+                color: "grey",
               }}
             >
               New
@@ -135,16 +125,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             style={{
               marginVertical: 5,
               paddingHorizontal: 10,
-              borderLeftColor: 'grey',
+              borderLeftColor: "grey",
               borderLeftWidth: 1,
             }}
           >
             <Text
               style={{
-                fontFamily: 'Avenir',
-                fontWeight: 'bold',
+                fontFamily: "Avenir",
+                fontWeight: "bold",
                 fontSize: 20,
-                color: 'grey',
+                color: "grey",
               }}
             >
               Recommended
@@ -161,16 +151,16 @@ export default class DiscoverScreen extends React.Component<Props, State> {
                     height: 125,
                     borderRadius: 5,
                     borderWidth: 1,
-                    borderColor: 'lightgrey',
+                    borderColor: "lightgrey",
                   }}
                   source={{ uri: val.cover }}
                 />
                 <Text
                   style={{
-                    fontFamily: 'Avenir',
-                    fontWeight: 'bold',
+                    fontFamily: "Avenir",
+                    fontWeight: "bold",
                     fontSize: 10,
-                    color: 'grey',
+                    color: "grey",
                   }}
                   numberOfLines={2}
                 >
@@ -179,10 +169,10 @@ export default class DiscoverScreen extends React.Component<Props, State> {
                 {val.creator && (
                   <Text
                     style={{
-                      fontFamily: 'Avenir',
-                      fontWeight: 'bold',
+                      fontFamily: "Avenir",
+                      fontWeight: "bold",
                       fontSize: 10,
-                      color: 'lightgrey',
+                      color: "lightgrey",
                     }}
                     numberOfLines={2}
                   >

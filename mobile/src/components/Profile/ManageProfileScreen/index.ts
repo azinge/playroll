@@ -1,2 +1,2 @@
-import ManageProfileScreen from './ManageProfileScreen';
+import ManageProfileScreen from "./ManageProfileScreen";
 export default ManageProfileScreen;

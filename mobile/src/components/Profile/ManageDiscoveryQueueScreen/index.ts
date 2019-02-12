@@ -1,2 +1,2 @@
-import ManageDiscoveryQueueScreen from './ManageDiscoveryQueueScreen';
+import ManageDiscoveryQueueScreen from "./ManageDiscoveryQueueScreen";
 export default ManageDiscoveryQueueScreen;

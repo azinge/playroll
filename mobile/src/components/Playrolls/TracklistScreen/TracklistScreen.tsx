@@ -2,17 +2,18 @@
  * Application component for Playroll mobile application.
  */
 
-import React from 'react';
-import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
-import { Card, Button } from 'react-native-elements';
-import { NavigationScreenProp } from 'react-navigation';
+import React from "react";
+import { Text, View, Image, ScrollView, SafeAreaView } from "react-native";
+import { Card, Button } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
+import { MockedProvider } from "react-apollo/test-utils";
 
 import {
   GeneratePlaylistMutation,
   GetTracklistQuery,
-} from '../../../graphql/requests/Tracklist';
+} from "../../../graphql/requests/Tracklist";
 
-import styles from './TracklistScreen.styles';
+import styles from "./TracklistScreen.styles";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -43,7 +44,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                   >
                     {(generatePlaylist, { data }) => (
                       <Button
-                        title='Generate Playlist'
+                        title="Generate Playlist"
                         onPress={() => {
                           generatePlaylist();
                         }}

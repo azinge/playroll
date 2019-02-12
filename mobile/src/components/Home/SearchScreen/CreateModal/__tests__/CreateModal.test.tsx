@@ -1,10 +1,10 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { MockedProvider } from 'react-apollo/test-utils';
+import React from "react";
+import renderer from "react-test-renderer";
+import { MockedProvider } from "react-apollo/test-utils";
 
-import CreateModal from '../CreateModal';
+import CreateModal from "../CreateModal";
 
-it('renders correctly', () => {
+it("renders correctly", () => {
   const tree = renderer
     .create(
       <MockedProvider>

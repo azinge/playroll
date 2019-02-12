@@ -1,12 +1,15 @@
-import { createStackNavigator } from 'react-navigation';
+import React from "react";
+import { createStackNavigator } from "react-navigation";
+import { Icon } from "react-native-elements";
+import { HeaderBackButton } from "react-navigation";
 
-import ManageProfileScreen from './ManageProfileScreen';
-import BrowseFriendsScreen from './BrowseFriendsScreen';
-import BrowseRecommendationsScreen from './BrowseRecommendationsScreen';
-import AddFriendScreen from './AddFriendScreen';
-import ConnectSpotifyScreen from './ConnectSpotifyScreen';
-import ManageDiscoveryQueueScreen from './ManageDiscoveryQueueScreen';
-import ViewProfileScreen from './ViewProfileScreen';
+import ManageProfileScreen from "./ManageProfileScreen";
+import BrowseFriendsScreen from "./BrowseFriendsScreen";
+import BrowseRecommendationsScreen from "./BrowseRecommendationsScreen";
+import AddFriendScreen from "./AddFriendScreen";
+import ConnectSpotifyScreen from "./ConnectSpotifyScreen";
+import ManageDiscoveryQueueScreen from "./ManageDiscoveryQueueScreen";
+import ViewProfileScreen from "./ViewProfileScreen";
 
 export const ProfileNavigator = createStackNavigator(
   {
@@ -62,7 +65,7 @@ export const ProfileNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'ViewProfile',
-    headerMode: 'screen',
+    initialRouteName: "ViewProfile",
+    headerMode: "screen",
   }
 );

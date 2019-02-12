@@ -1,2 +1,2 @@
-import TracklistScreen from './TracklistScreen';
+import TracklistScreen from "./TracklistScreen";
 export default TracklistScreen;

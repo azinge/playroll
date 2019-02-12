@@ -1,3 +1,3 @@
-export { GenerateTracklistMutation } from './GenerateTracklistMutation';
-export { GeneratePlaylistMutation } from './GeneratePlaylistMutation';
-export { GetTracklistQuery } from './GetTracklistQuery';
+export { GenerateTracklistMutation } from "./GenerateTracklistMutation";
+export { GeneratePlaylistMutation } from "./GeneratePlaylistMutation";
+export { GetTracklistQuery } from "./GetTracklistQuery";

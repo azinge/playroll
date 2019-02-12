@@ -22,7 +22,11 @@ exports[`renders correctly 1`] = `
   >
     <Image
       resizeMode="cover"
-      source={1}
+      source={
+        Object {
+          "testUri": "../../../src/assets/loading.png",
+        }
+      }
       style={
         Array [
           Object {

@@ -2,10 +2,10 @@
  * ManageRollScreen
  */
 
-import * as React from 'react';
-import { Text, SafeAreaView } from 'react-native';
-import { Button } from 'react-native-elements';
-import { NavigationScreenProp } from 'react-navigation';
+import * as React from "react";
+import { Text, SafeAreaView } from "react-native";
+import { Button } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -17,9 +17,9 @@ export default class ManageRollScreen extends React.Component<Props, State> {
     return (
       <SafeAreaView>
         <Text>ManageRollScreen</Text>
-        <Button title='Add To Playroll' onPress={() => {}} />
-        <Button title='Add To Discovery Queue' onPress={() => {}} />
-        <Button title='Recommend to Friend' onPress={() => {}} />
+        <Button title="Add To Playroll" onPress={() => {}} />
+        <Button title="Add To Discovery Queue" onPress={() => {}} />
+        <Button title="Recommend to Friend" onPress={() => {}} />
       </SafeAreaView>
     );
   }

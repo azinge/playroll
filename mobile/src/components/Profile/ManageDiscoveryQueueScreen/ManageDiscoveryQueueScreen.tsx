@@ -2,8 +2,8 @@
  * ManageDiscoveryQueueScreen
  */
 
-import * as React from 'react';
-import { Text, SafeAreaView } from 'react-native';
+import * as React from "react";
+import { Text, View, SafeAreaView } from "react-native";
 
 export default class ManageDiscoveryQueueScreen extends React.Component {
   render() {

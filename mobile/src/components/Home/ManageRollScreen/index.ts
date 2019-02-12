@@ -1,2 +1,2 @@
-import ManageRollScreen from './ManageRollScreen';
+import ManageRollScreen from "./ManageRollScreen";
 export default ManageRollScreen;

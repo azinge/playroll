@@ -1,9 +1,9 @@
-import * as React from 'react';
-import renderer from 'react-test-renderer';
+import * as React from "react";
+import renderer from "react-test-renderer";
 
-import DiscoverScreen from '../DiscoverScreen';
+import DiscoverScreen from "../DiscoverScreen";
 
-it('renders correctly', () => {
+it("renders correctly", () => {
   const tree = renderer.create(<DiscoverScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

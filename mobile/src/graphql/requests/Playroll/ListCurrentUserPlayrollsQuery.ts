@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import { Playroll } from '../../types';
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import { Playroll } from "../../types";
 
-export const LIST_CURRENT_USER_PLAYROLLS = 'LIST_CURRENT_USERS_PLAYROLLS';
+export const LIST_CURRENT_USER_PLAYROLLS = "LIST_CURRENT_USERS_PLAYROLLS";
 
 export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
   query ${LIST_CURRENT_USER_PLAYROLLS} {

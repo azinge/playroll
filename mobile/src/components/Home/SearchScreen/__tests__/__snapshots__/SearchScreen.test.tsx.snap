@@ -3,47 +3,36 @@
 exports[`renders correctly 1`] = `
 <View>
   <View
-    accessibilityIgnoresInvertColors={true}
     style={
-      Object {
-        "alignItems": "center",
-        "backgroundColor": "purple",
-        "borderBottomColor": "#f2f2f2",
-        "borderBottomWidth": 0.5,
-        "flexDirection": "row",
-        "height": 64,
-        "justifyContent": "space-between",
-        "paddingHorizontal": 10,
-        "paddingTop": 20,
-      }
+      Array [
+        Object {
+          "backgroundColor": "#476DC5",
+          "borderBottomColor": "#f2f2f2",
+          "borderBottomWidth": 1,
+          "height": 70,
+          "padding": 15,
+        },
+        Object {
+          "backgroundColor": "purple",
+        },
+        Object {
+          "marginBottom": -1,
+        },
+      ]
     }
   >
-    <Image
+    <View
       style={
         Array [
           Object {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          Object {
-            "height": 64,
-            "width": undefined,
+            "alignItems": "flex-end",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "space-between",
           },
           undefined,
         ]
       }
-      testID="headerContainer"
-    />
-    <View
-      style={
-        Object {
-          "alignItems": "flex-start",
-          "flex": 1,
-        }
-      }
     >
       <View>
         <View
@@ -56,83 +45,69 @@ exports[`renders correctly 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "justifyContent": "center",
-            }
+            Array [
+              false,
+              false,
+              false,
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "justifyContent": "center",
+              },
+              undefined,
+            ]
           }
         >
-          <Text />
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": "white",
+                  "fontSize": 24,
+                },
+                Array [
+                  Object {
+                    "backgroundColor": "transparent",
+                  },
+                  undefined,
+                ],
+                Object {
+                  "fontFamily": "Material Icons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
         </View>
       </View>
-    </View>
-    <View
-      style={
-        Object {
-          "alignItems": "center",
-          "flex": 3,
-        }
-      }
-    >
       <Text
         numberOfLines={1}
         style={
-          Object {
-            "color": "#fff",
-            "fontSize": 20,
-          }
-        }
-        text="Search"
-        theme={
-          Object {
-            "colors": Object {
-              "disabled": "hsl(208, 8%, 90%)",
-              "divider": "#bcbbc1",
-              "error": "#ff190c",
-              "grey0": "#393e42",
-              "grey1": "#43484d",
-              "grey2": "#5e6977",
-              "grey3": "#86939e",
-              "grey4": "#bdc6cf",
-              "grey5": "#e1e8ee",
-              "greyOutline": "#bbb",
-              "platform": Object {
-                "android": Object {
-                  "error": "#f44336",
-                  "primary": "#2196f3",
-                  "secondary": "#9C27B0",
-                  "success": "#4caf50",
-                  "warning": "#ffeb3b",
-                },
-                "ios": Object {
-                  "error": "#ff3b30",
-                  "primary": "#007aff",
-                  "secondary": "#5856d6",
-                  "success": "#4cd964",
-                  "warning": "#ffcc00",
-                },
-              },
-              "primary": "#2089dc",
-              "searchBg": "#303337",
-              "secondary": "#8F0CE8",
-              "success": "#52c41a",
-              "warning": "#faad14",
+          Array [
+            Object {},
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            Object {
+              "color": "#fff",
+              "fontSize": 20,
             },
-          }
+          ]
         }
       >
         Search
       </Text>
-    </View>
-    <View
-      style={
-        Object {
-          "alignItems": "flex-end",
-          "flex": 1,
-        }
-      }
-    >
       <View>
         <View
           accessible={true}
@@ -144,14 +119,44 @@ exports[`renders correctly 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            Object {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "justifyContent": "center",
-            }
+            Array [
+              false,
+              false,
+              false,
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "justifyContent": "center",
+              },
+              undefined,
+            ]
           }
         >
-          <Text />
+          <Text
+            allowFontScaling={false}
+            style={
+              Array [
+                Object {
+                  "color": "white",
+                  "fontSize": 24,
+                },
+                Array [
+                  Object {
+                    "backgroundColor": "transparent",
+                  },
+                  undefined,
+                ],
+                Object {
+                  "fontFamily": "Material Icons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
         </View>
       </View>
     </View>
@@ -172,60 +177,47 @@ exports[`renders correctly 1`] = `
   >
     <View
       style={
-        Object {
-          "paddingHorizontal": 5,
-        }
-      }
-    >
-      <View
-        style={
+        Array [
+          false,
+          false,
+          false,
           Object {
             "alignItems": "center",
             "backgroundColor": "transparent",
             "justifyContent": "center",
-          }
-        }
-        theme={
+          },
           Object {
-            "colors": Object {
-              "disabled": "hsl(208, 8%, 90%)",
-              "divider": "#bcbbc1",
-              "error": "#ff190c",
-              "grey0": "#393e42",
-              "grey1": "#43484d",
-              "grey2": "#5e6977",
-              "grey3": "#86939e",
-              "grey4": "#bdc6cf",
-              "grey5": "#e1e8ee",
-              "greyOutline": "#bbb",
-              "platform": Object {
-                "android": Object {
-                  "error": "#f44336",
-                  "primary": "#2196f3",
-                  "secondary": "#9C27B0",
-                  "success": "#4caf50",
-                  "warning": "#ffeb3b",
-                },
-                "ios": Object {
-                  "error": "#ff3b30",
-                  "primary": "#007aff",
-                  "secondary": "#5856d6",
-                  "success": "#4cd964",
-                  "warning": "#ffcc00",
-                },
-              },
-              "primary": "#2089dc",
-              "searchBg": "#303337",
-              "secondary": "#8F0CE8",
-              "success": "#52c41a",
-              "warning": "#faad14",
+            "paddingHorizontal": 5,
+          },
+        ]
+      }
+      underlayColor="lightgrey"
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": "lightgrey",
+              "fontSize": 35,
             },
-          }
+            Array [
+              Object {
+                "backgroundColor": "transparent",
+              },
+              undefined,
+            ],
+            Object {
+              "fontFamily": "Material Icons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
         }
-        underlayColor="lightgrey"
       >
-        <Text />
-      </View>
+        
+      </Text>
     </View>
     <TextInput
       allowFontScaling={true}
@@ -275,7 +267,6 @@ exports[`renders correctly 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           pointerEvents="box-only"
-          testID="ios_touchable_wrapper"
         >
           <View
             style={
@@ -293,56 +284,47 @@ exports[`renders correctly 1`] = `
             >
               Artist
             </Text>
-            <View>
-              <View
-                style={
+            <View
+              style={
+                Array [
+                  false,
+                  false,
+                  false,
                   Object {
                     "alignItems": "center",
                     "backgroundColor": "transparent",
                     "justifyContent": "center",
-                  }
-                }
-                theme={
-                  Object {
-                    "colors": Object {
-                      "disabled": "hsl(208, 8%, 90%)",
-                      "divider": "#bcbbc1",
-                      "error": "#ff190c",
-                      "grey0": "#393e42",
-                      "grey1": "#43484d",
-                      "grey2": "#5e6977",
-                      "grey3": "#86939e",
-                      "grey4": "#bdc6cf",
-                      "grey5": "#e1e8ee",
-                      "greyOutline": "#bbb",
-                      "platform": Object {
-                        "android": Object {
-                          "error": "#f44336",
-                          "primary": "#2196f3",
-                          "secondary": "#9C27B0",
-                          "success": "#4caf50",
-                          "warning": "#ffeb3b",
-                        },
-                        "ios": Object {
-                          "error": "#ff3b30",
-                          "primary": "#007aff",
-                          "secondary": "#5856d6",
-                          "success": "#4cd964",
-                          "warning": "#ffcc00",
-                        },
-                      },
-                      "primary": "#2089dc",
-                      "searchBg": "#303337",
-                      "secondary": "#8F0CE8",
-                      "success": "#52c41a",
-                      "warning": "#faad14",
+                  },
+                  undefined,
+                ]
+              }
+              underlayColor="white"
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": "black",
+                      "fontSize": 24,
                     },
-                  }
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                      },
+                      undefined,
+                    ],
+                    Object {
+                      "fontFamily": "Material Icons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {},
+                  ]
                 }
-                underlayColor="white"
               >
-                <Text />
-              </View>
+                
+              </Text>
             </View>
           </View>
         </View>
@@ -354,7 +336,7 @@ exports[`renders correctly 1`] = `
               "landscape",
             ]
           }
-          testID="ios_modal"
+          testID="RNPickerSelectModal"
           transparent={true}
           visible={false}
         >
@@ -378,14 +360,13 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "alignItems": "center",
                   "backgroundColor": "#EFF1F2",
                   "borderTopColor": "#919498",
                   "borderTopWidth": 0.5,
                   "flexDirection": "row",
                   "height": 44,
                   "justifyContent": "space-between",
-                  "paddingHorizontal": 10,
+                  "zIndex": 2,
                 },
                 undefined,
               ]
@@ -394,12 +375,11 @@ exports[`renders correctly 1`] = `
           >
             <View
               style={
-                Array [
-                  Object {
-                    "flexDirection": "row",
-                  },
-                  undefined,
-                ]
+                Object {
+                  "flex": 1,
+                  "flexDirection": "row",
+                  "marginLeft": 15,
+                }
               }
             >
               <View
@@ -422,18 +402,18 @@ exports[`renders correctly 1`] = `
                     Array [
                       Object {
                         "backgroundColor": "transparent",
-                        "borderColor": "#D0D4DB",
+                        "borderRightColor": "#D0D4DB",
                         "borderRightWidth": 1.5,
+                        "borderTopColor": "#D0D4DB",
                         "borderTopWidth": 1.5,
                         "height": 15,
                         "width": 15,
                       },
                       undefined,
                       Object {
-                        "marginLeft": 11,
                         "transform": Array [
                           Object {
-                            "translateY": 4,
+                            "translateY": 17,
                           },
                           Object {
                             "rotate": "-45deg",
@@ -446,6 +426,13 @@ exports[`renders correctly 1`] = `
                   }
                 />
               </View>
+              <View
+                style={
+                  Object {
+                    "marginHorizontal": 10,
+                  }
+                }
+              />
               <View
                 accessible={true}
                 isTVSelectable={true}
@@ -466,18 +453,18 @@ exports[`renders correctly 1`] = `
                     Array [
                       Object {
                         "backgroundColor": "transparent",
-                        "borderColor": "#D0D4DB",
+                        "borderRightColor": "#D0D4DB",
                         "borderRightWidth": 1.5,
+                        "borderTopColor": "#D0D4DB",
                         "borderTopWidth": 1.5,
                         "height": 15,
                         "width": 15,
                       },
                       undefined,
                       Object {
-                        "marginLeft": 22,
                         "transform": Array [
                           Object {
-                            "translateY": -5,
+                            "translateY": 8,
                           },
                           Object {
                             "rotate": "135deg",
@@ -495,10 +482,10 @@ exports[`renders correctly 1`] = `
               accessible={true}
               hitSlop={
                 Object {
-                  "bottom": 4,
-                  "left": 4,
-                  "right": 4,
-                  "top": 4,
+                  "bottom": 2,
+                  "left": 2,
+                  "right": 2,
+                  "top": 2,
                 }
               }
               onResponderGrant={[Function]}
@@ -514,10 +501,9 @@ exports[`renders correctly 1`] = `
                   Array [
                     Object {
                       "color": "#007AFE",
-                      "fontSize": 15,
+                      "fontSize": 18,
                       "fontWeight": "bold",
-                      "paddingRight": 2,
-                      "paddingTop": 1,
+                      "padding": 10,
                     },
                     undefined,
                   ]
@@ -577,6 +563,7 @@ exports[`renders correctly 1`] = `
                     undefined,
                   ]
                 }
+                testID="RNPickerSelectIOS"
               />
             </View>
           </View>
@@ -827,13 +814,15 @@ exports[`renders correctly 1`] = `
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
                 pointerEvents="box-only"
-                testID="ios_touchable_wrapper"
               >
                 <TextInput
                   allowFontScaling={true}
                   editable={false}
                   style={
                     Array [
+                      Object {
+                        "paddingRight": 30,
+                      },
                       Object {
                         "alignItems": "flex-end",
                         "backgroundColor": "white",
@@ -857,6 +846,28 @@ exports[`renders correctly 1`] = `
                   underlineColorAndroid="transparent"
                   value="Minutes..."
                 />
+                <View
+                  style={
+                    Array [
+                      Object {
+                        "backgroundColor": "transparent",
+                        "borderLeftColor": "transparent",
+                        "borderLeftWidth": 10,
+                        "borderRightColor": "transparent",
+                        "borderRightWidth": 10,
+                        "borderTopColor": "gray",
+                        "borderTopWidth": 10,
+                        "height": 0,
+                        "position": "absolute",
+                        "right": 10,
+                        "top": 20,
+                        "width": 0,
+                      },
+                      undefined,
+                    ]
+                  }
+                  testID="icon_ios"
+                />
               </View>
               <Modal
                 hardwareAccelerated={false}
@@ -866,7 +877,7 @@ exports[`renders correctly 1`] = `
                     "landscape",
                   ]
                 }
-                testID="ios_modal"
+                testID="RNPickerSelectModal"
                 transparent={true}
                 visible={false}
               >
@@ -890,14 +901,13 @@ exports[`renders correctly 1`] = `
                   style={
                     Array [
                       Object {
-                        "alignItems": "center",
                         "backgroundColor": "#EFF1F2",
                         "borderTopColor": "#919498",
                         "borderTopWidth": 0.5,
                         "flexDirection": "row",
                         "height": 44,
                         "justifyContent": "space-between",
-                        "paddingHorizontal": 10,
+                        "zIndex": 2,
                       },
                       undefined,
                     ]
@@ -906,12 +916,11 @@ exports[`renders correctly 1`] = `
                 >
                   <View
                     style={
-                      Array [
-                        Object {
-                          "flexDirection": "row",
-                        },
-                        undefined,
-                      ]
+                      Object {
+                        "flex": 1,
+                        "flexDirection": "row",
+                        "marginLeft": 15,
+                      }
                     }
                   >
                     <View
@@ -934,18 +943,18 @@ exports[`renders correctly 1`] = `
                           Array [
                             Object {
                               "backgroundColor": "transparent",
-                              "borderColor": "#D0D4DB",
+                              "borderRightColor": "#D0D4DB",
                               "borderRightWidth": 1.5,
+                              "borderTopColor": "#D0D4DB",
                               "borderTopWidth": 1.5,
                               "height": 15,
                               "width": 15,
                             },
                             undefined,
                             Object {
-                              "marginLeft": 11,
                               "transform": Array [
                                 Object {
-                                  "translateY": 4,
+                                  "translateY": 17,
                                 },
                                 Object {
                                   "rotate": "-45deg",
@@ -958,6 +967,13 @@ exports[`renders correctly 1`] = `
                         }
                       />
                     </View>
+                    <View
+                      style={
+                        Object {
+                          "marginHorizontal": 10,
+                        }
+                      }
+                    />
                     <View
                       accessible={true}
                       isTVSelectable={true}
@@ -978,18 +994,18 @@ exports[`renders correctly 1`] = `
                           Array [
                             Object {
                               "backgroundColor": "transparent",
-                              "borderColor": "#D0D4DB",
+                              "borderRightColor": "#D0D4DB",
                               "borderRightWidth": 1.5,
+                              "borderTopColor": "#D0D4DB",
                               "borderTopWidth": 1.5,
                               "height": 15,
                               "width": 15,
                             },
                             undefined,
                             Object {
-                              "marginLeft": 22,
                               "transform": Array [
                                 Object {
-                                  "translateY": -5,
+                                  "translateY": 8,
                                 },
                                 Object {
                                   "rotate": "135deg",
@@ -1007,10 +1023,10 @@ exports[`renders correctly 1`] = `
                     accessible={true}
                     hitSlop={
                       Object {
-                        "bottom": 4,
-                        "left": 4,
-                        "right": 4,
-                        "top": 4,
+                        "bottom": 2,
+                        "left": 2,
+                        "right": 2,
+                        "top": 2,
                       }
                     }
                     onResponderGrant={[Function]}
@@ -1026,10 +1042,9 @@ exports[`renders correctly 1`] = `
                         Array [
                           Object {
                             "color": "#007AFE",
-                            "fontSize": 15,
+                            "fontSize": 18,
                             "fontWeight": "bold",
-                            "paddingRight": 2,
-                            "paddingTop": 1,
+                            "padding": 10,
                           },
                           undefined,
                         ]
@@ -1084,6 +1099,7 @@ exports[`renders correctly 1`] = `
                           undefined,
                         ]
                       }
+                      testID="RNPickerSelectIOS"
                     />
                   </View>
                 </View>
@@ -1147,5 +1163,8 @@ exports[`renders correctly 1`] = `
       </View>
     </View>
   </Modal>
+  <RCTScrollView>
+    <View />
+  </RCTScrollView>
 </View>
 `;

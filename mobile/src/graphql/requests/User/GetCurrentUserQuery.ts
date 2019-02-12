@@ -1,13 +1,13 @@
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
-import { User } from '../../types';
+import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import { User } from "../../types";
 
-export const GET_CURRENT_USER = 'GET_CURRENT_USER';
+export const GET_CURRENT_USER = "GET_CURRENT_USER";
 
 export const GET_CURRENT_USER_QUERY = gql`
   query ${GET_CURRENT_USER} {
     currentUser {
-      id
+      id      
       name
       avatar
       email

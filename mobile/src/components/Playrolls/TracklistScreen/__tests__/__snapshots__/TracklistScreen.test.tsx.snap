@@ -2,6 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <RCTSafeAreaView
+  emulateUnlessSupported={true}
   style={
     Object {
       "backgroundColor": "#fff",
@@ -23,9 +24,15 @@ exports[`renders correctly 1`] = `
       </Text>
       <View
         style={
-          Object {
-            "borderRadius": 3,
-          }
+          Array [
+            Object {
+              "marginLeft": 15,
+              "marginRight": 15,
+            },
+            undefined,
+            undefined,
+            undefined,
+          ]
         }
       >
         <View
@@ -37,35 +44,67 @@ exports[`renders correctly 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={
-            Object {
-              "opacity": 1,
-            }
-          }
+          style={null}
         >
           <View
+            pointerEvents="box-only"
             style={
-              Object {
-                "alignItems": "center",
-                "backgroundColor": "#2089dc",
-                "borderColor": "#2089dc",
-                "borderRadius": 3,
-                "borderWidth": 0,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "padding": 8,
-              }
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "#9E9E9E",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                  "padding": 19,
+                },
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                Object {
+                  "padding": 12,
+                },
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+              ]
             }
           >
             <Text
               style={
-                Object {
-                  "color": "white",
-                  "fontSize": 18,
-                  "paddingBottom": 1,
-                  "paddingTop": 2,
-                  "textAlign": "center",
-                }
+                Array [
+                  Object {},
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  Array [
+                    Object {
+                      "color": "white",
+                      "fontSize": 20,
+                    },
+                    undefined,
+                    Object {
+                      "fontSize": 17.5,
+                    },
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                  ],
+                ]
               }
             >
               Generate Playlist
@@ -74,6 +113,9 @@ exports[`renders correctly 1`] = `
         </View>
       </View>
     </View>
+    <RCTScrollView>
+      <View />
+    </RCTScrollView>
   </View>
 </RCTSafeAreaView>
 `;

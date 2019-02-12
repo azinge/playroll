@@ -1,18 +1,12 @@
-import React from "react";
-import {
-  createBottomTabNavigator,
-  createStackNavigator,
-  createSwitchNavigator,
-} from "react-navigation";
-import { Icon } from "react-native-elements";
+import { createAppContainer, createStackNavigator } from 'react-navigation';
 
-import { AuthNavigator } from "./Auth/router";
-import { HomeNavigator } from "./Home/router";
-import { PlayrollsNavigator } from "./Playrolls/router";
-import { LoadingNavigator } from "./Loading/router";
-import { ProfileNavigator } from "./Profile/router";
+import { AuthNavigator } from './Auth/router';
+import { HomeNavigator } from './Home/router';
+import { PlayrollsNavigator } from './Playrolls/router';
+import { LoadingNavigator } from './Loading/router';
+import { ProfileNavigator } from './Profile/router';
 
-export const AppContainer = createStackNavigator(
+const AppNavigator = createStackNavigator(
   {
     Auth: AuthNavigator,
     Loading: LoadingNavigator,
@@ -21,10 +15,12 @@ export const AppContainer = createStackNavigator(
     Profile: ProfileNavigator,
   },
   {
-    initialRouteName: "Loading",
-    headerMode: "screen",
+    initialRouteName: 'Loading',
+    headerMode: 'none',
     navigationOptions: {
       header: null,
     },
   }
 );
+
+export const AppContainer = createAppContainer(AppNavigator);

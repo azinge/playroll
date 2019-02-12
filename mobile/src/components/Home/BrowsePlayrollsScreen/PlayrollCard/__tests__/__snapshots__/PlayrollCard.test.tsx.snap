@@ -3,36 +3,28 @@
 exports[`renders correctly 1`] = `
 <View
   style={
-    Array [
-      Object {
-        "backgroundColor": "white",
-        "borderColor": "#e1e8ee",
-        "borderWidth": 1,
-        "margin": 15,
-        "marginBottom": 0,
-        "padding": 15,
-        "shadowColor": "rgba(0,0,0, .2)",
-        "shadowOffset": Object {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 1,
-        "shadowRadius": 1,
+    Object {
+      "backgroundColor": "white",
+      "borderColor": "#e1e8ee",
+      "borderWidth": 1,
+      "margin": 15,
+      "marginBottom": 0,
+      "padding": 15,
+      "shadowColor": "rgba(0,0,0, .2)",
+      "shadowOffset": Object {
+        "height": 0,
+        "width": 0,
       },
-      undefined,
-      undefined,
-    ]
+      "shadowOpacity": 1,
+      "shadowRadius": 1,
+    }
   }
 >
   <View
     style={
-      Array [
-        Object {
-          "backgroundColor": "transparent",
-        },
-        undefined,
-        undefined,
-      ]
+      Object {
+        "backgroundColor": "transparent",
+      }
     }
   >
     <View
@@ -66,12 +58,8 @@ exports[`renders correctly 1`] = `
       </View>
       <View>
         <View
-          accessibilityComponentType="button"
-          accessibilityTraits={
-            Array [
-              "button",
-            ]
-          }
+          accessibilityRole="button"
+          accessibilityStates={Array []}
           accessible={true}
           isTVSelectable={true}
           onResponderGrant={[Function]}
@@ -110,12 +98,8 @@ exports[`renders correctly 1`] = `
           </View>
         </View>
         <View
-          accessibilityComponentType="button"
-          accessibilityTraits={
-            Array [
-              "button",
-            ]
-          }
+          accessibilityRole="button"
+          accessibilityStates={Array []}
           accessible={true}
           isTVSelectable={true}
           onResponderGrant={[Function]}

@@ -1,36 +1,35 @@
-import React from "react";
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation';
 
-import SignUpScreen from "./SignUpScreen";
-import SignInScreen from "./SignInScreen";
-import LandingScreen from "./LandingScreen";
+import SignUpScreen from './SignUpScreen';
+import SignInScreen from './SignInScreen';
+import LandingScreen from './LandingScreen';
 
 export const AuthNavigator = createStackNavigator(
   {
     SignIn: {
       screen: SignInScreen,
       navigationOptions: () => ({
-        title: `SignIn`,
+        title: 'SignIn',
         header: null,
       }),
     },
     SignUp: {
       screen: SignUpScreen,
       navigationOptions: () => ({
-        title: `SignUp`,
+        title: 'SignUp',
         header: null,
       }),
     },
     Landing: {
       screen: LandingScreen,
       navigationOptions: () => ({
-        title: `Landing`,
+        title: 'Landing',
         header: null,
       }),
     },
   },
   {
-    initialRouteName: "Landing",
-    headerMode: "screen",
+    initialRouteName: 'Landing',
+    headerMode: 'screen',
   }
 );

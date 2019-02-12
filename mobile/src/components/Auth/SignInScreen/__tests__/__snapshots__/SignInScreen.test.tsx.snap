@@ -60,11 +60,9 @@ exports[`renders correctly 1`] = `
         value="Password123!"
       />
       <RCTSwitch
-        disabled={false}
         onChange={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        onValueChange={[Function]}
         style={
           Object {
             "height": 31,
@@ -75,12 +73,8 @@ exports[`renders correctly 1`] = `
       />
     </View>
     <View
-      accessibilityComponentType="button"
-      accessibilityTraits={
-        Array [
-          "button",
-        ]
-      }
+      accessibilityRole="button"
+      accessibilityStates={Array []}
       accessible={true}
       isTVSelectable={true}
       onResponderGrant={[Function]}

@@ -12,6 +12,7 @@ exports[`renders correctly 1`] = `
   }
 >
   <View
+    accessibilityIgnoresInvertColors={true}
     style={
       Object {
         "height": 1334,
@@ -21,11 +22,7 @@ exports[`renders correctly 1`] = `
   >
     <Image
       resizeMode="cover"
-      source={
-        Object {
-          "testUri": "../../../src/assets/loading.png",
-        }
-      }
+      source={1}
       style={
         Array [
           Object {

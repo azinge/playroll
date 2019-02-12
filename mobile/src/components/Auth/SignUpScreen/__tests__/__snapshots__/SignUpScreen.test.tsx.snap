@@ -62,11 +62,9 @@ exports[`renders correctly 1`] = `
         value=""
       />
       <RCTSwitch
-        disabled={false}
         onChange={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        onValueChange={[Function]}
         style={
           Object {
             "height": 31,
@@ -107,12 +105,8 @@ exports[`renders correctly 1`] = `
       value="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png"
     />
     <View
-      accessibilityComponentType="button"
-      accessibilityTraits={
-        Array [
-          "button",
-        ]
-      }
+      accessibilityRole="button"
+      accessibilityStates={Array []}
       accessible={true}
       isTVSelectable={true}
       onResponderGrant={[Function]}
@@ -181,12 +175,8 @@ exports[`renders correctly 1`] = `
       value=""
     />
     <View
-      accessibilityComponentType="button"
-      accessibilityTraits={
-        Array [
-          "button",
-        ]
-      }
+      accessibilityRole="button"
+      accessibilityStates={Array []}
       accessible={true}
       isTVSelectable={true}
       onResponderGrant={[Function]}

@@ -2,9 +2,9 @@
  * BrowseFriendsScreen
  */
 
-import * as React from "react";
-import { Text, View, Button, SafeAreaView } from "react-native";
-import { NavigationScreenProp } from "react-navigation";
+import * as React from 'react';
+import { Text, Button, SafeAreaView } from 'react-native';
+import { NavigationScreenProp } from 'react-navigation';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -18,10 +18,10 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
       <SafeAreaView>
         <Text>BrowseFriendsScreen</Text>
         <Button
-          title="Add Friend"
+          title='Add Friend'
           onPress={() => {
             this.props.navigation &&
-              this.props.navigation.navigate("AddFriend");
+              this.props.navigation.navigate('AddFriend');
           }}
         />
       </SafeAreaView>

@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "react-navigation";
 
 import SignUpScreen from "./SignUpScreen";
+import ConfirmationScreen from './ConfirmationScreen';
 import SignInScreen from "./SignInScreen";
 import LandingScreen from "./LandingScreen";
 
@@ -18,6 +19,13 @@ export const AuthNavigator = createStackNavigator(
       screen: SignUpScreen,
       navigationOptions: () => ({
         title: `SignUp`,
+        header: null,
+      }),
+    },
+    Confirmation: {
+      screen: ConfirmationScreen,
+      navigationOptions: () => ({
+        title: `Confirmation`,
         header: null,
       }),
     },

@@ -16,7 +16,7 @@ import {
 import { Header, Icon } from "react-native-elements";
 import { NavigationScreenProp } from "react-navigation";
 import styles, { rawStyles } from "./ManagePlayrollScreen.styles";
-import Search from "../../Home/SearchScreen";
+import Search from "../../shared/Search/Search";
 import { Playroll, MusicSource } from "../../../graphql/types";
 
 import {
@@ -157,7 +157,7 @@ export default class ManagePlayrollScreen extends React.Component<
   renderSearchMusic(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
-        <Search playrollID={playroll.id} header={false} />
+        <Search playrollID={playroll.id} />
       </View>
     );
   }

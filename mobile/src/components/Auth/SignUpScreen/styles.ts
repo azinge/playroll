@@ -31,6 +31,22 @@ export default StyleSheet.create({
     borderColor: '#6A0070',
     color: '#6A0070',
   },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  passwordField: {
+    flex: 4,
+    marginTop: 25,
+    width: '100%',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#6A0070',
+    color: '#6A0070',
+  },
   submitButton: {
     flex: 1,
     position: 'absolute',

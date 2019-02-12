@@ -4,45 +4,37 @@
 
 import React from "react";
 import {
-  Text, TextInput, View,
+  Text, TextInput,
+  ActivityIndicator,
+  SafeAreaView, View,
   TouchableOpacity, Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { ConfirmSignUpMutation } from "../../../graphql/requests/Auth";
 import styles from './styles';
 
-export interface Props {}
+export interface Props {
+  toggleSignUp: () => void;
+  navigation?: NavigationScreenProp<{}>;
+}
 
 interface State {
-  confirmationCode?: string,
+  authCode: string;
+  confirmUser: string;
   error?: string
 }
 
- export default class Confirmation extends React.Component<Props, State> {
+ export default class ConfirmationScreen extends React.Component<Props, State> {
    constructor(props: Props) {
     super(props);
 
     this.state = {
-      confirmationCode: undefined,
+      authCode: "",
+      confirmUser: "",
       error: undefined,
     };
 
-    this.validateInput = this.validateInput.bind(this);
-    this.confirmAccount = this.confirmAccount.bind(this);
     this.renderError = this.renderError.bind(this);
-  }
-
-  // TODO: handle sending data to endpoints
-  confirmAccount(confirmationCode: String) {
-    console.log(confirmationCode);
-  }
-
-  validateInput() {
-    if (!this.state.confirmationCode) {
-      return this.setState({
-        error: 'Please enter a code.'
-      }, () => setTimeout(() => {this.setState({ error: undefined })}, 4000));
-    }
-    this.confirmAccount(this.state.confirmationCode);
   }
 
   renderHeader() {
@@ -67,12 +59,26 @@ interface State {
 
   renderConfirmButton() {
     return (
-      <TouchableOpacity
-        onPress={() => this.validateInput()}
-        style={styles.submitButton}
+      <ConfirmSignUpMutation
+        variables={{
+          username: this.state.confirmUser,
+          code: this.state.authCode,
+        }}
       >
-        <Text style={styles.submitButtonText}>Confirm</Text>
-      </TouchableOpacity>
+        {(confirmSignUp, { loading, data }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => confirmSignUp()}
+              style={styles.submitButton}
+            >
+              {loading
+                ? <ActivityIndicator color={'white'}/>
+                : <Text style={styles.submitButtonText}>Confirm</Text>
+              }
+            </TouchableOpacity>
+          );
+        }}
+      </ConfirmSignUpMutation>
     )
   }
 
@@ -87,14 +93,14 @@ interface State {
   render() {
     return(
       <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
             {this.renderInputField()}
             {this.renderError()}
           </View>
           {this.renderConfirmButton()}
-        </View>
+        </SafeAreaView>
       </TouchableWithoutFeedback>
     );
   }

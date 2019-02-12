@@ -45,18 +45,6 @@ interface State {
     )
   }
 
-  renderInputField() {
-    return (
-      <TextInput
-        placeholder="Confirmation Code"
-        style={styles.inputContainer}
-        onChangeText={text => this.setState({ confirmationCode: text.trim() })}
-        autoCapitalize={'sentences'}
-        value={this.state.confirmationCode}
-      />
-    )
-  }
-
   renderConfirmButton() {
     return (
       <ConfirmSignUpMutation
@@ -96,7 +84,20 @@ interface State {
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
-            {this.renderInputField()}
+            <TextInput
+              placeholder="Confirm Username"
+              style={styles.inputContainer}
+              onChangeText={text => this.setState({ confirmUser: text.trim() })}
+              autoCapitalize={'sentences'}
+              value={this.state.confirmUser}
+            />
+            <TextInput
+              placeholder="Confirmation Code"
+              style={styles.inputContainer}
+              onChangeText={text => this.setState({ confirmationCode: text.trim() })}
+              autoCapitalize={'sentences'}
+              value={this.state.confirmationCode}
+            />
             {this.renderError()}
           </View>
           {this.renderConfirmButton()}

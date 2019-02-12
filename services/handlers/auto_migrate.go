@@ -35,18 +35,7 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 	defer db.Close()
 
 	err = db.AutoMigrate(
-		models.Playroll{},
-		models.Roll{},
-		models.User{},
-		models.Tracklist{},
-		models.CompiledRoll{},
-		models.ExternalCredential{},
-		models.IdentityCredential{},
-		models.MusicServiceCredential{},
-		models.DiscoveryQueue{},
-		models.DiscoveryQueueEntry{},
-		models.Friendship{},
-		models.Recommendation{},
+		models.ModelList...,
 	).Error
 
 	if err != nil {

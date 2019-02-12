@@ -8,6 +8,20 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var ModelList = []interface{}{Playroll{},
+	Roll{},
+	User{},
+	Tracklist{},
+	CompiledRoll{},
+	ExternalCredential{},
+	IdentityCredential{},
+	MusicServiceCredential{},
+	DiscoveryQueue{},
+	DiscoveryQueueEntry{},
+	Friendship{},
+	Recommendation{},
+}
+
 type Entity interface {
 	// Implemented by Model.
 	DB() *gorm.DB

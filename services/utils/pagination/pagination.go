@@ -10,6 +10,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+//! File unimplemented temporarily
+
 type Paginator struct {
 	Database *gorm.DB
 	ShowLogs bool

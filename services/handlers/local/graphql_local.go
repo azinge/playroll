@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/cazinge/playroll/services/gqltag"
+	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
 
 	"github.com/graphql-go/graphql"
@@ -39,10 +40,18 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
+	if db.AutoMigrate(models.ModelList...).Error != nil {
+		HandleLocalErrors("error migrating db: " + err.Error())
+	}
+
+	mctx := &gqltag.MethodContext{
+		DB: db,
+		// Request: request,
+	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,
-		db,
+		mctx,
 	)
 
 	if err != nil {

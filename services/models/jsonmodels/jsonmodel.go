@@ -1,9 +1,8 @@
-package models
+package jsonmodels
 
 import (
 	"fmt"
 
-	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/lib/pq"
 )
 
@@ -25,8 +24,8 @@ const (
 )
 
 type Song struct {
-	Name        string                 `gql:"name: String"`
-	MusicSource jsonmodels.MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
+	Name        string      `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
 }
 
 func (s *Song) String() string {
@@ -34,8 +33,8 @@ func (s *Song) String() string {
 }
 
 type Artist struct {
-	Title       string                 `gql:"title: String"`
-	MusicSource jsonmodels.MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
+	Title       string      `gql:"title: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
 }
 
 func (a *Artist) String() string {
@@ -43,8 +42,8 @@ func (a *Artist) String() string {
 }
 
 type Album struct {
-	Name        string                 `gql:"name: String"`
-	MusicSource jsonmodels.MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
+	Name        string      `gql:"name: String"`
+	MusicSource MusicSource `gql:"musicSource: MusicSource" gorm:"type: jsonb"`
 }
 
 func (a *Album) String() string {

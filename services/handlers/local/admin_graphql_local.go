@@ -1,62 +1,65 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cazinge/playroll/services/gqltag"
+	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/schema"
+
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	host := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable",
+func HandleLocalErrors(context string) {
+	err := errors.New(context)
+	panic(err)
+}
+
+func adminHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("called")
+	host := fmt.Sprintf(
+		"host=%v port=%v user=%v dbname=%v sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PASS"),
 	)
 
 	db, err := gorm.Open("postgres", host)
 	if err != nil {
-		fmt.Println("error opening db: " + err.Error())
-		return events.APIGatewayProxyResponse{
-			Headers: map[string]string{
-				"Access-Control-Allow-Origin":      "*",
-				"Access-Control-Allow-Credentials": "true",
-			},
-			Body:       err.Error(),
-			StatusCode: 500,
-		}, err
+		HandleLocalErrors("error opening db: " + err.Error())
 	}
+	fmt.Println("Connected to DB!")
+
 	defer db.Close()
 
+	if db.AutoMigrate(models.ModelList...).Error != nil {
+		HandleLocalErrors("error migrating db: " + err.Error())
+	}
+
+	mctx := &gqltag.MethodContext{
+		DB: db,
+		// Request: request,
+	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedTypes,
 		schema.LinkedMethods,
-		db,
+		mctx,
 	)
 
 	if err != nil {
-		fmt.Println("error generating schema: " + err.Error())
-		return events.APIGatewayProxyResponse{
-			Headers: map[string]string{
-				"Access-Control-Allow-Origin":      "*",
-				"Access-Control-Allow-Credentials": "true",
-			},
-			Body:       err.Error(),
-			StatusCode: 500,
-		}, err
+		HandleLocalErrors("error generating schema: " + err.Error())
 	}
 
 	body := map[string]interface{}{}
-	json.Unmarshal([]byte(request.Body), &body)
+	json.NewDecoder(r.Body).Decode(&body)
 
 	requestString, _ := body["query"].(string)
 	variableValues, _ := body["variables"].(map[string]interface{})
@@ -67,32 +70,35 @@ func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxy
 		RequestString:  requestString,
 		VariableValues: variableValues,
 		OperationName:  operationName,
-		Context:        context,
 	})
 
 	out, err := json.Marshal(result)
 	if err != nil {
-		fmt.Println("json.Marshal failed: " + err.Error())
-		return events.APIGatewayProxyResponse{
-			Headers: map[string]string{
-				"Access-Control-Allow-Origin":      "*",
-				"Access-Control-Allow-Credentials": "true",
-			},
-			Body:       err.Error(),
-			StatusCode: 500,
-		}, err
+		HandleLocalErrors("json.Marshal failed: " + err.Error())
 	}
 
-	return events.APIGatewayProxyResponse{
-		Headers: map[string]string{
-			"Access-Control-Allow-Origin":      "*",
-			"Access-Control-Allow-Credentials": "true",
-		},
-		Body:       string(out),
-		StatusCode: 200,
-	}, nil
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	fmt.Fprintf(w, string(out))
+}
+
+func spotifyOAuth(w http.ResponseWriter, r *http.Request) {
+	// redirectURL := spotify.HandleSpotifyOAuth()
+	// fmt.Printf("\nredirectURL:\n%s", redirectURL)
+	// // fmt.Fprintf(w, redirectURL)
+	// http.Redirect(w, r, redirectURL, http.StatusSeeOther)
+}
+
+func spotifyCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	// code := spotify.HandleSpotifyCallback(w, r)
+	fmt.Fprintf(w, string("success"))
 }
 
 func main() {
-	lambda.Start(AdminGraphqlHandler)
+	http.HandleFunc("/graphql", adminHandler)
+	http.HandleFunc("/spotify/oAuth", spotifyOAuth)
+	http.HandleFunc("/callback", spotifyCallbackHandler)
+	fmt.Printf("\nrunning on localhost %v\n", os.Getenv("PORT"))
+	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), nil))
 }

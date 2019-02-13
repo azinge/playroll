@@ -209,11 +209,7 @@ export default class Search extends Component<Props, State> {
           modalVisible={this.state.modalVisible}
           closeModal={this.closeModal}
           playrollID={this.props.playrollID}
-          manageRoll={() => {
-            this.closeModal();
-            this.props.navigation &&
-              this.props.navigation.navigate("ManageRoll");
-          }}
+          navigation={this.props.navigation}
         />
         <SearchSpotifyQuery
           variables={{

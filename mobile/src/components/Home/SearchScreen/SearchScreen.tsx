@@ -5,9 +5,14 @@
 import React from "react";
 import { View } from "react-native";
 import { Header, Icon } from "react-native-elements";
+import { NavigationScreenProp } from "react-navigation";
 import Search from "../../shared/Search/Search";
 
-export default class SearchScreen extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+export default class SearchScreen extends React.Component<Props> {
   render() {
     return (
       <View>
@@ -19,7 +24,7 @@ export default class SearchScreen extends React.Component {
             style: { color: "#fff", fontSize: 20 },
           }}
         />
-        <Search />
+        <Search navigation={this.props.navigation} />
       </View>
     );
   }

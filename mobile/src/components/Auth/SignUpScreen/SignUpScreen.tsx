@@ -4,21 +4,18 @@
 
 import * as React from "react";
 import {
-  Text,
-  SafeAreaView,
-  View,
-  TextInput,
-  Button,
-  Switch,
-} from "react-native";
+  ActivityIndicator,
+  Text, TextInput,
+  TouchableOpacity, View,
+  TouchableWithoutFeedback,
+  Keyboard, Platform, Linking,
+  SafeAreaView, Switch
+} from 'react-native';
+import SafariView from 'react-native-safari-view';
 import { NavigationScreenProp } from "react-navigation";
+import { SignUpMutation } from "../../../graphql/requests/Auth";
+import styles from './SignUpScreen.styles';
 
-import {
-  SignUpMutation,
-  ConfirmSignUpMutation,
-} from "../../../graphql/requests/Auth";
-
-import styles from "./SignUpScreen.styles";
 export interface Props {
   toggleSignUp?: () => void;
   navigation?: NavigationScreenProp<{}>;
@@ -27,11 +24,10 @@ export interface Props {
 interface State {
   username: string;
   password: string;
+  showPassword: boolean;
   email: string;
   avatar: string;
-  confirmUser: string;
-  authCode: string;
-  showPassword: boolean;
+  error?: string;
 }
 
 export default class SignUpScreen extends React.Component<Props, State> {
@@ -39,114 +35,130 @@ export default class SignUpScreen extends React.Component<Props, State> {
     super(props);
     this.state = {
       username: "",
-      password: "",
       email: "",
+      password: "",
+      showPassword: true,
       avatar:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png",
-      confirmUser: "",
-      authCode: "",
-      showPassword: true,
+      error: undefined,
     };
     this.toggleSwitch = this.toggleSwitch.bind(this);
+    this.renderError = this.renderError.bind(this);
   }
 
   toggleSwitch() {
     this.setState({ showPassword: !this.state.showPassword });
   }
-  render() {
+
+  handleOpenTOSURL() {
+    const url = 'http://www.playroll.io/tos';
+    if (Platform.OS === 'ios') {
+      return SafariView.show({ url, fromBottom: true });
+    }
+    Linking.openURL(url);
+  }
+
+  renderHeader() {
     return (
-      <SafeAreaView style={styles.screenContainer}>
-        <View style={styles.optionsContainer}>
-          <Text>SignUpScreen</Text>
-          <TextInput
-            style={styles.usernameField}
-            autoCapitalize="none"
-            placeholder="Username"
-            onChangeText={(username: string) => this.setState({ username })}
-            value={this.state.username}
-          />
-          <View style={styles.passwordContainer}>
-            <TextInput
-              secureTextEntry={this.state.showPassword}
-              autoCapitalize="none"
-              placeholder="Password"
-              style={styles.passwordField}
-              onChangeText={(password: string) => this.setState({ password })}
-              value={this.state.password}
-            />
-            <Switch
-              onValueChange={this.toggleSwitch}
-              value={!this.state.showPassword}
-            />
-          </View>
-          <TextInput
-            style={styles.emailField}
-            autoCapitalize="none"
-            placeholder="Email"
-            onChangeText={(email: string) => this.setState({ email })}
-            value={this.state.email}
-          />
-          <TextInput //TODO: Remove Later
-            style={styles.emailField}
-            autoCapitalize="none"
-            placeholder="Avatar link"
-            onChangeText={(avatar: string) => this.setState({ avatar })}
-            value={this.state.avatar}
-          />
-          <SignUpMutation
-            variables={{
-              username: this.state.username,
-              password: this.state.password,
-              email: this.state.email,
-              avatar: this.state.avatar,
-            }}
-          >
-            {(signUp, { data }) => {
-              return (
-                <Button
-                  title="Sign Up"
-                  onPress={() => {
-                    signUp();
-                  }}
-                />
-              );
-            }}
-          </SignUpMutation>
-          <TextInput
-            style={styles.confirmUsernameField}
-            autoCapitalize="none"
-            placeholder="Username"
-            onChangeText={(confirmUser: string) =>
-              this.setState({ confirmUser })
-            }
-            value={this.state.confirmUser}
-          />
-          <TextInput
-            style={styles.confirmCodeField}
-            autoCapitalize="none"
-            placeholder="Code"
-            onChangeText={(authCode: string) => this.setState({ authCode })}
-            value={this.state.authCode}
-          />
-          <ConfirmSignUpMutation
-            variables={{
-              username: this.state.confirmUser,
-              code: this.state.authCode,
-            }}
-          >
-            {(confirmSignUp, { data }) => {
-              return (
-                <Button
-                  title="Confirm Sign Up"
-                  onPress={() => {
-                    confirmSignUp();
-                  }}
-                />
-              );
-            }}
-          </ConfirmSignUpMutation>
-        </View>
-      </SafeAreaView>
+      <View style={styles.signupHeader}>
+        <Text style={styles.signupText}>Sign Up</Text>
+      </View>
+    )
+  }
+
+  termsOfServiceLink() {
+    return(
+      <TouchableOpacity
+        onPress={() => this.handleOpenTOSURL()}
+        style={styles.tosContainer}
+        >
+        <Text style={styles.tosLink}>By signing up, you are agreeing to our Terms of Service.</Text>
+      </TouchableOpacity>
     );
   }
-}
+
+  renderSignupButton() {
+    return (
+      <SignUpMutation
+        variables={{
+          username: this.state.username,
+          password: this.state.password,
+          email: this.state.email,
+          avatar: this.state.avatar,
+        }}
+      >
+        {(signUp, { loading, data }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => signUp()}
+              style={styles.submitButton}
+            >
+              {loading
+                ? <ActivityIndicator color={'white'}/>
+                : <Text style={styles.submitButtonText}>Sign Up</Text>
+              }
+            </TouchableOpacity>
+          );
+        }}
+      </SignUpMutation>
+    );
+  }
+
+  renderError() {
+    return (
+      <Text style={styles.errorMessage}>
+        {this.state.error}
+      </Text>
+    )
+  }
+
+  render() {
+    return(
+      <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+        <SafeAreaView style={styles.mainContainer}>
+          <View style={styles.container}>
+            {this.renderHeader()}
+            <TextInput
+              placeholder="Username"
+              autoCapitalize="none"
+              style={styles.inputContainer}
+              onChangeText={(username: string) => this.setState({ username })}
+              autoCapitalize={"sentences"}
+              value={this.state.username}
+            />
+            <TextInput
+              placeholder="Email"
+              style={styles.inputContainer}
+              onChangeText={(email: string) => this.setState({ email })}
+              autoCapitalize={"none"}
+              value={this.state.email}
+            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                placeholder="Password"
+                style={styles.passwordField}
+                onChangeText={(password: string) => this.setState({ password })}
+                secureTextEntry={this.state.showPassword}
+                value={this.state.password}
+              />
+              <Switch
+                onValueChange={this.toggleSwitch}
+                value={!this.state.showPassword}
+              />
+            </View>
+            <TextInput //TODO: Remove Later
+              style={styles.inputContainer}
+              autoCapitalize="none"
+              placeholder="Avatar link"
+              onChangeText={(avatar: string) => this.setState({ avatar })}
+              value={this.state.avatar}
+            />
+            {this.termsOfServiceLink()}
+            {this.renderError()}
+          </View>
+          {this.renderSignupButton()}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    );
+  }
+ }

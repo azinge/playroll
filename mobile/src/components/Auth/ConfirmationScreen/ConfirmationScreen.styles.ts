@@ -11,7 +11,7 @@ export default StyleSheet.create({
     width: '95%',
     paddingLeft: 20,
   },
-  signupHeader: {
+  confirmationHeader: {
     paddingTop: 50,
     paddingBottom: 20,
     paddingRight: 20,
@@ -22,22 +22,6 @@ export default StyleSheet.create({
     color: '#6A0070',
   },
   inputContainer: {
-    marginTop: 25,
-    width: '100%',
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#6A0070',
-    color: '#6A0070',
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  passwordField: {
-    flex: 4,
     marginTop: 25,
     width: '100%',
     height: 45,
@@ -67,13 +51,5 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: '#FF0000',
-  },
-  tosContainer: {
-    marginTop: 50,
-  },
-  tosLink: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#6bbed8',
-  },
+  }
 });

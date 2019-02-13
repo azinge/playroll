@@ -9,7 +9,6 @@ export default class App extends React.Component {
       <ApolloProvider client={client}>
         <AppContainer
           navigationOptions={{ header: null, headerMode: 'screen' }}
-          headerMode='screen'
         />
       </ApolloProvider>
     );

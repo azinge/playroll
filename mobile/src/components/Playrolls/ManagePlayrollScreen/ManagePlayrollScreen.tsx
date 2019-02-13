@@ -2,30 +2,21 @@
  * ManagePlayrollScreen
  */
 
-import * as React from "react";
-import {
-  Text,
-  View,
-  SafeAreaView,
-  TextInput,
-  Button,
-  ScrollView,
-  Image,
-  StyleSheet,
-} from "react-native";
-import { Header, Icon } from "react-native-elements";
-import { NavigationScreenProp } from "react-navigation";
-import styles, { rawStyles } from "./ManagePlayrollScreen.styles";
-import Search from "../../shared/Search/Search";
-import { Playroll, MusicSource } from "../../../graphql/types";
+import * as React from 'react';
+import { View, TextInput, ScrollView, Image } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
+import { NavigationScreenProp } from 'react-navigation';
+import styles, { rawStyles } from './ManagePlayrollScreen.styles';
+import Search from '../../Home/SearchScreen';
+import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
   GetPlayrollQuery,
   UpdatePlayrollMutation,
-} from "../../../graphql/requests/Playroll";
-import { GenerateTracklistMutation } from "../../../graphql/requests/Tracklist";
+} from '../../../graphql/requests/Playroll';
+import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
-import { GET_PLAYROLL } from "../../../graphql/requests/Playroll/GetPlayrollQuery";
+import { GET_PLAYROLL } from '../../../graphql/requests/Playroll/GetPlayrollQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -42,7 +33,7 @@ export default class ManagePlayrollScreen extends React.Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      editPlayrollName: "",
+      editPlayrollName: '',
     };
   }
 
@@ -50,7 +41,7 @@ export default class ManagePlayrollScreen extends React.Component<
     const playroll: Playroll =
       (this.props &&
         this.props.navigation &&
-        this.props.navigation.getParam("playroll")) ||
+        this.props.navigation.getParam('playroll')) ||
       {};
     return (
       <GetPlayrollQuery variables={{ id: playroll.id }}>
@@ -74,7 +65,7 @@ export default class ManagePlayrollScreen extends React.Component<
         variables={{ playrollID: playroll.id }}
         onCompleted={data =>
           this.props.navigation &&
-          this.props.navigation.navigate("Tracklist", {
+          this.props.navigation.navigate('Tracklist', {
             playrollName: playroll.name,
             tracklistID:
               data && data.generateTracklist && data.generateTracklist.id,
@@ -84,15 +75,15 @@ export default class ManagePlayrollScreen extends React.Component<
         {(generateTracklist, { data }) => {
           return (
             <Header
-              backgroundColor="purple"
+              backgroundColor='purple'
               leftComponent={
                 <Icon
-                  name="arrow-back"
-                  color="white"
+                  name='arrow-back'
+                  color='white'
                   onPress={() =>
                     this.props.navigation && this.props.navigation.goBack(null)
                   }
-                  underlayColor="purple"
+                  underlayColor='purple'
                 />
               }
               centerComponent={{
@@ -101,8 +92,8 @@ export default class ManagePlayrollScreen extends React.Component<
               }}
               rightComponent={
                 <Icon
-                  name="save"
-                  color="white"
+                  name='save'
+                  color='white'
                   onPress={() => generateTracklist()}
                 />
               }
@@ -117,7 +108,7 @@ export default class ManagePlayrollScreen extends React.Component<
       <View style={styles.editingBarContainer}>
         <Image
           style={rawStyles.editingBarImage}
-          source={require("../../../assets/new_playroll.png")}
+          source={require('../../../assets/new_playroll.png')}
         />
         <UpdatePlayrollMutation
           variables={{
@@ -132,9 +123,9 @@ export default class ManagePlayrollScreen extends React.Component<
           {(updatePlayroll, { data }) => (
             <View style={styles.editingBarNameContainer}>
               <TextInput
-                selectionColor={"purple"}
-                placeholder="Name Your Playroll"
-                placeholderTextColor="lightgrey"
+                selectionColor={'purple'}
+                placeholder='Name Your Playroll'
+                placeholderTextColor='lightgrey'
                 style={styles.editingBarNameInput}
                 onChangeText={name => this.setState({ editPlayrollName: name })}
                 onSubmitEditing={() => updatePlayroll()}
@@ -143,9 +134,9 @@ export default class ManagePlayrollScreen extends React.Component<
               </TextInput>
               <View style={styles.horizontalRule} />
               <TextInput
-                selectionColor={"purple"}
-                placeholder="#Existential #Chill #Help"
-                placeholderTextColor="lightgrey"
+                selectionColor={'purple'}
+                placeholder='#Existential #Chill #Help'
+                placeholderTextColor='lightgrey'
                 style={styles.editingBarTagInput}
               />
             </View>
@@ -158,17 +149,17 @@ export default class ManagePlayrollScreen extends React.Component<
   renderSearchMusic(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
-        <Search playrollID={playroll.id} />
+        <Search playrollID={playroll.id} header={false} />
       </View>
     );
   }
 
   renderBottomBar(playroll: Playroll) {
     const iconMap: { [index: string]: string } = {
-      Track: "audiotrack",
-      Album: "album",
-      Artist: "mic",
-      Playlist: "playlist-play",
+      Track: 'audiotrack',
+      Album: 'album',
+      Artist: 'mic',
+      Playlist: 'playlist-play',
     };
     return (
       <View style={styles.bottomBarContainer}>
@@ -190,14 +181,14 @@ export default class ManagePlayrollScreen extends React.Component<
                     <View style={styles.bottomBarIconContainer}>
                       {
                         <Icon
-                          name={iconMap[val.type] || iconMap["Track"]}
+                          name={iconMap[val.type] || iconMap.Track}
                           size={20}
-                          color="purple"
+                          color='purple'
                           onPress={() =>
                             this.props.navigation &&
                             this.props.navigation.goBack(null)
                           }
-                          underlayColor="purple"
+                          underlayColor='purple'
                         />
                       }
                     </View>

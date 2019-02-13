@@ -1,2 +1,2 @@
-import DiscoverScreen from "./DiscoverScreen";
+import DiscoverScreen from './DiscoverScreen';
 export default DiscoverScreen;

@@ -1,2 +1,2 @@
-import BrowseFriendsScreen from "./BrowseFriendsScreen";
+import BrowseFriendsScreen from './BrowseFriendsScreen';
 export default BrowseFriendsScreen;

@@ -1,10 +1,10 @@
-import * as React from "react";
-import renderer from "react-test-renderer";
-import { MockedProvider } from "react-apollo/test-utils";
+import * as React from 'react';
+import renderer from 'react-test-renderer';
+import { MockedProvider } from 'react-apollo/test-utils';
 
-import ManagePlayrollScreen from "../ManagePlayrollScreen";
+import ManagePlayrollScreen from '../ManagePlayrollScreen';
 
-it("renders correctly", () => {
+it('renders correctly', () => {
   const tree = renderer
     .create(
       <MockedProvider>

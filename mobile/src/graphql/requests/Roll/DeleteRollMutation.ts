@@ -1,7 +1,7 @@
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
-export const DELETE_ROLL = "DELETE_ROLL";
+export const DELETE_ROLL = 'DELETE_ROLL';
 
 export const DELETE_ROLL_MUTATION = gql`
   mutation ${DELETE_ROLL}($id: ID!) {

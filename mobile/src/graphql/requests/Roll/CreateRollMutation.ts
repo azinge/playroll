@@ -1,8 +1,8 @@
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
-import { RollInput } from "../../types";
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
+import { RollInput } from '../../types';
 
-export const CREATE_ROLL = "CREATE_ROLL";
+export const CREATE_ROLL = 'CREATE_ROLL';
 
 export const CREATE_ROLL_MUTATION = gql`
   mutation ${CREATE_ROLL}($input: RollInput!) {

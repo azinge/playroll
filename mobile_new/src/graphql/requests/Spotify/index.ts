@@ -1,1 +1,0 @@
-export { SearchSpotifyQuery } from './SearchSpotifyQuery';

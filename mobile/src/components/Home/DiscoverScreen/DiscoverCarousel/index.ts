@@ -1,2 +1,2 @@
-import DiscoverCarousel from "./DiscoverCarousel";
+import DiscoverCarousel from './DiscoverCarousel';
 export default DiscoverCarousel;

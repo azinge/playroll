@@ -1,1 +1,0 @@
-export { GetCurrentUserQuery } from './GetCurrentUserQuery';

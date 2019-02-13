@@ -23,55 +23,31 @@ exports[`renders correctly 1`] = `
     Playroll 
   </Text>
   <View
-    accessible={true}
-    isTVSelectable={true}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
-      Array [
-        false,
-        false,
-        false,
+      Object {
+        "marginRight": 20,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
         Object {
           "alignItems": "center",
           "backgroundColor": "transparent",
           "justifyContent": "center",
-        },
-        Object {
-          "marginRight": 20,
-        },
-      ]
-    }
-  >
-    <Text
-      allowFontScaling={false}
-      style={
-        Array [
-          Object {
-            "color": "#ffffff",
-            "fontSize": 35,
-          },
-          Array [
-            Object {
-              "backgroundColor": "transparent",
-            },
-            undefined,
-          ],
-          Object {
-            "fontFamily": "Material Design Icons",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-          },
-          Object {},
-        ]
+        }
       }
     >
-      
-    </Text>
+      <Text />
+    </View>
   </View>
 </View>
 `;

@@ -11,7 +11,6 @@ import {
   TextInput,
 } from 'react-native';
 import styles, { pickerStyle } from './CreateModal.styles';
-import { NavigationScreenProp } from 'react-navigation';
 
 import { MusicSource } from '../../../../graphql/types';
 
@@ -27,15 +26,6 @@ export interface Props {
 }
 
 export default class CreateModal extends React.Component<Props> {
-  manageRoll() {
-    console.log(this.props.currentSource);
-    this.props.navigation &&
-      this.props.navigation.navigate('ManageRoll', {
-        currentSource: this.props.currentSource,
-      });
-    this.props.closeModal();
-  }
-
   render() {
     const {
       currentSource = {},

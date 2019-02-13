@@ -1,18 +1,18 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   headerCenterComponent: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
   },
   editingBarContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 100,
-    alignItems: "center",
+    alignItems: 'center',
   },
   editingBarNameContainer: {
     flex: 1,
@@ -21,9 +21,9 @@ export default StyleSheet.create({
     fontSize: 20,
   },
   horizontalRule: {
-    width: "75%",
+    width: '75%',
     marginVertical: 5,
-    borderBottomColor: "lightgrey",
+    borderBottomColor: 'lightgrey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   editingBarTagInput: {
@@ -34,24 +34,24 @@ export default StyleSheet.create({
   },
   bottomBarContainer: {
     height: 65,
-    borderTopColor: "lightgrey",
+    borderTopColor: 'lightgrey',
     borderTopWidth: 1,
-    width: "100%",
-    backgroundColor: "#f5eeed",
+    width: '100%',
+    backgroundColor: '#f5eeed',
   },
-  bottomBarScrollViewStyle: { alignItems: "center" },
+  bottomBarScrollViewStyle: { alignItems: 'center' },
   bottomBarItemContainer: {
     height: 65,
     width: 65,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bottomBarIconContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 4,
     left: 4,
     borderRadius: 5,
-    backgroundColor: "#FFFFFF9F",
+    backgroundColor: '#FFFFFF9F',
   },
 });
 
@@ -62,13 +62,13 @@ export const rawStyles = {
     marginHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "lightgrey",
+    borderColor: 'lightgrey',
   },
   bottomBarItemImage: {
     width: 50,
     height: 50,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: "lightgrey",
+    borderColor: 'lightgrey',
   },
 };

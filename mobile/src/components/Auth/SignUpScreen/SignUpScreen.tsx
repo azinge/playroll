@@ -2,18 +2,23 @@
  * SignUpScreen
  */
 
-import * as React from "react";
+import * as React from 'react';
 import {
   ActivityIndicator,
-  Text, TextInput,
-  TouchableOpacity, View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
   TouchableWithoutFeedback,
-  Keyboard, Platform, Linking,
-  SafeAreaView, Switch
+  Keyboard,
+  Platform,
+  Linking,
+  SafeAreaView,
+  Switch,
 } from 'react-native';
-import SafariView from 'react-native-safari-view';
-import { NavigationScreenProp } from "react-navigation";
-import { SignUpMutation } from "../../../graphql/requests/Auth";
+import { WebBrowser } from 'expo';
+import { NavigationScreenProp } from 'react-navigation';
+import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
 
 export interface Props {
@@ -34,12 +39,12 @@ export default class SignUpScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      username: "",
-      email: "",
-      password: "",
+      username: '',
+      email: '',
+      password: '',
       showPassword: true,
       avatar:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png",
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
       error: undefined,
     };
     this.toggleSwitch = this.toggleSwitch.bind(this);
@@ -53,9 +58,10 @@ export default class SignUpScreen extends React.Component<Props, State> {
   handleOpenTOSURL() {
     const url = 'http://www.playroll.io/tos';
     if (Platform.OS === 'ios') {
-      return SafariView.show({ url, fromBottom: true });
+      WebBrowser.openBrowserAsync(url);
     }
-    Linking.openURL(url);
+    // Linking.openURL(url);
+    WebBrowser.openBrowserAsync(url);
   }
 
   renderHeader() {
@@ -63,16 +69,18 @@ export default class SignUpScreen extends React.Component<Props, State> {
       <View style={styles.signupHeader}>
         <Text style={styles.signupText}>Sign Up</Text>
       </View>
-    )
+    );
   }
 
   termsOfServiceLink() {
-    return(
+    return (
       <TouchableOpacity
         onPress={() => this.handleOpenTOSURL()}
         style={styles.tosContainer}
-        >
-        <Text style={styles.tosLink}>By signing up, you are agreeing to our Terms of Service.</Text>
+      >
+        <Text style={styles.tosLink}>
+          By signing up, you are agreeing to our Terms of Service.
+        </Text>
       </TouchableOpacity>
     );
   }
@@ -93,10 +101,11 @@ export default class SignUpScreen extends React.Component<Props, State> {
               onPress={() => signUp()}
               style={styles.submitButton}
             >
-              {loading
-                ? <ActivityIndicator color={'white'}/>
-                : <Text style={styles.submitButtonText}>Sign Up</Text>
-              }
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text style={styles.submitButtonText}>Sign Up</Text>
+              )}
             </TouchableOpacity>
           );
         }}
@@ -105,37 +114,37 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
 
   renderError() {
-    return (
-      <Text style={styles.errorMessage}>
-        {this.state.error}
-      </Text>
-    )
+    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
-    return(
-      <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
             <TextInput
-              placeholder="Username"
-              autoCapitalize="none"
+              placeholder='Username'
+              autoCapitalize='none'
               style={styles.inputContainer}
               onChangeText={(username: string) => this.setState({ username })}
-              autoCapitalize={"sentences"}
+              autoCapitalize={'sentences'}
               value={this.state.username}
             />
             <TextInput
-              placeholder="Email"
+              placeholder='Email'
               style={styles.inputContainer}
               onChangeText={(email: string) => this.setState({ email })}
-              autoCapitalize={"none"}
+              autoCapitalize={'none'}
               value={this.state.email}
             />
             <View style={styles.passwordContainer}>
               <TextInput
-                placeholder="Password"
+                placeholder='Password'
                 style={styles.passwordField}
                 onChangeText={(password: string) => this.setState({ password })}
                 secureTextEntry={this.state.showPassword}
@@ -146,10 +155,10 @@ export default class SignUpScreen extends React.Component<Props, State> {
                 value={!this.state.showPassword}
               />
             </View>
-            <TextInput //TODO: Remove Later
+            <TextInput // TODO: Remove Later
               style={styles.inputContainer}
-              autoCapitalize="none"
-              placeholder="Avatar link"
+              autoCapitalize='none'
+              placeholder='Avatar link'
               onChangeText={(avatar: string) => this.setState({ avatar })}
               value={this.state.avatar}
             />
@@ -161,4 +170,4 @@ export default class SignUpScreen extends React.Component<Props, State> {
       </TouchableWithoutFeedback>
     );
   }
- }
+}

@@ -1,2 +1,2 @@
-import ConnectSpotifyScreen from "./ConnectSpotifyScreen";
+import ConnectSpotifyScreen from './ConnectSpotifyScreen';
 export default ConnectSpotifyScreen;

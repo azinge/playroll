@@ -1,32 +1,35 @@
 import React from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import {
-  View,
   Text,
+  View,
   Alert,
   Modal,
   TouchableHighlight,
+  SegmentedControlIOS,
   Image,
   TextInput,
 } from 'react-native';
 import styles, { pickerStyle } from './CreateModal.styles';
+import { NavigationScreenProp } from 'react-navigation';
 
-import { MusicSource } from '../../../../graphql/types';
+import { MusicSource, RollFilter, RollLength } from '../../../../graphql/types';
 
 import { CreateRollMutation } from '../../../../graphql/requests/Roll';
 import { GET_PLAYROLL } from '../../../../graphql/requests/Playroll/GetPlayrollQuery';
 
 export interface Props {
-  currentSource?: MusicSource;
-  modalVisible?: boolean;
-  closeModal?: (redirect?: boolean) => void;
-  manageRoll?: () => void;
-  playrollID?: number;
+  currentSource: MusicSource;
+  modalVisible: boolean;
+  closeModal: (redirect?: boolean) => void;
+  navigation: NavigationScreenProp<{}>;
+  //   manageRoll: (currentSource?: MusicSource) => void;
+  playrollID: number;
 }
 
 interface State {
-  filter?: { type?: string; modifications?: string[] };
-  length?: { type?: string; modifications?: string[] };
+  filter?: RollFilter;
+  length?: RollLength;
 }
 
 export default class CreateModal extends React.Component<Props, State> {
@@ -37,19 +40,21 @@ export default class CreateModal extends React.Component<Props, State> {
       length: undefined,
     };
   }
+  manageRoll() {
+    console.log(this.props.currentSource);
+    this.props.navigation &&
+      this.props.navigation.navigate('ManageRoll', {
+        currentSource: this.props.currentSource,
+      });
+    this.props.closeModal();
+  }
+
   render() {
-    const {
-      currentSource = {},
-      modalVisible = false,
-      playrollID = 0,
-      closeModal = () => {},
-      manageRoll = () => {},
-    } = this.props;
     return (
       <Modal
         animationType='fade'
         transparent={true}
-        visible={modalVisible}
+        visible={this.props.modalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}
@@ -61,27 +66,27 @@ export default class CreateModal extends React.Component<Props, State> {
               <Image
                 style={{ width: 200, height: 200, borderRadius: 5 }}
                 source={{
-                  uri: currentSource.cover,
+                  uri: this.props.currentSource.cover,
                 }}
               />
             </View>
-            <Text style={styles.welcome}>
-              {`${currentSource.name} - ${currentSource.type}`}
-            </Text>
+            <Text style={styles.welcome}>{this.props.currentSource.name}</Text>
+            <Text style={styles.welcome}>{this.props.currentSource.type}</Text>
+
             <View
               style={{
                 width: 200,
-                height: 125,
+                height: 120,
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: 0,
               }}
             >
               <RNPickerSelect
-                placeholder={{ label: 'Select Filter', value: undefined }}
+                placeholder={{ label: 'Select Filter...', value: undefined }}
                 items={[
-                  { label: 'Play Songs in order', value: 'In Order' },
-                  { label: 'Randomly Select Songs', value: 'Random' },
+                  { label: 'Play Songs In Order', value: 'In Order' },
+                  { label: 'Play Songs In Random Order', value: 'Random' },
                 ]}
                 onValueChange={value => {
                   switch (value) {
@@ -104,10 +109,10 @@ export default class CreateModal extends React.Component<Props, State> {
                 style={pickerStyle}
               />
               <RNPickerSelect
-                placeholder={{ label: 'Select Length', value: undefined }}
+                placeholder={{ label: 'Select Length...', value: undefined }}
                 items={[
-                  { label: 'Play all tracks', value: 'Original' },
-                  { label: 'Play 5 tracks', value: 'Number' },
+                  { label: 'Play All Songs', value: 'Original' },
+                  { label: 'Play 5 Songs', value: 'Number' },
                 ]}
                 onValueChange={value => {
                   switch (value) {
@@ -134,16 +139,16 @@ export default class CreateModal extends React.Component<Props, State> {
               <CreateRollMutation
                 variables={{
                   input: {
-                    playrollID: playrollID,
+                    playrollID: this.props.playrollID,
                     data: {
-                      sources: [currentSource],
+                      sources: [this.props.currentSource],
                       filters: [this.state.filter],
                       length: this.state.length,
                     },
                   },
                 }}
                 onCompleted={() => {
-                  closeModal(true);
+                  this.props.closeModal(true);
                 }}
                 refetchQueries={[GET_PLAYROLL]}
               >
@@ -151,10 +156,10 @@ export default class CreateModal extends React.Component<Props, State> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      playrollID ? createRoll() : manageRoll();
+                      this.props.playrollID ? createRoll() : this.manageRoll();
                     }}
                   >
-                    <Text>{playrollID ? 'Add' : 'Continue'}</Text>
+                    <Text>{this.props.playrollID ? 'Add' : 'Continue'}</Text>
                   </TouchableHighlight>
                 )}
               </CreateRollMutation>
@@ -162,7 +167,7 @@ export default class CreateModal extends React.Component<Props, State> {
               <TouchableHighlight
                 style={{ marginRight: 20 }}
                 onPress={() => {
-                  closeModal();
+                  this.props.closeModal();
                 }}
               >
                 <Text>Close</Text>

@@ -1,2 +1,2 @@
-import CreateModal from "./CreateModal";
+import CreateModal from './CreateModal';
 export default CreateModal;

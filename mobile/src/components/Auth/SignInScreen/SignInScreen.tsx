@@ -2,7 +2,7 @@
  * SignInScreen
  */
 
-import * as React from "react";
+import * as React from 'react';
 import {
   Text,
   View,
@@ -10,17 +10,16 @@ import {
   TextInput,
   Switch,
   SafeAreaView,
-} from "react-native";
-import { Auth } from "aws-amplify";
+} from 'react-native';
 import {
   NavigationScreenProp,
   StackActions,
   NavigationActions,
-} from "react-navigation";
+} from 'react-navigation';
 
-import { SignInMutation } from "../../../graphql/requests/Auth";
+import { SignInMutation } from '../../../graphql/requests/Auth';
 
-import styles from "./SignInScreen.styles";
+import styles from './SignInScreen.styles';
 
 export interface Props {
   onLoginPress?: () => void;
@@ -39,8 +38,8 @@ export default class SignInScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      username: "test",
-      password: "Password123!",
+      username: 'test',
+      password: 'Password123!',
       showPassword: true,
       signedUp: true,
     };
@@ -53,7 +52,7 @@ export default class SignInScreen extends React.Component<Props, State> {
   }
 
   toggleSignUp() {
-    this.props.navigation && this.props.navigation.navigate("SignUp");
+    this.props.navigation && this.props.navigation.navigate('SignUp');
   }
 
   render() {
@@ -63,14 +62,14 @@ export default class SignInScreen extends React.Component<Props, State> {
           <Text>Log In</Text>
           <TextInput
             style={styles.usernameField}
-            autoCapitalize="none"
+            autoCapitalize='none'
             onChangeText={(username: string) => this.setState({ username })}
             value={this.state.username}
           />
           <View style={styles.passwordContainer}>
             <TextInput
               secureTextEntry={this.state.showPassword}
-              autoCapitalize="none"
+              autoCapitalize='none'
               style={styles.passwordField}
               onChangeText={(password: string) => this.setState({ password })}
               value={this.state.password}
@@ -80,13 +79,6 @@ export default class SignInScreen extends React.Component<Props, State> {
               value={!this.state.showPassword}
             />
           </View>
-
-          <Button
-            title="Current info"
-            onPress={() => {
-              Auth.currentUserInfo().then(user => console.log(user));
-            }}
-          />
           <SignInMutation
             variables={{
               username: this.state.username,
@@ -96,7 +88,7 @@ export default class SignInScreen extends React.Component<Props, State> {
             {(signIn, { data }) => {
               return (
                 <Button
-                  title="Sign In"
+                  title='Sign In'
                   onPress={() => {
                     signIn().then(
                       () =>
@@ -106,7 +98,7 @@ export default class SignInScreen extends React.Component<Props, State> {
                             key: null,
                             index: 0,
                             actions: [
-                              NavigationActions.navigate({ routeName: "Home" }),
+                              NavigationActions.navigate({ routeName: 'Home' }),
                             ],
                           })
                         )

@@ -7,6 +7,8 @@ import (
 	"github.com/lib/pq"
 )
 
+//! DEPRECATING FILE
+
 type SourceType string
 
 const (

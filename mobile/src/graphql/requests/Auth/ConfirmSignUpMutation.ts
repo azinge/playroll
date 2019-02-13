@@ -1,7 +1,7 @@
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
-export const CONFIRM_SIGN_UP = "CONFIRM_SIGN_UP";
+export const CONFIRM_SIGN_UP = 'CONFIRM_SIGN_UP';
 
 export const CONFIRM_SIGN_UP_MUTATION = gql`
   mutation ${CONFIRM_SIGN_UP}($username: String, $code: String) {

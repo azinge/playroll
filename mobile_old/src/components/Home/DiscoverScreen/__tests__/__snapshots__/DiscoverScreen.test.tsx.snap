@@ -1,0 +1,1884 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#6A0070",
+        "flexDirection": "row",
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#ffffff",
+          "flex": 1,
+          "fontSize": 25,
+          "margin": 30,
+          "textAlign": "left",
+        }
+      }
+    >
+      Playroll 
+    </Text>
+    <View
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Array [
+          false,
+          false,
+          false,
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "justifyContent": "center",
+          },
+          Object {
+            "marginRight": 20,
+          },
+        ]
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          Array [
+            Object {
+              "color": "#ffffff",
+              "fontSize": 35,
+            },
+            Array [
+              Object {
+                "backgroundColor": "transparent",
+              },
+              undefined,
+            ],
+            Object {
+              "fontFamily": "Material Design Icons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            Object {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#993399",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Home
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "borderLeftColor": "grey",
+          "borderLeftWidth": 1,
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "grey",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Playrolls
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "borderLeftColor": "grey",
+          "borderLeftWidth": 1,
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "grey",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Radio
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "height": 250,
+      }
+    }
+  >
+    <RCTScrollView
+      activeAnimationOptions={null}
+      activeAnimationType="timing"
+      activeSlideAlignment="center"
+      activeSlideOffset={20}
+      apparitionDelay={0}
+      automaticallyAdjustContentInsets={false}
+      autoplay={false}
+      autoplayDelay={5000}
+      autoplayInterval={3000}
+      callbackOffsetMargin={5}
+      containerCustomStyle={Object {}}
+      contentContainerCustomStyle={Object {}}
+      contentContainerStyle={
+        Array [
+          Object {},
+          Object {
+            "paddingLeft": 0,
+            "paddingRight": 0,
+          },
+        ]
+      }
+      data={
+        Array [
+          Object {
+            "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+            "name": "Albums Only",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  "creator": "Darren Korb",
+                  "name": "Transistor Original Soundtrack",
+                  "provider": "Spotify",
+                  "providerID": "3B0PgLmgaW0gJth55ApWbw",
+                  "type": "Album",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+            "name": "Artists Only",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+            "name": "Everything",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  "creator": "Big Pun",
+                  "name": "Still Not A Player",
+                  "provider": "Spotify",
+                  "providerID": "3GKL13lkM5nRc4zC1lIOrR",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  "creator": "AmaLee",
+                  "name": "Life Will Change (Persona 5)",
+                  "provider": "Spotify",
+                  "providerID": "3JGQ8LZqQusCMpDluqqKhc",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  "creator": "Darren Korb",
+                  "name": "Transistor Original Soundtrack",
+                  "provider": "Spotify",
+                  "providerID": "3B0PgLmgaW0gJth55ApWbw",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+            "name": "Overseas Bops",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  "creator": "AmaLee",
+                  "name": "Life Will Change (Persona 5)",
+                  "provider": "Spotify",
+                  "providerID": "3JGQ8LZqQusCMpDluqqKhc",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+            "name": "Poppin' Rap",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  "creator": "Big Pun",
+                  "name": "Still Not A Player",
+                  "provider": "Spotify",
+                  "providerID": "3GKL13lkM5nRc4zC1lIOrR",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+            "name": "Velvety Goodness",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+            "name": "Why aren't ya listenin' son?",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  "creator": "Darren Korb",
+                  "name": "Transistor Original Soundtrack",
+                  "provider": "Spotify",
+                  "providerID": "3B0PgLmgaW0gJth55ApWbw",
+                  "type": "Album",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+            "name": "Songs Only",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  "creator": "Big Pun",
+                  "name": "Still Not A Player",
+                  "provider": "Spotify",
+                  "providerID": "3GKL13lkM5nRc4zC1lIOrR",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  "creator": "AmaLee",
+                  "name": "Life Will Change (Persona 5)",
+                  "provider": "Spotify",
+                  "providerID": "3JGQ8LZqQusCMpDluqqKhc",
+                  "type": "Track",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+            "name": "Albums Only",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  "creator": "Darren Korb",
+                  "name": "Transistor Original Soundtrack",
+                  "provider": "Spotify",
+                  "providerID": "3B0PgLmgaW0gJth55ApWbw",
+                  "type": "Album",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+            "name": "Artists Only",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+            "name": "Everything",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  "creator": "Big Pun",
+                  "name": "Still Not A Player",
+                  "provider": "Spotify",
+                  "providerID": "3GKL13lkM5nRc4zC1lIOrR",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  "creator": "AmaLee",
+                  "name": "Life Will Change (Persona 5)",
+                  "provider": "Spotify",
+                  "providerID": "3JGQ8LZqQusCMpDluqqKhc",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  "creator": "Darren Korb",
+                  "name": "Transistor Original Soundtrack",
+                  "provider": "Spotify",
+                  "providerID": "3B0PgLmgaW0gJth55ApWbw",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+            "name": "Overseas Bops",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  "creator": "Watanabe Saki (CV: Risa Taneda)",
+                  "name": "TV Anime \\"Shinsekai Yori\\" ED Shudaika \\"Wareta Ringo\\" \\"Yuki ni Saku Hana\\"",
+                  "provider": "Spotify",
+                  "providerID": "0Kaz0Nu3VKmzUS3hmNX5fD",
+                  "type": "Album",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  "creator": "AmaLee",
+                  "name": "Life Will Change (Persona 5)",
+                  "provider": "Spotify",
+                  "providerID": "3JGQ8LZqQusCMpDluqqKhc",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+            "name": "Poppin' Rap",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  "name": "Drake",
+                  "provider": "Spotify",
+                  "providerID": "3TVXtAsR1Inumwj472S9r4",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  "creator": "Big Pun",
+                  "name": "Still Not A Player",
+                  "provider": "Spotify",
+                  "providerID": "3GKL13lkM5nRc4zC1lIOrR",
+                  "type": "Track",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  "name": "Kanye West",
+                  "provider": "Spotify",
+                  "providerID": "5K4W6rqBFWDnAN6FQUkS6x",
+                  "type": "Artist",
+                },
+              },
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  "creator": "Travis Scott",
+                  "name": "ASTROWORLD",
+                  "provider": "Spotify",
+                  "providerID": "41GuZcammIkupMPKH2OJ6I",
+                  "type": "Album",
+                },
+              },
+            ],
+          },
+          Object {
+            "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+            "name": "Velvety Goodness",
+            "rolls": Array [
+              Object {
+                "source": Object {
+                  "cover": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  "name": "Red Velvet",
+                  "provider": "Spotify",
+                  "providerID": "1z4g3DjTBBZKhvAroFlhOM",
+                  "type": "Artist",
+                },
+              },
+            ],
+          },
+        ]
+      }
+      decelerationRate="fast"
+      directionalLockEnabled={true}
+      disableVirtualization={false}
+      enableMomentum={false}
+      enableSnap={true}
+      firstItem={0}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      hasParallaxImages={false}
+      horizontal={true}
+      inactiveSlideOpacity={0.7}
+      inactiveSlideScale={0.9}
+      inactiveSlideShift={0}
+      initialNumToRender={8}
+      invertStickyHeaders={false}
+      inverted={false}
+      itemHeight={250}
+      itemWidth={750}
+      keyExtractor={[Function]}
+      layout="default"
+      lockScrollTimeoutDuration={1000}
+      lockScrollWhileSnapping={false}
+      loop={true}
+      loopClonesPerSide={3}
+      maxToRenderPerBatch={17}
+      numColumns={1}
+      onContentSizeChange={[Function]}
+      onEndReachedThreshold={2}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onResponderRelease={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      onTouchStart={[Function]}
+      overScrollMode="never"
+      pinchGestureEnabled={false}
+      removeClippedSubviews={true}
+      renderItem={[Function]}
+      scrollEnabled={true}
+      scrollEventThrottle={1}
+      scrollsToTop={false}
+      shouldOptimizeUpdates={true}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      slideStyle={Object {}}
+      sliderWidth={750}
+      stickyHeaderIndices={Array []}
+      style={
+        Object {
+          "flexDirection": "row",
+          "opacity": 0,
+          "width": 750,
+        }
+      }
+      swipeThreshold={20}
+      updateCellsBatchingPeriod={50}
+      useScrollView={false}
+      vertical={false}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={17}
+    >
+      <View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 1,
+                "transform": Array [
+                  Object {
+                    "scale": 1,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Albums Only
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Artists Only
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Everything
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Overseas Bops
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Poppin' Rap
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Velvety Goodness
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Why aren't ya listenin' son?
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "flexDirection": "row",
+              },
+              null,
+            ]
+          }
+        >
+          <View
+            pointerEvents="box-none"
+            style={
+              Object {
+                "opacity": 0.7,
+                "transform": Array [
+                  Object {
+                    "scale": 0.9,
+                  },
+                ],
+                "width": 750,
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "height": 250,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+                  }
+                }
+                style={
+                  Object {
+                    "height": 250,
+                    "width": 750,
+                  }
+                }
+              />
+              <View
+                style={
+                  Object {
+                    "backgroundColor": "#993399",
+                    "borderRadius": 10,
+                    "bottom": 20,
+                    "padding": 7,
+                    "position": "absolute",
+                    "right": 20,
+                    "shadowColor": "black",
+                    "shadowOffset": Object {
+                      "height": 1,
+                      "width": 1,
+                    },
+                    "shadowOpacity": 1,
+                    "shadowRadius": 1,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={2}
+                  style={
+                    Object {
+                      "color": "white",
+                      "fontFamily": "Avenir",
+                    }
+                  }
+                >
+                  Songs Only
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            Object {
+              "width": 0,
+            }
+          }
+        />
+      </View>
+    </RCTScrollView>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#993399",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Popular
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "borderLeftColor": "grey",
+          "borderLeftWidth": 1,
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "grey",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        New
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "borderLeftColor": "grey",
+          "borderLeftWidth": 1,
+          "marginVertical": 5,
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "grey",
+            "fontFamily": "Avenir",
+            "fontSize": 20,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Recommended
+      </Text>
+    </View>
+  </View>
+  <RCTScrollView
+    horizontal={true}
+  >
+    <View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/8e27a6ecc55e623ef4bf695397782d40e15fd573",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Still Not A Player
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "lightgrey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Big Pun
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/dfc792622730ab209bc6dc937f9d93cbc2f55ebf",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          TV Anime "Shinsekai Yori" ED Shudaika "Wareta Ringo" "Yuki ni Saku Hana"
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "lightgrey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Watanabe Saki (CV: Risa Taneda)
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/0731284e07a53c37979ba73ca98c67159e560664",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Life Will Change (Persona 5)
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "lightgrey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          AmaLee
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/a12d8543e28d71d9f1e7f5f363c1a6c73316f9e6",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Kanye West
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/cdca7dc20c778ada42fb18506ea1f26857f01d17",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          ASTROWORLD
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "lightgrey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Travis Scott
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/1263ee65dc1c21fb68f4f2bac5cc2e0dfa7c6958",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Red Velvet
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/2fe23859170d279143c7d10043973820416218f2",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Transistor Original Soundtrack
+        </Text>
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "lightgrey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Darren Korb
+        </Text>
+      </View>
+      <View
+        style={
+          Object {
+            "marginHorizontal": 10,
+            "width": 125,
+          }
+        }
+      >
+        <Image
+          source={
+            Object {
+              "uri": "https://i.scdn.co/image/012ecd119617ac24ab56620ace4b81735b172686",
+            }
+          }
+          style={
+            Object {
+              "borderColor": "lightgrey",
+              "borderRadius": 5,
+              "borderWidth": 1,
+              "height": 125,
+              "width": 125,
+            }
+          }
+        />
+        <Text
+          numberOfLines={2}
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "Avenir",
+              "fontSize": 10,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Drake
+        </Text>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

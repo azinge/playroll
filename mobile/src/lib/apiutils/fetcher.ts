@@ -1,7 +1,7 @@
-import * as config from "../../config/aws";
-import Amplify, { Auth } from "aws-amplify";
-import Signer from "aws-appsync/lib/link/signer/signer";
-import Url from "url";
+import * as config from '../../config/aws';
+import Amplify, { Auth } from 'aws-amplify';
+import Signer from 'aws-appsync/lib/link/signer/signer';
+import Url from 'url';
 
 Amplify.configure(config.amplify.dev);
 
@@ -18,8 +18,8 @@ export const fetcher = async (uri, { method, body }) => {
   const formatted = {
     method,
     body,
-    service: "execute-api",
-    region: config.api.region,
+    service: 'execute-api',
+    region: config.api.dev.region,
     url: uri,
     host,
     path,

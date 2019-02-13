@@ -2,24 +2,24 @@
  * PlayrollCard
  */
 
-import * as React from "react";
-import { Text, View, Dimensions, Image, Button } from "react-native";
-import Carousel from "react-native-snap-carousel";
-import { Card } from "react-native-elements";
-import { NavigationScreenProp } from "react-navigation";
+import * as React from 'react';
+import { View, Image, Button } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { Card } from 'react-native-elements';
+import { NavigationScreenProp } from 'react-navigation';
 
 import {
   DeletePlayrollMutation,
   GetPlayrollQuery,
-} from "../../../../graphql/requests/Playroll/";
+} from '../../../../graphql/requests/Playroll/';
 
-import { LIST_CURRENT_USER_PLAYROLLS } from "../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
+import { LIST_CURRENT_USER_PLAYROLLS } from '../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
-import { Playroll, Roll, MusicSource } from "../../../../graphql/types";
+import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
 
 export interface Props {
-  playroll: Playroll;
-  editPlayroll: () => void;
+  playroll?: Playroll;
+  editPlayroll?: () => void;
   navigation?: NavigationScreenProp<{}>;
 }
 
@@ -43,11 +43,11 @@ export default class PlayrollCard extends React.Component<Props, State> {
     );
   }
   render() {
-    const { playroll, editPlayroll } = this.props;
+    const { playroll = {}, editPlayroll = () => {} } = this.props;
     return (
       <GetPlayrollQuery
-        variables={{ id: this.props.playroll.id }}
-        fetchPolicy="cache-only"
+        variables={{ id: playroll.id }}
+        fetchPolicy='cache-only'
       >
         {({ data }) => {
           const playroll = (data && data.playroll) || {};
@@ -57,7 +57,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
               // image={require("../../assets/wack.jpg")}
               key={playroll.id}
             >
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: 'row' }}>
                 <View style={{ height: 110 }}>
                   {playroll.rolls && playroll.rolls.length > 0 ? (
                     <Carousel
@@ -67,7 +67,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                       sliderWidth={110}
                       itemWidth={100}
                       itemHeight={100}
-                      layout={"tinder"}
+                      layout={'tinder'}
                       layoutCardOffset={5}
                       loop={true}
                     />
@@ -75,14 +75,14 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     <Image
                       source={{
                         uri:
-                          "https://www.unesale.com/ProductImages/Large/notfound.png",
+                          'https://www.unesale.com/ProductImages/Large/notfound.png',
                       }}
                       style={{ height: 110, width: 110, borderRadius: 5 }}
                     />
                   )}
                 </View>
                 <View>
-                  <Button onPress={editPlayroll} title="Edit Playroll" />
+                  <Button onPress={editPlayroll} title='Edit Playroll' />
                   <DeletePlayrollMutation
                     variables={{
                       id: playroll.id,
@@ -91,7 +91,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                   >
                     {(deletePlayroll, { data }) => (
                       <Button
-                        title="Delete Playroll"
+                        title='Delete Playroll'
                         onPress={() => {
                           deletePlayroll();
                         }}

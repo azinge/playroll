@@ -1,20 +1,19 @@
-import React from "react";
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation';
 
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from './LoadingScreen';
 
 export const LoadingNavigator = createStackNavigator(
   {
     Loading: {
       screen: LoadingScreen,
       navigationOptions: () => ({
-        title: `Loading`,
+        title: 'Loading',
         header: null,
       }),
     },
   },
   {
-    initialRouteName: "Loading",
-    headerMode: "screen",
+    initialRouteName: 'Loading',
+    headerMode: 'screen',
   }
 );

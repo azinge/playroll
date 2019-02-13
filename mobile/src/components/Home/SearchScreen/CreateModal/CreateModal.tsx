@@ -1,50 +1,46 @@
-import React from "react";
-import { Text } from "native-base";
-import RNPickerSelect from "react-native-picker-select";
+import React from 'react';
+import RNPickerSelect from 'react-native-picker-select';
 import {
   View,
+  Text,
   Alert,
   Modal,
   TouchableHighlight,
   SegmentedControlIOS,
   Image,
   TextInput,
-} from "react-native";
-import styles, { pickerStyle } from "./CreateModal.styles";
-import { NavigationScreenProp } from "react-navigation";
+} from 'react-native';
+import styles, { pickerStyle } from './CreateModal.styles';
 
-import { MusicSource } from "../../../../graphql/types";
+import { MusicSource } from '../../../../graphql/types';
 
-import { CreateRollMutation } from "../../../../graphql/requests/Roll";
-import { GET_PLAYROLL } from "../../../../graphql/requests/Playroll/GetPlayrollQuery";
+import { CreateRollMutation } from '../../../../graphql/requests/Roll';
+import { GET_PLAYROLL } from '../../../../graphql/requests/Playroll/GetPlayrollQuery';
 
 export interface Props {
-  currentSource: MusicSource;
-  modalVisible: boolean;
-  closeModal: (redirect?: boolean) => void;
-  navigation: NavigationScreenProp<{}>;
-  //   manageRoll: (currentSource?: MusicSource) => void;
-  playrollID: number;
+  currentSource?: MusicSource;
+  modalVisible?: boolean;
+  closeModal?: (redirect?: boolean) => void;
+  manageRoll?: () => void;
+  playrollID?: number;
 }
 
 export default class CreateModal extends React.Component<Props> {
-  manageRoll() {
-    console.log(this.props.currentSource);
-    this.props.navigation &&
-      this.props.navigation.navigate("ManageRoll", {
-        currentSource: this.props.currentSource,
-      });
-    this.props.closeModal();
-  }
-
   render() {
+    const {
+      currentSource = {},
+      modalVisible = false,
+      playrollID = 0,
+      closeModal = () => {},
+      manageRoll = () => {},
+    } = this.props;
     return (
       <Modal
-        animationType="fade"
+        animationType='fade'
         transparent={true}
-        visible={this.props.modalVisible}
+        visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          Alert.alert('Modal has been closed.');
         }}
       >
         <View style={styles.modalposition}>
@@ -54,25 +50,25 @@ export default class CreateModal extends React.Component<Props> {
               <Image
                 style={{ width: 200, height: 200, borderRadius: 5 }}
                 source={{
-                  uri: this.props.currentSource.cover,
+                  uri: currentSource.cover,
                 }}
               />
             </View>
-            <Text style={styles.welcome}>{this.props.currentSource.name}</Text>
-            <Text style={styles.welcome}>{this.props.currentSource.type}</Text>
+            <Text style={styles.welcome}>{currentSource.name}</Text>
+            <Text style={styles.welcome}>{currentSource.type}</Text>
 
             <View
               style={{
                 width: 200,
                 height: 100,
-                marginLeft: "auto",
-                marginRight: "auto",
+                marginLeft: 'auto',
+                marginRight: 'auto',
                 marginBottom: 0,
               }}
             >
               <SegmentedControlIOS
-                tintColor={"#6A0070"}
-                values={["Popular", "Random"]}
+                tintColor={'#6A0070'}
+                values={['Popular', 'Random']}
                 // selectedIndex={this.state.playFrom}
                 onChange={event => {
                   this.setState({
@@ -80,13 +76,13 @@ export default class CreateModal extends React.Component<Props> {
                   });
                 }}
               />
-              <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <TextInput
                   // ref={(el) => {
                   //     this.inputRefs.name = el;
                   // }}
-                  placeholder={"Mai = Waifu"}
-                  returnKeyType="next"
+                  placeholder={'Mai = Waifu'}
+                  returnKeyType='next'
                   enablesReturnKeyAutomatically
                   // onSubmitEditing={() => {
                   // this.inputRefs.picker.togglePicker();
@@ -95,10 +91,10 @@ export default class CreateModal extends React.Component<Props> {
                   blurOnSubmit={false}
                 />
                 <RNPickerSelect
-                  placeholder={{ label: "Minutes...", value: null }}
+                  placeholder={{ label: 'Minutes...', value: null }}
                   items={[
-                    { label: "Songs", value: "songs" },
-                    { label: "Minutes", value: "minutes" },
+                    { label: 'Songs', value: 'songs' },
+                    { label: 'Minutes', value: 'minutes' },
                   ]}
                   onValueChange={value => {
                     this.setState({
@@ -113,12 +109,12 @@ export default class CreateModal extends React.Component<Props> {
               <CreateRollMutation
                 variables={{
                   input: {
-                    playrollID: this.props.playrollID,
-                    data: { sources: [this.props.currentSource] },
+                    playrollID: playrollID,
+                    data: { sources: [currentSource] },
                   },
                 }}
                 onCompleted={() => {
-                  this.props.closeModal(true);
+                  closeModal(true);
                 }}
                 refetchQueries={[GET_PLAYROLL]}
               >
@@ -126,10 +122,10 @@ export default class CreateModal extends React.Component<Props> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      this.props.playrollID ? createRoll() : this.manageRoll();
+                      playrollID ? createRoll() : manageRoll();
                     }}
                   >
-                    <Text>{this.props.playrollID ? "Add" : "Continue"}</Text>
+                    <Text>{playrollID ? 'Add' : 'Continue'}</Text>
                   </TouchableHighlight>
                 )}
               </CreateRollMutation>
@@ -137,7 +133,7 @@ export default class CreateModal extends React.Component<Props> {
               <TouchableHighlight
                 style={{ marginRight: 20 }}
                 onPress={() => {
-                  this.props.closeModal();
+                  closeModal();
                 }}
               >
                 <Text>Close</Text>

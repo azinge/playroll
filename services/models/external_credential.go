@@ -1,5 +1,7 @@
 package models
 
+//! DEPRECATING FILE
+
 import (
 	"encoding/json"
 	"fmt"

@@ -8,6 +8,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+//! File unimplemented temporarily
+
 type Options struct {
 	UserID          string
 	PreloadModel    string

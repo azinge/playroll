@@ -2,8 +2,8 @@
  * ManageProfileScreen
  */
 
-import * as React from "react";
-import { Text, View, SafeAreaView } from "react-native";
+import * as React from 'react';
+import { Text, View, SafeAreaView } from 'react-native';
 
 export default class ManageProfileScreen extends React.Component {
   render() {

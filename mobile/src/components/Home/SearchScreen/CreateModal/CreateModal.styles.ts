@@ -10,7 +10,7 @@ export default StyleSheet.create({
   welcome: {
       fontSize: 20,
       color: '#6A0070',
-      marginLeft: 50      
+      marginLeft: 50,
       // textAlign: 'center',
       // margin: 100,
   },
@@ -18,16 +18,16 @@ export default StyleSheet.create({
       textAlign: 'center',
       color: '#333333',
       marginBottom: 5,
-      
+
   },
   modaldata: {
-    marginLeft: 50, 
-    marginRight: 50, 
+    marginLeft: 50,
+    marginRight: 50,
     marginTop: 10,
     marginBottom: 10,
-    shadowColor: "black", 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.3
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
   },
   footercontent: {
       backgroundColor: '#00ffff',
@@ -47,24 +47,24 @@ export default StyleSheet.create({
     marginLeft: 15,
   },
   formfooter: {
-    display: 'flex', 
-    flexDirection: 'row', 
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    bottom: 10
-  }, 
+    bottom: 10,
+  },
   modalposition: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(52, 52, 52, 0.6)"
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(52, 52, 52, 0.6)',
   },
   modalbackground: {
     flex: .6,
-    flexDirection: "column",
+    flexDirection: 'column',
     borderRadius: 20,
-    backgroundColor: "white",
-    position: 'absolute'
+    backgroundColor: 'white',
+    position: 'absolute',
     // margin: 50
   },
 });
@@ -85,5 +85,5 @@ export const pickerStyle = StyleSheet.create({
     backgroundColor: 'white',
     color: 'black',
     alignItems: 'flex-end',
-  }
+  },
 });

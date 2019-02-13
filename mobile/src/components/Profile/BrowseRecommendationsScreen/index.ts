@@ -1,2 +1,2 @@
-import BrowseRecommendationsScreen from "./BrowseRecommendationsScreen";
+import BrowseRecommendationsScreen from './BrowseRecommendationsScreen';
 export default BrowseRecommendationsScreen;

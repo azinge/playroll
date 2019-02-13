@@ -6,7 +6,6 @@ import {
   Alert,
   Modal,
   TouchableHighlight,
-  SegmentedControlIOS,
   Image,
   TextInput,
 } from 'react-native';
@@ -25,7 +24,19 @@ export interface Props {
   playrollID?: number;
 }
 
-export default class CreateModal extends React.Component<Props> {
+interface State {
+  filter?: { type?: string; modifications?: string[] };
+  length?: { type?: string; modifications?: string[] };
+}
+
+export default class CreateModal extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      filter: undefined,
+      length: undefined,
+    };
+  }
   render() {
     const {
       currentSource = {},
@@ -54,63 +65,81 @@ export default class CreateModal extends React.Component<Props> {
                 }}
               />
             </View>
-            <Text style={styles.welcome}>{currentSource.name}</Text>
-            <Text style={styles.welcome}>{currentSource.type}</Text>
-
+            <Text style={styles.welcome}>
+              {`${currentSource.name} - ${currentSource.type}`}
+            </Text>
             <View
               style={{
                 width: 200,
-                height: 100,
+                height: 125,
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 marginBottom: 0,
               }}
             >
-              <SegmentedControlIOS
-                tintColor={'#6A0070'}
-                values={['Popular', 'Random']}
-                // selectedIndex={this.state.playFrom}
-                onChange={event => {
-                  this.setState({
-                    selectedIndex: event.nativeEvent.selectedSegmentIndex,
-                  });
+              <RNPickerSelect
+                placeholder={{ label: 'Select Filter', value: undefined }}
+                items={[
+                  { label: 'Play Songs in order', value: 'In Order' },
+                  { label: 'Randomly Select Songs', value: 'Random' },
+                ]}
+                onValueChange={value => {
+                  switch (value) {
+                    case 'In Order':
+                      this.setState({
+                        filter: { type: 'In Order' },
+                      });
+                      break;
+                    case 'Random':
+                      this.setState({
+                        filter: { type: 'Random' },
+                      });
+                      break;
+                    default:
+                      this.setState({
+                        filter: undefined,
+                      });
+                  }
                 }}
+                style={pickerStyle}
               />
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <TextInput
-                  // ref={(el) => {
-                  //     this.inputRefs.name = el;
-                  // }}
-                  placeholder={'Mai = Waifu'}
-                  returnKeyType='next'
-                  enablesReturnKeyAutomatically
-                  // onSubmitEditing={() => {
-                  // this.inputRefs.picker.togglePicker();
-                  // }}
-                  style={pickerStyle.inputIOS}
-                  blurOnSubmit={false}
-                />
-                <RNPickerSelect
-                  placeholder={{ label: 'Minutes...', value: null }}
-                  items={[
-                    { label: 'Songs', value: 'songs' },
-                    { label: 'Minutes', value: 'minutes' },
-                  ]}
-                  onValueChange={value => {
-                    this.setState({
-                      favColor: value,
-                    });
-                  }}
-                  style={pickerStyle}
-                />
-              </View>
+              <RNPickerSelect
+                placeholder={{ label: 'Select Length', value: undefined }}
+                items={[
+                  { label: 'Play all tracks', value: 'Original' },
+                  { label: 'Play 5 tracks', value: 'Number' },
+                ]}
+                onValueChange={value => {
+                  switch (value) {
+                    case 'Original':
+                      this.setState({
+                        length: { type: 'Original' },
+                      });
+                      break;
+                    case 'Number':
+                      this.setState({
+                        length: { type: 'Number', modifications: ['0', '5'] },
+                      });
+                      break;
+                    default:
+                      this.setState({
+                        length: undefined,
+                      });
+                  }
+                }}
+                style={pickerStyle}
+              />
             </View>
             <View style={styles.formfooter}>
               <CreateRollMutation
                 variables={{
                   input: {
                     playrollID: playrollID,
-                    data: { sources: [currentSource] },
+                    data: {
+                      sources: [currentSource],
+                      filters: [this.state.filter],
+                      length: this.state.length,
+                    },
                   },
                 }}
                 onCompleted={() => {

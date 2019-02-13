@@ -848,7 +848,7 @@ exports[`renders correctly 1`] = `
                 tintColor="#6A0070"
                 values={
                   Array [
-                    "Popular",
+                    "In Order",
                     "Random",
                   ]
                 }
@@ -865,7 +865,7 @@ exports[`renders correctly 1`] = `
                   allowFontScaling={true}
                   blurOnSubmit={false}
                   enablesReturnKeyAutomatically={true}
-                  placeholder="Mai = Waifu"
+                  placeholder="How many?"
                   returnKeyType="next"
                   style={
                     Object {
@@ -933,7 +933,7 @@ exports[`renders correctly 1`] = `
                         ]
                       }
                       underlineColorAndroid="transparent"
-                      value="Minutes..."
+                      value="Play all tracks"
                     />
                   </View>
                   <Modal
@@ -1134,19 +1134,14 @@ exports[`renders correctly 1`] = `
                           items={
                             Array [
                               Object {
-                                "label": "Minutes...",
+                                "label": "Play all tracks",
                                 "textColor": undefined,
-                                "value": null,
+                                "value": "Original",
                               },
                               Object {
-                                "label": "Songs",
+                                "label": "Number of songs",
                                 "textColor": undefined,
-                                "value": "songs",
-                              },
-                              Object {
-                                "label": "Minutes",
-                                "textColor": undefined,
-                                "value": "minutes",
+                                "value": "Number",
                               },
                             ]
                           }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
@@ -13,24 +14,26 @@ import (
 	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
 
-func handleFilters(tracks []jsonmodels.MusicSource, filters *[]jsonmodels.RollFilter) error {
+func handleFilters(tracks []jsonmodels.MusicSource, filters *[]jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
 	for _, filter := range *filters {
 		switch filter.Type {
 		case "Random":
 			fmt.Printf("Random [Filter Type]!")
-			for i := range tracks {
-				tracks[i] = tracks[rand.Intn(len(tracks))]
+			trackscopy := []jsonmodels.MusicSource{}
+			r := rand.New(rand.NewSource(time.Now().Unix()))
+			for _, i := range r.Perm(len(tracks)) {
+				trackscopy = append(trackscopy, tracks[i])
 			}
-			break
+			return trackscopy, nil
 		case "In Order":
 			fmt.Printf("In Order [Filter Type]: Don't modify!")
-			break
+			return tracks, nil
 		}
 	}
-	return nil
+	return tracks, nil
 }
 
-func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLength) error {
+func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLength) ([]jsonmodels.MusicSource, error) {
 	switch length.Type {
 	case "Number":
 		fmt.Printf("Number [Length Type]!")
@@ -39,20 +42,20 @@ func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLengt
 		if err != nil {
 			fmt.Println("offset error in handleLengths()")
 			fmt.Println(err)
-			return err
+			return nil, err
 		}
 
 		reqNumber, err := strconv.ParseInt(length.Modifications[1], 10, 64)
 		if err != nil {
 			fmt.Println("reqNumber error in handleLengths()")
 			fmt.Println(err)
-			return err
+			return nil, err
 		}
 
 		// TODO: handle throwing error on the FE when requested
 		// number of tracks is greater than the actual tracks slice length.
 		if reqNumber > int64(len(tracks)-1) {
-			return errors.New("requested # of tracks > tracks slice length")
+			return nil, errors.New("requested # of tracks > tracks slice length")
 		}
 
 		tracks = tracks[offset:]
@@ -62,12 +65,12 @@ func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLengt
 		for i := 0; i < int(newTrackLength); i++ {
 			result[i] = tracks[i]
 		}
-		tracks = result
+		return result, nil
 	case "Original":
 		fmt.Printf("Original [Length Type]: Don't modify!")
-		break
+		return tracks, nil
 	}
-	return nil
+	return tracks, nil
 }
 
 func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
@@ -103,8 +106,14 @@ func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models
 				tracks = append(tracks, (*result)...)
 			}
 		}
-		handleFilters(tracks, &roll.Data.Filters)
-		handleLengths(tracks, &roll.Data.Length)
+		tracks, err := handleFilters(tracks, &roll.Data.Filters)
+		if err != nil {
+			return nil, err
+		}
+		tracks, err = handleLengths(tracks, &roll.Data.Length)
+		if err != nil {
+			return nil, err
+		}
 		compiledRolls = append(compiledRolls, models.CompiledRollOutput{
 			Data:   jsonmodels.CompiledRollDataOutput{Tracks: tracks},
 			RollID: roll.ID,

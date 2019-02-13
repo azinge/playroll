@@ -1,16 +1,9 @@
-import * as React from 'react';
-import renderer from 'react-test-renderer';
-import { MockedProvider } from 'react-apollo/test-utils';
+import * as React from "react";
+import renderer from "react-test-renderer";
 
-import SearchScreen from '../SearchScreen';
+import SearchScreen from "../SearchScreen";
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <MockedProvider>
-        <SearchScreen />
-      </MockedProvider>
-    )
-    .toJSON();
+it("renders correctly", () => {
+  const tree = renderer.create(<SearchScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

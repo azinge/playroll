@@ -17,6 +17,14 @@ export const GET_PLAYROLL_QUERY = gql`
             name
             type
           }
+          filters {
+            type
+            modifications
+          }
+          length {
+            type
+            modifications
+          }
         }
       }
       tracklists {

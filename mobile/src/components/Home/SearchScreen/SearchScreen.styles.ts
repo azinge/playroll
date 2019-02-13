@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const pickerStyle = StyleSheet.create({
   inputIOS: {
@@ -12,13 +12,13 @@ export const pickerStyle = StyleSheet.create({
     // paddingBottom: 12,
     // borderWidth: 1,
     // borderLeftWidth: 1,
-    borderColor: '#6A0070',
+    borderColor: "#6A0070",
     // borderRadius: 4,
-    borderLeftColor: 'lightgray',
-    textAlign: 'center',
-    backgroundColor: '#f5eeed',
-    color: 'black',
-    alignItems: 'flex-end',
+    borderLeftColor: "lightgray",
+    textAlign: "center",
+    backgroundColor: "#f5eeed",
+    color: "black",
+    alignItems: "flex-end",
   },
 });
 

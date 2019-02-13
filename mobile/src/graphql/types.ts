@@ -76,13 +76,13 @@ export type RollFilter = {
 };
 
 export type RollData = {
-  filter?: RollFilter;
+  filters?: RollFilter[];
   length?: RollLength;
   sources?: MusicSource[];
 };
 
 export type RollDataInput = {
-  filter?: RollFilter;
+  filters?: RollFilter[];
   length?: RollLength;
   sources?: MusicSource[];
 };

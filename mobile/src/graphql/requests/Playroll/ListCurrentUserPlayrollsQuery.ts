@@ -17,6 +17,14 @@ export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
             name
             type
           }
+          filters {
+            type
+            modifications
+          }
+          length {
+            type
+            modifications
+          }
         }
       }
       tracklists {

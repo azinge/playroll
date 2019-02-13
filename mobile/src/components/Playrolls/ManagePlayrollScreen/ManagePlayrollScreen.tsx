@@ -7,7 +7,7 @@ import { View, TextInput, ScrollView, Image } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ManagePlayrollScreen.styles';
-import Search from '../../Home/SearchScreen';
+import Search from '../../shared/Search';
 import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {

@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "react-native";
 import styles, { pickerStyle } from "./CreateModal.styles";
+import { NavigationScreenProp } from "react-navigation";
 
 import { MusicSource } from "../../../../graphql/types";
 
@@ -21,11 +22,21 @@ export interface Props {
   currentSource: MusicSource;
   modalVisible: boolean;
   closeModal: (redirect?: boolean) => void;
-  manageRoll: () => void;
+  navigation: NavigationScreenProp<{}>;
+  //   manageRoll: (currentSource?: MusicSource) => void;
   playrollID: number;
 }
 
 export default class CreateModal extends React.Component<Props> {
+  manageRoll() {
+    console.log(this.props.currentSource);
+    this.props.navigation &&
+      this.props.navigation.navigate("ManageRoll", {
+        currentSource: this.props.currentSource,
+      });
+    this.props.closeModal();
+  }
+
   render() {
     return (
       <Modal
@@ -115,9 +126,7 @@ export default class CreateModal extends React.Component<Props> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      this.props.playrollID
-                        ? createRoll()
-                        : this.props.manageRoll();
+                      this.props.playrollID ? createRoll() : this.manageRoll();
                     }}
                   >
                     <Text>{this.props.playrollID ? "Add" : "Continue"}</Text>

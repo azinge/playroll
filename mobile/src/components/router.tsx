@@ -21,7 +21,7 @@ export const AppContainer = createStackNavigator(
     Profile: ProfileNavigator,
   },
   {
-    initialRouteName: "Loading",
+    initialRouteName: "Home",
     headerMode: "screen",
     navigationOptions: {
       header: null,

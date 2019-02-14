@@ -20,7 +20,7 @@ export interface Props {
 
 interface State {
   authCode: string;
-  confirmUser: string;
+  username: string;
   error?: string
 }
 
@@ -30,11 +30,22 @@ interface State {
 
     this.state = {
       authCode: "",
-      confirmUser: "",
+      username: "",
       error: undefined,
     };
 
     this.renderError = this.renderError.bind(this);
+  }
+
+  validateInput(confirmSignUp) {
+    if (this.state.username === '' || this.state.authCode === '') {
+      return this.setState({
+        error: 'All fields must have a value.'
+      }, () => {
+        setTimeout(() => {this.setState({ error: null })}, 3000);
+      });
+    }
+    confirmSignUp();
   }
 
   renderHeader() {
@@ -49,14 +60,14 @@ interface State {
     return (
       <ConfirmSignUpMutation
         variables={{
-          username: this.state.confirmUser,
+          username: this.state.username,
           code: this.state.authCode,
         }}
       >
-        {(confirmSignUp, { loading, data }) => {
+        {(confirmSignUp, { loading, error, data }) => {
           return (
             <TouchableOpacity
-              onPress={() => confirmSignUp()}
+              onPress={() => this.validateInput(confirmSignUp)}
               style={styles.submitButton}
             >
               {loading
@@ -87,16 +98,16 @@ interface State {
             <TextInput
               placeholder="Confirm Username"
               style={styles.inputContainer}
-              onChangeText={text => this.setState({ confirmUser: text.trim() })}
+              onChangeText={text => this.setState({ username: text.trim() })}
               autoCapitalize={'sentences'}
-              value={this.state.confirmUser}
+              value={this.state.username}
             />
             <TextInput
               placeholder="Confirmation Code"
               style={styles.inputContainer}
-              onChangeText={text => this.setState({ confirmationCode: text.trim() })}
+              onChangeText={text => this.setState({ authCode: text.trim() })}
               autoCapitalize={'sentences'}
-              value={this.state.confirmationCode}
+              value={this.state.authCode}
             />
             {this.renderError()}
           </View>

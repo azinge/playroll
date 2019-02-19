@@ -23,16 +23,18 @@ export interface Props {
 
 interface State {}
 export default class ManageRollScreen extends React.Component<Props, State> {
+
   render() {
     const currentSource =
       this.props.navigation && this.props.navigation.getParam('currentSource');
     // console.log(currentSource.cover);
     return (
       <View style={{ flex: 2, backgroundColor: 'white' }}>
+
         <LinearGradient
           colors={['#9333CC', 'white']}
           style={{
-            flex: 2,
+            flex: 3,
           }}
         >
           <View
@@ -40,6 +42,7 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               shadowColor: 'black',
               shadowOffset: { height: 2, width: 2 },
               shadowOpacity: 0.3,
+              marginTop: 50,
             }}
           >
             <ImageBackground

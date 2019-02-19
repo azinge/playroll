@@ -34,8 +34,9 @@ export default class TracklistScreen extends React.Component<Props, State> {
           {({ loading, error, data }) => {
             return (
               <View style={{ flex: 1, marginTop: 20 }}>
-                <View>
-                  <Text>{`${playlistName} - Tracklist TEST`}</Text>
+                <View style={styles.headerView}>
+                  {/* TODO: improve title styling */}
+                  <Text style={styles.titleText}>{`${playlistName} > Tracklist`}</Text>
                   <GeneratePlaylistMutation
                     variables={{
                       tracklistID,
@@ -45,6 +46,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     {(generatePlaylist, { data }) => (
                       <Button
                         title='Generate Playlist'
+                        containerStyle={styles.genPlaylistButton}
                         onPress={() => {
                           generatePlaylist();
                         }}
@@ -65,13 +67,14 @@ export default class TracklistScreen extends React.Component<Props, State> {
                           <Card
                             key={compiledRoll.id}
                             title={`Compiled roll #${compiledRoll.id}`}
+                            titleStyle={styles.rollCardTitle}
                           >
                             {compiledRoll.data.tracks.map(track => {
                               return (
                                 track && (
-                                  <View key={track.providerID}>
+                                  <View style={styles.trackView} key={track.providerID}>
                                     <Image
-                                      style={{ width: 100, height: 100 }}
+                                      style={styles.trackImage}
                                       source={{ uri: track.cover }}
                                     />
                                     <Text>{track.name}</Text>

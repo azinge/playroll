@@ -11,9 +11,15 @@ import DiscoverCarousel from './DiscoverCarousel';
 import { musicSources } from '../../../static/mockData';
 import { Header, Icon } from 'react-native-elements';
 
+import { Font } from 'expo';
+
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
+
+Font.loadAsync({
+  Avenir: require('../../../assets/fonts/AvenirLTStd-Black.otf'),
+});
 
 interface State {}
 export default class DiscoverScreen extends React.Component<Props, State> {

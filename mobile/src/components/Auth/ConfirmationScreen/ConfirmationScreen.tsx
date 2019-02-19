@@ -96,7 +96,8 @@ interface State {
           <View style={styles.container}>
             {this.renderHeader()}
             <TextInput
-              placeholder="Confirm Username"
+              placeholder="Confirm 
+"
               style={styles.inputContainer}
               onChangeText={text => this.setState({ username: text.trim() })}
               autoCapitalize={'sentences'}

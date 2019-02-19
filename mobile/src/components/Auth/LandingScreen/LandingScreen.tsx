@@ -48,6 +48,12 @@ export default class LandingScreen extends React.Component<Props, State> {
               this.props.navigation && this.props.navigation.navigate("SignUp");
             }}
           >Sign Up</Text>
+          <Text
+            style={styles.signUpText}
+            onPress={() => {
+              this.props.navigation && this.props.navigation.navigate("Confirmation");
+            }}
+          >Confirm User (TEMP)</Text>
         </View>
       </SafeAreaView>
     );

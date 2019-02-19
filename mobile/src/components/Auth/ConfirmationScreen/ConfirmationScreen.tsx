@@ -50,7 +50,7 @@ interface State {
       <ConfirmSignUpMutation
         variables={{
           username: this.state.confirmUser,
-          code: this.state.authCode,
+          code: this.state.confirmationCode,
         }}
       >
         {(confirmSignUp, { loading, data }) => {

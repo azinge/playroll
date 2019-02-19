@@ -20,6 +20,7 @@ export interface Props {
 
 interface State {}
 
+// TODO: re-style this screen
 export default class TracklistScreen extends React.Component<Props, State> {
   render() {
     const nav = this.props.navigation;
@@ -34,7 +35,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
             return (
               <View style={{ flex: 1, marginTop: 20 }}>
                 <View>
-                  <Text>{`${playlistName} - Tracklist`}</Text>
+                  <Text>{`${playlistName} - Tracklist TEST`}</Text>
                   <GeneratePlaylistMutation
                     variables={{
                       tracklistID,

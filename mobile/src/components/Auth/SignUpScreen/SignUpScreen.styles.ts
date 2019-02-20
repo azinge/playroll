@@ -31,13 +31,7 @@ export default StyleSheet.create({
     borderColor: '#6A0070',
     color: '#6A0070',
   },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  passwordField: {
-    flex: 4,
+  avatarContainer: {
     marginTop: 25,
     width: '100%',
     height: 45,
@@ -46,6 +40,9 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#6A0070',
     color: '#6A0070',
+  },
+  showPasswordButton: {
+    marginTop: 15
   },
   submitButton: {
     flex: 1,
@@ -63,7 +60,7 @@ export default StyleSheet.create({
     fontSize: 18,
   },
   errorMessage: {
-    paddingTop: 5,
+    marginTop: 15,
     fontWeight: 'bold',
     fontSize: 18,
     color: '#FF0000',

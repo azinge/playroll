@@ -43,15 +43,14 @@ export default class SignUpScreen extends React.Component<Props, State> {
       email: '',
       password: '',
       showPassword: true,
-      avatar:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
+      avatar: '',
       error: undefined,
     };
-    this.toggleSwitch = this.toggleSwitch.bind(this);
+    this.displayPassword = this.displayPassword.bind(this);
     this.renderError = this.renderError.bind(this);
   }
 
-  toggleSwitch() {
+  displayPassword() {
     this.setState({ showPassword: !this.state.showPassword });
   }
 
@@ -62,6 +61,18 @@ export default class SignUpScreen extends React.Component<Props, State> {
     }
     // Linking.openURL(url);
     WebBrowser.openBrowserAsync(url);
+  }
+
+  validateInput(signUp) {
+    if (this.state.username === '' || this.state.email === '' ||
+        this.state.password === '' || this.state.avatar === '') {
+          return this.setState({
+            error: 'All fields must have a value'
+          }, () => {
+            setTimeout(() => {this.setState({ error: null })}, 3000);
+          });
+    }
+    signUp();
   }
 
   renderHeader() {
@@ -85,6 +96,21 @@ export default class SignUpScreen extends React.Component<Props, State> {
     );
   }
 
+  renderPasswordButton() {
+    if (this.state.password.length > 1) {
+      return (
+        <TouchableOpacity
+          onPress={() => this.displayPassword()}
+          style={styles.showPasswordButton}
+        >
+          <Text style={styles.tosLink}>
+            Show Password
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  }
+
   renderSignupButton() {
     return (
       <SignUpMutation
@@ -95,10 +121,13 @@ export default class SignUpScreen extends React.Component<Props, State> {
           avatar: this.state.avatar,
         }}
       >
-        {(signUp, { loading, data }) => {
+        {(signUp, { loading, error, data }) => {
+          if (data) {
+            this.props.navigation.navigate("Confirmation");
+          }
           return (
             <TouchableOpacity
-              onPress={() => signUp()}
+              onPress={() => this.validateInput(signUp)}
               style={styles.submitButton}
             >
               {loading ? (
@@ -142,21 +171,16 @@ export default class SignUpScreen extends React.Component<Props, State> {
               autoCapitalize={'none'}
               value={this.state.email}
             />
-            <View style={styles.passwordContainer}>
-              <TextInput
-                placeholder='Password'
-                style={styles.passwordField}
-                onChangeText={(password: string) => this.setState({ password })}
-                secureTextEntry={this.state.showPassword}
-                value={this.state.password}
-              />
-              <Switch
-                onValueChange={this.toggleSwitch}
-                value={!this.state.showPassword}
-              />
-            </View>
-            <TextInput // TODO: Remove Later
+            <TextInput
+              placeholder='Password'
               style={styles.inputContainer}
+              onChangeText={(password: string) => this.setState({ password })}
+              secureTextEntry={this.state.showPassword}
+              value={this.state.password}
+            />
+            {this.renderPasswordButton()}
+            <TextInput // TODO: Remove Later
+              style={styles.avatarContainer}
               autoCapitalize='none'
               placeholder='Avatar link'
               onChangeText={(avatar: string) => this.setState({ avatar })}

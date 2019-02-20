@@ -6,6 +6,7 @@ import React from 'react';
 import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
+import { LinearGradient } from "expo";
 
 import {
   GeneratePlaylistMutation,
@@ -33,10 +34,16 @@ export default class TracklistScreen extends React.Component<Props, State> {
         <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
             return (
+              // TODO: possibly remove inline styles
               <View style={{ flex: 1, marginTop: 20 }}>
                 <View style={styles.headerView}>
-                  {/* TODO: improve title styling */}
-                  <Text style={styles.titleText}>{`${playlistName} > Tracklist`}</Text>
+                  <View style={styles.titleView}>
+                    <LinearGradient colors={["#761477", "#954687"]}>
+                      <View style={styles.innerTitleView}>
+                        <Text style={styles.titleText}>{`${playlistName}`}</Text>
+                      </View>
+                    </LinearGradient>
+                  </View>
                   <GeneratePlaylistMutation
                     variables={{
                       tracklistID,
@@ -68,6 +75,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                             key={compiledRoll.id}
                             title={`Compiled roll #${compiledRoll.id}`}
                             titleStyle={styles.rollCardTitle}
+                            containerStyle={styles.rollCardContainer}
                           >
                             {compiledRoll.data.tracks.map(track => {
                               return (

@@ -142,8 +142,7 @@ export default class CreateModal extends React.Component<Props, State> {
                     playrollID: this.props.playrollID,
                     data: {
                       sources: [this.props.currentSource],
-                      filters: [this.state.filter],
-                      length: this.state.length,
+                      filters: [this.state.filter, this.state.length],
                     },
                   },
                 }}

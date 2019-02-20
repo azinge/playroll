@@ -10,12 +10,12 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  Button,
 } from 'react-native';
 import { LinearGradient } from 'expo';
-import { Header } from 'react-native-elements';
+
 import { NavigationScreenProp } from 'react-navigation';
-import { MusicSource } from 'graphql/types';
+import { MusicSource } from '../../../graphql/types';
+import { Button } from 'react-native-elements';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -23,16 +23,18 @@ export interface Props {
 
 interface State {}
 export default class ManageRollScreen extends React.Component<Props, State> {
+
   render() {
     const currentSource =
       this.props.navigation && this.props.navigation.getParam('currentSource');
     // console.log(currentSource.cover);
     return (
       <View style={{ flex: 2, backgroundColor: 'white' }}>
+
         <LinearGradient
-          colors={['white', '#9333CC']}
+          colors={['#9333CC', 'white']}
           style={{
-            flex: 2,
+            flex: 3,
           }}
         >
           <View
@@ -40,6 +42,7 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               shadowColor: 'black',
               shadowOffset: { height: 2, width: 2 },
               shadowOpacity: 0.3,
+              marginTop: 50,
             }}
           >
             <ImageBackground
@@ -71,38 +74,40 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               {currentSource.type}
             </Text>
           </View>
-          <View style={{ margin: 25 }}>
+          <View style={{ marginTop: 25, marginLeft: 50, marginRight: 50 }}>
             <Button
-              fontWeight='bold'
               title='Add To Playroll'
-              color='#9333CC'
+              containerStyle={{ margin: 10 }}
               buttonStyle={{
                 backgroundColor: 'white',
-                margin: 10,
-                borderRadius: 5,
+                borderRadius: 25,
+                height: 50,
               }}
+              titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() => {}}
               raised
             />
             <Button
               title='Add To Discovery Queue'
-              color='#9333CC'
+              containerStyle={{ margin: 10 }}
               buttonStyle={{
                 backgroundColor: 'white',
-                margin: 10,
-                borderRadius: 5,
+                borderRadius: 25,
+                height: 50,
               }}
+              titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() => {}}
               raised
             />
             <Button
-              title='Recommend to Friend'
-              color='#9333CC'
+              title='Recommend'
+              containerStyle={{ margin: 10 }}
               buttonStyle={{
                 backgroundColor: 'white',
-                margin: 10,
-                borderRadius: 5,
+                borderRadius: 25,
+                height: 50,
               }}
+              titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() => {}}
               raised
             />

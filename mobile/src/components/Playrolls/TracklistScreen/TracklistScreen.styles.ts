@@ -6,6 +6,8 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+
+  // Header
   headerView: {
     alignItems: 'center',
     marginBottom: 10,
@@ -28,6 +30,8 @@ export default StyleSheet.create({
   genPlaylistButton: {
     width: '90%',
   },
+
+  // Scroll View Content
   rollCardContainer: {
     marginTop: 3,
     marginBottom: 10,
@@ -46,5 +50,16 @@ export default StyleSheet.create({
     height: 25,
     width: 25,
     marginRight: 5,
+  },
+
+  // Footer
+  footerView: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 50,
+    zIndex: 2,
   }
 });

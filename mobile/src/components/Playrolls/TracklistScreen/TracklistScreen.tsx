@@ -36,6 +36,8 @@ export default class TracklistScreen extends React.Component<Props, State> {
             return (
               // TODO: possibly remove inline styles
               <View style={{ flex: 1, marginTop: 20 }}>
+
+                {/* Header */}
                 <View style={styles.headerView}>
                   <View style={styles.titleView}>
                     <LinearGradient colors={["#761477", "#954687"]}>
@@ -61,7 +63,9 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     )}
                   </GeneratePlaylistMutation>
                 </View>
-                <ScrollView>
+
+                {/* Scroll View Content */}
+                <ScrollView style={{ flex: 1, zIndex: 0 }} contentContainerStyle={{ zIndex: 0 }}>
                   {data &&
                     data.tracklist &&
                     data.tracklist.compiledRolls &&
@@ -96,6 +100,28 @@ export default class TracklistScreen extends React.Component<Props, State> {
                       );
                     })}
                 </ScrollView>
+
+                {/* TODO: Move "Generate Playlist" Button into a Fixed Footer */}
+                {/* <View style={styles.footerView}>
+                  <Text>HELLO</Text>
+                  <GeneratePlaylistMutation
+                    variables={{
+                      tracklistID,
+                      playlistName,
+                    }}
+                  >
+                    {(generatePlaylist, { data }) => (
+                      <Button
+                        title='Generate Playlist'
+                        containerStyle={styles.genPlaylistButton}
+                        onPress={() => {
+                          generatePlaylist();
+                        }}
+                      />
+                    )}
+                  </GeneratePlaylistMutation>
+                </View> */}
+
               </View>
             );
           }}

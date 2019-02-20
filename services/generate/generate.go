@@ -14,38 +14,32 @@ import (
 	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
 
-func handleFilters(tracks []jsonmodels.MusicSource, filters *[]jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
-	for _, filter := range *filters {
-		switch filter.Type {
-		case "Random":
-			fmt.Printf("Random [Filter Type]!")
-			trackscopy := []jsonmodels.MusicSource{}
-			r := rand.New(rand.NewSource(time.Now().Unix()))
-			for _, i := range r.Perm(len(tracks)) {
-				trackscopy = append(trackscopy, tracks[i])
-			}
-			return trackscopy, nil
-		case "In Order":
-			fmt.Printf("In Order [Filter Type]: Don't modify!")
-			return tracks, nil
+func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
+	switch filter.Type {
+	case "Random":
+		fmt.Println("Random [Filter Type]!")
+		trackscopy := []jsonmodels.MusicSource{}
+		r := rand.New(rand.NewSource(time.Now().Unix()))
+		for _, i := range r.Perm(len(tracks)) {
+			trackscopy = append(trackscopy, tracks[i])
 		}
-	}
-	return tracks, nil
-}
+		return trackscopy, nil
 
-func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLength) ([]jsonmodels.MusicSource, error) {
-	switch length.Type {
+	case "In Order":
+		fmt.Println("In Order [Filter Type]: Don't modify!")
+		return tracks, nil
+
 	case "Number":
-		fmt.Printf("Number [Length Type]!")
+		fmt.Println("Number [Length Type]!")
 
-		offset, err := strconv.ParseInt(length.Modifications[0], 10, 64)
+		offset, err := strconv.ParseInt(filter.Modifications[0], 10, 64)
 		if err != nil {
 			fmt.Println("offset error in handleLengths()")
 			fmt.Println(err)
 			return nil, err
 		}
 
-		reqNumber, err := strconv.ParseInt(length.Modifications[1], 10, 64)
+		reqNumber, err := strconv.ParseInt(filter.Modifications[1], 10, 64)
 		if err != nil {
 			fmt.Println("reqNumber error in handleLengths()")
 			fmt.Println(err)
@@ -66,11 +60,13 @@ func handleLengths(tracks []jsonmodels.MusicSource, length *jsonmodels.RollLengt
 			result[i] = tracks[i]
 		}
 		return result, nil
+
 	case "Original":
-		fmt.Printf("Original [Length Type]: Don't modify!")
+		fmt.Println("Original [Length Type]: Don't modify!")
+		return tracks, nil
+	default:
 		return tracks, nil
 	}
-	return tracks, nil
 }
 
 func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
@@ -106,14 +102,15 @@ func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models
 				tracks = append(tracks, (*result)...)
 			}
 		}
-		tracks, err := handleFilters(tracks, &roll.Data.Filters)
-		if err != nil {
-			return nil, err
+
+		for _, filter := range roll.Data.Filters {
+			var err error
+			tracks, err = handleFilter(tracks, filter)
+			if err != nil {
+				return nil, err
+			}
 		}
-		tracks, err = handleLengths(tracks, &roll.Data.Length)
-		if err != nil {
-			return nil, err
-		}
+
 		compiledRolls = append(compiledRolls, models.CompiledRollOutput{
 			Data:   jsonmodels.CompiledRollDataOutput{Tracks: tracks},
 			RollID: roll.ID,

@@ -36,6 +36,7 @@ interface State {
   password: string;
   showPassword: boolean;
   signedUp: boolean;
+  error?: string;
 }
 
 export default class SignInScreen extends React.Component<Props, State> {
@@ -46,9 +47,15 @@ export default class SignInScreen extends React.Component<Props, State> {
       password: 'Password123!',
       showPassword: true,
       signedUp: true,
+      error: undefined,
     };
     this.revealPassword = this.revealPassword.bind(this);
     this.toggleSignUp = this.toggleSignUp.bind(this);
+    this.renderError = this.renderError.bind(this);
+  }
+
+  renderError() {
+    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   revealPassword() {
@@ -91,11 +98,10 @@ export default class SignInScreen extends React.Component<Props, State> {
           password: this.state.password,
         }}
       >
-      {/* What does error mean down here  */}
         {(signIn, { loading, error, data }) => {
           return (
             <TouchableOpacity
-              onPress={() => this.toggleSignIn(signIn)}
+              onPress={() => this.validateInput(signIn)}
               style={styles.submitButton}
             >
               {loading ? (
@@ -110,6 +116,30 @@ export default class SignInScreen extends React.Component<Props, State> {
     );
   }
 
+  validateInput(signIn) {
+    if (this.state.username === '' ||
+        this.state.password === '') {
+          return this.setState({
+            error: 'All fields must have a value'
+          }, () => {
+            setTimeout(() => {this.setState({ error: null })}, 3000);
+          });
+    }
+    signIn().then(
+      () =>
+      this.props.navigation &&
+      this.props.navigation.dispatch(
+        StackActions.reset({
+          key: null,
+          index: 0,
+          actions: [
+            NavigationActions.navigate({ routeName: 'Home' }),
+          ],
+        })
+      )
+    );
+  }
+
   render() {
     return (
       <TouchableWithoutFeedback
@@ -120,6 +150,7 @@ export default class SignInScreen extends React.Component<Props, State> {
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
+            {this.renderError()}
             <TextInput
               placeholder='Username'
               autoCapitalize='none'
@@ -135,7 +166,7 @@ export default class SignInScreen extends React.Component<Props, State> {
               onChangeText={(password: string) => this.setState({ password })}
               value={this.state.password}
             />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'}}>
               <Text style={styles.showPasswordText}>Show Password</Text>
               <Switch
                   onValueChange={this.revealPassword}

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { Icon, Header } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -17,6 +17,8 @@ import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/
 
 import PlayrollCard from './PlayrollCard';
 
+import styles from './BrowsePlayrollsScreen.styles';
+
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
@@ -25,16 +27,22 @@ interface State {
   addPlayrollName: string;
 }
 
-export default class BrowsePlayrollsScreen extends React.Component<
-  Props,
-  State
-> {
+export default class BrowsePlayrollsScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       addPlayrollName: '',
     };
   }
+
+  // renderHeader() {
+  //   return (
+  //     <View style={styles.loginHeader}>
+  //       <Text style = {styles.headerText}>Playrolls</Text>
+  //     </View>
+  //   );
+  // }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -46,7 +54,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   backgroundColor='purple'
                   centerComponent={{
                     text: 'Playrolls',
-                    style: { color: '#fff', fontSize: 20 },
                   }}
                   rightComponent={
                     <Icon name='add' color='grey' underlayColor='purple' />

@@ -26,6 +26,13 @@ export default StyleSheet.create({
     fontSize: 14,
     color: '#6A0070',
   },
+  errorMessage: {
+    marginTop: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#cc1414',
+  },
   loginHeader: {
     paddingTop: 50,
     paddingBottom: 20,

@@ -156,6 +156,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
+            {this.renderError()}
             <TextInput
               placeholder='Username'
               autoCapitalize='none'
@@ -187,7 +188,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
               value={this.state.avatar}
             />
             {this.termsOfServiceLink()}
-            {this.renderError()}
           </View>
           {this.renderSignupButton()}
         </SafeAreaView>

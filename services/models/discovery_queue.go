@@ -25,6 +25,23 @@ type DiscoveryQueueOutput struct {
 	Entries []DiscoveryQueueEntryOutput `gql:"entries: [DiscoveryQueueEntry]"`
 }
 
+// Utility Functions
+
+func GetDiscoveryQueueByUserID(id uint, db *gorm.DB) (*DiscoveryQueueOutput, error) {
+	dq := &DiscoveryQueue{}
+	db = db.Preload("DiscoveryQueueEntry")
+	if err := db.Where(DiscoveryQueue{UserID: id}).First(dq).Error; err != nil {
+		fmt.Printf("error getting discovery queue: %s", err.Error())
+		return nil, err
+	}
+
+	discoveryQueue, err := FormatDiscoveryQueue(dq)
+	if err != nil {
+		return nil, err
+	}
+	return discoveryQueue, nil
+}
+
 // Entity Specific Methods
 
 func DiscoveryQueueInputToModel(dqi *DiscoveryQueueInput) (*DiscoveryQueue, error) {

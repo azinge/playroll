@@ -33,11 +33,13 @@ export default StyleSheet.create({
     flex: 1,
   },
   bottomBarContainer: {
-    height: 65,
+    height: 83,
     borderTopColor: 'lightgrey',
     borderTopWidth: 1,
     width: '100%',
     backgroundColor: '#f5eeed',
+    paddingBottom: 5,
+    paddingHorizontal: 5,
   },
   bottomBarScrollViewStyle: { alignItems: 'center' },
   bottomBarItemContainer: {

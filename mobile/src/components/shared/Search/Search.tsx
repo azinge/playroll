@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   TextInput,
   View,
@@ -9,14 +9,17 @@ import {
   SafeAreaView,
   StyleSheet,
   Picker,
-} from "react-native";
-import { Header, Icon } from "react-native-elements";
-import { NavigationScreenProp } from "react-navigation";
+  FlatList,
+  ListRenderItem,
+} from 'react-native';
+import { Header, Icon } from 'react-native-elements';
+import { NavigationScreenProp } from 'react-navigation';
+import styles from './Search.styles';
 
-import RNPickerSelect from "react-native-picker-select";
-import { MusicSource } from "../../../graphql/types";
-import { SearchSpotifyQuery } from "../../../graphql/requests/Spotify/";
-import CreateModal from "../../Home/SearchScreen/CreateModal/CreateModal";
+import RNPickerSelect from 'react-native-picker-select';
+import { MusicSource } from '../../../graphql/types';
+import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify/';
+import CreateModal from '../../Home/SearchScreen/CreateModal/CreateModal';
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {
@@ -30,13 +33,13 @@ const pickerStyle = StyleSheet.create({
     // paddingBottom: 12,
     // borderWidth: 1,
     // borderLeftWidth: 1,
-    borderColor: "#6A0070",
+    borderColor: '#6A0070',
     // borderRadius: 4,
-    borderLeftColor: "lightgray",
-    textAlign: "center",
-    backgroundColor: "#f5eeed",
-    color: "black",
-    alignItems: "flex-end",
+    borderLeftColor: 'lightgray',
+    textAlign: 'center',
+    backgroundColor: '#f5eeed',
+    color: 'black',
+    alignItems: 'flex-end',
   },
 });
 
@@ -57,9 +60,9 @@ export default class Search extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      text: "Drake",
-      query: "Drake",
-      searchType: "Artist",
+      text: 'Drake',
+      query: 'Drake',
+      searchType: 'Artist',
       modalVisible: false,
       currentSource: {},
     };
@@ -75,54 +78,43 @@ export default class Search extends Component<Props, State> {
 
   closeModal(redirect?: boolean) {
     this.setState({ modalVisible: false, currentSource: {} });
-    if (redirect) {
-      this.props &&
-        this.props.navigation &&
-        this.props.navigation.navigate("Tracklist");
-    }
+    // if (redirect) {
+    //   this.props &&
+    //     this.props.navigation &&
+    //     this.props.navigation.navigate('Tracklist');
+    // }
   }
 
   render() {
     return (
       <View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%",
-            backgroundColor: "#f5eeed",
-            borderTopWidth: 1,
-            borderTopColor: "lightgrey",
-            borderBottomWidth: 1,
-            borderBottomColor: "lightgrey",
-          }}
-        >
+        <View style={styles.main}>
           <Icon
-            name={"search"}
+            name={'search'}
             size={35}
-            color="lightgrey"
-            underlayColor="lightgrey"
+            color='lightgrey'
+            underlayColor='lightgrey'
             containerStyle={{ paddingHorizontal: 5 }}
           />
           <TextInput
             style={{ flex: 1, fontSize: 16 }}
-            selectionColor={"purple"}
-            placeholder="What are you looking for?"
+            selectionColor={'purple'}
+            placeholder='What are you looking for?'
             onChangeText={(text: string) => this.setState({ text })}
             onSubmitEditing={() => {
               this.setState({ query: this.state.text });
             }}
             value={this.state.text}
           />
-          <View
+          {/* <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               paddingTop: 7,
-              height: "100%",
+              height: '100%',
               margin: 0,
               paddingLeft: 20,
               borderLeftWidth: 1,
-              borderLeftColor: "lightgray",
+              borderLeftColor: 'lightgray',
               width: 100,
               // height: 100%,
             }}
@@ -131,10 +123,10 @@ export default class Search extends Component<Props, State> {
               placeholder={{}}
               hideIcon={true}
               items={[
-                { label: "Artist", value: "Artist" },
-                { label: "Album", value: "Album" },
-                { label: "Track", value: "Track" },
-                { label: "Playlist", value: "Playlist" },
+                { label: 'Artist', value: 'Artist' },
+                { label: 'Album', value: 'Album' },
+                { label: 'Track', value: 'Track' },
+                { label: 'Playlist', value: 'Playlist' },
               ]}
               onValueChange={value => {
                 this.setState({
@@ -143,64 +135,26 @@ export default class Search extends Component<Props, State> {
               }}
               style={pickerStyle}
             >
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: 'row' }}>
                 <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
-                <Icon name="arrow-drop-down" />
+                <Icon name='arrow-drop-down' />
               </View>
             </RNPickerSelect>
-          </View>
+          </View> */}
         </View>
-        <View
-          style={{
-            margin: 10,
-            flexDirection: "row",
-          }}
-        >
+        <View style={{ margin: 10, flexDirection: 'row' }}>
           <View style={{ paddingHorizontal: 7 }}>
             <Text
-              style={{
-                fontFamily: "Avenir",
-                fontWeight: "bold",
-                fontSize: 15,
-                color: "#993399",
-              }}
+              style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
             >
               Popular
             </Text>
           </View>
-          <View
-            style={{
-              paddingHorizontal: 7,
-              borderLeftColor: "grey",
-              borderLeftWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Avenir",
-                fontSize: 15,
-                color: "grey",
-              }}
-            >
-              New
-            </Text>
+          <View style={styles.nullOptions}>
+            <Text style={[styles.options, { color: 'grey' }]}>New</Text>
           </View>
-          <View
-            style={{
-              paddingHorizontal: 7,
-              borderLeftColor: "grey",
-              borderLeftWidth: 1,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Avenir",
-                fontSize: 15,
-                color: "grey",
-              }}
-            >
-              ABC
-            </Text>
+          <View style={styles.nullOptions}>
+            <Text style={[styles.options, { color: 'grey' }]}>ABC</Text>
           </View>
         </View>
 
@@ -219,81 +173,52 @@ export default class Search extends Component<Props, State> {
         >
           {({ loading, error, data }) => {
             return (
-              <ScrollView>
-                {data &&
-                  data.searchSpotify &&
-                  data.searchSpotify.map((source: MusicSource) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => this.setModal(source)}
-                        key={source.providerID}
+              <View style={{ marginBottom: 145 }}>
+                <FlatList
+                  data={data && data.searchSpotify}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index) => item.providerID}
+                  extraData={this.state}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => this.setModal(item)}
+                      key={item.providerID}
+                    >
+                      <View
+                        style={{ width: '100%', alignItems: 'center' }}
+                        key={item.providerID}
                       >
-                        <View
-                          style={{
-                            width: "100%",
-                            alignItems: "center",
-                          }}
-                          key={source.providerID}
-                        >
-                          <View style={{ flexDirection: "row", width: "100%" }}>
-                            <Image
-                              style={{
-                                width: 65,
-                                height: 65,
-                                marginHorizontal: 20,
-                                borderRadius: 5,
-                                borderWidth: 1,
-                                borderColor: "lightgrey",
-                              }}
-                              source={{ uri: source.cover }}
-                            />
-                            <View style={{ flex: 1, justifyContent: "center" }}>
-                              <Text
-                                style={{
-                                  fontFamily: "Avenir",
-                                  fontSize: 17,
-                                  color: "purple",
-                                }}
-                                numberOfLines={2}
-                              >
-                                {source.name}
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                          <Image
+                            style={styles.cover}
+                            source={{ uri: item.cover }}
+                          />
+                          <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={styles.artist} numberOfLines={2}>
+                              {item.name}
+                            </Text>
+                            {item.creator ? (
+                              <Text style={styles.noArtist} numberOfLines={2}>
+                                {item.creator}
                               </Text>
-                              {source.creator ? (
-                                <Text
-                                  style={{
-                                    fontFamily: "Avenir",
-                                    fontSize: 15,
-                                    color: "lightgrey",
-                                  }}
-                                  numberOfLines={2}
-                                >
-                                  {source.creator}
-                                </Text>
-                              ) : null}
-                            </View>
-                            <Icon
-                              size={35}
-                              name="more-vert"
-                              color="lightgrey"
-                              onPress={() =>
-                                this.props.navigation &&
-                                this.props.navigation.goBack(null)
-                              }
-                            />
+                            ) : null}
                           </View>
-                          <View
-                            style={{
-                              width: "75%",
-                              marginVertical: 10,
-                              borderBottomColor: "lightgrey",
-                              borderBottomWidth: StyleSheet.hairlineWidth,
-                            }}
+                          <Icon
+                            size={35}
+                            name='more-vert'
+                            color='lightgrey'
+                            onPress={() =>
+                              this.props.navigation &&
+                              this.props.navigation.goBack(null)
+                            }
                           />
                         </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-              </ScrollView>
+                        <View style={styles.spacing} />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
             );
           }}
         </SearchSpotifyQuery>

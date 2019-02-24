@@ -149,7 +149,7 @@ export default class ManagePlayrollScreen extends React.Component<
   renderSearchMusic(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
-        <Search playrollID={playroll.id} header={false} />
+        <Search playrollID={playroll.id} />
       </View>
     );
   }

@@ -47,7 +47,7 @@ export default StyleSheet.create({
     fontSize: 18,
   },
   errorMessage: {
-    paddingTop: 5,
+    marginTop: 15,
     fontWeight: 'bold',
     fontSize: 18,
     color: '#FF0000',

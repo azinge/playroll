@@ -86,6 +86,13 @@ export default class Search extends Component<Props, State> {
     // }
   }
 
+  manageRoll(source) {
+    this.props.navigation &&
+      this.props.navigation.navigate('ManageRoll', {
+        currentSource: source,
+      });
+  }
+
   render() {
     return (
       <View>
@@ -162,6 +169,7 @@ export default class Search extends Component<Props, State> {
         }}
       >
         {({ loading, error, data }) => {
+          console.log(error);
           return (
             <View style={{ marginBottom: 145 }}>
               <FlatList
@@ -171,7 +179,11 @@ export default class Search extends Component<Props, State> {
                 extraData={this.state}
                 renderItem={({ item }) => (
                   <TouchableOpacity
-                    onPress={() => this.setModal(item)}
+                    onPress={() => {
+                      this.props.playrollID
+                        ? this.setModal(item)
+                        : this.manageRoll(item);
+                    }}
                     key={item.providerID}
                   >
                     <View

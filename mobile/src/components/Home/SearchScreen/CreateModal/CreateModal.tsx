@@ -40,14 +40,6 @@ export default class CreateModal extends React.Component<Props, State> {
       length: undefined,
     };
   }
-  manageRoll() {
-    console.log(this.props.currentSource);
-    this.props.navigation &&
-      this.props.navigation.navigate('ManageRoll', {
-        currentSource: this.props.currentSource,
-      });
-    this.props.closeModal();
-  }
 
   render() {
     return (
@@ -155,7 +147,7 @@ export default class CreateModal extends React.Component<Props, State> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      this.props.playrollID ? createRoll() : this.manageRoll();
+                      createRoll();
                     }}
                   >
                     <Text>{this.props.playrollID ? 'Add' : 'Continue'}</Text>

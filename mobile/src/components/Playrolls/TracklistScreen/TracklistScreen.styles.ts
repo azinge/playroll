@@ -8,9 +8,14 @@ export default StyleSheet.create({
   },
   tracklistView: {
     flex: 1,
+    marginBottom: 40,  // instead of SafeAreaView
   },
 
   // Header
+  headerCenterComponent: {
+    color: "#fff",
+    fontSize: 20,
+  },
   headerView: {
     alignItems: 'center',
     marginBottom: 10,
@@ -36,6 +41,7 @@ export default StyleSheet.create({
   // Scroll View Content
   scrollView: {
     flex: 1,
+    marginTop: 10,
     zIndex: 0,
   },
   scrollViewContent: {
@@ -47,7 +53,6 @@ export default StyleSheet.create({
   },
   rollCardTitle: {
     fontSize: 16,
-    // marginTop: 0,
   },
   trackView: {
     flex: 1,

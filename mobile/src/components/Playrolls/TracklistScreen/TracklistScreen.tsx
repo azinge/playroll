@@ -4,7 +4,12 @@
 
 import React from 'react';
 import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { 
+  Card, 
+  Button,
+  Header,
+  Icon,
+} from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { LinearGradient } from "expo";
 
@@ -29,22 +34,32 @@ export default class TracklistScreen extends React.Component<Props, State> {
     const playlistName =
       nav && nav.state && nav.state.params && nav.state.params.playrollName;
     return (
-      <SafeAreaView style={styles.screenContainer}>
+      // SafeAreaView causes a large margin/padding at the top, so we're avoiding it, using bottomMargin instead
+      // https://facebook.github.io/react-native/docs/safeareaview
+      // <SafeAreaView style={styles.screenContainer} forceInset={{ top: 'never' }}>
         <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
             return (
               <View style={styles.tracklistView}>
 
                 {/* Header */}
-                <View style={styles.headerView}>
-                  <View style={styles.titleView}>
-                    <LinearGradient colors={["#761477", "#954687"]}>
-                      <View style={styles.innerTitleView}>
-                        <Text style={styles.titleText}>{`${playlistName}`}</Text>
-                      </View>
-                    </LinearGradient>
-                  </View>
-                </View>
+                <Header
+                  backgroundColor="purple"
+                  leftComponent={
+                    <Icon
+                      name="arrow-back"
+                      color="white"
+                      onPress={() =>
+                        this.props.navigation && this.props.navigation.goBack(null)
+                      }
+                      underlayColor="purple"
+                    />
+                  }
+                  centerComponent={{
+                    text: `${playlistName}`,
+                    style: styles.headerCenterComponent,
+                  }}
+                />
 
                 {/* Scroll View Content */}
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
@@ -107,7 +122,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
             );
           }}
         </GetTracklistQuery>
-      </SafeAreaView>
+      // </SafeAreaView>
     );
   }
 }

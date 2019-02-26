@@ -35,7 +35,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
           {({ loading, error, data }) => {
             return (
               // TODO: possibly remove inline styles
-              <View style={{ flex: 1, marginTop: 20 }}>
+              <View style={styles.tracklistView}>
 
                 {/* Header */}
                 <View style={styles.headerView}>
@@ -49,7 +49,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                 </View>
 
                 {/* Scroll View Content */}
-                <ScrollView style={{ flex: 1, zIndex: 0 }} contentContainerStyle={{ zIndex: 0 }}>
+                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
                   {data &&
                     data.tracklist &&
                     data.tracklist.compiledRolls &&
@@ -63,8 +63,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                         compiledRoll.data.tracks.length > 0 && (
                           <Card
                             key={compiledRoll.id}
-                            // title={`Compiled roll #${compiledRoll.id}`}
-                            // titleStyle={styles.rollCardTitle}
                             containerStyle={styles.rollCardContainer}
                           >
                             {compiledRoll.data.tracks.map(track => {
@@ -94,7 +92,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                       tracklistID,
                       playlistName,
                     }}
-                    style={styles.footerButton}
                   >
                     {(generatePlaylist, { data }) => (
                       <Button

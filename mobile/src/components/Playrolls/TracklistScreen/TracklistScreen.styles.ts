@@ -6,6 +6,9 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  tracklistView: {
+    flex: 1,
+  },
 
   // Header
   headerView: {
@@ -31,6 +34,13 @@ export default StyleSheet.create({
   },
 
   // Scroll View Content
+  scrollView: {
+    flex: 1,
+    zIndex: 0,
+  },
+  scrollViewContent: {
+    zIndex: 0,
+  },
   rollCardContainer: {
     marginTop: 3,
     marginBottom: 10,
@@ -52,9 +62,6 @@ export default StyleSheet.create({
   },
 
   // Footer
-  footerButton: {
-    
-  },
   footerView: {
     backgroundColor: '#fff',
     flex: 1,

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Text, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { Text, View, Image, ScrollView } from 'react-native';
 import { 
   Card, 
   Button,
@@ -11,7 +11,6 @@ import {
   Icon,
 } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
-import { LinearGradient } from "expo";
 
 import {
   GeneratePlaylistMutation,

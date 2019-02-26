@@ -21,7 +21,6 @@ export interface Props {
 
 interface State {}
 
-// TODO: re-style this screen
 export default class TracklistScreen extends React.Component<Props, State> {
   render() {
     const nav = this.props.navigation;
@@ -34,7 +33,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
         <GetTracklistQuery variables={{ id: tracklistID }}>
           {({ loading, error, data }) => {
             return (
-              // TODO: possibly remove inline styles
               <View style={styles.tracklistView}>
 
                 {/* Header */}
@@ -85,7 +83,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     })}
                 </ScrollView>
 
-                {/* TODO: Move "Generate Playlist" Button into a Fixed Footer */}
+                {/* "Generate Playlist" Button */}
                 <View style={styles.footerView}>
                   <GeneratePlaylistMutation
                     variables={{

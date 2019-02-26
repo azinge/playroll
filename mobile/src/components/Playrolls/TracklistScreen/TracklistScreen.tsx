@@ -66,8 +66,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     data.tracklist &&
                     data.tracklist.compiledRolls &&
                     data.tracklist.compiledRolls.map(compiledRoll => {
-                      console.log("TRACKLIST SCREEN > render/return > ScrollView > compiledRoll: ")
-                      console.log(compiledRoll)
                       return (
                         compiledRoll &&
                         compiledRoll.data &&

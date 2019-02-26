@@ -87,7 +87,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                                       source={{ uri: track.cover }}
                                     />
                                     <Text>{track.name}</Text>
-                                    {/* <Text>{track.type}</Text> */}
                                   </View>
                                 )
                               );

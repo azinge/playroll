@@ -3,12 +3,12 @@ import { Dimensions } from 'react-native';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const NORMALIZED_FONTS = SCREEN_WIDTH * 0.024;
 
-export const screen = {
+const screen = {
   width: SCREEN_WIDTH,
   height: SCREEN_HEIGHT,
 };
 
-export const fontSize = {
+const fontSize = {
   h1: NORMALIZED_FONTS * 7.6,
   h2: NORMALIZED_FONTS * 5.1,
   h3: NORMALIZED_FONTS * 3.8,
@@ -23,3 +23,5 @@ export const fontSize = {
   h12: NORMALIZED_FONTS * 1.1,
   h13: NORMALIZED_FONTS,
 };
+
+export default { screen, fontSize };

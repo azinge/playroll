@@ -46,22 +46,6 @@ export default class TracklistScreen extends React.Component<Props, State> {
                       </View>
                     </LinearGradient>
                   </View>
-                  <GeneratePlaylistMutation
-                    variables={{
-                      tracklistID,
-                      playlistName,
-                    }}
-                  >
-                    {(generatePlaylist, { data }) => (
-                      <Button
-                        title='Generate Playlist'
-                        containerStyle={styles.genPlaylistButton}
-                        onPress={() => {
-                          generatePlaylist();
-                        }}
-                      />
-                    )}
-                  </GeneratePlaylistMutation>
                 </View>
 
                 {/* Scroll View Content */}
@@ -70,6 +54,8 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     data.tracklist &&
                     data.tracklist.compiledRolls &&
                     data.tracklist.compiledRolls.map(compiledRoll => {
+                      console.log("TRACKLIST SCREEN > render/return > ScrollView > compiledRoll: ")
+                      console.log(compiledRoll)
                       return (
                         compiledRoll &&
                         compiledRoll.data &&
@@ -77,8 +63,8 @@ export default class TracklistScreen extends React.Component<Props, State> {
                         compiledRoll.data.tracks.length > 0 && (
                           <Card
                             key={compiledRoll.id}
-                            title={`Compiled roll #${compiledRoll.id}`}
-                            titleStyle={styles.rollCardTitle}
+                            // title={`Compiled roll #${compiledRoll.id}`}
+                            // titleStyle={styles.rollCardTitle}
                             containerStyle={styles.rollCardContainer}
                           >
                             {compiledRoll.data.tracks.map(track => {
@@ -102,13 +88,13 @@ export default class TracklistScreen extends React.Component<Props, State> {
                 </ScrollView>
 
                 {/* TODO: Move "Generate Playlist" Button into a Fixed Footer */}
-                {/* <View style={styles.footerView}>
-                  <Text>HELLO</Text>
+                <View style={styles.footerView}>
                   <GeneratePlaylistMutation
                     variables={{
                       tracklistID,
                       playlistName,
                     }}
+                    style={styles.footerButton}
                   >
                     {(generatePlaylist, { data }) => (
                       <Button
@@ -120,7 +106,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                       />
                     )}
                   </GeneratePlaylistMutation>
-                </View> */}
+                </View>
 
               </View>
             );

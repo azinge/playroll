@@ -14,7 +14,6 @@ export default StyleSheet.create({
   },
   titleView: {
     marginTop: Platform.OS == "ios" ? 20 : 4,
-    marginBottom: 10,
     width: '100%',
   },
   innerTitleView: {
@@ -53,13 +52,19 @@ export default StyleSheet.create({
   },
 
   // Footer
+  footerButton: {
+    
+  },
   footerView: {
+    backgroundColor: '#fff',
     flex: 1,
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 50,
-    zIndex: 2,
+    bottom: 0, // stick to bottom
+    left: 0,   // stretch to left
+    right: 0,  // stretch to right
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1, // float on top
   }
 });

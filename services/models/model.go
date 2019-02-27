@@ -8,7 +8,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var ModelList = []interface{}{Playroll{},
+var ModelList = []interface{}{
+	Playroll{},
 	Roll{},
 	User{},
 	Tracklist{},

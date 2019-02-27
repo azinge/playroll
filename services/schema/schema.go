@@ -11,8 +11,8 @@ type Types = types.Types
 var LinkedTypes = types.LinkedTypes
 
 type Methods struct {
-	crud.CRUDMethods       `gql:"GROUP"`
-	methods.GeneralMethods `gql:"GROUP"`
+	crud.CRUDMethods       `gql:"GROUP: Crud"`
+	methods.GeneralMethods `gql:"GROUP: CurrentUser"`
 }
 
 var LinkedMethods = Methods{

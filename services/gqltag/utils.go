@@ -1,6 +1,8 @@
 package gqltag
 
 import (
+	"unicode"
+
 	"github.com/aws/aws-lambda-go/events"
 	ast "github.com/graphql-go/graphql/language/ast"
 	"github.com/jinzhu/gorm"
@@ -72,4 +74,11 @@ func GetSelectedFields(selectionPath []string,
 		collect = append(collect, field.Name.Value)
 	}
 	return collect
+}
+
+func LowercaseFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }

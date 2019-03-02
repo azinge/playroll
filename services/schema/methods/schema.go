@@ -6,6 +6,7 @@ type GeneralMethods struct {
 	UserMethods       `gql:"GROUP"`
 	PlayrollMethods   `gql:"GROUP"`
 	FriendshipMethods `gql:"GROUP"`
+  DiscoveryQueueMethods `gql:"GROUP"`
 }
 
 var LinkedGeneralMethods = GeneralMethods{
@@ -14,4 +15,5 @@ var LinkedGeneralMethods = GeneralMethods{
 	UserMethods:       LinkedUserMethods,
 	PlayrollMethods:   LinkedPlayrollMethods,
 	FriendshipMethods: LinkedFriendshipMethods,
+  DiscoveryQueueMethods: LinkedDiscoveryQueueMethods,
 }

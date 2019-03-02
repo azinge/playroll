@@ -10,7 +10,8 @@ import (
 )
 
 type PlayrollMethods struct {
-	ListCurrentUserPlayrolls *gqltag.Query `gql:"listCurrentUserPlayrolls(offset: Int, count: Int): [Playroll]"`
+	ListCurrentUserPlayrolls *gqltag.Query    `gql:"listCurrentUserPlayrolls(offset: Int, count: Int): [Playroll]"`
+	AddToPlayroll            *gqltag.Mutation `gql:"addToPlayroll(playrollID: ID, roll: RollInput): [Playroll]"`
 }
 
 var listCurrentUserPlayrolls = gqltag.Method{

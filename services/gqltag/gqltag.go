@@ -114,22 +114,26 @@ func populateMethodsFromStruct(struc interface{}, mctx *MethodContext, rootQuery
 			name := strings.TrimPrefix(tag, "GROUP: ")
 			fieldName := LowercaseFirst(name)
 			subQuery := graphql.NewObject(graphql.ObjectConfig{Name: name + "QueryMethods", Fields: graphql.Fields{}})
+			subMutation := graphql.NewObject(graphql.ObjectConfig{Name: name + "MutationMethods", Fields: graphql.Fields{}})
+			populateMethodsFromStruct(m.Value(), mctx, subQuery, subMutation, typeMap, inputTypeMap)
 			subQueryField := &graphql.Field{
 				Type: subQuery,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					return map[string]string{}, nil
 				},
 			}
-			rootQuery.AddFieldConfig(fieldName, subQueryField)
-			subMutation := graphql.NewObject(graphql.ObjectConfig{Name: name + "MutationMethods", Fields: graphql.Fields{}})
 			subMutationField := &graphql.Field{
 				Type: subMutation,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					return map[string]string{}, nil
 				},
 			}
-			rootMutation.AddFieldConfig(fieldName, subMutationField)
-			populateMethodsFromStruct(m.Value(), mctx, subQuery, subMutation, typeMap, inputTypeMap)
+			if len(subQuery.Fields()) != 0 {
+				rootQuery.AddFieldConfig(fieldName, subQueryField)
+			}
+			if len(subMutation.Fields()) != 0 {
+				rootMutation.AddFieldConfig(fieldName, subMutationField)
+			}
 		} else {
 			name, gqlField := parseGraphQLField(tag, typeMap, inputTypeMap)
 			gqlField.Resolve = generateResolveFromMethod(m, mctx)

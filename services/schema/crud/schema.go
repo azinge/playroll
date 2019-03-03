@@ -14,6 +14,12 @@ type CRUDMethods struct {
 	DiscoveryQueueEntryMethods    `gql:"GROUP"`
 	FriendshipMethods             `gql:"GROUP"`
 	RecommendationMethods         `gql:"GROUP"`
+	MusicServiceAlbumMethods      `gql:"GROUP"`
+	MusicServiceArtistMethods     `gql:"GROUP"`
+	MusicServicePlaylistMethods   `gql:"GROUP"`
+	MusicServiceTrackMethods      `gql:"GROUP"`
+	MusicServiceUserMethods       `gql:"GROUP"`
+	RelationshipMethods           `gql:"GROUP"`
 }
 
 var LinkedCRUDMethods = CRUDMethods{
@@ -29,4 +35,10 @@ var LinkedCRUDMethods = CRUDMethods{
 	DiscoveryQueueEntryMethods:    LinkedDiscoveryQueueEntryMethods,
 	FriendshipMethods:             LinkedFriendshipMethods,
 	RecommendationMethods:         LinkedRecommendationMethods,
+	MusicServiceAlbumMethods:      LinkedMusicServiceAlbumMethods,
+	MusicServiceArtistMethods:     LinkedMusicServiceArtistMethods,
+	MusicServicePlaylistMethods:   LinkedMusicServicePlaylistMethods,
+	MusicServiceTrackMethods:      LinkedMusicServiceTrackMethods,
+	MusicServiceUserMethods:       LinkedMusicServiceUserMethods,
+	RelationshipMethods:           LinkedRelationshipMethods,
 }

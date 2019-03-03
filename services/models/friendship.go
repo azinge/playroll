@@ -37,23 +37,17 @@ type FriendshipOutput struct {
 
 func GetFriendsByUserID(id uint, db *gorm.DB) (*[]User, error) {
 	fs := &[]Friendship{}
-	if err := db.Where(&Friendship{UserID: id}).Find(&fs).Error; err != nil {
+	if err := db.Preload("Friend").Where(&Friendship{UserID: id}).Find(&fs).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
-	friendIDs := []uint{}
+	friends := []User{}
 	for _, f := range *fs {
-		friendIDs = append(friendIDs, f.FriendID)
+		friends = append(friends, f.Friend)
 	}
 
-	us := &[]User{}
-	if err := db.Where(friendIDs).Find(&us).Error; err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	return us, nil
+	return &friends, nil
 }
 
 // Entity Specific Methods

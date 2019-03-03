@@ -14,13 +14,19 @@ var ModelList = []interface{}{
 	User{},
 	Tracklist{},
 	CompiledRoll{},
-	ExternalCredential{},
+	ExternalCredential{}, //! Deprecated
 	IdentityCredential{},
 	MusicServiceCredential{},
 	DiscoveryQueue{},
 	DiscoveryQueueEntry{},
-	Friendship{},
+	Friendship{}, //! Deprecated
 	Recommendation{},
+	MusicServiceAlbum{},
+	MusicServiceArtist{},
+	MusicServicePlaylist{},
+	MusicServiceTrack{},
+	MusicServiceUser{},
+	Relationship{},
 }
 
 type Entity interface {

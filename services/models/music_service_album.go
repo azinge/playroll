@@ -11,6 +11,7 @@ type MusicServiceAlbum struct {
 }
 
 type MusicServiceAlbumInput struct {
+	Placeholder string `gql:"placeholder: String"`
 }
 
 type MusicServiceAlbumOutput struct {
@@ -19,19 +20,21 @@ type MusicServiceAlbumOutput struct {
 
 // Entity Specific Methods
 
-func MusicServiceAlbumInputToModel(msi *MusicServiceAlbumInput) (*MusicServiceAlbum, error) {
-	ms := &MusicServiceAlbum{}
-	return ms, nil
+func MusicServiceAlbumInputToModel(msai *MusicServiceAlbumInput) (*MusicServiceAlbum, error) {
+	msa := &MusicServiceAlbum{}
+	// ADD METHODS TO ENCODE PROPERTIES HERE
+	return msa, nil
 }
 
-func MusicServiceAlbumOutputToModel(ms *MusicServiceAlbumOutput) (*MusicServiceAlbum, error) {
+func MusicServiceAlbumOutputToModel(msa *MusicServiceAlbumOutput) (*MusicServiceAlbum, error) {
 	return nil, fmt.Errorf("MusicServiceAlbumOutputToModel Not Implemented")
 }
 
-func MusicServiceAlbumModelToOutput(ms *MusicServiceAlbum) (*MusicServiceAlbumOutput, error) {
-	mso := &MusicServiceAlbumOutput{}
-	mso.Model = ms.Model
-	return mso, nil
+func MusicServiceAlbumModelToOutput(msa *MusicServiceAlbum) (*MusicServiceAlbumOutput, error) {
+	msao := &MusicServiceAlbumOutput{}
+	msao.Model = msa.Model
+	// ADD METHODS TO DECODE PROPERTIES HERE
+	return msao, nil
 }
 
 func InitMusicServiceAlbumDAO(db *gorm.DB) Entity {
@@ -42,41 +45,41 @@ func InitMusicServiceAlbumDAO(db *gorm.DB) Entity {
 }
 
 func FormatMusicServiceAlbum(val interface{}) (*MusicServiceAlbumOutput, error) {
-	ms, ok := val.(*MusicServiceAlbum)
+	msa, ok := val.(*MusicServiceAlbum)
 	if !ok {
 		return nil, fmt.Errorf("error converting to MusicServiceAlbum")
 	}
-	return MusicServiceAlbumModelToOutput(ms)
+	return MusicServiceAlbumModelToOutput(msa)
 }
 
 func FormatMusicServiceAlbumSlice(val interface{}) ([]MusicServiceAlbumOutput, error) {
-	mss, ok := val.(*[]MusicServiceAlbum)
+	msas, ok := val.(*[]MusicServiceAlbum)
 	if !ok {
 		return nil, fmt.Errorf("error converting to MusicServiceAlbum Slice")
 	}
 	output := []MusicServiceAlbumOutput{}
-	for _, ms := range *mss {
-		mso, err := MusicServiceAlbumModelToOutput(&ms)
+	for _, msa := range *msas {
+		msao, err := MusicServiceAlbumModelToOutput(&msa)
 		if err != nil {
 			return nil, err
 		}
-		output = append(output, *mso)
+		output = append(output, *msao)
 	}
 	return output, nil
 }
 
 // Interface Generalization Methods
 
-func (msi *MusicServiceAlbumInput) ToModel() (Entity, error) {
-	return MusicServiceAlbumInputToModel(msi)
+func (msai *MusicServiceAlbumInput) ToModel() (Entity, error) {
+	return MusicServiceAlbumInputToModel(msai)
 }
 
-func (mso *MusicServiceAlbumOutput) ToModel() (Entity, error) {
-	return MusicServiceAlbumOutputToModel(mso)
+func (msao *MusicServiceAlbumOutput) ToModel() (Entity, error) {
+	return MusicServiceAlbumOutputToModel(msao)
 }
 
-func (ms *MusicServiceAlbum) ToOutput() (EntityOutput, error) {
-	return MusicServiceAlbumModelToOutput(ms)
+func (msa *MusicServiceAlbum) ToOutput() (EntityOutput, error) {
+	return MusicServiceAlbumModelToOutput(msa)
 }
 
 func (_ *MusicServiceAlbum) InitDAO(db *gorm.DB) Entity {

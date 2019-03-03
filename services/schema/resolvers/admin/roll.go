@@ -1,4 +1,4 @@
-package crud
+package admin
 
 import (
 	"github.com/cazinge/playroll/services/gqltag"

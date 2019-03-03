@@ -22,11 +22,11 @@ var listCurrentUserPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		type listCurrentUsersPlayrollParams struct {
+		type listCurrentUserPlayrollParams struct {
 			Offset uint
 			Count  uint
 		}
-		params := &listCurrentUsersPlayrollParams{}
+		params := &listCurrentUserPlayrollParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)

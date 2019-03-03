@@ -8,6 +8,8 @@ import (
 
 type MusicServicePlaylist struct {
 	Model
+	Provider   string
+	ProviderID string
 }
 
 type MusicServicePlaylistInput struct {
@@ -15,7 +17,21 @@ type MusicServicePlaylistInput struct {
 }
 
 type MusicServicePlaylistOutput struct {
-	Model `gql:"MODEL"`
+	Model      `gql:"MODEL"`
+	Provider   string `gql:"provider: String" json:"provider"`
+	ProviderID string `gql:"providerID: String" json:"providerID"`
+}
+
+// Utility Methods
+
+func GetMusicServicePlaylistByProviderInfo(provider, providerID string, db *gorm.DB) (*MusicServicePlaylistOutput, error) {
+	//TODO: include cache stale timer
+	mst := &MusicServicePlaylist{}
+	if err := db.Where(&MusicServicePlaylist{Provider: provider, ProviderID: providerID}).Last(mst).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return FormatMusicServicePlaylist(mst)
 }
 
 // Entity Specific Methods
@@ -33,6 +49,8 @@ func MusicServicePlaylistOutputToModel(msp *MusicServicePlaylistOutput) (*MusicS
 func MusicServicePlaylistModelToOutput(msp *MusicServicePlaylist) (*MusicServicePlaylistOutput, error) {
 	mspo := &MusicServicePlaylistOutput{}
 	mspo.Model = msp.Model
+	mspo.Provider = msp.Provider
+	mspo.ProviderID = msp.ProviderID
 	// ADD METHODS TO DECODE PROPERTIES HERE
 	return mspo, nil
 }

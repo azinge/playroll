@@ -8,6 +8,8 @@ import (
 
 type MusicServiceAlbum struct {
 	Model
+	Provider   string
+	ProviderID string
 }
 
 type MusicServiceAlbumInput struct {
@@ -15,7 +17,21 @@ type MusicServiceAlbumInput struct {
 }
 
 type MusicServiceAlbumOutput struct {
-	Model `gql:"MODEL"`
+	Model      `gql:"MODEL"`
+	Provider   string `gql:"provider: String" json:"provider"`
+	ProviderID string `gql:"providerID: String" json:"providerID"`
+}
+
+// Utility Methods
+
+func GetMusicServiceAlbumByProviderInfo(provider, providerID string, db *gorm.DB) (*MusicServiceAlbumOutput, error) {
+	//TODO: include cache stale timer
+	msa := &MusicServiceAlbum{}
+	if err := db.Where(&MusicServiceAlbum{Provider: provider, ProviderID: providerID}).Last(msa).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return FormatMusicServiceAlbum(msa)
 }
 
 // Entity Specific Methods
@@ -33,6 +49,8 @@ func MusicServiceAlbumOutputToModel(msa *MusicServiceAlbumOutput) (*MusicService
 func MusicServiceAlbumModelToOutput(msa *MusicServiceAlbum) (*MusicServiceAlbumOutput, error) {
 	msao := &MusicServiceAlbumOutput{}
 	msao.Model = msa.Model
+	msao.Provider = msa.Provider
+	msao.ProviderID = msa.ProviderID
 	// ADD METHODS TO DECODE PROPERTIES HERE
 	return msao, nil
 }

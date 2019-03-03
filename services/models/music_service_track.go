@@ -8,6 +8,8 @@ import (
 
 type MusicServiceTrack struct {
 	Model
+	Provider   string
+	ProviderID string
 }
 
 type MusicServiceTrackInput struct {
@@ -15,7 +17,21 @@ type MusicServiceTrackInput struct {
 }
 
 type MusicServiceTrackOutput struct {
-	Model `gql:"MODEL"`
+	Model      `gql:"MODEL"`
+	Provider   string `gql:"provider: String" json:"provider"`
+	ProviderID string `gql:"providerID: String" json:"providerID"`
+}
+
+// Utility Methods
+
+func GetMusicServiceTrackByProviderInfo(provider, providerID string, db *gorm.DB) (*MusicServiceTrackOutput, error) {
+	//TODO: include cache stale timer
+	mst := &MusicServiceTrack{}
+	if err := db.Where(&MusicServiceTrack{Provider: provider, ProviderID: providerID}).Last(mst).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return FormatMusicServiceTrack(mst)
 }
 
 // Entity Specific Methods
@@ -33,6 +49,8 @@ func MusicServiceTrackOutputToModel(mst *MusicServiceTrackOutput) (*MusicService
 func MusicServiceTrackModelToOutput(mst *MusicServiceTrack) (*MusicServiceTrackOutput, error) {
 	msto := &MusicServiceTrackOutput{}
 	msto.Model = mst.Model
+	msto.Provider = mst.Provider
+	msto.ProviderID = mst.ProviderID
 	// ADD METHODS TO DECODE PROPERTIES HERE
 	return msto, nil
 }

@@ -9,10 +9,55 @@ import (
 
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
+	"github.com/jinzhu/gorm"
 	"github.com/zmb3/spotify"
-
-	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
+
+func collectSource(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) error {
+	switch source.Type {
+	case "Track":
+		return collectTrack(source, db, client)
+	case "Album":
+		return collectAlbum(source, db, client)
+	case "Artist":
+		return collectArtist(source, db, client)
+	case "Playlist":
+		return collectPlaylist(source, db, client)
+	default:
+		return fmt.Errorf("error, could not find matching source type")
+	}
+}
+
+func handleSource(tracks []jsonmodels.MusicSource, source jsonmodels.MusicSource, client *spotify.Client) ([]jsonmodels.MusicSource, error) {
+	switch source.Type {
+	// case "Track":
+	// 	result, err := spotifyhelpers.GetSpotifyTrack(&source, client)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	return append(tracks, (*result)...), nil
+	// case "Album":
+	// 	result, err := spotifyhelpers.GetSpotifyAlbumTracks(&source, client)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	return append(tracks, (*result)...), nil
+	// case "Artist":
+	// 	result, err := spotifyhelpers.GetSpotifyArtistTracks(&source, client)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	return append(tracks, (*result)...), nil
+	// case "Playlist":
+	// 	result, err := spotifyhelpers.GetSpotifyPlaylistTracks(&source, client)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	return append(tracks, (*result)...), nil
+	default:
+		return tracks, nil
+	}
+}
 
 func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
 	switch filter.Type {
@@ -69,47 +114,26 @@ func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter)
 	}
 }
 
-func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
+func CompileRolls(rolls *[]models.RollOutput, db *gorm.DB, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
 	compiledRolls := []models.CompiledRollOutput{}
 	for _, roll := range *rolls {
-		tracks := []jsonmodels.MusicSource{}
-		if sources := roll.Data.Sources; len(sources) > 0 {
-			source := sources[0]
-			switch source.Type {
-			case "Track":
-				result, err := spotifyhelpers.GetSpotifyTrack(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Album":
-				result, err := spotifyhelpers.GetSpotifyAlbumTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Artist":
-				result, err := spotifyhelpers.GetSpotifyArtistTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Playlist":
-				result, err := spotifyhelpers.GetSpotifyPlaylistTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			}
-		}
-
-		for _, filter := range roll.Data.Filters {
+		for _, source := range roll.Data.Sources {
 			var err error
-			tracks, err = handleFilter(tracks, filter)
+			err = collectSource(&source, db, client)
 			if err != nil {
 				return nil, err
 			}
 		}
+
+		tracks := []jsonmodels.MusicSource{}
+
+		// for _, filter := range roll.Data.Filters {
+		// 	var err error
+		// 	tracks, err = handleFilter(tracks, filter)
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
+		// }
 
 		compiledRolls = append(compiledRolls, models.CompiledRollOutput{
 			Data:   jsonmodels.CompiledRollDataOutput{Tracks: tracks},

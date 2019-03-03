@@ -1,5 +1,6 @@
 package crud
 
+//! DEPRECATION NOTICE: Moving to ./resolvers
 type CRUDMethods struct {
 	PlayrollMethods               `gql:"GROUP"`
 	RollMethods                   `gql:"GROUP"`

@@ -7,6 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//! Deprecation Notice: Using relationship entity from now on
+
 type Friendship struct {
 	Model
 	Status   string

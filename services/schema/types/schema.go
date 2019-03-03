@@ -11,11 +11,9 @@ type Types struct {
 	CompiledRollTypes           `gql:"GROUP"`
 	IdentityCredentialTypes     `gql:"GROUP"`
 	MusicServiceCredentialTypes `gql:"GROUP"`
-	ExternalCredentialTypes     `gql:"GROUP"`
 	UserTypes                   `gql:"GROUP"`
 	DiscoveryQueueTypes         `gql:"GROUP"`
 	DiscoveryQueueEntryTypes    `gql:"GROUP"`
-	FriendshipTypes             `gql:"GROUP"`
 	RecommendationTypes         `gql:"GROUP"`
 	MusicServiceAlbumTypes      `gql:"GROUP"`
 	MusicServiceArtistTypes     `gql:"GROUP"`
@@ -33,11 +31,9 @@ var LinkedTypes = Types{
 	CompiledRollTypes:           LinkedCompiledRollTypes,
 	IdentityCredentialTypes:     LinkedIdentityCredentialTypes,
 	MusicServiceCredentialTypes: LinkedMusicServiceCredentialTypes,
-	ExternalCredentialTypes:     LinkedExternalCredentialTypes,
 	UserTypes:                   LinkedUserTypes,
 	DiscoveryQueueTypes:         LinkedDiscoveryQueueTypes,
 	DiscoveryQueueEntryTypes:    LinkedDiscoveryQueueEntryTypes,
-	FriendshipTypes:             LinkedFriendshipTypes,
 	RecommendationTypes:         LinkedRecommendationTypes,
 	MusicServiceAlbumTypes:      LinkedMusicServiceAlbumTypes,
 	MusicServiceArtistTypes:     LinkedMusicServiceArtistTypes,

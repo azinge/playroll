@@ -6,9 +6,9 @@ type GeneralMethods struct {
 	SpotifyMethods        `gql:"GROUP"`
 	UserMethods           `gql:"GROUP"`
 	PlayrollMethods       `gql:"GROUP"`
-	FriendshipMethods     `gql:"GROUP"`
 	DiscoveryQueueMethods `gql:"GROUP"`
 	RecommendationMethods `gql:"GROUP"`
+	RelationshipMethods   `gql:"GROUP"`
 }
 
 var LinkedGeneralMethods = GeneralMethods{
@@ -16,7 +16,7 @@ var LinkedGeneralMethods = GeneralMethods{
 	SpotifyMethods:        LinkedSpotifyMethods,
 	UserMethods:           LinkedUserMethods,
 	PlayrollMethods:       LinkedPlayrollMethods,
-	FriendshipMethods:     LinkedFriendshipMethods,
 	DiscoveryQueueMethods: LinkedDiscoveryQueueMethods,
 	RecommendationMethods: LinkedRecommendationMethods,
+	RelationshipMethods:   LinkedRelationshipMethods,
 }

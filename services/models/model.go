@@ -14,12 +14,10 @@ var ModelList = []interface{}{
 	User{},
 	Tracklist{},
 	CompiledRoll{},
-	ExternalCredential{}, //! Deprecated
 	IdentityCredential{},
 	MusicServiceCredential{},
 	DiscoveryQueue{},
 	DiscoveryQueueEntry{},
-	Friendship{}, //! Deprecated
 	Recommendation{},
 	MusicServiceAlbum{},
 	MusicServiceArtist{},

@@ -19,8 +19,7 @@ type User struct {
 	Playrolls               []Playroll
 	IdentityCredentials     []IdentityCredential
 	MusicServiceCredentials []MusicServiceCredential
-	ExternalCredentials     []ExternalCredential
-	Friendships             []Friendship
+	Relationships           []Relationship
 	Recommendations         []Recommendation
 	DiscoveryQueues         []DiscoveryQueue
 }
@@ -41,8 +40,7 @@ type UserOutput struct {
 	Playrolls               []PlayrollOutput               `gql:"playrolls: [Playroll]"`
 	IdentityCredentials     []IdentityCredentialOutput     `gql:"identityCredentials: [IdentityCredential]"`
 	MusicServiceCredentials []MusicServiceCredentialOutput `gql:"musicServiceCredentials: [MusicServiceCredential]"`
-	ExternalCredentials     []ExternalCredentialOutput     `gql:"externalCredentials: [ExternalCredential]"` //! DEPRECATED
-	Friendships             []FriendshipOutput             `gql:"friendships: [Friendship]"`
+	Relationships           []RelationshipOutput           `gql:"relationships: [Relationship]"`
 	Recommendations         []RecommendationOutput         `gql:"recommendations: [Recommendation]"`
 	DiscoveryQueues         []DiscoveryQueueOutput         `gql:"discoveryQueues: [DiscoveryQueue]"`
 }
@@ -157,11 +155,6 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 		return nil, err
 	}
 	uo.Playrolls = playrolls
-	externalCredentials, err := FormatExternalCredentialSlice(&u.ExternalCredentials)
-	if err != nil {
-		return nil, err
-	}
-	uo.ExternalCredentials = externalCredentials
 	identityCredentials, err := FormatIdentityCredentialSlice(&u.IdentityCredentials)
 	if err != nil {
 		return nil, err
@@ -172,11 +165,11 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 		return nil, err
 	}
 	uo.MusicServiceCredentials = musicServiceCredentials
-	friendships, err := FormatFriendshipSlice(&u.Friendships)
+	relationships, err := FormatRelationshipSlice(&u.Relationships)
 	if err != nil {
 		return nil, err
 	}
-	uo.Friendships = friendships
+	uo.Relationships = relationships
 	recommendations, err := FormatRecommendationSlice(&u.Recommendations)
 	if err != nil {
 		return nil, err

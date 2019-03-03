@@ -8,14 +8,43 @@ import (
 
 type Relationship struct {
 	Model
+	Status      string
+	UserID      uint `gorm:"primary_key"`
+	User        User
+	OtherUserID uint `gorm:"primary_key"`
+	OtherUser   User
 }
 
 type RelationshipInput struct {
-	Placeholder string `gql:"placeholder: String"`
+	Status      string `gql:"String"`
+	UserID      string `gql:"userID: ID"`
+	OtherUserID string `gql:"otherUserID: ID"`
 }
 
 type RelationshipOutput struct {
-	Model `gql:"MODEL"`
+	Model       `gql:"MODEL"`
+	Status      string     `gql:"status: String"`
+	UserID      uint       `gql:"userID: ID"`
+	User        UserOutput `gql:"user: User"`
+	OtherUserID uint       `gql:"otherUserID: ID"`
+	OtherUser   UserOutput `gql:"otherUser: User"`
+}
+
+// Utility Methods
+
+func GetRelationshipsByUserID(id uint, db *gorm.DB) (*[]User, error) {
+	fs := &[]Relationship{}
+	if err := db.Preload("OtherUser").Where(&Relationship{UserID: id}).Find(&fs).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	otherUsers := []User{}
+	for _, f := range *fs {
+		otherUsers = append(otherUsers, f.OtherUser)
+	}
+
+	return &otherUsers, nil
 }
 
 // Entity Specific Methods

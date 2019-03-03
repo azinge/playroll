@@ -9,9 +9,9 @@ import (
 
 type DiscoveryQueue struct {
 	Model
-	UserID                uint
-	User                  User
-	DiscoveryQueueEntries []DiscoveryQueueEntry `gorm:"foreignkey:DiscoveryQueueID"`
+	UserID  uint
+	User    User
+	Entries []DiscoveryQueueEntry
 }
 
 type DiscoveryQueueInput struct {
@@ -29,7 +29,7 @@ type DiscoveryQueueOutput struct {
 
 func GetDiscoveryQueueByUserID(id uint, db *gorm.DB) (*DiscoveryQueueOutput, error) {
 	dq := &DiscoveryQueue{}
-	db = db.Preload("DiscoveryQueueEntries")
+	db = db.Preload("Entries")
 	if err := db.Where(DiscoveryQueue{UserID: id}).First(dq).Error; err != nil {
 		fmt.Printf("error getting discovery queue: %s", err.Error())
 		return nil, err
@@ -59,7 +59,7 @@ func DiscoveryQueueModelToOutput(dq *DiscoveryQueue) (*DiscoveryQueueOutput, err
 	dqo.Model = dq.Model
 	dqo.UserID = dq.UserID
 	dqo.User = dq.User
-	entries, err := FormatDiscoveryQueueEntrySlice(&dq.DiscoveryQueueEntries)
+	entries, err := FormatDiscoveryQueueEntrySlice(&dq.Entries)
 	if err != nil {
 		return nil, err
 	}

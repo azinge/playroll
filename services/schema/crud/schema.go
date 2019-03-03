@@ -8,11 +8,9 @@ type CRUDMethods struct {
 	CompiledRollMethods           `gql:"GROUP"`
 	IdentityCredentialMethods     `gql:"GROUP"`
 	MusicServiceCredentialMethods `gql:"GROUP"`
-	ExternalCredentialMethods     `gql:"GROUP"`
 	UserMethods                   `gql:"GROUP"`
 	DiscoveryQueueMethods         `gql:"GROUP"`
 	DiscoveryQueueEntryMethods    `gql:"GROUP"`
-	FriendshipMethods             `gql:"GROUP"`
 	RecommendationMethods         `gql:"GROUP"`
 	MusicServiceAlbumMethods      `gql:"GROUP"`
 	MusicServiceArtistMethods     `gql:"GROUP"`
@@ -29,11 +27,9 @@ var LinkedCRUDMethods = CRUDMethods{
 	CompiledRollMethods:           LinkedCompiledRollMethods,
 	IdentityCredentialMethods:     LinkedIdentityCredentialMethods,
 	MusicServiceCredentialMethods: LinkedMusicServiceCredentialMethods,
-	ExternalCredentialMethods:     LinkedExternalCredentialMethods,
 	UserMethods:                   LinkedUserMethods,
 	DiscoveryQueueMethods:         LinkedDiscoveryQueueMethods,
 	DiscoveryQueueEntryMethods:    LinkedDiscoveryQueueEntryMethods,
-	FriendshipMethods:             LinkedFriendshipMethods,
 	RecommendationMethods:         LinkedRecommendationMethods,
 	MusicServiceAlbumMethods:      LinkedMusicServiceAlbumMethods,
 	MusicServiceArtistMethods:     LinkedMusicServiceArtistMethods,

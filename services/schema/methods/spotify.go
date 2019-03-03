@@ -16,7 +16,7 @@ import (
 type SpotifyMethods struct {
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	SearchSpotifyFull       *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
-	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): ExternalCredential"`
+	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): MusicServiceCredential"`
 	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
 }
 

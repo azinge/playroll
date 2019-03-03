@@ -22,34 +22,34 @@ var spotifyScopes = []string{
 }
 
 func GetSpotifyClientForUser(userID uint, db *gorm.DB) (*spotify.Client, error) {
-	ec, err := models.FindExternalCredentialByUserID(userID, db)
+	msc, err := models.FindMusicServiceCredentialByUserID(userID, db)
 	if err != nil {
-		fmt.Println("Error Finding External Credential by userID: ", err.Error(), ", UserID:", userID)
+		fmt.Println("error finding MusicServiceCredential by userID: ", err.Error(), ", UserID:", userID)
 		return nil, err
 	}
 
-	eco, err := models.ExternalCredentialModelToOutput(ec)
+	msco, err := models.MusicServiceCredentialModelToOutput(msc)
 	if err != nil {
-		fmt.Println("Error creating output object for External Credential: ", err.Error())
+		fmt.Println("error creating output object for MusicServiceCredential: ", err.Error())
 		return nil, err
 	}
-	token := &eco.Token
+	token := &msco.Token
 
 	client := spotify.NewAuthenticator(redirectURL, spotifyScopes...).NewClient(token)
 	token, err = client.Token()
 	if err != nil {
-		fmt.Println("Error fetching token: ", err.Error())
+		fmt.Println("error fetching token: ", err.Error())
 		return nil, err
 	}
 
-	dao := models.InitExternalCredentialDAO(db)
-	ec.Token, err = json.Marshal(token)
+	dao := models.InitMusicServiceCredentialDAO(db)
+	msc.Token, err = json.Marshal(token)
 	if err != nil {
 		fmt.Println("Error Marshalling token: ", err.Error())
 		return nil, err
 	}
 
-	_, err = dao.Update(ec)
+	_, err = dao.Update(msc)
 	if err != nil {
 		fmt.Println("Error Updating Credentials: ", err.Error())
 		return nil, err
@@ -57,19 +57,8 @@ func GetSpotifyClientForUser(userID uint, db *gorm.DB) (*spotify.Client, error) 
 	return &client, err
 }
 
-func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*models.ExternalCredentialOutput, error) {
-	auth := spotify.NewAuthenticator(redirectURL, spotifyScopes...)
-	url := auth.AuthURL("")
-	fmt.Println(url)
-	// TEMPORARY
-
-	if code == "" {
-		return nil, fmt.Errorf(fmt.Sprintf("Please log in: " + url))
-	}
-
+func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*models.MusicServiceCredentialOutput, error) {
 	oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(code)
-
-	fmt.Printf("Recieved Token: %#v\n", oauthToken)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -77,25 +66,21 @@ func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*mod
 
 	t2 := &oauth2.Token{}
 
-	b, e := json.Marshal(oauthToken)
-	fmt.Println(e)
+	b, _ := json.Marshal(oauthToken)
 	json.Unmarshal(b, t2)
-	fmt.Printf("Translated Token: %#v\n", t2)
 
-	ec := models.InitExternalCredentialDAO(db)
-	externalCredential := &models.ExternalCredential{
+	msc := models.InitMusicServiceCredentialDAO(db)
+	musicServiceCredential := &models.MusicServiceCredential{
 		Provider: "Spotify",
 		UserID:   userID,
 		Token:    b,
 	}
 
-	fmt.Printf("Saved Token: %#v\n", externalCredential)
-
-	rawExternalCredential, err := ec.Create(externalCredential)
+	rawMusicServiceCredential, err := msc.Create(musicServiceCredential)
 	if err != nil {
 		return nil, err
 	}
-	return models.FormatExternalCredential(rawExternalCredential)
+	return models.FormatMusicServiceCredential(rawMusicServiceCredential)
 }
 
 func SearchSpotify(query string, searchType string, client *spotify.Client) (*jsonmodels.SearchSpotifyOutput, error) {

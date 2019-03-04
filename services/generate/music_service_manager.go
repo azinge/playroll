@@ -22,9 +22,7 @@ func collectTrack(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 		if err != nil {
 			return err
 		}
-		dao := models.InitMusicServiceTrackDAO(db)
-		_, err = dao.Create(track)
-		return err
+		return db.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error
 	default:
 		return fmt.Errorf("error, could not find music service provider")
 	}
@@ -42,8 +40,7 @@ func collectAlbum(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 			return err
 		}
 		tx := db.Begin()
-		albumDAO := models.InitMusicServiceAlbumDAO(tx)
-		if _, err = albumDAO.Create(album); err != nil {
+		if err = tx.Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -53,9 +50,8 @@ func collectAlbum(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 			tx.Rollback()
 			return err
 		}
-		trackDAO := models.InitMusicServiceTrackDAO(tx)
 		for _, track := range *tracks {
-			if _, err = trackDAO.Create(&track); err != nil {
+			if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 				tx.Rollback()
 				return err
 			}
@@ -79,8 +75,7 @@ func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 			return err
 		}
 		tx := db.Begin()
-		artistDAO := models.InitMusicServiceArtistDAO(tx)
-		if _, err = artistDAO.Create(artist); err != nil {
+		if err = tx.Where(models.MusicServiceArtist{ProviderID: artist.ProviderID}).Attrs(artist).FirstOrCreate(&models.MusicServiceArtist{}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -94,8 +89,12 @@ func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 			if err != nil {
 				return err
 			}
-			albumDAO := models.InitMusicServiceAlbumDAO(tx)
-			if _, err = albumDAO.Create(album); err != nil {
+
+			if album.ArtistID != artist.ProviderID {
+				continue
+			}
+
+			if err = tx.Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
 				tx.Rollback()
 				return err
 			}
@@ -105,9 +104,8 @@ func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 				tx.Rollback()
 				return err
 			}
-			trackDAO := models.InitMusicServiceTrackDAO(tx)
 			for _, track := range *tracks {
-				if _, err = trackDAO.Create(&track); err != nil {
+				if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 					tx.Rollback()
 					return err
 				}
@@ -132,8 +130,7 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 			return err
 		}
 		tx := db.Begin()
-		playlistDAO := models.InitMusicServicePlaylistDAO(tx)
-		if _, err = playlistDAO.Create(playlist); err != nil {
+		if err = tx.Where(models.MusicServicePlaylist{ProviderID: playlist.ProviderID}).Attrs(playlist).FirstOrCreate(&models.MusicServicePlaylist{}).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -143,9 +140,8 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 			tx.Rollback()
 			return err
 		}
-		trackDAO := models.InitMusicServiceTrackDAO(tx)
 		for _, track := range *tracks {
-			if _, err = trackDAO.Create(&track); err != nil {
+			if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 				tx.Rollback()
 				return err
 			}

@@ -28,37 +28,6 @@ func collectSource(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 	}
 }
 
-func handleSource(tracks []jsonmodels.MusicSource, source jsonmodels.MusicSource, client *spotify.Client) ([]jsonmodels.MusicSource, error) {
-	switch source.Type {
-	// case "Track":
-	// 	result, err := spotifyhelpers.GetSpotifyTrack(&source, client)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return append(tracks, (*result)...), nil
-	// case "Album":
-	// 	result, err := spotifyhelpers.GetSpotifyAlbumTracks(&source, client)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return append(tracks, (*result)...), nil
-	// case "Artist":
-	// 	result, err := spotifyhelpers.GetSpotifyArtistTracks(&source, client)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return append(tracks, (*result)...), nil
-	// case "Playlist":
-	// 	result, err := spotifyhelpers.GetSpotifyPlaylistTracks(&source, client)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	return append(tracks, (*result)...), nil
-	default:
-		return tracks, nil
-	}
-}
-
 func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
 	switch filter.Type {
 	case "Random":

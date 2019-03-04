@@ -84,6 +84,22 @@ func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*mod
 	return models.FormatMusicServiceCredential(rawMusicServiceCredential)
 }
 
+func extractCover(images []spotify.Image) string {
+	cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
+	if len(images) > 0 {
+		cover = images[0].URL
+	}
+	return cover
+}
+
+func extractArtist(artists []spotify.SimpleArtist) (id, name string) {
+	if len(artists) > 0 {
+		id = string(artists[0].ID)
+		name = artists[0].Name
+	}
+	return id, name
+}
+
 func SearchSpotify(query string, searchType string, client *spotify.Client) (*jsonmodels.SearchSpotifyOutput, error) {
 	var searchResult *spotify.SearchResult
 	var err error
@@ -227,23 +243,48 @@ func GetSpotifyTrack(id spotify.ID, client *spotify.Client) (*models.MusicServic
 }
 
 func GetSpotifyTracks(ids *[]spotify.ID, client *spotify.Client) (*[]models.MusicServiceTrack, error) {
-	// audioFeatures, err := client.GetAudioFeatures(*ids...)
-	// if err != nil {
-	// 	fmt.Println("Error retrieving audio features: ", err.Error())
-	// 	return nil, err
-	// }
-	// tracks, err := client.GetTracks(ids...)
-	// if err != nil {
-	// 	fmt.Println("Error retrieving tracks: ", err.Error())
-	// 	return nil, err
-	// }
+	audioFeatures, err := client.GetAudioFeatures(*ids...)
+	if err != nil {
+		fmt.Println("Error retrieving audio features: ", err.Error())
+		return nil, err
+	}
+	tracks, err := client.GetTracks(*ids...)
+	if err != nil {
+		fmt.Println("Error retrieving tracks: ", err.Error())
+		return nil, err
+	}
 
 	msts := make([]models.MusicServiceTrack, len(*ids))
 	for i, id := range *ids {
+		// TODO: Link Genres, Secondary Artists, Available Markets
 		msts[i].Provider = "Spotify"
 		msts[i].ProviderID = string(id)
-		//msts[i].*audiofeatures* = audioFeatures[i].*audiofeatures*
-		//msts[i].*trackdetails* = audioFeatures[i].*trackdetails*
+
+		// Full Track Attributes
+		msts[i].Cover = extractCover(tracks[i].Album.Images)
+		msts[i].Popularity = tracks[i].Popularity
+		msts[i].AlbumID = string(tracks[i].Album.ID)
+		msts[i].AlbumName = tracks[i].Album.Name
+		msts[i].ArtistID, msts[i].ArtistName = extractArtist(tracks[i].Artists)
+		msts[i].DiscNumber = tracks[i].DiscNumber
+		msts[i].Duration = tracks[i].Duration
+		msts[i].Explicit = tracks[i].Explicit
+		msts[i].Name = tracks[i].Name
+		msts[i].TrackNumber = tracks[i].TrackNumber
+
+		// Audio Features
+		msts[i].Acousticness = audioFeatures[i].Acousticness
+		msts[i].Danceability = audioFeatures[i].Danceability
+		msts[i].Energy = audioFeatures[i].Energy
+		msts[i].Instrumentalness = audioFeatures[i].Instrumentalness
+		msts[i].Key = audioFeatures[i].Key
+		msts[i].Liveness = audioFeatures[i].Liveness
+		msts[i].Loudness = audioFeatures[i].Loudness
+		msts[i].Mode = audioFeatures[i].Mode
+		msts[i].Speechiness = audioFeatures[i].Speechiness
+		msts[i].Tempo = audioFeatures[i].Tempo
+		msts[i].TimeSignature = audioFeatures[i].TimeSignature
+		msts[i].Valence = audioFeatures[i].Valence
 	}
 
 	return &msts, nil
@@ -268,10 +309,20 @@ func GetSpotifyAlbums(ids *[]spotify.ID, client *spotify.Client) (msa *[]models.
 	}
 	msas := make([]models.MusicServiceAlbum, len(albums))
 	for i, album := range albums {
+		artistID, artistName := extractArtist(album.Artists)
 		msas[i] =
 			models.MusicServiceAlbum{
-				Provider:   "Spotify",
-				ProviderID: string(album.ID),
+				Provider:             "Spotify",
+				ProviderID:           string(album.ID),
+				Popularity:           album.Popularity,
+				ReleaseDate:          album.ReleaseDate,
+				ReleaseDatePrecision: album.ReleaseDatePrecision,
+				Name:                 album.Name,
+				ArtistID:             artistID,
+				ArtistName:           artistName,
+				AlbumGroup:           album.AlbumGroup,
+				AlbumType:            album.AlbumType,
+				Cover:                extractCover(album.Images),
 			}
 	}
 	return &msas, nil
@@ -286,10 +337,21 @@ func GetSpotifyAlbumWithTracks(id spotify.ID, client *spotify.Client) (msa *mode
 	for i, track := range album.Tracks.Tracks {
 		ids[i] = track.ID
 	}
-	msa = &models.MusicServiceAlbum{
-		Provider:   "Spotify",
-		ProviderID: string(album.ID),
-	}
+	artistID, artistName := extractArtist(album.Artists)
+	msa =
+		&models.MusicServiceAlbum{
+			Provider:             "Spotify",
+			ProviderID:           string(album.ID),
+			Popularity:           album.Popularity,
+			ReleaseDate:          album.ReleaseDate,
+			ReleaseDatePrecision: album.ReleaseDatePrecision,
+			Name:                 album.Name,
+			ArtistID:             artistID,
+			ArtistName:           artistName,
+			AlbumGroup:           album.AlbumGroup,
+			AlbumType:            album.AlbumType,
+			Cover:                extractCover(album.Images),
+		}
 	return msa, &ids, nil
 }
 
@@ -316,6 +378,9 @@ func GetSpotifyArtists(ids *[]spotify.ID, client *spotify.Client) (msa *[]models
 			models.MusicServiceArtist{
 				Provider:   "Spotify",
 				ProviderID: string(artist.ID),
+				Popularity: artist.Popularity,
+				Name:       artist.Name,
+				Cover:      extractCover(artist.Images),
 			}
 	}
 	return &msas, nil
@@ -334,6 +399,9 @@ func GetSpotifyArtistWithAlbums(id spotify.ID, client *spotify.Client) (msa *mod
 	msa = &models.MusicServiceArtist{
 		Provider:   "Spotify",
 		ProviderID: string(artist.ID),
+		Popularity: artist.Popularity,
+		Name:       artist.Name,
+		Cover:      extractCover(artist.Images),
 	}
 	return msa, &ids, nil
 }
@@ -344,8 +412,15 @@ func GetSpotifyPlaylist(id spotify.ID, client *spotify.Client) (msp *models.Musi
 		return nil, err
 	}
 	msp = &models.MusicServicePlaylist{
-		Provider:   "Spotify",
-		ProviderID: string(playlist.ID),
+		Provider:    "Spotify",
+		ProviderID:  string(playlist.ID),
+		Description: playlist.Description,
+		Cover:       extractCover(playlist.Images),
+		Name:        playlist.Name,
+		OwnerID:     playlist.Owner.ID,
+		OwnerName:   playlist.Owner.DisplayName,
+		SnapshotID:  playlist.SnapshotID,
+		IsPublic:    playlist.IsPublic,
 	}
 	return msp, nil
 }
@@ -360,8 +435,15 @@ func GetSpotifyPlaylistWithTracks(id spotify.ID, client *spotify.Client) (msp *m
 		ids[i] = track.Track.ID
 	}
 	msp = &models.MusicServicePlaylist{
-		Provider:   "Spotify",
-		ProviderID: string(playlist.ID),
+		Provider:    "Spotify",
+		ProviderID:  string(playlist.ID),
+		Description: playlist.Description,
+		Cover:       extractCover(playlist.Images),
+		Name:        playlist.Name,
+		OwnerID:     playlist.Owner.ID,
+		OwnerName:   playlist.Owner.DisplayName,
+		SnapshotID:  playlist.SnapshotID,
+		IsPublic:    playlist.IsPublic,
 	}
 	return msp, &ids, nil
 }

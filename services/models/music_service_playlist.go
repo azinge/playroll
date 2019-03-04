@@ -10,6 +10,15 @@ type MusicServicePlaylist struct {
 	Model
 	Provider   string
 	ProviderID string
+
+	//Full Playlist https://godoc.org/github.com/zmb3/spotify#FullPlaylist
+	Description string `json:"description"`
+	Cover       string `json:"cover"`
+	Name        string `json:"name"`
+	OwnerID     string `json:"owner_id"`
+	OwnerName   string `json:"owner_name"`
+	SnapshotID  string `json:"snapshot_id"`
+	IsPublic    bool   `json:"public"`
 }
 
 type MusicServicePlaylistInput struct {
@@ -20,6 +29,15 @@ type MusicServicePlaylistOutput struct {
 	Model      `gql:"MODEL"`
 	Provider   string `gql:"provider: String" json:"provider"`
 	ProviderID string `gql:"providerID: String" json:"providerID"`
+
+	//Full Playlist https://godoc.org/github.com/zmb3/spotify#FullPlaylist
+	Description string `gql:"description: String" json:"description"`
+	Cover       string `gql:"cover: String" json:"cover"`
+	Name        string `gql:"name: String" json:"name"`
+	OwnerID     string `gql:"ownerID: String" json:"owner_id"`
+	OwnerName   string `gql:"ownerName: String" json:"owner_name"`
+	SnapshotID  string `gql:"snapshotID: String" json:"snapshot_id"`
+	IsPublic    bool   `gql:"public: Boolean" json:"public"`
 }
 
 // Utility Methods
@@ -28,7 +46,6 @@ func GetMusicServicePlaylistByProviderInfo(provider, providerID string, db *gorm
 	//TODO: include cache stale timer
 	mst := &MusicServicePlaylist{}
 	if err := db.Where(&MusicServicePlaylist{Provider: provider, ProviderID: providerID}).Last(mst).Error; err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	return FormatMusicServicePlaylist(mst)
@@ -51,7 +68,13 @@ func MusicServicePlaylistModelToOutput(msp *MusicServicePlaylist) (*MusicService
 	mspo.Model = msp.Model
 	mspo.Provider = msp.Provider
 	mspo.ProviderID = msp.ProviderID
-	// ADD METHODS TO DECODE PROPERTIES HERE
+	mspo.Description = msp.Description
+	mspo.Cover = msp.Cover
+	mspo.Name = msp.Name
+	mspo.OwnerID = msp.OwnerID
+	mspo.OwnerName = msp.OwnerName
+	mspo.SnapshotID = msp.SnapshotID
+	mspo.IsPublic = msp.IsPublic
 	return mspo, nil
 }
 

@@ -10,6 +10,17 @@ type MusicServiceAlbum struct {
 	Model
 	Provider   string
 	ProviderID string
+
+	// Full Album https://godoc.org/github.com/zmb3/spotify#FullAlbum
+	Popularity           int    `json:"popularity"`
+	ReleaseDate          string `json:"release_date"`
+	ReleaseDatePrecision string `json:"release_date_precision"`
+	Name                 string `json:"name"`
+	ArtistID             string `json:"artistID"`
+	ArtistName           string `json:"artistName"`
+	AlbumGroup           string `json:"album_group"`
+	AlbumType            string `json:"album_type"`
+	Cover                string `json:"cover"`
 }
 
 type MusicServiceAlbumInput struct {
@@ -20,6 +31,17 @@ type MusicServiceAlbumOutput struct {
 	Model      `gql:"MODEL"`
 	Provider   string `gql:"provider: String" json:"provider"`
 	ProviderID string `gql:"providerID: String" json:"providerID"`
+
+	// Full Album
+	Popularity           int    `gql:"popularity: Int" json:"popularity"`
+	ReleaseDate          string `gql:"releaseDate: String" json:"release_date"`
+	ReleaseDatePrecision string `gql:"releaseDatePrecision: String" json:"release_date_precision"`
+	Name                 string `gql:"name: String" json:"name"`
+	ArtistID             string `gql:"artistID: String" json:"artistID"`
+	ArtistName           string `gql:"artistName: String" json:"artistName"`
+	AlbumGroup           string `gql:"albumGroup: String" json:"album_group"`
+	AlbumType            string `gql:"albumType: String" json:"album_type"`
+	Cover                string `gql:"cover: String" json:"cover"`
 }
 
 // Utility Methods
@@ -28,7 +50,6 @@ func GetMusicServiceAlbumByProviderInfo(provider, providerID string, db *gorm.DB
 	//TODO: include cache stale timer
 	msa := &MusicServiceAlbum{}
 	if err := db.Where(&MusicServiceAlbum{Provider: provider, ProviderID: providerID}).Last(msa).Error; err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	return FormatMusicServiceAlbum(msa)
@@ -51,7 +72,17 @@ func MusicServiceAlbumModelToOutput(msa *MusicServiceAlbum) (*MusicServiceAlbumO
 	msao.Model = msa.Model
 	msao.Provider = msa.Provider
 	msao.ProviderID = msa.ProviderID
-	// ADD METHODS TO DECODE PROPERTIES HERE
+
+	// Full Album
+	msao.Popularity = msa.Popularity
+	msao.ReleaseDate = msa.ReleaseDate
+	msao.ReleaseDatePrecision = msa.ReleaseDatePrecision
+	msao.Name = msa.Name
+	msao.ArtistID = msa.ArtistID
+	msao.ArtistName = msa.ArtistName
+	msao.AlbumGroup = msa.AlbumGroup
+	msao.AlbumType = msa.AlbumType
+	msao.Cover = msa.Cover
 	return msao, nil
 }
 

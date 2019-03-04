@@ -10,6 +10,11 @@ type MusicServiceArtist struct {
 	Model
 	Provider   string
 	ProviderID string
+
+	//Full Artist https://godoc.org/github.com/zmb3/spotify#FullArtist
+	Popularity int    `json:"popularity"`
+	Name       string `json:"name"`
+	Cover      string ` json:"cover"`
 }
 
 type MusicServiceArtistInput struct {
@@ -20,6 +25,11 @@ type MusicServiceArtistOutput struct {
 	Model      `gql:"MODEL"`
 	Provider   string `gql:"provider: String" json:"provider"`
 	ProviderID string `gql:"providerID: String" json:"providerID"`
+
+	//Full Artist
+	Popularity int    `gql:"popularity: Int" json:"popularity"`
+	Name       string `gql:"name: String" json:"name"`
+	Cover      string `gql:"cover: String" json:"cover"`
 }
 
 // Utility Methods
@@ -28,7 +38,6 @@ func GetMusicServiceArtistByProviderInfo(provider, providerID string, db *gorm.D
 	//TODO: include cache stale timer
 	msa := &MusicServiceArtist{}
 	if err := db.Where(&MusicServiceArtist{Provider: provider, ProviderID: providerID}).Last(msa).Error; err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	return FormatMusicServiceArtist(msa)
@@ -51,7 +60,9 @@ func MusicServiceArtistModelToOutput(msa *MusicServiceArtist) (*MusicServiceArti
 	msao.Model = msa.Model
 	msao.Provider = msa.Provider
 	msao.ProviderID = msa.ProviderID
-	// ADD METHODS TO DECODE PROPERTIES HERE
+	msao.Popularity = msa.Popularity
+	msao.Name = msa.Name
+	msao.Cover = msa.Cover
 	return msao, nil
 }
 

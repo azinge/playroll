@@ -91,6 +91,6 @@ export const HomeNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Search',
+    initialRouteName: 'Discover',
   }
 );

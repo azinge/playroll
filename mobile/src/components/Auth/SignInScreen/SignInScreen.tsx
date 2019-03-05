@@ -70,16 +70,14 @@ export default class SignInScreen extends React.Component<Props, State> {
   toggleSignIn(signIn) {
     signIn().then(
       () =>
-      this.props.navigation &&
-      this.props.navigation.dispatch(
-        StackActions.reset({
-          key: null,
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: 'Home' }),
-          ],
-        })
-      )
+        this.props.navigation &&
+        this.props.navigation.dispatch(
+          StackActions.reset({
+            key: null,
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Home' })],
+          })
+        )
     );
   }
 
@@ -91,7 +89,7 @@ export default class SignInScreen extends React.Component<Props, State> {
           password: this.state.password,
         }}
       >
-      {/* What does error mean down here  */}
+        {/* What does error mean down here  */}
         {(signIn, { loading, error, data }) => {
           return (
             <TouchableOpacity
@@ -99,10 +97,10 @@ export default class SignInScreen extends React.Component<Props, State> {
               style={styles.submitButton}
             >
               {loading ? (
-                  <ActivityIndicator color={'white'} />
-                ) : (
-                  <Text style={styles.submitButtonText}>Sign In</Text>
-                )}
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text style={styles.submitButtonText}>Sign In</Text>
+              )}
             </TouchableOpacity>
           );
         }}
@@ -135,12 +133,12 @@ export default class SignInScreen extends React.Component<Props, State> {
               onChangeText={(password: string) => this.setState({ password })}
               value={this.state.password}
             />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.showPasswordText}>Show Password</Text>
               <Switch
-                  onValueChange={this.revealPassword}
-                  value={!this.state.showPassword}
-                  style={{marginTop: 25, marginLeft: 10}}
+                onValueChange={this.revealPassword}
+                value={!this.state.showPassword}
+                style={{ marginTop: 25, marginLeft: 10 }}
               />
             </View>
           </View>

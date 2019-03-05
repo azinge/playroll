@@ -11,6 +11,7 @@ import {
   Picker,
   FlatList,
   ListRenderItem,
+  ActivityIndicator,
 } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
@@ -172,54 +173,58 @@ export default class Search extends Component<Props, State> {
           console.log(error);
           return (
             <View style={{ marginBottom: 145 }}>
-              <FlatList
-                data={data && data.searchSpotify}
-                showsVerticalScrollIndicator={false}
-                keyExtractor={(item, index) => item.providerID}
-                extraData={this.state}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.playrollID
-                        ? this.setModal(item)
-                        : this.manageRoll(item);
-                    }}
-                    key={item.providerID}
-                  >
-                    <View
-                      style={{ width: '100%', alignItems: 'center' }}
+              {loading ? (
+                <ActivityIndicator color={'gray'} />
+              ) : (
+                <FlatList
+                  data={data && data.searchSpotify}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index) => item.providerID}
+                  extraData={this.state}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.playrollID
+                          ? this.setModal(item)
+                          : this.manageRoll(item);
+                      }}
                       key={item.providerID}
                     >
-                      <View style={{ flexDirection: 'row', width: '100%' }}>
-                        <Image
-                          style={styles.cover}
-                          source={{ uri: item.cover }}
-                        />
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
-                          <Text style={styles.artist} numberOfLines={2}>
-                            {item.name}
-                          </Text>
-                          {item.creator ? (
-                            <Text style={styles.noArtist} numberOfLines={2}>
-                              {item.creator}
+                      <View
+                        style={{ width: '100%', alignItems: 'center' }}
+                        key={item.providerID}
+                      >
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                          <Image
+                            style={styles.cover}
+                            source={{ uri: item.cover }}
+                          />
+                          <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={styles.artist} numberOfLines={2}>
+                              {item.name}
                             </Text>
-                          ) : null}
+                            {item.creator ? (
+                              <Text style={styles.noArtist} numberOfLines={2}>
+                                {item.creator}
+                              </Text>
+                            ) : null}
+                          </View>
+                          <Icon
+                            size={35}
+                            name='more-vert'
+                            color='lightgrey'
+                            onPress={() =>
+                              this.props.navigation &&
+                              this.props.navigation.goBack(null)
+                            }
+                          />
                         </View>
-                        <Icon
-                          size={35}
-                          name='more-vert'
-                          color='lightgrey'
-                          onPress={() =>
-                            this.props.navigation &&
-                            this.props.navigation.goBack(null)
-                          }
-                        />
+                        <View style={styles.spacing} />
                       </View>
-                      <View style={styles.spacing} />
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
+                    </TouchableOpacity>
+                  )}
+                />
+              )}
             </View>
           );
         }}

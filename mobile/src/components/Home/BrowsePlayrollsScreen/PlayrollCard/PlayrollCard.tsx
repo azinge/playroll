@@ -56,6 +56,17 @@ export default class PlayrollCard extends React.Component<Props, State> {
               title={playroll.name}
               // image={require("../../assets/wack.jpg")}
               key={playroll.id}
+              containerStyle={{
+                borderRadius: 12,
+                borderColor: 'white',
+                shadowColor: 'gray',
+                shadowOffset: {
+                  width: 2,
+                  height: 3,
+                },
+                shadowRadius: 5,
+                shadowOpacity: 0.2,
+              }}
             >
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ height: 110 }}>

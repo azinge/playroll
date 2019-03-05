@@ -12,10 +12,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
-  Linking,
   SafeAreaView,
-  Switch,
+  Image
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
@@ -28,9 +28,9 @@ export interface Props {
 
 interface State {
   username: string;
-  password: string;
-  showPassword: boolean;
   email: string;
+  password: string;
+  confirmPassword: string;
   avatar: string;
   error?: string;
 }
@@ -42,16 +42,11 @@ export default class SignUpScreen extends React.Component<Props, State> {
       username: '',
       email: '',
       password: '',
-      showPassword: true,
+      confirmPassword: '',
       avatar: '',
-      error: undefined,
+      error: undefined
     };
-    this.displayPassword = this.displayPassword.bind(this);
     this.renderError = this.renderError.bind(this);
-  }
-
-  displayPassword() {
-    this.setState({ showPassword: !this.state.showPassword });
   }
 
   handleOpenTOSURL() {
@@ -59,56 +54,76 @@ export default class SignUpScreen extends React.Component<Props, State> {
     if (Platform.OS === 'ios') {
       WebBrowser.openBrowserAsync(url);
     }
-    // Linking.openURL(url);
     WebBrowser.openBrowserAsync(url);
   }
 
   validateInput(signUp) {
     if (this.state.username === '' || this.state.email === '' ||
-        this.state.password === '' || this.state.avatar === '') {
+        this.state.password === '' || this.state.confirmPassword === '' ||
+        this.state.avatar === '') {
           return this.setState({
             error: 'All fields must have a value'
           }, () => {
             setTimeout(() => {this.setState({ error: null })}, 3000);
           });
     }
+    if (this.state.password !== this.state.confirmPassword) {
+      return this.setState({
+        password: '',
+        confirmPassword: '',
+        error: 'Passwords do not match!'
+      }, () => {
+        setTimeout(() => {this.setState({ error: null })}, 3000);
+      });
+    }
     signUp();
+  }
+
+  renderSegueToSignIn() {
+    return (
+      <View style={styles.segueToSignInContainer}>
+        <Icon
+          name="arrow-back"
+          type="material"
+          color="#6A0070"
+          onPress={() => {
+            this.props.navigation && this.props.navigation.navigate("SignIn");
+          }}
+        />
+        <Text style={styles.signInTitle}>Sign In</Text>
+      </View>
+    );
+  }
+
+  selectProfileImage() {
+    // TODO: pull image from gallery.
   }
 
   renderHeader() {
     return (
       <View style={styles.signupHeader}>
-        <Text style={styles.signupText}>Sign Up</Text>
+        <View style={styles.signupTextContainer}>
+          <Text style={styles.signupText}>Sign Up</Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.imageSelectionContainer}
+          onPress={() => this.selectProfileImage}
+        >
+          <Image source={{uri: this.state.avatar}} style={styles.image}/>
+          <Text style={styles.editPhotoText}>Edit Photo</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   termsOfServiceLink() {
     return (
-      <TouchableOpacity
-        onPress={() => this.handleOpenTOSURL()}
-        style={styles.tosContainer}
-      >
+      <TouchableOpacity onPress={() => this.handleOpenTOSURL()}>
         <Text style={styles.tosLink}>
           By signing up, you are agreeing to our Terms of Service.
         </Text>
       </TouchableOpacity>
     );
-  }
-
-  renderPasswordButton() {
-    if (this.state.password.length > 1) {
-      return (
-        <TouchableOpacity
-          onPress={() => this.displayPassword()}
-          style={styles.showPasswordButton}
-        >
-          <Text style={styles.tosLink}>
-            Show Password
-          </Text>
-        </TouchableOpacity>
-      );
-    }
   }
 
   renderSignupButton() {
@@ -155,15 +170,17 @@ export default class SignUpScreen extends React.Component<Props, State> {
       >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
+            {this.renderSegueToSignIn()}
             {this.renderHeader()}
+            <Text style={styles.formText}>Username</Text>
             <TextInput
               placeholder='Username'
               autoCapitalize='none'
               style={styles.inputContainer}
               onChangeText={(username: string) => this.setState({ username })}
-              autoCapitalize={'sentences'}
               value={this.state.username}
             />
+            <Text style={styles.formText}>Email</Text>
             <TextInput
               placeholder='Email'
               style={styles.inputContainer}
@@ -171,20 +188,21 @@ export default class SignUpScreen extends React.Component<Props, State> {
               autoCapitalize={'none'}
               value={this.state.email}
             />
+            <Text style={styles.formText}>Password</Text>
             <TextInput
               placeholder='Password'
               style={styles.inputContainer}
               onChangeText={(password: string) => this.setState({ password })}
-              secureTextEntry={this.state.showPassword}
+              secureTextEntry={true}
               value={this.state.password}
             />
-            {this.renderPasswordButton()}
-            <TextInput // TODO: Remove Later
-              style={styles.avatarContainer}
-              autoCapitalize='none'
-              placeholder='Avatar link'
-              onChangeText={(avatar: string) => this.setState({ avatar })}
-              value={this.state.avatar}
+            <Text style={styles.formText}>Confirm Password</Text>
+            <TextInput
+              placeholder='Confirm Password'
+              style={styles.inputContainer}
+              onChangeText={(confirmPassword: string) => this.setState({ confirmPassword })}
+              secureTextEntry={true}
+              value={this.state.confirmPassword}
             />
             {this.termsOfServiceLink()}
             {this.renderError()}

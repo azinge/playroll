@@ -4,42 +4,70 @@ export default StyleSheet.create({
   mainContainer: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   container: {
     flex: 1,
     width: '95%',
-    paddingLeft: 20,
+    paddingLeft: 20
+  },
+  segueToSignInContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '22%', //TODO: handle spacing
+    opacity: 0.5
+  },
+  signInTitle: {
+    fontSize: 17,
+    color: '#6A0070'
   },
   signupHeader: {
-    paddingTop: 50,
+    flexDirection: "row",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 30,
     paddingBottom: 20,
-    paddingRight: 20,
+    paddingRight: 20
+  },
+  signupTextContainer: {
+    flex: 2
   },
   signupText: {
     fontWeight: 'bold',
     fontSize: 30,
-    color: '#6A0070',
+    color: '#6A0070'
+  },
+  imageSelectionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  image: {
+    height: 75,
+    width: 75,
+    borderRadius: 75 / 2,
+    backgroundColor: 'pink'
+  },
+  editPhotoText: {
+    paddingTop: 10,
+    fontSize: 15,
+    color: '#6A0070'
+  },
+  formText: {
+    fontSize: 15,
+    color: '#6A0070'
   },
   inputContainer: {
-    marginTop: 25,
     width: '100%',
     height: 45,
+    marginBottom: 25,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderColor: '#6A0070',
-    color: '#6A0070',
-  },
-  avatarContainer: {
-    marginTop: 25,
-    width: '100%',
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderColor: '#6A0070',
-    color: '#6A0070',
+    color: '#6A0070'
   },
   showPasswordButton: {
     marginTop: 15
@@ -51,26 +79,23 @@ export default StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#6A0070',
-    padding: 20,
+    padding: 20
   },
   submitButtonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 18
   },
   errorMessage: {
     marginTop: 15,
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#FF0000',
-  },
-  tosContainer: {
-    marginTop: 50,
+    color: '#FF0000'
   },
   tosLink: {
     fontWeight: 'bold',
-    fontSize: 16,
-    color: '#6bbed8',
+    fontSize: 15,
+    color: '#19B3E2'
   },
 });

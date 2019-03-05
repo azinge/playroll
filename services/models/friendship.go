@@ -31,6 +31,29 @@ type FriendshipOutput struct {
 	Friend   UserOutput `gql:"friend: User"`
 }
 
+// Utility Methods
+
+func GetFriendsByUserID(id uint, db *gorm.DB) (*[]User, error) {
+	fs := &[]Friendship{}
+	if err := db.Where(&Friendship{UserID: id}).Find(&fs).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	friendIDs := []uint{}
+	for _, f := range *fs {
+		friendIDs = append(friendIDs, f.FriendID)
+	}
+
+	us := &[]User{}
+	if err := db.Where(friendIDs).Find(&us).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return us, nil
+}
+
 // Entity Specific Methods
 
 func FriendshipInputToModel(fi *FriendshipInput) (*Friendship, error) {

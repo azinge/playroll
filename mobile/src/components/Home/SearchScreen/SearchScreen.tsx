@@ -2,11 +2,11 @@
  * SearchScreen
  */
 
-import React from "react";
-import { View } from "react-native";
-import { Header, Icon } from "react-native-elements";
-import { NavigationScreenProp } from "react-navigation";
-import Search from "../../shared/Search/Search";
+import React from 'react';
+import { View } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
+import { NavigationScreenProp } from 'react-navigation';
+import Search from '../../shared/Search/Search';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -15,16 +15,17 @@ export interface Props {
 export default class SearchScreen extends React.Component<Props> {
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Header
-          backgroundColor="purple"
-          outerContainerStyles={{ marginBottom: -1 }}
+          backgroundColor='purple'
           centerComponent={{
-            text: "Search",
-            style: { color: "#fff", fontSize: 20 },
+            text: 'Search',
+            style: { color: '#fff', fontSize: 20 },
           }}
         />
-        <Search navigation={this.props.navigation} />
+        <View style={{ flex: 1 }}>
+          <Search navigation={this.props.navigation} />
+        </View>
       </View>
     );
   }

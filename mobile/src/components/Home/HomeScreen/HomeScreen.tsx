@@ -26,6 +26,7 @@ export interface Props {
 }
 
 interface State {}
+
 export default class HomeScreen extends React.Component<Props, State> {
   componentWillMount() {
     StatusBar.setBarStyle('light-content', true);
@@ -34,7 +35,8 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       //   <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Collapsible
-        min={isIphoneX() ? 34 : 20}
+        max={45}
+        min={isIphoneX() ? 45 : 20}
         backgroundColor={'purple'}
         renderHeader={this.renderHeader()}
         // renderContent is not needed if using FlatList
@@ -76,7 +78,7 @@ export default class HomeScreen extends React.Component<Props, State> {
             </ScrollView>
 
             <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-              <Text style={styles.title}> Recommendations</Text>
+              <Text style={styles.title}>Recommendations</Text>
             </View>
 
             <ScrollView
@@ -100,7 +102,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               })}
             </ScrollView>
             <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-              <Text style={styles.title}> Friends</Text>
+              <Text style={styles.title}>Friends</Text>
             </View>
 
             <ScrollView
@@ -132,7 +134,6 @@ export default class HomeScreen extends React.Component<Props, State> {
         // keyExtractor={(item, i) => String(i)}
         // renderItem={({ index }) => <Content gray={index % 2 !== 0} />}
       />
-      //   </View>
     );
   }
 

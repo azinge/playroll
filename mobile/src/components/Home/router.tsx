@@ -9,6 +9,7 @@ import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import HomeScreen from './HomeScreen';
 import SearchScreen from './SearchScreen';
 import ManageRollScreen from './ManageRollScreen';
+import YourLibraryScreen from './YourLibraryScreen';
 
 const SearchNavigator = createStackNavigator(
   {
@@ -83,6 +84,22 @@ export const HomeNavigator = createBottomTabNavigator(
           <Icon
             type='material-community'
             name='spotify'
+            size={35}
+            color={tintColor}
+          />
+        ),
+      },
+    },
+
+    YourLibrary: {
+      screen: YourLibraryScreen,
+      navigationOptions: {
+        title: `Library`,
+        tabBarLabel: 'Your Library',
+        tabBarIcon: ({ tintColor = '' }) => (
+          <Icon
+            type='material-community'
+            name='library-music'
             size={35}
             color={tintColor}
           />

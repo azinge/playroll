@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 
 import ManagePlayrollScreen from './ManagePlayrollScreen';
+import ViewPlayrollScreen from './ViewPlayrollScreen';
 import TracklistScreen from './TracklistScreen';
 
 export const PlayrollsNavigator = createStackNavigator(
@@ -9,6 +10,13 @@ export const PlayrollsNavigator = createStackNavigator(
       screen: ManagePlayrollScreen,
       navigationOptions: () => ({
         title: 'ManagePlayroll',
+        header: null,
+      }),
+    },
+    ViewPlayroll: {
+      screen: ViewPlayrollScreen,
+      navigationOptions: () => ({
+        title: 'ViewPlayroll',
         header: null,
       }),
     },

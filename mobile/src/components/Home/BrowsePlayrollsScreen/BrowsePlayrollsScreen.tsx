@@ -114,7 +114,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                                 // https://reactnavigation.org/docs/en/navigation-prop.html#navigate-link-to-other-screens
                                 // https://reactnavigation.org/docs/en/navigation-prop.html#getparam-get-a-specific-param-value-with-a-fallback
                                 this.props.navigation.navigate('Playrolls', {
-                                  managePlayroll: 'Manage Playroll',
+                                  // managePlayroll: 'Manage Playroll',
                                   playroll,
                                 });
                             }}

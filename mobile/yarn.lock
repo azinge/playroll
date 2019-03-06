@@ -3391,6 +3391,11 @@ fast-levenshtein@~2.0.4:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
+fast-memoize@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/fast-memoize/-/fast-memoize-2.5.1.tgz#c3519241e80552ce395e1a32dcdde8d1fd680f5d"
+  integrity sha512-xdmw296PCL01tMOXx9mdJSmWY29jQgxyuZdq0rEHMu+Tpe1eOEtCycoG6chzlcrWsNgpZP7oL8RiQr7+G6Bl6g==
+
 fb-watchman@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-2.0.0.tgz#54e9abf7dfa2f26cd9b1636c588c1afc05de5d58"
@@ -6858,6 +6863,20 @@ react-native-branch@2.2.5:
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"
   integrity sha1-QHTdY7SXPmOX2c5Q6XtXx3pRjp0=
 
+react-native-collapsible-header-views@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible-header-views/-/react-native-collapsible-header-views-1.0.0.tgz#4c10aee670bf5691b868a8a6f2550af7381df667"
+  integrity sha512-GyFiIHwVVtx1voHx+F1nWtRodL7tbPmI+iolq0NpRn5n0Oz4/nsOK+7oP91avNTl+SjN1X4YPHBsE+MR0XLlBg==
+  dependencies:
+    fast-memoize "^2.5.1"
+
+react-native-collapsible-header@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible-header/-/react-native-collapsible-header-0.0.14.tgz#3e806c1c55f1c4ba676129a84d6e218936eafd7a"
+  integrity sha512-812BuLUYcFdxAdyn7MdNVM/XBDAA+oO9ZxC9MNCaklApufp+5d69lN8RzMIjUNRUtdFqawpgW7LRgvTD0ccgWg==
+  dependencies:
+    prop-types "^15.6.1"
+
 react-native-elements@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.0.0.tgz#95bc194f61ec4658d8dbd977524f8c4fd3ada136"
@@ -6895,6 +6914,11 @@ react-native-image-color-picker@^1.0.4:
   dependencies:
     image-color-picker "^1.0.0"
     react-native-fetch-blob "^0.10.8"
+
+react-native-iphone-x-helper@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
+  integrity sha512-xIeTo4s77wwKgBZLVRIZC9tM9/PkXS46Ul76NXmvmixEb3ZwqGdQesR3zRiLMOoIdfOURB6N9bba9po7+x9Bag==
 
 react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"

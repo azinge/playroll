@@ -6,7 +6,7 @@ import {
 import { Icon } from 'react-native-elements';
 
 import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
-import DiscoverScreen from './DiscoverScreen';
+import HomeScreen from './HomeScreen';
 import SearchScreen from './SearchScreen';
 import ManageRollScreen from './ManageRollScreen';
 
@@ -45,11 +45,11 @@ const SearchNavigator = createStackNavigator(
 
 export const HomeNavigator = createBottomTabNavigator(
   {
-    Discover: {
-      screen: DiscoverScreen,
+    Home: {
+      screen: HomeScreen,
       navigationOptions: {
-        title: `Discover`,
-        tabBarLabel: 'Discover',
+        title: `Home`,
+        tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
@@ -91,6 +91,6 @@ export const HomeNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Discover',
+    initialRouteName: 'Home',
   }
 );

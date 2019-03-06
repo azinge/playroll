@@ -1,2 +1,2 @@
-import ManagePlayrollScreen from './ManagePlayrollScreen';
-export default ManagePlayrollScreen;
+import ViewPlayrollScreen from './ViewPlayrollScreen';
+export default ViewPlayrollScreen;

@@ -1,5 +1,5 @@
 /**
- * ViewPlayrollScreen (aka. Edit Playroll)
+ * ViewPlayrollScreen
  */
 
 import * as React from 'react';

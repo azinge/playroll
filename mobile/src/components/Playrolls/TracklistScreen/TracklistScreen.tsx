@@ -55,7 +55,7 @@ export default class TracklistScreen extends React.Component<Props, State> {
                     />
                   }
                   centerComponent={{
-                    text: `${playlistName}`,
+                    text: `${playlistName}`, // TODO: name is not saving from previous screen
                     style: styles.headerCenterComponent,
                   }}
                 />
@@ -104,8 +104,9 @@ export default class TracklistScreen extends React.Component<Props, State> {
                   >
                     {(generatePlaylist, { data }) => (
                       <Button
-                        title='Generate Playlist'
-                        containerStyle={styles.genPlaylistButton}
+                        title='View in Spotify'
+                        containerStyle={styles.genPlaylistButtonContainer}
+                        buttonStyle={styles.genPlaylistButton}
                         onPress={() => {
                           generatePlaylist();
                         }}

@@ -34,8 +34,12 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     margin: 10,
   },
-  genPlaylistButton: {
+  genPlaylistButtonContainer: {
     width: '90%',
+  },
+  genPlaylistButton: {
+    backgroundColor: 'purple',
+    borderRadius: 10,
   },
 
   // Scroll View Content

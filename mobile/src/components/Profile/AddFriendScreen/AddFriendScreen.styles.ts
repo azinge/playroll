@@ -6,13 +6,8 @@ export default StyleSheet.create({
         width: "100%",
         alignItems: "center"
     },
-    container: {
-        flex: 1,
-        width: "90%"
-    },
     header: {
-        width: "100%",
-        paddingBottom: 20
+        marginBottom: 20,
     },
     segueToBrowseContainer: {
         alignItems: "center",
@@ -30,17 +25,21 @@ export default StyleSheet.create({
         fontSize: 30,
         color: "#6A0070"
     },
-    searchContainer: {
-        paddingTop: 20,
-        height: 125,
-        width: "100%"
-    },
     searchBarContainer: {
-        height: "25%"
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#4F0C50',
+        borderRadius: 25,
     },
     searchInputContainer: {
+        flex: 1,
+        backgroundColor: "#4F0C50",
+        color: 'white',
         borderBottomWidth: 0.5,
-        borderColor: "#6A0070",
+        borderColor: "#4F0C50",
+        borderRadius: 25,
         height: "100%"
     },
     searchButton: {
@@ -49,15 +48,18 @@ export default StyleSheet.create({
         backgroundColor: "#6A0070"
     },
     usersContainer: {
+        flex: 1,
+        width: "95%",
         paddingBottom: 10,
-        backgroundColor: "#6A0070"
     },
     userRow: {
         flex: 1,
         padding: 15,
+        margin: 10,
         alignItems: "center",
         flexDirection: "row",
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        backgroundColor: "#6A0070"
     },
     userAvatarContainer: {
         flex: 1,

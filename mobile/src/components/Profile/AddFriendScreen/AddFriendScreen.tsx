@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback,
   View
  } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { User } from '../../../graphql/types';
 import styles from './AddFriendScreen.styles'; 
@@ -63,58 +63,76 @@ export default class AddFriendScreen extends React.Component<Props, State> {
 
     this.renderUserRow = this.renderUserRow.bind(this);
   }
-
-  renderHeader() {
+  
+  renderSegueIcon() {
     return (
-      <View style={styles.header}>
-       <View style={styles.segueToBrowseContainer}>
-        <Icon
-          name="arrow-left"
-          type="font-awesome"
-          color="#6A0070"
-          onPress={() => {
-            this.props.navigation && this.props.navigation.goBack(null);
-          }}
-        />
-        <Text style={styles.browseTitle}>Browse</Text>
-       </View>
-       <Text style={styles.headerTitle}>Add Friend</Text>
-      </View>
-    );
-  }
-
-  renderSearchBar() {
-    return (
-      <View style={styles.searchBarContainer}>
-          <TextInput
-            placeholder="@playroll"
-            style={styles.searchInputContainer}
-            onChangeText={username => this.setState({ username })}
-            autoCapitalize={'none'}
-            value={this.state.username}
-          />
-        </View>
-    );
-  }
-
-  renderSearchButton() {
-    return (
-      <Button 
-        buttonStyle={styles.searchButton} 
-        title={"Search"}
+      <Icon
+        name="arrow-left"
+        type="font-awesome"
+        color="white"
         onPress={() => {
-          this.setState({ renderUsers: !this.state.renderUsers });
+          this.props.navigation && this.props.navigation.goBack(null);
         }}
       />
     );
   }
 
+  renderClearTextIcon() {
+    return (
+      <Icon 
+        name="clear"
+        type="material"
+        color="white"
+        onPress={() => this.setState({ username: "" })}
+      />
+    );
+  }
+
+  renderSearchBar() {
+    return (
+      <TextInput
+          placeholder="@playroll"
+          placeholderTextColor="#fff"
+          style={styles.searchInputContainer}
+          onChangeText={username => this.setState({ username })}
+          autoCapitalize={'none'}
+          value={this.state.username}
+          onSubmitEditing={() => this.setState({ renderUsers: true })}
+        />
+    );
+  }
+
   renderSearchContainer() {
     return (
-      <View style={styles.searchContainer}>
+      <View style={styles.searchBarContainer}>
         {this.renderSearchBar()}
-        {this.state.username.length > 0 && this.renderSearchButton()}
+        {this.state.username.length > 0 && this.renderClearTextIcon()}
       </View>
+    );
+  }
+
+  renderOptionIcon() {
+    return (
+      <Icon
+        name="more-vert"
+        type="material"
+        color="white"
+        onPress={() => {
+          console.log('open options?');
+        }}
+      />
+    );
+  }
+
+  renderHeader() {
+    return (
+      <Header
+        backgroundColor="#6A0070"
+        leftComponent={this.renderSegueIcon()}
+        centerComponent={this.renderSearchContainer()}
+        rightComponent={this.renderOptionIcon()}
+        style={styles.header}
+       />
     );
   }
   
@@ -184,13 +202,10 @@ export default class AddFriendScreen extends React.Component<Props, State> {
           Keyboard.dismiss();
         }}
       >
-        <SafeAreaView style={styles.mainContainer}>
-          <View style={styles.container}>
-            {this.renderHeader()}
-            {this.renderSearchContainer()}
-            {this.renderUsers()}
-          </View>
-        </SafeAreaView>
+        <View style={styles.mainContainer}>
+          {this.renderHeader()}
+          {this.renderUsers()}
+        </View>
       </TouchableWithoutFeedback>
     );
   }

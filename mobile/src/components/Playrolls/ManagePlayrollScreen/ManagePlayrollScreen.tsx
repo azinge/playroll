@@ -1,5 +1,5 @@
 /**
- * ManagePlayrollScreen
+ * ManagePlayrollScreen (aka. Edit Playroll)
  */
 
 import * as React from 'react';

@@ -20,6 +20,7 @@ import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
 export interface Props {
   playroll?: Playroll;
   editPlayroll?: () => void;
+  viewPlayroll?: () => void;
   navigation?: NavigationScreenProp<{}>;
 }
 
@@ -43,7 +44,11 @@ export default class PlayrollCard extends React.Component<Props, State> {
     );
   }
   render() {
-    const { playroll = {}, editPlayroll = () => {} } = this.props;
+    const { 
+      playroll = {}, 
+      editPlayroll = () => {},
+      viewPlayroll = () => {} 
+    } = this.props;
     return (
       <GetPlayrollQuery
         variables={{ id: playroll.id }}
@@ -93,6 +98,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                   )}
                 </View>
                 <View>
+                  <Button onPress={viewPlayroll} title='View Playroll' />
                   <Button onPress={editPlayroll} title='Edit Playroll' />
                   <DeletePlayrollMutation
                     variables={{

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Icon, Header } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -37,7 +37,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
             if (!data || !data.currentUser) {
@@ -93,10 +93,14 @@ export default class BrowsePlayrollsScreen extends React.Component<
         </GetCurrentUserQuery>
         <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
-            error && console.warn(error);
             return (
               <View style={{ flex: 1 }}>
-                {!loading && !error && (
+                {loading ? (
+                  <ActivityIndicator
+                    color={'gray'}
+                    style={{ paddingTop: 50 }}
+                  />
+                ) : (
                   <ScrollView>
                     {data &&
                       data.listCurrentUserPlayrolls &&

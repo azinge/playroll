@@ -3,7 +3,13 @@
  */
 
 import React from 'react';
-import { Text, View, ScrollView, Image } from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import DiscoverCarousel from './DiscoverCarousel';
@@ -28,20 +34,57 @@ export default class DiscoverScreen extends React.Component<Props, State> {
       <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <Header
           backgroundColor='purple'
-          centerComponent={{
-            text: 'Discover',
-            style: { color: '#fff', fontSize: 20 },
-          }}
-          rightComponent={
-            <Icon
-              name='account-circle'
+          placement='left'
+          leftComponent={
+            <View style={{ flexDirection: 'row' }}>
+              {/* <Icon
+              //   raised
+              name='play-circle'
+              type='font-awesome'
               color='white'
-              underlayColor='purple'
+              onPress={() => console.log('hello')}
+              containerStyle={{ marginTop: 5, marginRight: 5 }}
+            /> */}
+              <Image
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginTop: 5,
+                  marginRight: 5,
+                  borderRadius: 5,
+                }}
+                source={require('../../../assets/new_playroll.png')}
+              />
+              <Text
+                style={{ fontSize: 26, fontWeight: 'bold', color: 'white' }}
+              >
+                Playroll
+              </Text>
+            </View>
+          }
+          rightComponent={
+            <TouchableHighlight
               onPress={() =>
                 this.props.navigation &&
                 this.props.navigation.navigate('Profile')
               }
-            />
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 15,
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  overflow: 'hidden',
+                }}
+                source={require('../../../assets/wack.jpg')}
+              />
+            </TouchableHighlight>
           }
         />
         <View

@@ -5,7 +5,6 @@ import {
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import HomeScreen from './HomeScreen';
 import SearchScreen from './SearchScreen';
 import ManageRollScreen from './ManageRollScreen';
@@ -61,21 +60,7 @@ export const HomeNavigator = createBottomTabNavigator(
         ),
       },
     },
-    BrowsePlayrolls: {
-      screen: BrowsePlayrollsScreen,
-      navigationOptions: {
-        title: `BrowsePlayrolls`,
-        tabBarLabel: 'Playrolls',
-        tabBarIcon: ({ tintColor = '' }) => (
-          <Icon
-            type='material-community'
-            name='playlist-play'
-            size={35}
-            color={tintColor}
-          />
-        ),
-      },
-    },
+
     Search: {
       screen: SearchNavigator,
       navigationOptions: {

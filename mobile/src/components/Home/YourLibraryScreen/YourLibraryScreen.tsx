@@ -39,7 +39,13 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
         renderContent={
           <View style={{ marginTop: 5, flex: 1 }}>
             <View style={styles.textContainer}>
-              <Text onPress={() => {}} style={styles.text}>
+              <Text
+                onPress={() => {
+                  this.props.navigation &&
+                    this.props.navigation.navigate('Playrolls');
+                }}
+                style={styles.text}
+              >
                 Playrolls
               </Text>
             </View>

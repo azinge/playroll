@@ -30,6 +30,14 @@ export default class HomeScreen extends React.Component<Props, State> {
   componentWillMount() {
     StatusBar.setBarStyle('light-content', true);
   }
+  componentDidMount() {
+
+    // TODO: On Android, on scroll up, status bar is translucent
+    if ( Platform.OS === 'android' ) {
+      StatusBar.setBackgroundColor('purple', true)
+      StatusBar.setTranslucent(false)
+    }
+  }
   render() {
     return (
       //   <View style={{ flex: 1, backgroundColor: '#fff' }}>

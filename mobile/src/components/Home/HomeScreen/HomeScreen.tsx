@@ -15,11 +15,10 @@ import {
 import { NavigationScreenProp } from 'react-navigation';
 
 import DiscoverCarousel from './DiscoverCarousel';
-
+import { ifIphoneX, isIphoneX } from 'react-native-iphone-x-helper';
 import { musicSources } from '../../../static/mockData';
 import { Header, Icon } from 'react-native-elements';
 import styles from './HomeScreen.styles';
-import { Font } from 'expo';
 import Collapsible from 'react-native-collapsible-header';
 
 export interface Props {
@@ -29,12 +28,13 @@ export interface Props {
 interface State {}
 export default class HomeScreen extends React.Component<Props, State> {
   componentWillMount() {
-    StatusBar.setBarStyle('dark-content', true);
+    StatusBar.setBarStyle('light-content', true);
   }
   render() {
     return (
       //   <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Collapsible
+        min={isIphoneX() ? 34 : 20}
         backgroundColor={'purple'}
         renderHeader={this.renderHeader()}
         // renderContent is not needed if using FlatList
@@ -99,6 +99,30 @@ export default class HomeScreen extends React.Component<Props, State> {
                 );
               })}
             </ScrollView>
+            <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
+              <Text style={styles.title}> Friends</Text>
+            </View>
+
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {musicSources.map((val, idx) => {
+                return (
+                  <View style={{ width: 125, marginHorizontal: 10 }} key={idx}>
+                    <Image style={styles.image} source={{ uri: val.cover }} />
+                    <Text style={styles.sourceTitle} numberOfLines={2}>
+                      {val.name}
+                    </Text>
+                    {val.creator && (
+                      <Text style={styles.sourceCreator} numberOfLines={1}>
+                        {val.creator}
+                      </Text>
+                    )}
+                  </View>
+                );
+              })}
+            </ScrollView>
             <View style={{ marginVertical: 10 }} />
           </View>
         }
@@ -119,12 +143,20 @@ export default class HomeScreen extends React.Component<Props, State> {
           alignItems: 'center',
           flex: 1,
           justifyContent: 'center',
-          marginBottom: 20,
+          ...ifIphoneX(
+            {
+              marginTop: -40,
+            },
+            {
+              marginTop: -20,
+            }
+          ),
         }}
       >
         <Header
           backgroundColor='purple'
           placement='right'
+          //   statusBarProps={{ translucent: false }}
           leftComponent={
             <View style={{ flexDirection: 'row' }}>
               <Icon

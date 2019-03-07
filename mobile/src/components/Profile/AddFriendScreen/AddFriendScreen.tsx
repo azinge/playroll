@@ -58,6 +58,18 @@ export default class AddFriendScreen extends React.Component<Props, State> {
         {id: "16", name: "username1", avatar: ""},
         {id: "17", name: "username2", avatar: ""},
         {id: "18", name: "username3", avatar: ""},
+        {id: "19", name: "username3", avatar: ""},
+        {id: "20", name: "username0", avatar: ""},
+        {id: "21", name: "username1", avatar: ""},
+        {id: "22", name: "username2", avatar: ""},
+        {id: "23", name: "username3", avatar: ""},
+        {id: "24", name: "username0", avatar: ""},
+        {id: "25", name: "username1", avatar: ""},
+        {id: "26", name: "username2", avatar: ""},
+        {id: "27", name: "username3", avatar: ""},
+        {id: "28", name: "username0", avatar: ""},
+        {id: "29", name: "username1", avatar: ""},
+        {id: "30", name: "username2", avatar: ""},
       ]
     };
 
@@ -92,7 +104,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     return (
       <TextInput
           placeholder="@playroll"
-          placeholderTextColor="#fff"
+          placeholderTextColor="#bdbdbd"
           style={styles.searchInputContainer}
           onChangeText={username => this.setState({ username })}
           autoCapitalize={'none'}
@@ -131,7 +143,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
         leftComponent={this.renderSegueIcon()}
         centerComponent={this.renderSearchContainer()}
         rightComponent={this.renderOptionIcon()}
-        style={styles.header}
+        containerStyle={styles.header}
        />
     );
   }
@@ -197,16 +209,10 @@ export default class AddFriendScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={styles.mainContainer}>
-          {this.renderHeader()}
-          {this.renderUsers()}
-        </View>
-      </TouchableWithoutFeedback>
+      <View style={styles.mainContainer}>
+        {this.renderHeader()}
+        {this.renderUsers()}
+      </View>
     );
   }
 }

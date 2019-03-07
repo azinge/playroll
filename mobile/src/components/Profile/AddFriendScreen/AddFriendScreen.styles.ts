@@ -7,7 +7,7 @@ export default StyleSheet.create({
         alignItems: "center"
     },
     header: {
-        marginBottom: 20,
+        marginBottom: 30
     },
     segueToBrowseContainer: {
         alignItems: "center",
@@ -32,6 +32,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#4F0C50',
         borderRadius: 25,
+        padding: 10
     },
     searchInputContainer: {
         flex: 1,
@@ -49,13 +50,12 @@ export default StyleSheet.create({
     },
     usersContainer: {
         flex: 1,
-        width: "95%",
-        paddingBottom: 10,
+        width: "95%"
     },
     userRow: {
         flex: 1,
         padding: 15,
-        margin: 10,
+        margin: 15,
         alignItems: "center",
         flexDirection: "row",
         justifyContent: "space-around",

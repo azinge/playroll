@@ -5,10 +5,10 @@ import {
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import HomeScreen from './HomeScreen';
+import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
+import DiscoverScreen from './DiscoverScreen';
 import SearchScreen from './SearchScreen';
 import ManageRollScreen from './ManageRollScreen';
-import YourLibraryScreen from './YourLibraryScreen';
 
 const SearchNavigator = createStackNavigator(
   {
@@ -45,11 +45,11 @@ const SearchNavigator = createStackNavigator(
 
 export const HomeNavigator = createBottomTabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
+    Discover: {
+      screen: DiscoverScreen,
       navigationOptions: {
-        title: `Home`,
-        tabBarLabel: 'Home',
+        title: `Discover`,
+        tabBarLabel: 'Discover',
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
@@ -60,7 +60,21 @@ export const HomeNavigator = createBottomTabNavigator(
         ),
       },
     },
-
+    BrowsePlayrolls: {
+      screen: BrowsePlayrollsScreen,
+      navigationOptions: {
+        title: `BrowsePlayrolls`,
+        tabBarLabel: 'Playrolls',
+        tabBarIcon: ({ tintColor = '' }) => (
+          <Icon
+            type='material-community'
+            name='playlist-play'
+            size={35}
+            color={tintColor}
+          />
+        ),
+      },
+    },
     Search: {
       screen: SearchNavigator,
       navigationOptions: {
@@ -75,24 +89,8 @@ export const HomeNavigator = createBottomTabNavigator(
         ),
       },
     },
-
-    YourLibrary: {
-      screen: YourLibraryScreen,
-      navigationOptions: {
-        title: `Library`,
-        tabBarLabel: 'Your Library',
-        tabBarIcon: ({ tintColor = '' }) => (
-          <Icon
-            type='material-community'
-            name='library-music'
-            size={35}
-            color={tintColor}
-          />
-        ),
-      },
-    },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Discover',
   }
 );

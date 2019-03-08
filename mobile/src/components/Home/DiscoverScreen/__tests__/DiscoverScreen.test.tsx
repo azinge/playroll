@@ -1,9 +1,9 @@
 import * as React from 'react';
 import renderer from 'react-test-renderer';
 
-import HomeScreen from '../HomeScreen';
+import DiscoverScreen from '../DiscoverScreen';
 
 it('renders correctly', () => {
-  const tree = renderer.create(<HomeScreen />).toJSON();
+  const tree = renderer.create(<DiscoverScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

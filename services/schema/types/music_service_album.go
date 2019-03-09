@@ -10,17 +10,17 @@ type MusicServiceAlbumTypes struct {
 	MusicServiceAlbumInput *gqltag.Input  `gql:"MusicServiceAlbumInput"`
 }
 
-var MusicServiceAlbumType = gqltag.Type{
+var musicServiceAlbumType = gqltag.Type{
 	Description: `[MusicServiceAlbum Type Description Goes Here]`,
 	Fields:      &models.MusicServiceAlbumOutput{},
 }
 
-var MusicServiceAlbumInputType = gqltag.Type{
+var musicServiceAlbumInputType = gqltag.Type{
 	Description: `[MusicServiceAlbum Input Type Description Goes Here]`,
 	Fields:      &models.MusicServiceAlbumInput{},
 }
 
 var LinkedMusicServiceAlbumTypes = MusicServiceAlbumTypes{
-	MusicServiceAlbum:      gqltag.LinkOutput(MusicServiceAlbumType),
-	MusicServiceAlbumInput: gqltag.LinkInput(MusicServiceAlbumInputType),
+	MusicServiceAlbum:      gqltag.LinkOutput(musicServiceAlbumType),
+	MusicServiceAlbumInput: gqltag.LinkInput(musicServiceAlbumInputType),
 }

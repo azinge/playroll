@@ -10,17 +10,17 @@ type MusicServiceUserTypes struct {
 	MusicServiceUserInput *gqltag.Input  `gql:"MusicServiceUserInput"`
 }
 
-var MusicServiceUserType = gqltag.Type{
+var musicServiceUserType = gqltag.Type{
 	Description: `[MusicServiceUser Type Description Goes Here]`,
 	Fields:      &models.MusicServiceUserOutput{},
 }
 
-var MusicServiceUserInputType = gqltag.Type{
+var musicServiceUserInputType = gqltag.Type{
 	Description: `[MusicServiceUser Input Type Description Goes Here]`,
 	Fields:      &models.MusicServiceUserInput{},
 }
 
 var LinkedMusicServiceUserTypes = MusicServiceUserTypes{
-	MusicServiceUser:      gqltag.LinkOutput(MusicServiceUserType),
-	MusicServiceUserInput: gqltag.LinkInput(MusicServiceUserInputType),
+	MusicServiceUser:      gqltag.LinkOutput(musicServiceUserType),
+	MusicServiceUserInput: gqltag.LinkInput(musicServiceUserInputType),
 }

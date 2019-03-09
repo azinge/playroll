@@ -10,17 +10,17 @@ type MusicServiceTrackTypes struct {
 	MusicServiceTrackInput *gqltag.Input  `gql:"MusicServiceTrackInput"`
 }
 
-var MusicServiceTrackType = gqltag.Type{
+var musicServiceTrackType = gqltag.Type{
 	Description: `[MusicServiceTrack Type Description Goes Here]`,
 	Fields:      &models.MusicServiceTrackOutput{},
 }
 
-var MusicServiceTrackInputType = gqltag.Type{
+var musicServiceTrackInputType = gqltag.Type{
 	Description: `[MusicServiceTrack Input Type Description Goes Here]`,
 	Fields:      &models.MusicServiceTrackInput{},
 }
 
 var LinkedMusicServiceTrackTypes = MusicServiceTrackTypes{
-	MusicServiceTrack:      gqltag.LinkOutput(MusicServiceTrackType),
-	MusicServiceTrackInput: gqltag.LinkInput(MusicServiceTrackInputType),
+	MusicServiceTrack:      gqltag.LinkOutput(musicServiceTrackType),
+	MusicServiceTrackInput: gqltag.LinkInput(musicServiceTrackInputType),
 }

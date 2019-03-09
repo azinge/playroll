@@ -22,6 +22,7 @@ var ModelList = []interface{}{
 	MusicServiceAlbum{},
 	MusicServiceArtist{},
 	MusicServicePlaylist{},
+	PlaylistTrack{},
 	MusicServiceTrack{},
 	MusicServiceUser{},
 	Relationship{},

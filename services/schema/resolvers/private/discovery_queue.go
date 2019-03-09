@@ -1,4 +1,4 @@
-package currentuser
+package private
 
 import (
 	"fmt"

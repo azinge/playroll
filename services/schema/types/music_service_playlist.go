@@ -10,17 +10,17 @@ type MusicServicePlaylistTypes struct {
 	MusicServicePlaylistInput *gqltag.Input  `gql:"MusicServicePlaylistInput"`
 }
 
-var MusicServicePlaylistType = gqltag.Type{
+var musicServicePlaylistType = gqltag.Type{
 	Description: `[MusicServicePlaylist Type Description Goes Here]`,
 	Fields:      &models.MusicServicePlaylistOutput{},
 }
 
-var MusicServicePlaylistInputType = gqltag.Type{
+var musicServicePlaylistInputType = gqltag.Type{
 	Description: `[MusicServicePlaylist Input Type Description Goes Here]`,
 	Fields:      &models.MusicServicePlaylistInput{},
 }
 
 var LinkedMusicServicePlaylistTypes = MusicServicePlaylistTypes{
-	MusicServicePlaylist:      gqltag.LinkOutput(MusicServicePlaylistType),
-	MusicServicePlaylistInput: gqltag.LinkInput(MusicServicePlaylistInputType),
+	MusicServicePlaylist:      gqltag.LinkOutput(musicServicePlaylistType),
+	MusicServicePlaylistInput: gqltag.LinkInput(musicServicePlaylistInputType),
 }

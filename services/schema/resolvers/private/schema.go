@@ -1,7 +1,6 @@
-package currentuser
+package private
 
-//! DEPRECATION NOTICE: Moving to ./resolvers
-type CurrentUserMethods struct {
+type PrivateMethods struct {
 	GenerateMethods       `gql:"GROUP"`
 	SpotifyMethods        `gql:"GROUP"`
 	UserMethods           `gql:"GROUP"`
@@ -11,7 +10,7 @@ type CurrentUserMethods struct {
 	RelationshipMethods   `gql:"GROUP"`
 }
 
-var LinkedCurrentUserMethods = CurrentUserMethods{
+var LinkedPrivateMethods = PrivateMethods{
 	GenerateMethods:       LinkedGenerateMethods,
 	SpotifyMethods:        LinkedSpotifyMethods,
 	UserMethods:           LinkedUserMethods,

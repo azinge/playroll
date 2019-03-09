@@ -2,25 +2,28 @@ package resolvers
 
 import (
 	"github.com/cazinge/playroll/services/schema/resolvers/admin"
-	"github.com/cazinge/playroll/services/schema/resolvers/currentuser"
+	"github.com/cazinge/playroll/services/schema/resolvers/private"
+	"github.com/cazinge/playroll/services/schema/resolvers/public"
 )
 
-// type AdminMethods struct {
-// 	admin.AdminMethods             `gql:"GROUP: Admin"`
-// 	currentuser.CurrentUserMethods `gql:"GROUP: CurrentUser"`
-// }
-
-type Methods struct {
-	admin.AdminMethods             `gql:"GROUP: Admin"` //TODO: Remove
-	currentuser.CurrentUserMethods `gql:"GROUP: CurrentUser"`
+type AdminMethods struct {
+	admin.AdminMethods     `gql:"GROUP: Admin"`
+	private.PrivateMethods `gql:"GROUP: Private"`
+	public.PublicMethods   `gql:"GROUP: Public"`
 }
 
-// var LinkedAdminMethods = AdminMethods{
-// 	AdminMethods:       admin.LinkedAdminMethods,
-// 	CurrentUserMethods: currentuser.LinkedCurrentUserMethods,
-// }
+type Methods struct {
+	private.PrivateMethods `gql:"GROUP: Private"`
+	public.PublicMethods   `gql:"GROUP: Public"`
+}
+
+var LinkedAdminMethods = AdminMethods{
+	AdminMethods:   admin.LinkedAdminMethods,
+	PrivateMethods: private.LinkedPrivateMethods,
+	PublicMethods:  public.LinkedPublicMethods,
+}
 
 var LinkedMethods = Methods{
-	AdminMethods:       admin.LinkedAdminMethods, //TODO: Remove
-	CurrentUserMethods: currentuser.LinkedCurrentUserMethods,
+	PrivateMethods: private.LinkedPrivateMethods,
+	PublicMethods:  public.LinkedPublicMethods,
 }

@@ -10,17 +10,17 @@ type RelationshipTypes struct {
 	RelationshipInput *gqltag.Input  `gql:"RelationshipInput"`
 }
 
-var RelationshipType = gqltag.Type{
+var relationshipType = gqltag.Type{
 	Description: `[Relationship Type Description Goes Here]`,
 	Fields:      &models.RelationshipOutput{},
 }
 
-var RelationshipInputType = gqltag.Type{
+var relationshipInputType = gqltag.Type{
 	Description: `[Relationship Input Type Description Goes Here]`,
 	Fields:      &models.RelationshipInput{},
 }
 
 var LinkedRelationshipTypes = RelationshipTypes{
-	Relationship:      gqltag.LinkOutput(RelationshipType),
-	RelationshipInput: gqltag.LinkInput(RelationshipInputType),
+	Relationship:      gqltag.LinkOutput(relationshipType),
+	RelationshipInput: gqltag.LinkInput(relationshipInputType),
 }

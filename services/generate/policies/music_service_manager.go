@@ -1,4 +1,4 @@
-package generate
+package policies
 
 import (
 	"fmt"
@@ -10,6 +10,21 @@ import (
 
 	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
+
+func CollectSource(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) error {
+	switch source.Type {
+	case "Track":
+		return collectTrack(source, db, client)
+	case "Album":
+		return collectAlbum(source, db, client)
+	case "Artist":
+		return collectArtist(source, db, client)
+	case "Playlist":
+		return collectPlaylist(source, db, client)
+	default:
+		return fmt.Errorf("error, could not find matching source type")
+	}
+}
 
 func collectTrack(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) error {
 	if _, err := models.GetMusicServiceTrackByProviderInfo(source.Provider, source.ProviderID, db); err == nil {
@@ -130,7 +145,8 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 			return err
 		}
 		tx := db.Begin()
-		if err = tx.Where(models.MusicServicePlaylist{ProviderID: playlist.ProviderID}).Attrs(playlist).FirstOrCreate(&models.MusicServicePlaylist{}).Error; err != nil {
+		playlistModel := &models.MusicServicePlaylist{}
+		if err = tx.Where(models.MusicServicePlaylist{ProviderID: playlist.ProviderID}).Attrs(playlist).FirstOrCreate(&playlistModel).Error; err != nil {
 			tx.Rollback()
 			return err
 		}
@@ -140,8 +156,18 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 			tx.Rollback()
 			return err
 		}
-		for _, track := range *tracks {
-			if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
+		for i, track := range *tracks {
+			trackModel := &models.MusicServiceTrack{}
+			if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&trackModel).Error; err != nil {
+				tx.Rollback()
+				return err
+			}
+			playlistTrackModel := &models.PlaylistTrack{
+				MusicServiceTrackID:    trackModel.ProviderID,
+				MusicServicePlaylistID: playlistModel.ProviderID,
+				TrackNumber:            i,
+			}
+			if err = tx.Create(playlistTrackModel).Error; err != nil {
 				tx.Rollback()
 				return err
 			}

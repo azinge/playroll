@@ -1,4 +1,4 @@
-package currentuser
+package private
 
 import (
 	"github.com/cazinge/playroll/services/gqltag"

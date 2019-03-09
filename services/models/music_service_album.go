@@ -10,6 +10,7 @@ type MusicServiceAlbum struct {
 	Model
 	Provider   string
 	ProviderID string
+	Tracks     []MusicServiceTrack `gorm:"foreignkey:AlbumID;association_foreignkey:ProviderID"`
 
 	// Full Album https://godoc.org/github.com/zmb3/spotify#FullAlbum
 	Popularity           int    `json:"popularity"`
@@ -29,8 +30,9 @@ type MusicServiceAlbumInput struct {
 
 type MusicServiceAlbumOutput struct {
 	Model      `gql:"MODEL"`
-	Provider   string `gql:"provider: String" json:"provider"`
-	ProviderID string `gql:"providerID: String" json:"providerID"`
+	Provider   string                    `gql:"provider: String" json:"provider"`
+	ProviderID string                    `gql:"providerID: String" json:"providerID"`
+	Tracks     []MusicServiceTrackOutput `gql:"tracks: [MusicServiceTrack]" json:"tracks"`
 
 	// Full Album
 	Popularity           int    `gql:"popularity: Int" json:"popularity"`
@@ -72,6 +74,11 @@ func MusicServiceAlbumModelToOutput(msa *MusicServiceAlbum) (*MusicServiceAlbumO
 	msao.Model = msa.Model
 	msao.Provider = msa.Provider
 	msao.ProviderID = msa.ProviderID
+	tracks, err := FormatMusicServiceTrackSlice(&msa.Tracks)
+	if err != nil {
+		return nil, err
+	}
+	msao.Tracks = tracks
 
 	// Full Album
 	msao.Popularity = msa.Popularity
@@ -89,6 +96,9 @@ func MusicServiceAlbumModelToOutput(msa *MusicServiceAlbum) (*MusicServiceAlbumO
 func InitMusicServiceAlbumDAO(db *gorm.DB) Entity {
 	dao := &MusicServiceAlbum{}
 	dao.SetEntity(dao)
+	db = db.Preload("Tracks", func(db *gorm.DB) *gorm.DB {
+		return db.Order("track_number")
+	})
 	dao.SetDB(db)
 	return dao
 }

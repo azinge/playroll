@@ -7,26 +7,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/cazinge/playroll/services/generate/policies"
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/jinzhu/gorm"
 	"github.com/zmb3/spotify"
 )
-
-func collectSource(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) error {
-	switch source.Type {
-	case "Track":
-		return collectTrack(source, db, client)
-	case "Album":
-		return collectAlbum(source, db, client)
-	case "Artist":
-		return collectArtist(source, db, client)
-	case "Playlist":
-		return collectPlaylist(source, db, client)
-	default:
-		return fmt.Errorf("error, could not find matching source type")
-	}
-}
 
 func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
 	switch filter.Type {
@@ -86,23 +72,26 @@ func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter)
 func CompileRolls(rolls *[]models.RollOutput, db *gorm.DB, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
 	compiledRolls := []models.CompiledRollOutput{}
 	for _, roll := range *rolls {
-		for _, source := range roll.Data.Sources {
-			var err error
-			err = collectSource(&source, db, client)
-			if err != nil {
-				return nil, err
-			}
+		gpm, err := policies.NewGeneratePolicyManager(&roll.Data.Filters, &roll.Data.Sources, db, client)
+		if err != nil {
+			return nil, err
+		}
+		msts, err := gpm.ExecuteQuery(db)
+		if err != nil {
+			return nil, err
 		}
 
-		tracks := []jsonmodels.MusicSource{}
-
-		// for _, filter := range roll.Data.Filters {
-		// 	var err error
-		// 	tracks, err = handleFilter(tracks, filter)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-		// }
+		tracks := make([]jsonmodels.MusicSource, len(*msts))
+		for i, mst := range *msts {
+			tracks[i] = jsonmodels.MusicSource{
+				Type:       "Track",
+				Name:       mst.Name,
+				Creator:    mst.ArtistName,
+				Cover:      mst.Cover,
+				Provider:   mst.Provider,
+				ProviderID: mst.ProviderID,
+			}
+		}
 
 		compiledRolls = append(compiledRolls, models.CompiledRollOutput{
 			Data:   jsonmodels.CompiledRollDataOutput{Tracks: tracks},

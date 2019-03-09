@@ -10,6 +10,7 @@ type MusicServicePlaylist struct {
 	Model
 	Provider   string
 	ProviderID string
+	Tracks     []PlaylistTrack `gorm:"foreignkey:MusicServicePlaylistID;association_foreignkey:ProviderID"`
 
 	//Full Playlist https://godoc.org/github.com/zmb3/spotify#FullPlaylist
 	Description string `json:"description"`
@@ -27,8 +28,9 @@ type MusicServicePlaylistInput struct {
 
 type MusicServicePlaylistOutput struct {
 	Model      `gql:"MODEL"`
-	Provider   string `gql:"provider: String" json:"provider"`
-	ProviderID string `gql:"providerID: String" json:"providerID"`
+	Provider   string                    `gql:"provider: String" json:"provider"`
+	ProviderID string                    `gql:"providerID: String" json:"providerID"`
+	Tracks     []MusicServiceTrackOutput `gql:"tracks: [MusicServiceTrack]" json:"tracks"`
 
 	//Full Playlist https://godoc.org/github.com/zmb3/spotify#FullPlaylist
 	Description string `gql:"description: String" json:"description"`
@@ -38,6 +40,16 @@ type MusicServicePlaylistOutput struct {
 	OwnerName   string `gql:"ownerName: String" json:"owner_name"`
 	SnapshotID  string `gql:"snapshotID: String" json:"snapshot_id"`
 	IsPublic    bool   `gql:"public: Boolean" json:"public"`
+}
+
+// Supplementary Entities
+type PlaylistTrack struct {
+	Model
+	MusicServicePlaylist   MusicServicePlaylist `gorm:"foreignkey:ProviderID;association_foreignkey:MusicServicePlaylistID"`
+	MusicServicePlaylistID string
+	MusicServiceTrack      MusicServiceTrack `gorm:"foreignkey:ProviderID;association_foreignkey:MusicServiceTrackID"`
+	MusicServiceTrackID    string
+	TrackNumber            int
 }
 
 // Utility Methods
@@ -65,6 +77,15 @@ func MusicServicePlaylistOutputToModel(msp *MusicServicePlaylistOutput) (*MusicS
 
 func MusicServicePlaylistModelToOutput(msp *MusicServicePlaylist) (*MusicServicePlaylistOutput, error) {
 	mspo := &MusicServicePlaylistOutput{}
+	tracks := make([]MusicServiceTrackOutput, len(msp.Tracks))
+	for i, track := range msp.Tracks {
+		t, err := FormatMusicServiceTrack(&track.MusicServiceTrack)
+		if err != nil {
+			return nil, err
+		}
+		tracks[i] = *t
+	}
+	mspo.Tracks = tracks
 	mspo.Model = msp.Model
 	mspo.Provider = msp.Provider
 	mspo.ProviderID = msp.ProviderID
@@ -81,6 +102,9 @@ func MusicServicePlaylistModelToOutput(msp *MusicServicePlaylist) (*MusicService
 func InitMusicServicePlaylistDAO(db *gorm.DB) Entity {
 	dao := &MusicServicePlaylist{}
 	dao.SetEntity(dao)
+	db = db.Preload("Tracks.MusicServiceTrack", func(db *gorm.DB) *gorm.DB {
+		return db.Order("track_number")
+	})
 	dao.SetDB(db)
 	return dao
 }

@@ -1,11 +1,11 @@
-import * as config from '../../config/aws';
+import * as config from '../config/aws';
 import Amplify, { Auth } from 'aws-amplify';
 import Signer from 'aws-appsync/lib/link/signer/signer';
 import Url from 'url';
 
 Amplify.configure(config.amplify.dev);
 
-export const fetcher = async (uri, { method, body }) => {
+const signedFetch = async (uri, { method, body }) => {
   const {
     accessKeyId,
     secretAccessKey,
@@ -36,4 +36,8 @@ export const fetcher = async (uri, { method, body }) => {
   // console.warn({ ...signedRequest, headers: "", body: "" });
 
   return fetch(uri, signedRequest);
+};
+
+export default {
+  fetch: signedFetch,
 };

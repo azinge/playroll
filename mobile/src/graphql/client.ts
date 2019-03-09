@@ -5,7 +5,7 @@ import { HttpLink } from 'apollo-link-http';
 // @ts-ignore
 import apolloLogger from 'apollo-link-logger';
 import * as config from '../config/aws';
-import { fetcher } from '../lib/apiutils/fetcher';
+import APIService from '../services/APIService';
 import { withClientState } from 'apollo-link-state';
 import { resolvers } from './resolvers';
 import { defaults } from './defaults';
@@ -28,7 +28,7 @@ const stateLink = withClientState({
 
 const httpLink = new HttpLink({
   uri: config.api.dev.url,
-  fetch: fetcher,
+  fetch: APIService.fetch,
 });
 
 export const client = new ApolloClient({

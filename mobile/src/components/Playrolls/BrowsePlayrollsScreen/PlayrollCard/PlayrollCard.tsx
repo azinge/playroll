@@ -1,5 +1,5 @@
 /**
- * PlayrollCard
+ * PlayrollCard - used in Browse Playrolls
  */
 
 import * as React from 'react';

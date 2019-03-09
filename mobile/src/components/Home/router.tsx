@@ -5,10 +5,10 @@ import {
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
-import DiscoverScreen from './DiscoverScreen';
+import HomeScreen from './HomeScreen';
 import SearchScreen from './SearchScreen';
 import ManageRollScreen from './ManageRollScreen';
+import YourLibraryScreen from './YourLibraryScreen';
 
 const SearchNavigator = createStackNavigator(
   {
@@ -45,11 +45,11 @@ const SearchNavigator = createStackNavigator(
 
 export const HomeNavigator = createBottomTabNavigator(
   {
-    Discover: {
-      screen: DiscoverScreen,
+    Home: {
+      screen: HomeScreen,
       navigationOptions: {
-        title: `Discover`,
-        tabBarLabel: 'Discover',
+        title: `Home`,
+        tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
@@ -60,21 +60,7 @@ export const HomeNavigator = createBottomTabNavigator(
         ),
       },
     },
-    BrowsePlayrolls: {
-      screen: BrowsePlayrollsScreen,
-      navigationOptions: {
-        title: `BrowsePlayrolls`,
-        tabBarLabel: 'Playrolls',
-        tabBarIcon: ({ tintColor = '' }) => (
-          <Icon
-            type='material-community'
-            name='playlist-play'
-            size={35}
-            color={tintColor}
-          />
-        ),
-      },
-    },
+
     Search: {
       screen: SearchNavigator,
       navigationOptions: {
@@ -89,8 +75,24 @@ export const HomeNavigator = createBottomTabNavigator(
         ),
       },
     },
+
+    YourLibrary: {
+      screen: YourLibraryScreen,
+      navigationOptions: {
+        title: `Library`,
+        tabBarLabel: 'Your Library',
+        tabBarIcon: ({ tintColor = '' }) => (
+          <Icon
+            type='material-community'
+            name='library-music'
+            size={35}
+            color={tintColor}
+          />
+        ),
+      },
+    },
   },
   {
-    initialRouteName: 'Discover',
+    initialRouteName: 'Home',
   }
 );

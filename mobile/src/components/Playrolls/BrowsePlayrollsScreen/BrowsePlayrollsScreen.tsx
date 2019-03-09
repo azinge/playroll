@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, ActivityIndicator } from 'react-native';
 import { Icon, Header } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -37,13 +37,24 @@ export default class BrowsePlayrollsScreen extends React.Component<
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
             if (!data || !data.currentUser) {
               return (
                 <Header
                   backgroundColor='purple'
+                  leftComponent={
+                    <Icon
+                      name='arrow-back'
+                      type='material'
+                      color='white'
+                      onPress={() =>
+                        this.props.navigation &&
+                        this.props.navigation.goBack(null)
+                      }
+                    />
+                  }
                   centerComponent={{
                     text: 'Playrolls',
                     style: { color: '#fff', fontSize: 20 },
@@ -62,7 +73,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 onCompleted={data =>
                   this.props &&
                   this.props.navigation &&
-                  this.props.navigation.navigate('Playrolls', {
+                  this.props.navigation.navigate('ManagePlayroll', {
                     playroll: data.createPlayroll,
                   })
                 }
@@ -72,6 +83,18 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   return (
                     <Header
                       backgroundColor='purple'
+                      leftComponent={
+                        <Icon
+                          name='arrow-back'
+                          type='material'
+                          color='white'
+                          underlayColor='rgba(255,255,255,0)'
+                          onPress={() =>
+                            this.props.navigation &&
+                            this.props.navigation.goBack(null)
+                          }
+                        />
+                      }
                       centerComponent={{
                         text: 'Playrolls',
                         style: { color: '#fff', fontSize: 20 },
@@ -80,7 +103,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         <Icon
                           name='add'
                           color='white'
-                          underlayColor='purple'
+                          underlayColor='rgba(255,255,255,0)'
                           onPress={() => createPlayroll()}
                         />
                       }
@@ -93,10 +116,14 @@ export default class BrowsePlayrollsScreen extends React.Component<
         </GetCurrentUserQuery>
         <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
-            error && console.warn(error);
             return (
               <View style={{ flex: 1 }}>
-                {!loading && !error && (
+                {loading ? (
+                  <ActivityIndicator
+                    color={'gray'}
+                    style={{ paddingTop: 50 }}
+                  />
+                ) : (
                   <ScrollView>
                     {data &&
                       data.listCurrentUserPlayrolls &&
@@ -104,13 +131,13 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         return (
                           <PlayrollCard
                             playroll={playroll}
-                            editPlayroll={() => {
+                            editPlayroll={() =>
                               this.props.navigation &&
-                                this.props.navigation.navigate('Playrolls', {
-                                  managePlayroll: 'Manage Playroll',
-                                  playroll,
-                                });
-                            }}
+                              this.props.navigation.navigate('ManagePlayroll', {
+                                managePlayroll: 'Manage Playroll',
+                                playroll,
+                              })
+                            }
                             key={playroll.id}
                           />
                         );

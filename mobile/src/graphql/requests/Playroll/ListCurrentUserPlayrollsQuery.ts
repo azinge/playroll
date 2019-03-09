@@ -1,37 +1,16 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Playroll } from '../../types';
+import { Playroll, PlayrollFragments } from '../../types';
 
-export const LIST_CURRENT_USER_PLAYROLLS = 'LIST_CURRENT_USERS_PLAYROLLS';
+export const LIST_CURRENT_USER_PLAYROLLS = 'LIST_CURRENT_USER_PLAYROLLS';
 
 export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
-  query ${LIST_CURRENT_USER_PLAYROLLS} {
+  query LIST_CURRENT_USER_PLAYROLLS {
     listCurrentUserPlayrolls {
-      id
-      name
-      rolls {
-        id
-        data {
-          sources {
-            cover
-            name
-            type
-          }
-          filters {
-            type
-            modifications
-          }
-          length {
-            type
-            modifications
-          }
-        }
-      }
-      tracklists {
-        id
-      }
+      ...PlayrollWithTracklist
     }
   }
+  ${PlayrollFragments.withTracklist}
 `;
 
 type ListCurrentUserPlayrollsVariables = {};

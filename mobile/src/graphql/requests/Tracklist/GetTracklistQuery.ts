@@ -1,27 +1,17 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-import { CompiledRoll } from '../../types';
+import { Tracklist, TracklistFragments } from '../../types';
 
 export const GET_TRACKLIST = 'GET_TRACKLIST';
 
 export const GET_TRACKLIST_QUERY = gql`
-  query ${GET_TRACKLIST}($id: ID!) {
+  query GET_TRACKLIST($id: ID!) {
     tracklist(id: $id) {
-      compiledRolls {
-        id
-        data {
-          tracks {
-            cover
-            name
-            provider
-            providerID
-            type
-          }
-        }
-      }
+      ...DefaultTracklist
     }
   }
+  ${TracklistFragments.default}
 `;
 
 type GetTracklistVariables = {
@@ -29,7 +19,7 @@ type GetTracklistVariables = {
 };
 
 type GetTracklistData = {
-  tracklist?: { id?: number; compiledRolls?: CompiledRoll[] };
+  tracklist?: Tracklist;
 };
 
 export class GetTracklistQuery extends Query<

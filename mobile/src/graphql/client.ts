@@ -7,8 +7,7 @@ import apolloLogger from 'apollo-link-logger';
 import * as config from '../config/aws';
 import APIService from '../services/APIService';
 import { withClientState } from 'apollo-link-state';
-import { resolvers } from './resolvers';
-import { defaults } from './defaults';
+import { resolvers, typeDefs, loadDefaults } from './local-state';
 
 // This is the same cache you pass into new ApolloClient
 const cache = new InMemoryCache({
@@ -20,12 +19,6 @@ const cache = new InMemoryCache({
   },
 });
 
-const stateLink = withClientState({
-  cache,
-  resolvers,
-  defaults,
-});
-
 const httpLink = new HttpLink({
   uri: config.api.dev.url,
   fetch: APIService.fetch,
@@ -33,5 +26,9 @@ const httpLink = new HttpLink({
 
 export const client = new ApolloClient({
   cache,
-  link: ApolloLink.from([apolloLogger, stateLink, httpLink]),
+  link: ApolloLink.from([apolloLogger, httpLink]),
+  resolvers,
+  typeDefs,
 });
+
+loadDefaults(client.cache);

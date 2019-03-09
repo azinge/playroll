@@ -1,14 +1,16 @@
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { Tracklist, TracklistFragments } from '../../types';
 
 export const GENERATE_TRACKLIST = 'GENERATE_TRACKLIST';
 
 export const GENERATE_TRACKLIST_MUTATION = gql`
-  mutation ${GENERATE_TRACKLIST}($playrollID: ID!) {
+  mutation GENERATE_TRACKLIST($playrollID: ID!) {
     generateTracklist(playrollID: $playrollID) {
-      id
+      ...DefaultTracklist
     }
   }
+  ${TracklistFragments.default}
 `;
 
 type GenerateTracklistVariables = {
@@ -16,7 +18,7 @@ type GenerateTracklistVariables = {
 };
 
 type GenerateTracklistData = {
-  generateTracklist?: { id: number };
+  generateTracklist?: Tracklist;
 };
 
 export class GenerateTracklistMutation extends Mutation<

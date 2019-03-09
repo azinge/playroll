@@ -2,16 +2,20 @@
  * Signup component for Playroll mobile application.
  */
 
-import * as React from "react";
+import * as React from 'react';
 import {
-  Text, TextInput,
+  Text,
+  TextInput,
   ActivityIndicator,
-  SafeAreaView, View,
-  TouchableOpacity, Keyboard,
+  SafeAreaView,
+  View,
+  TouchableOpacity,
+  Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ConfirmSignUpMutation } from "../../../graphql/requests/Auth";
+import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './ConfirmationScreen.styles';
+import { NavigationScreenProp } from 'react-navigation';
 
 export interface Props {
   toggleSignUp: () => void;
@@ -21,16 +25,16 @@ export interface Props {
 interface State {
   authCode: string;
   username: string;
-  error?: string
+  error?: string;
 }
 
- export default class ConfirmationScreen extends React.Component<Props, State> {
-   constructor(props: Props) {
+export default class ConfirmationScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
-      authCode: "",
-      username: "",
+      authCode: '',
+      username: '',
       error: undefined,
     };
 
@@ -39,11 +43,16 @@ interface State {
 
   validateInput(confirmSignUp) {
     if (this.state.username === '' || this.state.authCode === '') {
-      return this.setState({
-        error: 'All fields must have a value.'
-      }, () => {
-        setTimeout(() => {this.setState({ error: null })}, 3000);
-      });
+      return this.setState(
+        {
+          error: 'All fields must have a value.',
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ error: null });
+          }, 3000);
+        }
+      );
     }
     confirmSignUp();
   }
@@ -53,7 +62,7 @@ interface State {
       <View style={styles.confirmationHeader}>
         <Text style={styles.signupText}>Confirm Account</Text>
       </View>
-    )
+    );
   }
 
   renderConfirmButton() {
@@ -70,41 +79,42 @@ interface State {
               onPress={() => this.validateInput(confirmSignUp)}
               style={styles.submitButton}
             >
-              {loading
-                ? <ActivityIndicator color={'white'}/>
-                : <Text style={styles.submitButtonText}>Confirm</Text>
-              }
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text style={styles.submitButtonText}>Confirm</Text>
+              )}
             </TouchableOpacity>
           );
         }}
       </ConfirmSignUpMutation>
-    )
+    );
   }
 
   renderError() {
-    return (
-      <Text style={styles.errorMessage}>
-        {this.state.error}
-      </Text>
-    )
+    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
-    return(
-      <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             {this.renderHeader()}
             <TextInput
-              placeholder="Confirm 
-"
+              placeholder='Confirm
+'
               style={styles.inputContainer}
               onChangeText={text => this.setState({ username: text.trim() })}
               autoCapitalize={'sentences'}
               value={this.state.username}
             />
             <TextInput
-              placeholder="Confirmation Code"
+              placeholder='Confirmation Code'
               style={styles.inputContainer}
               onChangeText={text => this.setState({ authCode: text.trim() })}
               autoCapitalize={'sentences'}
@@ -117,4 +127,4 @@ interface State {
       </TouchableWithoutFeedback>
     );
   }
- }
+}

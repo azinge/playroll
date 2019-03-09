@@ -29,7 +29,7 @@ type DiscoveryQueueOutput struct {
 
 func GetDiscoveryQueueByUserID(id uint, db *gorm.DB) (*DiscoveryQueueOutput, error) {
 	dq := &DiscoveryQueue{}
-	db = db.Preload("DiscoveryQueueEntry")
+	db = db.Preload("Entries")
 	if err := db.Where(DiscoveryQueue{UserID: id}).First(dq).Error; err != nil {
 		fmt.Printf("error getting discovery queue: %s", err.Error())
 		return nil, err

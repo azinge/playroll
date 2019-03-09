@@ -147,11 +147,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
                                 managePlayroll: 'Manage Playroll',
                                 playroll,
                               })
-                            }
+                            }}
                             key={playroll.id}
                           />
-                        );
-                      })}
+                        )
+                      })
+                    }
                   </ScrollView>
                 )}
               </View>

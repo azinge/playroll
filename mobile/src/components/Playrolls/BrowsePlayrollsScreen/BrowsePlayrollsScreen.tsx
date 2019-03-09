@@ -44,6 +44,17 @@ export default class BrowsePlayrollsScreen extends React.Component<
               return (
                 <Header
                   backgroundColor='purple'
+                  leftComponent={
+                    <Icon
+                      name='arrow-back'
+                      type='material'
+                      color='white'
+                      onPress={() =>
+                        this.props.navigation &&
+                        this.props.navigation.goBack(null)
+                      }
+                    />
+                  }
                   centerComponent={{
                     text: 'Playrolls',
                     style: { color: '#fff', fontSize: 20 },
@@ -62,7 +73,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 onCompleted={data =>
                   this.props &&
                   this.props.navigation &&
-                  this.props.navigation.navigate('Playrolls', {
+                  this.props.navigation.navigate('ManagePlayroll', {
                     playroll: data.createPlayroll,
                   })
                 }
@@ -72,6 +83,18 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   return (
                     <Header
                       backgroundColor='purple'
+                      leftComponent={
+                        <Icon
+                          name='arrow-back'
+                          type='material'
+                          color='white'
+                          underlayColor='rgba(255,255,255,0)'
+                          onPress={() =>
+                            this.props.navigation &&
+                            this.props.navigation.goBack(null)
+                          }
+                        />
+                      }
                       centerComponent={{
                         text: 'Playrolls',
                         style: { color: '#fff', fontSize: 20 },
@@ -80,7 +103,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         <Icon
                           name='add'
                           color='white'
-                          underlayColor='purple'
+                          underlayColor='rgba(255,255,255,0)'
                           onPress={() => createPlayroll()}
                         />
                       }
@@ -120,11 +143,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
                             }}
                             editPlayroll={() => {
                               this.props.navigation &&
-                                this.props.navigation.navigate('Playrolls', {
-                                  managePlayroll: 'Manage Playroll',
-                                  playroll,
-                                });
-                            }}
+                              this.props.navigation.navigate('ManagePlayroll', {
+                                managePlayroll: 'Manage Playroll',
+                                playroll,
+                              })
+                            }
                             key={playroll.id}
                           />
                         );

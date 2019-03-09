@@ -67,12 +67,12 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 	variableValues, _ := body["variables"].(map[string]interface{})
 	operationName, _ := body["operationName"].(string)
 
-	graphql.SchemaMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
-		return nil, nil
-	}
-	graphql.TypeMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
-		return nil, nil
-	}
+	// graphql.SchemaMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
+	// 	return nil, nil
+	// }
+	// graphql.TypeMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
+	// 	return nil, nil
+	// }
 
 	result := graphql.Do(graphql.Params{
 		Schema:         schema,

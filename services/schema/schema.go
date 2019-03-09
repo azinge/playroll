@@ -5,6 +5,10 @@ import (
 	"github.com/cazinge/playroll/services/schema/types"
 )
 
+type AdminTypes = types.Types
+
+var LinkedAdminTypes = types.LinkedTypes
+
 type Types = types.Types
 
 var LinkedTypes = types.LinkedTypes

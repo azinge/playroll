@@ -51,7 +51,7 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		// Request: request,
 	}
 	schema, err := gqltag.GenerateGraphQLSchema(
-		schema.LinkedTypes,
+		schema.LinkedAdminTypes,
 		schema.LinkedAdminMethods,
 		mctx,
 	)

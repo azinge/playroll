@@ -6,8 +6,8 @@ export const CREATE_PLAYROLL = 'CREATE_PLAYROLL';
 
 export const CREATE_PLAYROLL_MUTATION = gql`
   mutation CREATE_PLAYROLL($input: PlayrollInput!) {
-    admin {
-      createPlayroll(input: $input) {
+    private {
+      createCurrentUserPlayroll(input: $input) {
         ...DefaultPlayroll
       }
     }
@@ -20,8 +20,8 @@ type CreatePlayrollVariables = {
 };
 
 type CreatePlayrollData = {
-  admin: {
-    createPlayroll: Playroll;
+  private: {
+    createCurrentUserPlayroll: Playroll;
   };
 };
 

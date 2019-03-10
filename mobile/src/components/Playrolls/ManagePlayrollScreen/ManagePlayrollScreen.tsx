@@ -16,7 +16,7 @@ import {
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
-import { GET_PLAYROLL } from '../../../graphql/requests/Playroll/GetPlayrollQuery';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -121,7 +121,7 @@ export default class ManagePlayrollScreen extends React.Component<
               userID: playroll.userID,
             },
           }}
-          refetchQueries={[GET_PLAYROLL]}
+          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
             <View style={styles.editingBarNameContainer}>

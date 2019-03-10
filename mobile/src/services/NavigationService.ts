@@ -4,6 +4,7 @@ import {
   NavigationActions,
   NavigationContainerComponent,
   NavigationParams,
+  NavigationAction,
 } from 'react-navigation';
 
 let navigator: NavigationContainerComponent;
@@ -21,9 +22,14 @@ function navigate(routeName: string, params?: NavigationParams) {
   );
 }
 
+function dispatch(action: NavigationAction) {
+  return navigator.dispatch(action);
+}
+
 // add other navigation functions that you need and export them
 
 export default {
+  dispatch,
   navigate,
   setTopLevelNavigator,
 };

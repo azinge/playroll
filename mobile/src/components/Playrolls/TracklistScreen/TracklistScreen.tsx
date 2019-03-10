@@ -61,38 +61,40 @@ export default class TracklistScreen extends React.Component<Props, State> {
                 contentContainerStyle={styles.scrollViewContent}
               >
                 {data &&
-                  data.admin.tracklist &&
-                  data.admin.tracklist.compiledRolls &&
-                  data.admin.tracklist.compiledRolls.map(compiledRoll => {
-                    return (
-                      compiledRoll &&
-                      compiledRoll.data &&
-                      compiledRoll.data.tracks &&
-                      compiledRoll.data.tracks.length > 0 && (
-                        <Card
-                          key={compiledRoll.id}
-                          containerStyle={styles.rollCardContainer}
-                        >
-                          {compiledRoll.data.tracks.map(track => {
-                            return (
-                              track && (
-                                <View
-                                  style={styles.trackView}
-                                  key={track.providerID}
-                                >
-                                  <Image
-                                    style={styles.trackImage}
-                                    source={{ uri: track.cover }}
-                                  />
-                                  <Text>{track.name}</Text>
-                                </View>
-                              )
-                            );
-                          })}
-                        </Card>
-                      )
-                    );
-                  })}
+                  data.private.currentUserTracklist &&
+                  data.private.currentUserTracklist.compiledRolls &&
+                  data.private.currentUserTracklist.compiledRolls.map(
+                    compiledRoll => {
+                      return (
+                        compiledRoll &&
+                        compiledRoll.data &&
+                        compiledRoll.data.tracks &&
+                        compiledRoll.data.tracks.length > 0 && (
+                          <Card
+                            key={compiledRoll.id}
+                            containerStyle={styles.rollCardContainer}
+                          >
+                            {compiledRoll.data.tracks.map(track => {
+                              return (
+                                track && (
+                                  <View
+                                    style={styles.trackView}
+                                    key={track.providerID}
+                                  >
+                                    <Image
+                                      style={styles.trackImage}
+                                      source={{ uri: track.cover }}
+                                    />
+                                    <Text>{track.name}</Text>
+                                  </View>
+                                )
+                              );
+                            })}
+                          </Card>
+                        )
+                      );
+                    }
+                  )}
               </ScrollView>
 
               {/* "Generate Playlist" Button */}

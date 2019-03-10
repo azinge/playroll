@@ -6,8 +6,8 @@ export const CREATE_ROLL = 'CREATE_ROLL';
 
 export const CREATE_ROLL_MUTATION = gql`
   mutation CREATE_ROLL($input: RollInput!) {
-    admin {
-      createRoll(input: $input) {
+    private {
+      createCurrentUserRoll(input: $input) {
         ...DefaultRoll
       }
     }
@@ -20,8 +20,8 @@ type CreateRollVariables = {
 };
 
 type CreateRollData = {
-  admin: {
-    createRoll?: Roll;
+  private: {
+    createCurrentUserRoll?: Roll;
   };
 };
 

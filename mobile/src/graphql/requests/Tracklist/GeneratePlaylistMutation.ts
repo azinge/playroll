@@ -5,7 +5,7 @@ export const GENERATE_PLAYLIST = 'GENERATE_PLAYLIST';
 
 export const GENERATE_PLAYLIST_MUTATION = gql`
   mutation GENERATE_PLAYLIST($tracklistID: ID!, $playlistName: String) {
-    public {
+    private {
       generatePlaylist(tracklistID: $tracklistID, playlistName: $playlistName)
     }
   }
@@ -17,7 +17,7 @@ type GeneratePlaylistVariables = {
 };
 
 type GeneratePlaylistData = {
-  public: {
+  private: {
     generatePlaylist: string[];
   };
 };

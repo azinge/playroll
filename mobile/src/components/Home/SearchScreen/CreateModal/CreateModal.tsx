@@ -14,7 +14,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import { MusicSource, RollFilter } from '../../../../graphql/types';
 
 import { CreateRollMutation } from '../../../../graphql/requests/Roll';
-import { GET_PLAYROLL } from '../../../../graphql/requests/Playroll/GetPlayrollQuery';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 
 export interface Props {
   currentSource: MusicSource;
@@ -139,7 +139,7 @@ export default class CreateModal extends React.Component<Props, State> {
                 onCompleted={() => {
                   this.props.closeModal(true);
                 }}
-                refetchQueries={[GET_PLAYROLL]}
+                refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
               >
                 {(createRoll, { data }) => (
                   <TouchableHighlight

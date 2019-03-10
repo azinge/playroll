@@ -6,8 +6,8 @@ export const DELETE_ROLL = 'DELETE_ROLL';
 
 export const DELETE_ROLL_MUTATION = gql`
   mutation DELETE_ROLL($id: ID!) {
-    admin {
-      deleteRoll(id: $id) {
+    private {
+      deleteCurrentUserRoll(id: $id) {
         ...DefaultRoll
       }
     }
@@ -20,8 +20,8 @@ type DeleteRollVariables = {
 };
 
 type DeleteRollData = {
-  admin: {
-    deleteRoll?: Roll;
+  private: {
+    deleteCurrentUserRoll?: Roll;
   };
 };
 

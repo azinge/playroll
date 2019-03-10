@@ -4,8 +4,7 @@ export const api = {
     region: '',
   },
   dev: {
-    url:
-      'https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/admin_graphql/',
+    url: 'https://wxvm74psg3.execute-api.us-west-2.amazonaws.com/dev/graphql/',
     region: 'us-west-2',
   },
 };

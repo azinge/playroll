@@ -1,33 +1,39 @@
 import { signIn, signOut, signUp, confirmSignUp } from './resolvers/Auth';
+import { coreData } from './resolvers/Core';
 import gql from 'graphql-tag';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { ApolloCache } from 'apollo-cache';
 
 export const resolvers = {
+  // Query: {
+  //   local: () => {},
+  // },
+  // Mutation: {
+  //   local: () => {},
+  // },
+  Query: {
+    coreData,
+  },
   Mutation: {
-    // client: {
     signOut,
     signIn,
     signUp,
     confirmSignUp,
-    // },
   },
 };
 
 export const typeDefs = gql`
+  # extend type Query {
+  #   local: LocalQueryMethods
+  # }
+  # extend type Mutation {
+  #   local: LocalMutationMethods
+  # }
+
   extend type Query {
-    #   client: ClientQueryMethods
     coreData: CoreData
   }
-  # extend type Mutation {
-  #   client: ClientMutationMethods
-  # }
 
-  # type ClientQueryMethods {
-  #   coreData: CoreData
-  # }
-
-  # type ClientMutationMethods {
   extend type Mutation {
     signOut: Boolean
     signIn(username: String, password: String): Boolean
@@ -48,9 +54,12 @@ export const typeDefs = gql`
 export const loadDefaults = (cache: ApolloCache<NormalizedCacheObject>) => {
   cache.writeData({
     data: {
-      coreData: {
-        isAuthenticated: false,
-        __typename: 'CoreData',
+      local: {
+        __typename: 'LocalQueryMethods',
+        coreData: {
+          __typename: 'CoreData',
+          isAuthenticated: false,
+        },
       },
     },
   });

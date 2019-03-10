@@ -6,8 +6,8 @@ export const DELETE_PLAYROLL = 'DELETE_PLAYROLL';
 
 export const DELETE_PLAYROLL_MUTATION = gql`
   mutation DELETE_PLAYROLL($id: ID!) {
-    admin {
-      deletePlayroll(id: $id) {
+    private {
+      deleteCurrentUserPlayroll(id: $id) {
         ...DefaultPlayroll
       }
     }
@@ -20,8 +20,8 @@ type DeletePlayrollVariables = {
 };
 
 type DeletePlayrollData = {
-  admin: {
-    deletePlayroll: Playroll;
+  private: {
+    deleteCurrentUserPlayroll: Playroll;
   };
 };
 

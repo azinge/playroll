@@ -25,10 +25,11 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
   render() {
     return (
       <GetCurrentUserQuery>
-        {({ data }) => {
-          if (!data || !data.private.currentUser) {
+        {({ loading, error, data }) => {
+          if (loading || error || Object.keys(data).length === 0) {
             return <SafeAreaView style={styles.screenContainer} />;
           }
+          const currentUser = (data && data.private.currentUser) || {};
           return (
             <SafeAreaView style={styles.screenContainer}>
               <View>
@@ -37,11 +38,11 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
               <View style={{ height: 100 }}>
                 <Image
                   source={{
-                    uri: data.private.currentUser.avatar,
+                    uri: currentUser.avatar,
                   }}
                   style={{ height: 100, width: 100, borderRadius: 5 }}
                 />
-                <Text>{data.private.currentUser.name}</Text>
+                <Text>{currentUser.name}</Text>
               </View>
               <Button
                 title='Discovery Queue'

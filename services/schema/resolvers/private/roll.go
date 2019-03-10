@@ -40,7 +40,7 @@ var getCurrentUserRoll = gqltag.Method{
 		rollModel := &models.Roll{}
 
 		db := mctx.DB.Table("rolls").
-			Joins("LEFT JOIN playrolls ON playrolls.tracklist_id = rolls.id")
+			Joins("LEFT JOIN playrolls ON playrolls.id = rolls.playroll_id")
 
 		if err := db.Where(&models.Playroll{UserID: user.ID}).First(rollModel, id).Error; err != nil {
 			return nil, err
@@ -131,7 +131,7 @@ var updateCurrentUserRoll = gqltag.Method{
 		rollModel.SetID(id)
 		// rollModel.UserID = user.ID
 		db := mctx.DB.Table("rolls").
-			Joins("LEFT JOIN playrolls ON playrolls.tracklist_id = rolls.id")
+			Joins("LEFT JOIN playrolls ON playrolls.id = rolls.playroll_id")
 
 		if err := db.Model(rollModel).Where(&models.Playroll{UserID: user.ID}).Updates(rollModel).Error; err != nil {
 			return nil, err
@@ -169,7 +169,7 @@ var deleteCurrentUserRoll = gqltag.Method{
 		rollModel := &models.Roll{}
 
 		db := mctx.DB.Table("rolls").
-			Joins("LEFT JOIN playrolls ON playrolls.tracklist_id = rolls.id")
+			Joins("LEFT JOIN playrolls ON playrolls.id = rolls.playroll_id")
 
 		if err := db.Where(&models.Playroll{UserID: user.ID}).First(rollModel, id).Error; err != nil {
 			return nil, err

@@ -3,9 +3,11 @@
  */
 
 import React from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, ActivityIndicator } from 'react-native';
 import { Icon, Header } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
+
+import NavigationService from '../../../services/NavigationService';
 
 import {
   ListCurrentUserPlayrollsQuery,
@@ -40,7 +42,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
       <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
-            if (!data || !data.currentUser) {
+            if (loading || error) {
               return (
                 <Header
                   backgroundColor='purple'
@@ -65,21 +67,21 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 />
               );
             }
+            const currentUser = (data && data.private.currentUser) || {};
             return (
               <CreatePlayrollMutation
                 variables={{
-                  input: { name: 'New Playroll', userID: data.currentUser.id },
+                  input: { name: 'New Playroll', userID: currentUser.id },
                 }}
-                onCompleted={data =>
-                  this.props &&
-                  this.props.navigation &&
-                  this.props.navigation.navigate('ManagePlayroll', {
-                    playroll: data.createPlayroll,
-                  })
-                }
+                onCompleted={data2 => {
+                  const playroll = data2.admin.createPlayroll;
+                  NavigationService.navigate('ManagePlayroll', {
+                    playroll,
+                  });
+                }}
                 refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
               >
-                {(createPlayroll, { data }) => {
+                {createPlayroll => {
                   return (
                     <Header
                       backgroundColor='purple'
@@ -116,34 +118,37 @@ export default class BrowsePlayrollsScreen extends React.Component<
         </GetCurrentUserQuery>
         <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
+            if (loading) {
+              return (
+                <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
+              );
+            }
+            if (error) {
+              return (
+                <Text style={{ paddingTop: 50 }}>Error Loading Playrolls</Text>
+              );
+            }
+            const playrolls = data && data.private.listCurrentUserPlayrolls;
             return (
               <View style={{ flex: 1 }}>
-                {loading ? (
-                  <ActivityIndicator
-                    color={'gray'}
-                    style={{ paddingTop: 50 }}
-                  />
-                ) : (
-                  <ScrollView>
-                    {data &&
-                      data.listCurrentUserPlayrolls &&
-                      data.listCurrentUserPlayrolls.map(playroll => {
-                        return (
-                          <PlayrollCard
-                            playroll={playroll}
-                            editPlayroll={() =>
-                              this.props.navigation &&
-                              this.props.navigation.navigate('ManagePlayroll', {
-                                managePlayroll: 'Manage Playroll',
-                                playroll,
-                              })
-                            }
-                            key={playroll.id}
-                          />
-                        );
-                      })}
-                  </ScrollView>
-                )}
+                <ScrollView>
+                  {playrolls &&
+                    playrolls.map(playroll => {
+                      return (
+                        <PlayrollCard
+                          playroll={playroll}
+                          editPlayroll={() =>
+                            this.props.navigation &&
+                            this.props.navigation.navigate('ManagePlayroll', {
+                              managePlayroll: 'Manage Playroll',
+                              playroll,
+                            })
+                          }
+                          key={playroll.id}
+                        />
+                      );
+                    })}
+                </ScrollView>
               </View>
             );
           }}

@@ -6,14 +6,12 @@ import {
   Alert,
   Modal,
   TouchableHighlight,
-  SegmentedControlIOS,
   Image,
-  TextInput,
 } from 'react-native';
 import styles, { pickerStyle } from './CreateModal.styles';
 import { NavigationScreenProp } from 'react-navigation';
 
-import { MusicSource, RollFilter, RollLength } from '../../../../graphql/types';
+import { MusicSource, RollFilter } from '../../../../graphql/types';
 
 import { CreateRollMutation } from '../../../../graphql/requests/Roll';
 import { GET_PLAYROLL } from '../../../../graphql/requests/Playroll/GetPlayrollQuery';
@@ -29,7 +27,7 @@ export interface Props {
 
 interface State {
   filter?: RollFilter;
-  length?: RollLength;
+  length?: RollFilter;
 }
 
 export default class CreateModal extends React.Component<Props, State> {

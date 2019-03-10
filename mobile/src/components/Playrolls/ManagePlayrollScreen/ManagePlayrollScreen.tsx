@@ -11,8 +11,8 @@ import Search from '../../shared/Search';
 import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
-  GetPlayrollQuery,
   UpdatePlayrollMutation,
+  GetCurrentUserPlayrollQuery,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
@@ -38,15 +38,16 @@ export default class ManagePlayrollScreen extends React.Component<
   }
 
   render() {
-    const playroll: Playroll =
+    const playrollID: number =
       (this.props &&
         this.props.navigation &&
-        this.props.navigation.getParam('playroll')) ||
+        this.props.navigation.getParam('playroll').id) ||
       {};
     return (
-      <GetPlayrollQuery variables={{ id: playroll.id }}>
+      <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
         {({ loading, error, data, client: { cache } }) => {
-          const playroll: Playroll = (data && data.playroll) || {};
+          const playroll: Playroll =
+            (data && data.private.currentUserPlayroll) || {};
           return (
             <View style={styles.screenContainer}>
               {this.renderHeader(playroll)}
@@ -56,7 +57,7 @@ export default class ManagePlayrollScreen extends React.Component<
             </View>
           );
         }}
-      </GetPlayrollQuery>
+      </GetCurrentUserPlayrollQuery>
     );
   }
   renderHeader(playroll: Playroll) {
@@ -68,7 +69,9 @@ export default class ManagePlayrollScreen extends React.Component<
           this.props.navigation.navigate('Tracklist', {
             playrollName: playroll.name,
             tracklistID:
-              data && data.generateTracklist && data.generateTracklist.id,
+              data &&
+              data.private.generateTracklist &&
+              data.private.generateTracklist.id,
           })
         }
       >

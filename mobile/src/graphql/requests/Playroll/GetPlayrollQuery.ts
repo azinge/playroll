@@ -1,37 +1,18 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Playroll } from '../../types';
+import { Playroll, PlayrollFragments } from '../../types';
 
 export const GET_PLAYROLL = 'GET_PLAYROLL';
 
 export const GET_PLAYROLL_QUERY = gql`
-  query ${GET_PLAYROLL}($id: ID!) {
-    playroll(id: $id) {
-      id
-      name
-      rolls {
-        id
-        data {
-          sources {
-            cover
-            name
-            type
-          }
-          filters {
-            type
-            modifications
-          }
-          length {
-            type
-            modifications
-          }
-        }
-      }
-      tracklists {
-        id
+  query GET_PLAYROLL($id: ID!) {
+    admin {
+      playroll(id: $id) {
+        ...PlayrollWithTracklist
       }
     }
   }
+  ${PlayrollFragments.withTracklist}
 `;
 
 type GetPlayrollVariables = {
@@ -39,7 +20,9 @@ type GetPlayrollVariables = {
 };
 
 type GetPlayrollData = {
-  playroll?: Playroll;
+  admin: {
+    playroll?: Playroll;
+  };
 };
 
 export class GetPlayrollQuery extends Query<

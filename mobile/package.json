@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@types/react-navigation": "^3.0.1",
+    "apollo-client": "^2.5.1",
     "apollo-link-logger": "^1.2.3",
     "apollo-link-state": "^0.4.2",
     "aws-amplify": "^1.1.19",

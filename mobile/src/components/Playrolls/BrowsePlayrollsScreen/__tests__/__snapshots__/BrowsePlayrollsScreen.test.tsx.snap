@@ -4,7 +4,7 @@ exports[`renders correctly 1`] = `
 <View
   style={
     Object {
-      "backgroundColor": "#fff",
+      "backgroundColor": "#f7f7f7",
       "flex": 1,
     }
   }
@@ -51,7 +51,29 @@ exports[`renders correctly 1`] = `
           "flex": 1,
         }
       }
-    />
+    >
+      <View>
+        <View
+          accessible={true}
+          isTVSelectable={true}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text />
+        </View>
+      </View>
+    </View>
     <View
       style={
         Object {
@@ -177,6 +199,18 @@ exports[`renders correctly 1`] = `
         "flex": 1,
       }
     }
-  />
+  >
+    <ActivityIndicator
+      animating={true}
+      color="gray"
+      hidesWhenStopped={true}
+      size="small"
+      style={
+        Object {
+          "paddingTop": 50,
+        }
+      }
+    />
+  </View>
 </View>
 `;

@@ -6,11 +6,16 @@ import React from 'react';
 import { View } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
+import { Font } from 'expo';
 import Search from '../../shared/Search/Search';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
+
+Font.loadAsync({
+  Avenir: require('../../../assets/fonts/AvenirLTStd-Black.otf'),
+});
 
 export default class SearchScreen extends React.Component<Props> {
   render() {

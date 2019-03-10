@@ -6,8 +6,10 @@ export const GENERATE_TRACKLIST = 'GENERATE_TRACKLIST';
 
 export const GENERATE_TRACKLIST_MUTATION = gql`
   mutation GENERATE_TRACKLIST($playrollID: ID!) {
-    generateTracklist(playrollID: $playrollID) {
-      ...DefaultTracklist
+    private {
+      generateTracklist(playrollID: $playrollID) {
+        ...DefaultTracklist
+      }
     }
   }
   ${TracklistFragments.default}
@@ -18,7 +20,9 @@ type GenerateTracklistVariables = {
 };
 
 type GenerateTracklistData = {
-  generateTracklist?: Tracklist;
+  private: {
+    generateTracklist?: Tracklist;
+  };
 };
 
 export class GenerateTracklistMutation extends Mutation<

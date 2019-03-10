@@ -6,8 +6,10 @@ export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
 export const GET_CURRENT_USER_QUERY = gql`
   query GET_CURRENT_USER {
-    currentUser {
-      ...DefaultUser
+    private {
+      currentUser {
+        ...DefaultUser
+      }
     }
   }
   ${UserFragments.default}
@@ -18,7 +20,9 @@ type GetCurrentUserVariables = {
 };
 
 type GetCurrentUserData = {
-  currentUser?: User;
+  private: {
+    currentUser?: User;
+  };
 };
 
 export class GetCurrentUserQuery extends Query<

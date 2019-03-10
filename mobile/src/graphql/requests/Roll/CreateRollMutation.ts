@@ -6,8 +6,10 @@ export const CREATE_ROLL = 'CREATE_ROLL';
 
 export const CREATE_ROLL_MUTATION = gql`
   mutation CREATE_ROLL($input: RollInput!) {
-    createRoll(input: $input) {
-      ...DefaultRoll
+    admin {
+      createRoll(input: $input) {
+        ...DefaultRoll
+      }
     }
   }
   ${RollFragments.default}
@@ -18,7 +20,9 @@ type CreateRollVariables = {
 };
 
 type CreateRollData = {
-  createRoll?: Roll;
+  admin: {
+    createRoll?: Roll;
+  };
 };
 
 export class CreateRollMutation extends Mutation<

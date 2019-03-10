@@ -10,7 +10,7 @@ import { NavigationScreenProp } from 'react-navigation';
 
 import {
   DeletePlayrollMutation,
-  GetPlayrollQuery,
+  GetCurrentUserPlayrollQuery,
 } from '../../../../graphql/requests/Playroll/';
 
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
@@ -43,14 +43,35 @@ export default class PlayrollCard extends React.Component<Props, State> {
     );
   }
   render() {
-    const { playroll = {}, editPlayroll = () => {} } = this.props;
+    const { editPlayroll = () => {} } = this.props;
+    console.log(this.props.playroll.id);
     return (
-      <GetPlayrollQuery
-        variables={{ id: playroll.id }}
-        fetchPolicy='cache-only'
+      <GetCurrentUserPlayrollQuery
+        variables={{ id: this.props.playroll.id }}
+        // fetchPolicy='cache-only'
       >
-        {({ data }) => {
-          const playroll = (data && data.playroll) || {};
+        {({ loading, error, data }) => {
+          // if (loading || error) {
+          //   return (
+          //     <Card
+          //       title={'Loading'}
+          //       // image={require("../../assets/wack.jpg")}
+          //       key={''}
+          //       containerStyle={{
+          //         borderRadius: 12,
+          //         borderColor: 'white',
+          //         shadowColor: 'gray',
+          //         shadowOffset: {
+          //           width: 2,
+          //           height: 3,
+          //         },
+          //         shadowRadius: 5,
+          //         shadowOpacity: 0.2,
+          //       }}
+          //     />
+          //   );
+          // }
+          const playroll = (data && data.private.currentUserPlayroll) || {};
           return (
             <Card
               title={playroll.name}
@@ -100,7 +121,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     }}
                     refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
                   >
-                    {(deletePlayroll, { data }) => (
+                    {deletePlayroll => (
                       <Button
                         title='Delete Playroll'
                         onPress={() => {
@@ -114,7 +135,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
             </Card>
           );
         }}
-      </GetPlayrollQuery>
+      </GetCurrentUserPlayrollQuery>
     );
   }
 }

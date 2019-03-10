@@ -1,13 +1,15 @@
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { PlayrollInput, PlayrollFragments } from '../../types';
+import { Playroll, PlayrollInput, PlayrollFragments } from '../../types';
 
 export const CREATE_PLAYROLL = 'CREATE_PLAYROLL';
 
 export const CREATE_PLAYROLL_MUTATION = gql`
   mutation CREATE_PLAYROLL($input: PlayrollInput!) {
-    createPlayroll(input: $input) {
-      ...DefaultPlayroll
+    admin {
+      createPlayroll(input: $input) {
+        ...DefaultPlayroll
+      }
     }
   }
   ${PlayrollFragments.default}
@@ -18,7 +20,9 @@ type CreatePlayrollVariables = {
 };
 
 type CreatePlayrollData = {
-  createPlayroll?: { id: number };
+  admin: {
+    createPlayroll: Playroll;
+  };
 };
 
 export class CreatePlayrollMutation extends Mutation<

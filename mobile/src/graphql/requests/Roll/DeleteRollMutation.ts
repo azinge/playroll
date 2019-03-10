@@ -6,8 +6,10 @@ export const DELETE_ROLL = 'DELETE_ROLL';
 
 export const DELETE_ROLL_MUTATION = gql`
   mutation DELETE_ROLL($id: ID!) {
-    deleteRoll(id: $id) {
-      ...DefaultRoll
+    admin {
+      deleteRoll(id: $id) {
+        ...DefaultRoll
+      }
     }
   }
   ${RollFragments.default}
@@ -18,7 +20,9 @@ type DeleteRollVariables = {
 };
 
 type DeleteRollData = {
-  deleteRoll?: Roll;
+  admin: {
+    deleteRoll?: Roll;
+  };
 };
 
 export class DeleteRollMutation extends Mutation<

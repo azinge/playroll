@@ -30,6 +30,7 @@ export const MusicSourceFragments = {
 
 export type RollFilter = {
   type?: string;
+  name?: string;
   modifications?: string[];
 };
 
@@ -39,6 +40,7 @@ export const RollFilterFragments = {
   default: gql`
     fragment DefaultRollFilter on RollFilter {
       type
+      name
       modifications
     }
   `,
@@ -172,6 +174,7 @@ export const TracklistFragments = {
 
 export type Playroll = {
   id?: number;
+  userID: number;
   name?: string;
   rolls?: [Roll];
   tracklists?: [Tracklist];
@@ -186,6 +189,7 @@ export const PlayrollFragments = {
   default: gql`
     fragment DefaultPlayroll on Playroll {
       id
+      userID
       name
       rolls {
         ...DefaultRoll
@@ -196,6 +200,7 @@ export const PlayrollFragments = {
   withTracklist: gql`
     fragment PlayrollWithTracklist on Playroll {
       id
+      userID
       name
       rolls {
         ...DefaultRoll

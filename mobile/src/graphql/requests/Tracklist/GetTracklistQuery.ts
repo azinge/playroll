@@ -7,8 +7,10 @@ export const GET_TRACKLIST = 'GET_TRACKLIST';
 
 export const GET_TRACKLIST_QUERY = gql`
   query GET_TRACKLIST($id: ID!) {
-    tracklist(id: $id) {
-      ...DefaultTracklist
+    admin {
+      tracklist(id: $id) {
+        ...DefaultTracklist
+      }
     }
   }
   ${TracklistFragments.default}
@@ -19,7 +21,9 @@ type GetTracklistVariables = {
 };
 
 type GetTracklistData = {
-  tracklist?: Tracklist;
+  admin: {
+    tracklist?: Tracklist;
+  };
 };
 
 export class GetTracklistQuery extends Query<

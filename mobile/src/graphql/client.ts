@@ -12,9 +12,10 @@ import { resolvers, typeDefs, loadDefaults } from './local-state';
 // This is the same cache you pass into new ApolloClient
 const cache = new InMemoryCache({
   cacheRedirects: {
-    Query: {
-      playroll: (_, args, { getCacheKey }) =>
-        getCacheKey({ __typename: 'Playroll', id: args.id }),
+    PrivateQueryMethods: {
+      currentUserPlayroll: (_, args, { getCacheKey }) => {
+        return getCacheKey({ __typename: 'Playroll', id: args.id });
+      },
     },
   },
 });

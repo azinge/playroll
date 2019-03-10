@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { introspectionQuery } = require('graphql');
 const fs = require('fs');
 
-fetch('http://localhost:4445/graphql', {
+fetch('http://localhost:4445/admin_graphql', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ query: introspectionQuery }),

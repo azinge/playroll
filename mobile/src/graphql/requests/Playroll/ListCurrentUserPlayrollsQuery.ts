@@ -6,8 +6,10 @@ export const LIST_CURRENT_USER_PLAYROLLS = 'LIST_CURRENT_USER_PLAYROLLS';
 
 export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
   query LIST_CURRENT_USER_PLAYROLLS {
-    listCurrentUserPlayrolls {
-      ...PlayrollWithTracklist
+    private {
+      listCurrentUserPlayrolls {
+        ...PlayrollWithTracklist
+      }
     }
   }
   ${PlayrollFragments.withTracklist}
@@ -16,7 +18,9 @@ export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
 type ListCurrentUserPlayrollsVariables = {};
 
 type ListCurrentUserPlayrollsData = {
-  listCurrentUserPlayrolls?: Playroll[];
+  private: {
+    listCurrentUserPlayrolls?: Playroll[];
+  };
 };
 
 export class ListCurrentUserPlayrollsQuery extends Query<

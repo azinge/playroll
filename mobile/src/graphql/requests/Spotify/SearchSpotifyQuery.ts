@@ -6,8 +6,10 @@ export const SEARCH_SPOTIFY = 'SEARCH_SPOTIFY';
 
 export const SEARCH_SPOTIFY_QUERY = gql`
   query SEARCH_SPOTIFY($query: String, $searchType: String) {
-    searchSpotify(query: $query, searchType: $searchType) {
-      ...DefaultMusicSource
+    private {
+      searchSpotify(query: $query, searchType: $searchType) {
+        ...DefaultMusicSource
+      }
     }
   }
   ${MusicSourceFragments.default}
@@ -19,7 +21,9 @@ type SearchSpotifyVariables = {
 };
 
 type SearchSpotifyData = {
-  searchSpotify?: MusicSource[];
+  private: {
+    searchSpotify?: MusicSource[];
+  };
 };
 
 export class SearchSpotifyQuery extends Query<

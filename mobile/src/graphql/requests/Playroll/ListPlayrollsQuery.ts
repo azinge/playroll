@@ -6,8 +6,10 @@ export const LIST_PLAYROLLS = 'LIST_PLAYROLLS';
 
 export const LIST_PLAYROLLS_QUERY = gql`
   query LIST_PLAYROLLS {
-    listPlayrolls {
-      ...PlayrollWithTracklist
+    admin {
+      listPlayrolls {
+        ...PlayrollWithTracklist
+      }
     }
   }
   ${PlayrollFragments.withTracklist}
@@ -16,7 +18,9 @@ export const LIST_PLAYROLLS_QUERY = gql`
 type ListPlayrollsVariables = {};
 
 type ListPlayrollsData = {
-  listPlayrolls?: Playroll[];
+  admin: {
+    listPlayrolls?: Playroll[];
+  };
 };
 
 export class ListPlayrollsQuery extends Query<

@@ -22,6 +22,7 @@ import { MusicSource } from '../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify/';
 import CreateModal from '../../Home/SearchScreen/CreateModal/CreateModal';
 import { render } from 'react-dom';
+import NavigationService from '../../../services/NavigationService';
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {
@@ -88,10 +89,9 @@ export default class Search extends Component<Props, State> {
   }
 
   manageRoll(source) {
-    this.props.navigation &&
-      this.props.navigation.navigate('ManageRoll', {
-        currentSource: source,
-      });
+    NavigationService.navigate('ManageRoll', {
+      currentSource: source,
+    });
   }
 
   render() {
@@ -177,7 +177,7 @@ export default class Search extends Component<Props, State> {
                 <ActivityIndicator color={'gray'} />
               ) : (
                 <FlatList
-                  data={data && data.searchSpotify}
+                  data={data && data.private.searchSpotify}
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => item.providerID}
                   extraData={this.state}

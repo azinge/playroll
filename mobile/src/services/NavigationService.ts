@@ -12,7 +12,7 @@ function setTopLevelNavigator(navigatorRef: NavigationContainerComponent) {
   navigator = navigatorRef;
 }
 
-function navigate(routeName: string, params: NavigationParams) {
+function navigate(routeName: string, params?: NavigationParams) {
   navigator.dispatch(
     NavigationActions.navigate({
       routeName,

@@ -6,8 +6,10 @@ export const UPDATE_PLAYROLL = 'UPDATE_PLAYROLL';
 
 export const UPDATE_PLAYROLL_MUTATION = gql`
   mutation UPDATE_PLAYROLL($id: ID!, $input: PlayrollInput!) {
-    updatePlayroll(id: $id, input: $input) {
-      ...DefaultPlayroll
+    admin {
+      updatePlayroll(id: $id, input: $input) {
+        ...DefaultPlayroll
+      }
     }
   }
   ${PlayrollFragments.default}
@@ -19,7 +21,9 @@ type UpdatePlayrollVariables = {
 };
 
 type UpdatePlayrollData = {
-  updatePlayroll?: Playroll;
+  admin: {
+    updatePlayroll?: Playroll;
+  };
 };
 
 export class UpdatePlayrollMutation extends Mutation<

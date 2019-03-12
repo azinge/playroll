@@ -175,6 +175,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
                 this.props.navigation &&
                 this.props.navigation.navigate('Search')
               }
+              underlayColor='rgba(255,255,255,0)'
             />
           }
           rightComponent={

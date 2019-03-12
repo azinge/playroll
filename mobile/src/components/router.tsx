@@ -15,7 +15,7 @@ const AppNavigator = createStackNavigator(
     Profile: ProfileNavigator,
   },
   {
-    initialRouteName: 'Playrolls',
+    initialRouteName: 'Loading',
     headerMode: 'none',
     navigationOptions: {
       header: null,

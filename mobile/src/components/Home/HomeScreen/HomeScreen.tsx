@@ -175,6 +175,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               name='search'
               size={27}
               color='white'
+              underlayColor='rgba(255,255,255,0)'
               containerStyle={{ marginTop: 5, marginLeft: 5 }}
               onPress={() =>
                 this.props.navigation &&

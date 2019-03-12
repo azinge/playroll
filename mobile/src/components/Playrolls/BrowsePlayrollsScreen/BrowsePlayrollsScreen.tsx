@@ -74,7 +74,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   input: { name: 'New Playroll', userID: currentUser.id },
                 }}
                 onCompleted={data2 => {
-                  const playroll = data2.admin.createPlayroll;
+                  const playroll =
+                    data2 &&
+                    data2.private &&
+                    data2.private.createCurrentUserPlayroll &&
+                    data2.private.createCurrentUserPlayroll;
                   NavigationService.navigate('ManagePlayroll', {
                     playroll,
                   });

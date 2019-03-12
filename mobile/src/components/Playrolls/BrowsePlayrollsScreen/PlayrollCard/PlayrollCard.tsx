@@ -112,9 +112,9 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     <FlatList
                       data={playroll.rolls}
                       renderItem={this._renderItem}
-                      keyExtractor={item => playroll.rolls.id}
+                      keyExtractor={item => item.id.toString()}
                       horizontal={true}
-                      style={{ height: 80, width: 315 }}
+                      style={{ height: 80, width: 329 }}
                     />
                   ) : (
                     <Image

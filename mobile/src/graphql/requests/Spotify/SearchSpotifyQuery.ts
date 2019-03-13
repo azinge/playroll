@@ -1,20 +1,18 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { MusicSource } from '../../types';
+import { MusicSource, MusicSourceFragments } from '../../types';
 
 export const SEARCH_SPOTIFY = 'SEARCH_SPOTIFY';
 
 export const SEARCH_SPOTIFY_QUERY = gql`
-  query ${SEARCH_SPOTIFY}($query: String, $searchType: String) {
-    searchSpotify(query: $query, searchType: $searchType) {
-      cover
-      creator
-      name
-      provider
-      providerID
-      type
+  query SEARCH_SPOTIFY($query: String, $searchType: String) {
+    private {
+      searchSpotify(query: $query, searchType: $searchType) {
+        ...DefaultMusicSource
+      }
     }
   }
+  ${MusicSourceFragments.default}
 `;
 
 type SearchSpotifyVariables = {
@@ -23,7 +21,9 @@ type SearchSpotifyVariables = {
 };
 
 type SearchSpotifyData = {
-  searchSpotify?: MusicSource[];
+  private: {
+    searchSpotify?: MusicSource[];
+  };
 };
 
 export class SearchSpotifyQuery extends Query<

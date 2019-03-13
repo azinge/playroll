@@ -13,6 +13,7 @@ import {
   StackActions,
   NavigationActions,
 } from 'react-navigation';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -24,10 +25,11 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
   render() {
     return (
       <GetCurrentUserQuery>
-        {({ data }) => {
-          if (!data || !data.currentUser) {
+        {({ loading, error, data }) => {
+          if (loading || error || Object.keys(data).length === 0) {
             return <SafeAreaView style={styles.screenContainer} />;
           }
+          const currentUser = (data && data.private.currentUser) || {};
           return (
             <SafeAreaView style={styles.screenContainer}>
               <View>
@@ -36,49 +38,44 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
               <View style={{ height: 100 }}>
                 <Image
                   source={{
-                    uri: data.currentUser.avatar,
+                    uri: currentUser.avatar,
                   }}
                   style={{ height: 100, width: 100, borderRadius: 5 }}
                 />
-                <Text>{data.currentUser.name}</Text>
+                <Text>{currentUser.name}</Text>
               </View>
               <Button
                 title='Discovery Queue'
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('ManageDiscoveryQueue');
+                  NavigationService.navigate('ManageDiscoveryQueue');
                 }}
               />
               <Button
                 title='Friends'
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('BrowseFriends');
+                  NavigationService.navigate('BrowseFriends');
                 }}
               />
               <Button
                 title='Recommendations'
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('BrowseRecommendations');
+                  NavigationService.navigate('BrowseRecommendations');
                 }}
               />
               <Button
                 title='Connect to Spotify'
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('ConnectSpotify');
+                  NavigationService.navigate('ConnectSpotify');
                 }}
               />
               <Button
                 title='Edit Profile'
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('ManageProfile');
+                  NavigationService.navigate('ManageProfile');
                 }}
               />
               <SignOutMutation>
-                {(signOut, { data }) => {
+                {signOut => {
                   return (
                     <Button
                       title='Sign Out'

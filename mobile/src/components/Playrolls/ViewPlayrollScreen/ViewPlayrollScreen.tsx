@@ -11,12 +11,12 @@ import Search from '../../shared/Search';
 import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
-  GetPlayrollQuery,
+  GetCurrentUserPlayrollQuery,
   UpdatePlayrollMutation,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
-import { GET_PLAYROLL } from '../../../graphql/requests/Playroll/GetPlayrollQuery';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -44,7 +44,7 @@ export default class ViewPlayrollScreen extends React.Component<
         this.props.navigation.getParam('playroll')) ||
       {};
     return (
-      <GetPlayrollQuery variables={{ id: playroll.id }}>
+      <GetCurrentUserPlayrollQuery variables={{ id: playroll.id }}>
         {({ loading, error, data, client: { cache } }) => {
           const playroll: Playroll = (data && data.playroll) || {};
           return (
@@ -56,7 +56,7 @@ export default class ViewPlayrollScreen extends React.Component<
             </View>
           );
         }}
-      </GetPlayrollQuery>
+      </GetCurrentUserPlayrollQuery>
     );
   }
   renderHeader(playroll: Playroll) {
@@ -118,7 +118,7 @@ export default class ViewPlayrollScreen extends React.Component<
               userID: playroll.userID,
             },
           }}
-          refetchQueries={[GET_PLAYROLL]}
+          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
             <View style={styles.editingBarNameContainer}>

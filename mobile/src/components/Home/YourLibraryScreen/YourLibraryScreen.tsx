@@ -9,6 +9,7 @@ import {
   ScrollView,
   Image,
   TouchableHighlight,
+  TouchableOpacity,
   Platform,
   StatusBar,
 } from 'react-native';
@@ -79,44 +80,53 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
             >
               {musicSources.map((val, idx) => {
                 return (
-                  <View
-                    style={{
-                      //   width: 300,
-                      flex: 1,
-                      //   marginHorizontal: 10,
-                      marginVertical: 5,
-                      flexDirection: 'row',
-                    }}
-                    key={idx}
-                  >
+                  <TouchableOpacity onPress={() => {}} key={idx}>
                     <View
                       style={{
-                        borderColor: 'white',
-                        shadowColor: 'gray',
-                        shadowOffset: {
-                          width: 2,
-                          height: 3,
-                        },
-                        shadowRadius: 3,
-                        shadowOpacity: 0.2,
+                        //   width: 300,
+                        flex: 1,
+                        //   marginHorizontal: 10,
+                        marginVertical: 5,
+                        flexDirection: 'row',
                       }}
+                      key={idx}
                     >
-                      <Image style={styles.image} source={{ uri: val.cover }} />
-                    </View>
+                      <View
+                        style={{
+                          borderColor: 'white',
+                          shadowColor: 'gray',
+                          shadowOffset: {
+                            width: 2,
+                            height: 3,
+                          },
+                          shadowRadius: 3,
+                          shadowOpacity: 0.2,
+                        }}
+                      >
+                        <Image
+                          style={styles.image}
+                          source={{ uri: val.cover }}
+                        />
+                      </View>
 
-                    <View
-                      style={{ marginTop: 5, marginLeft: 10, marginRight: 90 }}
-                    >
-                      <Text style={styles.sourceTitle} numberOfLines={1}>
-                        {val.name}
-                      </Text>
-                      {val.creator && (
-                        <Text style={styles.sourceCreator} numberOfLines={1}>
-                          {val.creator}
+                      <View
+                        style={{
+                          marginTop: 5,
+                          marginLeft: 10,
+                          marginRight: 90,
+                        }}
+                      >
+                        <Text style={styles.sourceTitle} numberOfLines={1}>
+                          {val.name}
                         </Text>
-                      )}
+                        {val.creator && (
+                          <Text style={styles.sourceCreator} numberOfLines={1}>
+                            {val.creator}
+                          </Text>
+                        )}
+                      </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
             </ScrollView>

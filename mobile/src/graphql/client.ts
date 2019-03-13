@@ -5,33 +5,31 @@ import { HttpLink } from 'apollo-link-http';
 // @ts-ignore
 import apolloLogger from 'apollo-link-logger';
 import * as config from '../config/aws';
-import { fetcher } from '../lib/apiutils/fetcher';
+import APIService from '../services/APIService';
 import { withClientState } from 'apollo-link-state';
-import { resolvers } from './resolvers';
-import { defaults } from './defaults';
+import { resolvers, typeDefs, loadDefaults } from './local-state';
 
 // This is the same cache you pass into new ApolloClient
 const cache = new InMemoryCache({
   cacheRedirects: {
-    Query: {
-      playroll: (_, args, { getCacheKey }) =>
-        getCacheKey({ __typename: 'Playroll', id: args.id }),
+    PrivateQueryMethods: {
+      currentUserPlayroll: (_, args, { getCacheKey }) => {
+        return getCacheKey({ __typename: 'Playroll', id: args.id });
+      },
     },
   },
 });
 
-const stateLink = withClientState({
-  cache,
-  resolvers,
-  defaults,
-});
-
 const httpLink = new HttpLink({
   uri: config.api.dev.url,
-  fetch: fetcher,
+  fetch: APIService.fetch,
 });
 
 export const client = new ApolloClient({
   cache,
-  link: ApolloLink.from([apolloLogger, stateLink, httpLink]),
+  link: ApolloLink.from([apolloLogger, httpLink]),
+  resolvers,
+  typeDefs,
 });
+
+loadDefaults(client.cache);

@@ -110,6 +110,30 @@ func populateMethodsFromStruct(struc interface{}, mctx *MethodContext, rootQuery
 		tag := m.Tag("gql")
 		if tag == "GROUP" {
 			populateMethodsFromStruct(m.Value(), mctx, rootQuery, rootMutation, typeMap, inputTypeMap)
+		} else if strings.HasPrefix(tag, "GROUP: ") {
+			name := strings.TrimPrefix(tag, "GROUP: ")
+			fieldName := LowercaseFirst(name)
+			subQuery := graphql.NewObject(graphql.ObjectConfig{Name: name + "QueryMethods", Fields: graphql.Fields{}})
+			subMutation := graphql.NewObject(graphql.ObjectConfig{Name: name + "MutationMethods", Fields: graphql.Fields{}})
+			populateMethodsFromStruct(m.Value(), mctx, subQuery, subMutation, typeMap, inputTypeMap)
+			subQueryField := &graphql.Field{
+				Type: subQuery,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					return map[string]string{}, nil
+				},
+			}
+			subMutationField := &graphql.Field{
+				Type: subMutation,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					return map[string]string{}, nil
+				},
+			}
+			if len(subQuery.Fields()) != 0 {
+				rootQuery.AddFieldConfig(fieldName, subQueryField)
+			}
+			if len(subMutation.Fields()) != 0 {
+				rootMutation.AddFieldConfig(fieldName, subMutationField)
+			}
 		} else {
 			name, gqlField := parseGraphQLField(tag, typeMap, inputTypeMap)
 			gqlField.Resolve = generateResolveFromMethod(m, mctx)
@@ -124,7 +148,7 @@ func populateMethodsFromStruct(struc interface{}, mctx *MethodContext, rootQuery
 	}
 }
 
-//TODO: Support internal Methods/Resolvers
+// TODO: Support internal Methods/Resolvers
 func GenerateGraphQLSchema(types interface{}, methods interface{}, mctx *MethodContext) (graphql.Schema, error) {
 	typeMap := map[string]*graphql.Object{}
 	inputTypeMap := map[string]*graphql.InputObject{}

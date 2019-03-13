@@ -22,6 +22,7 @@ import { MusicSource } from '../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify/';
 import CreateModal from '../../Home/SearchScreen/CreateModal/CreateModal';
 import { render } from 'react-dom';
+import NavigationService from '../../../services/NavigationService';
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {
@@ -88,10 +89,9 @@ export default class Search extends Component<Props, State> {
   }
 
   manageRoll(source) {
-    this.props.navigation &&
-      this.props.navigation.navigate('ManageRoll', {
-        currentSource: source,
-      });
+    NavigationService.navigate('ManageRoll', {
+      currentSource: source,
+    });
   }
 
   render() {
@@ -125,6 +125,41 @@ export default class Search extends Component<Props, State> {
           }}
           value={this.state.text}
         />
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingTop: 7,
+            height: '100%',
+            margin: 0,
+            paddingLeft: 20,
+            borderLeftWidth: 1,
+            borderLeftColor: 'lightgray',
+            width: 100,
+            // height: 100%,
+          }}
+        >
+          <RNPickerSelect
+            placeholder={{}}
+            // hideIcon={true}
+            items={[
+              { label: 'Artist', value: 'Artist' },
+              { label: 'Album', value: 'Album' },
+              { label: 'Track', value: 'Track' },
+              { label: 'Playlist', value: 'Playlist' },
+            ]}
+            onValueChange={value => {
+              this.setState({
+                searchType: value,
+              });
+            }}
+            style={pickerStyle}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
+              <Icon name='arrow-drop-down' />
+            </View>
+          </RNPickerSelect>
+        </View>
       </View>
     );
   }
@@ -177,7 +212,7 @@ export default class Search extends Component<Props, State> {
                 <ActivityIndicator color={'gray'} />
               ) : (
                 <FlatList
-                  data={data && data.searchSpotify}
+                  data={data && data.private.searchSpotify}
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => item.providerID}
                   extraData={this.state}

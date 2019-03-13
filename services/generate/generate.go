@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/cazinge/playroll/services/generate/policies"
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
+	"github.com/jinzhu/gorm"
 	"github.com/zmb3/spotify"
-
-	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
 )
 
 func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter) ([]jsonmodels.MusicSource, error) {
@@ -69,45 +69,27 @@ func handleFilter(tracks []jsonmodels.MusicSource, filter jsonmodels.RollFilter)
 	}
 }
 
-func CompileRolls(rolls *[]models.RollOutput, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
+func CompileRolls(rolls *[]models.RollOutput, db *gorm.DB, client *spotify.Client) (*[]models.CompiledRollOutput, error) {
 	compiledRolls := []models.CompiledRollOutput{}
 	for _, roll := range *rolls {
-		tracks := []jsonmodels.MusicSource{}
-		if sources := roll.Data.Sources; len(sources) > 0 {
-			source := sources[0]
-			switch source.Type {
-			case "Track":
-				result, err := spotifyhelpers.GetSpotifyTrack(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Album":
-				result, err := spotifyhelpers.GetSpotifyAlbumTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Artist":
-				result, err := spotifyhelpers.GetSpotifyArtistTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			case "Playlist":
-				result, err := spotifyhelpers.GetSpotifyPlaylistTracks(&source, client)
-				if err != nil {
-					return nil, err
-				}
-				tracks = append(tracks, (*result)...)
-			}
+		gpm, err := policies.NewGeneratePolicyManager(&roll.Data.Filters, &roll.Data.Sources, db, client)
+		if err != nil {
+			return nil, err
+		}
+		msts, err := gpm.ExecuteQuery(db)
+		if err != nil {
+			return nil, err
 		}
 
-		for _, filter := range roll.Data.Filters {
-			var err error
-			tracks, err = handleFilter(tracks, filter)
-			if err != nil {
-				return nil, err
+		tracks := make([]jsonmodels.MusicSource, len(*msts))
+		for i, mst := range *msts {
+			tracks[i] = jsonmodels.MusicSource{
+				Type:       "Track",
+				Name:       mst.Name,
+				Creator:    mst.ArtistName,
+				Cover:      mst.Cover,
+				Provider:   mst.Provider,
+				ProviderID: mst.ProviderID,
 			}
 		}
 

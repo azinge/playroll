@@ -4,8 +4,18 @@ import { Mutation } from 'react-apollo';
 export const SIGN_UP = 'SIGN_UP';
 
 export const SIGN_UP_MUTATION = gql`
-  mutation ${SIGN_UP}($username: String, $password: String, $email: String, $avatar: String) {
-    signUp(username: $username, password: $password, email: $email, avatar: $avatar) @client
+  mutation SIGN_UP(
+    $username: String
+    $password: String
+    $email: String
+    $avatar: String
+  ) {
+    signUp(
+      username: $username
+      password: $password
+      email: $email
+      avatar: $avatar
+    ) @client
   }
 `;
 

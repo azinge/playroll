@@ -44,6 +44,8 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 		HandleLocalErrors("error migrating db: " + err.Error())
 	}
 
+	// db.LogMode(true)
+
 	mctx := &gqltag.MethodContext{
 		DB: db,
 		// Request: request,
@@ -65,6 +67,13 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 	variableValues, _ := body["variables"].(map[string]interface{})
 	operationName, _ := body["operationName"].(string)
 
+	// graphql.SchemaMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
+	// 	return nil, nil
+	// }
+	// graphql.TypeMetaFieldDef.Resolve = func(p graphql.ResolveParams) (interface{}, error) {
+	// 	return nil, nil
+	// }
+
 	result := graphql.Do(graphql.Params{
 		Schema:         schema,
 		RequestString:  requestString,
@@ -83,22 +92,8 @@ func localHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(out))
 }
 
-func spotifyOAuth(w http.ResponseWriter, r *http.Request) {
-	// redirectURL := spotify.HandleSpotifyOAuth()
-	// fmt.Printf("\nredirectURL:\n%s", redirectURL)
-	// // fmt.Fprintf(w, redirectURL)
-	// http.Redirect(w, r, redirectURL, http.StatusSeeOther)
-}
-
-func spotifyCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	// code := spotify.HandleSpotifyCallback(w, r)
-	fmt.Fprintf(w, string("success"))
-}
-
 func main() {
 	http.HandleFunc("/graphql", localHandler)
-	http.HandleFunc("/spotify/oAuth", spotifyOAuth)
-	http.HandleFunc("/callback", spotifyCallbackHandler)
 	fmt.Printf("\nrunning on localhost %v\n", os.Getenv("PORT"))
 	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), nil))
 }

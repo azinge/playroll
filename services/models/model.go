@@ -8,18 +8,24 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var ModelList = []interface{}{Playroll{},
+var ModelList = []interface{}{
+	Playroll{},
 	Roll{},
 	User{},
 	Tracklist{},
 	CompiledRoll{},
-	ExternalCredential{},
 	IdentityCredential{},
 	MusicServiceCredential{},
 	DiscoveryQueue{},
 	DiscoveryQueueEntry{},
-	Friendship{},
 	Recommendation{},
+	MusicServiceAlbum{},
+	MusicServiceArtist{},
+	MusicServicePlaylist{},
+	PlaylistTrack{},
+	MusicServiceTrack{},
+	MusicServiceUser{},
+	Relationship{},
 }
 
 type Entity interface {

@@ -1,19 +1,18 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { User } from '../../types';
+import { User, UserFragments } from '../../types';
 
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
 export const GET_CURRENT_USER_QUERY = gql`
-  query ${GET_CURRENT_USER} {
-    currentUser {
-      id
-      name
-      avatar
-      email
-      accountType
+  query GET_CURRENT_USER {
+    private {
+      currentUser {
+        ...DefaultUser
+      }
     }
   }
+  ${UserFragments.default}
 `;
 
 type GetCurrentUserVariables = {
@@ -21,7 +20,9 @@ type GetCurrentUserVariables = {
 };
 
 type GetCurrentUserData = {
-  currentUser?: User;
+  private: {
+    currentUser?: User;
+  };
 };
 
 export class GetCurrentUserQuery extends Query<

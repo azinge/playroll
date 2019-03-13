@@ -1,21 +1,22 @@
 package schema
 
 import (
-	"github.com/cazinge/playroll/services/schema/crud"
-	"github.com/cazinge/playroll/services/schema/methods"
+	"github.com/cazinge/playroll/services/schema/resolvers"
 	"github.com/cazinge/playroll/services/schema/types"
 )
+
+type AdminTypes = types.Types
+
+var LinkedAdminTypes = types.LinkedTypes
 
 type Types = types.Types
 
 var LinkedTypes = types.LinkedTypes
 
-type Methods struct {
-	crud.CRUDMethods       `gql:"GROUP"`
-	methods.GeneralMethods `gql:"GROUP"`
-}
+type AdminMethods = resolvers.AdminMethods
 
-var LinkedMethods = Methods{
-	CRUDMethods:    crud.LinkedCRUDMethods,
-	GeneralMethods: methods.LinkedGeneralMethods,
-}
+var LinkedAdminMethods = resolvers.LinkedAdminMethods
+
+type Methods = resolvers.Methods
+
+var LinkedMethods = resolvers.LinkedMethods

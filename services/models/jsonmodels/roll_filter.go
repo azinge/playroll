@@ -11,22 +11,26 @@ import (
 
 type RollFilter struct {
 	Type          string         `json:"type"`
+	Name          string         `json:"name"`
 	Modifications pq.StringArray `json:"modifications"`
 }
 
 type RollFilterInput struct {
 	Type          string   `gql:"type: String" json:"type"`
+	Name          string   `gql:"name: String" json:"name"`
 	Modifications []string `gql:"modifications: [String]" json:"modifications"`
 }
 
 type RollFilterOutput struct {
 	Type          string   `gql:"type: String" json:"type"`
+	Name          string   `gql:"name: String" json:"name"`
 	Modifications []string `gql:"modifications: [String]" json:"modifications"`
 }
 
 func (rfi *RollFilterInput) ToModel() (*RollFilter, error) {
 	rf := &RollFilter{}
 	rf.Type = rfi.Type
+	rf.Name = rfi.Name
 	rf.Modifications = rfi.Modifications
 	return rf, nil
 }
@@ -34,6 +38,7 @@ func (rfi *RollFilterInput) ToModel() (*RollFilter, error) {
 func (rf *RollFilter) ToOutput() (*RollFilterOutput, error) {
 	rfo := &RollFilterOutput{}
 	rfo.Type = rf.Type
+	rfo.Name = rf.Name
 	rfo.Modifications = rf.Modifications
 	return rfo, nil
 }

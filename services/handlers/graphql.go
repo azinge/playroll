@@ -13,7 +13,6 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func GraphqlHandler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -38,8 +37,6 @@ func GraphqlHandler(context context.Context, request events.APIGatewayProxyReque
 		}, err
 	}
 	defer db.Close()
-
-	// fmt.Printf("%#v\n", request)
 
 	mctx := &gqltag.MethodContext{
 		DB:      db,

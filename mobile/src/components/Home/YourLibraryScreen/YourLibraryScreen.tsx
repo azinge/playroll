@@ -33,7 +33,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
     return (
       <Collapsible
         max={45}
-        min={isIphoneX() ? 45 : 20}
+        min={isIphoneX() ? 41 : 19}
         backgroundColor={'purple'}
         renderHeader={this.renderHeader()}
         // renderContent is not needed if using FlatList
@@ -154,7 +154,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
               marginTop: -40,
             },
             {
-              marginTop: -20,
+              marginTop: -19,
             }
           ),
         }}

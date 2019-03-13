@@ -10,19 +10,35 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from 'expo';
 
 import { NavigationScreenProp } from 'react-navigation';
 import { MusicSource } from '../../../graphql/types';
-import { Button } from 'react-native-elements';
+import { Button, Overlay, Header, Icon } from 'react-native-elements';
+import styles from './ManageRollScreen.styles';
+
+import { ListCurrentUserPlayrollsQuery } from '../../../graphql/requests/Playroll/';
+import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
+import PlayrollCard from '../../Playrolls/BrowsePlayrollsScreen/PlayrollCard';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
 
-interface State {}
+interface State {
+  isVisible: boolean;
+}
 export default class ManageRollScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      isVisible: false,
+    };
+  }
 
   render() {
     const currentSource =
@@ -30,71 +46,32 @@ export default class ManageRollScreen extends React.Component<Props, State> {
     // console.log(currentSource.cover);
     return (
       <View style={{ flex: 2, backgroundColor: 'white' }}>
-
-        <LinearGradient
-          colors={['#9333CC', 'white']}
-          style={{
-            flex: 3,
-          }}
-        >
-          <View
-            style={{
-              shadowColor: 'black',
-              shadowOffset: { height: 2, width: 2 },
-              shadowOpacity: 0.3,
-              marginTop: 50,
-            }}
-          >
+        <LinearGradient colors={['#9333CC', 'white']} style={{ flex: 3 }}>
+          <View style={styles.coverContainer}>
             <ImageBackground
               source={{
                 uri: currentSource.cover,
               }}
-              style={{
-                width: 200,
-                height: 200,
-                alignSelf: 'center',
-                justifyContent: 'center',
-                resizeMode: 'center',
-                marginTop: 40,
-              }}
+              style={styles.cover}
             />
           </View>
-          <View
-            style={{
-              justifyContent: 'center',
-              textAlign: 'center',
-              alignItems: 'center',
-              marginTop: 15,
-            }}
-          >
-            <Text style={{ fontSize: 40, color: 'white', fontWeight: 'bold' }}>
-              {currentSource.name}
-            </Text>
-            <Text style={{ fontSize: 20, color: 'white', fontWeight: 'bold' }}>
-              {currentSource.type}
-            </Text>
+          <View style={styles.source}>
+            <Text style={styles.sourceTitle}>{currentSource.name}</Text>
+            <Text style={styles.sourceSubtitle}>{currentSource.type}</Text>
           </View>
-          <View style={{ marginTop: 25, marginLeft: 50, marginRight: 50 }}>
+          <View style={styles.buttonContainer}>
             <Button
               title='Add To Playroll'
               containerStyle={{ margin: 10 }}
-              buttonStyle={{
-                backgroundColor: 'white',
-                borderRadius: 25,
-                height: 50,
-              }}
+              buttonStyle={styles.button}
               titleStyle={{ color: 'purple', fontSize: 16 }}
-              onPress={() => {}}
+              onPress={() => this.setState({ isVisible: true })}
               raised
             />
             <Button
               title='Add To Discovery Queue'
               containerStyle={{ margin: 10 }}
-              buttonStyle={{
-                backgroundColor: 'white',
-                borderRadius: 25,
-                height: 50,
-              }}
+              buttonStyle={styles.button}
               titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() => {}}
               raised
@@ -102,16 +79,93 @@ export default class ManageRollScreen extends React.Component<Props, State> {
             <Button
               title='Recommend'
               containerStyle={{ margin: 10 }}
-              buttonStyle={{
-                backgroundColor: 'white',
-                borderRadius: 25,
-                height: 50,
-              }}
+              buttonStyle={styles.button}
               titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() => {}}
               raised
             />
           </View>
+          <Overlay
+            isVisible={this.state.isVisible}
+            fullScreen={false}
+            animationType={'fade'}
+            //   overlayBackgroundColor={'purple'}
+            onBackdropPress={() => this.setState({ isVisible: false })}
+            // containerStyle={{ margin: 0 }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Icon
+                name='close'
+                type='material-community'
+                onPress={() => this.setState({ isVisible: false })}
+              />
+              <ListCurrentUserPlayrollsQuery>
+                {({ loading, error, data }) => {
+                  if (loading) {
+                    return (
+                      <ActivityIndicator
+                        color={'gray'}
+                        style={{ paddingTop: 50 }}
+                      />
+                    );
+                  }
+                  if (error) {
+                    return (
+                      <Text style={{ paddingTop: 50 }}>
+                        Error Loading Playrolls
+                      </Text>
+                    );
+                  }
+                  const playrolls =
+                    data && data.private.listCurrentUserPlayrolls;
+                  return (
+                    <View style={{ flex: 1 }}>
+                      <ScrollView>
+                        {playrolls &&
+                          playrolls.map((playroll, idx) => {
+                            return (
+                              //   <PlayrollCard
+                              //     playroll={playroll}
+                              //     editPlayroll={() =>
+                              //       this.props.navigation &&
+                              //       this.props.navigation.navigate(
+                              //         'ManagePlayroll',
+                              //         {
+                              //           managePlayroll: 'Manage Playroll',
+                              //           playroll,
+                              //         }
+                              //       )
+                              //     }
+                              //     key={playroll.id}
+                              //   />
+                              <TouchableOpacity key={playroll.id}>
+                                <View
+                                  style={{
+                                    //   width: 300,
+                                    flex: 1,
+                                    //   marginHorizontal: 10,
+                                    marginVertical: 5,
+                                    flexDirection: 'row',
+                                  }}
+                                >
+                                  <Text>{playroll.name}</Text>
+                                </View>
+                              </TouchableOpacity>
+                            );
+                          })}
+                      </ScrollView>
+                    </View>
+                  );
+                }}
+              </ListCurrentUserPlayrollsQuery>
+            </View>
+          </Overlay>
         </LinearGradient>
       </View>
     );

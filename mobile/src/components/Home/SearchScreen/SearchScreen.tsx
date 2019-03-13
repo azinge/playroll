@@ -18,6 +18,7 @@ export default class SearchScreen extends React.Component<Props> {
       <View style={{ flex: 1 }}>
         <Header
           backgroundColor='purple'
+          statusBarProps={{ barStyle: 'light-content' }}
           centerComponent={{
             text: 'Search',
             style: { color: '#fff', fontSize: 20 },

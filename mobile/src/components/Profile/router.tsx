@@ -62,7 +62,7 @@ export const ProfileNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'ViewProfile',
+    initialRouteName: 'AddFriend',
     headerMode: 'screen',
   }
 );

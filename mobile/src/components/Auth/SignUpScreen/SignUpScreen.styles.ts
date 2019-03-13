@@ -8,7 +8,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    width: '95%',
+    width: '100%',
     paddingLeft: 20,
   },
   signupHeader: {

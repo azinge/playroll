@@ -33,7 +33,7 @@ export default class LoadingScreen extends React.Component<Props, State> {
                     index: 0,
                     actions: [
                       NavigationActions.navigate({
-                        routeName: error ? 'Auth' : 'Home',
+                        routeName: error ? 'Profile' : 'Home',
                       }),
                     ],
                   })

@@ -44,7 +44,7 @@ func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	if err != nil {
 		return nil, err
 	}
-	return playrolls, err
+	return playrolls, nil
 }
 
 // Entity Specific Methods

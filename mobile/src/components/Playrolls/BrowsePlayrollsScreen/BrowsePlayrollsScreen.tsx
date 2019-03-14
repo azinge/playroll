@@ -37,11 +37,13 @@ export default class BrowsePlayrollsScreen extends React.Component<
       addPlayrollName: '',
     };
   }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
+            console.log(error && error.message);
             if (loading || error) {
               return (
                 <Header

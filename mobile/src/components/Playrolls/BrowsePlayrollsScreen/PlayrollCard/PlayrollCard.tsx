@@ -165,6 +165,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                           type='material-community'
                           name='delete'
                           color='white'
+                          containerStyle={{ top: 3 }}
                           size={25}
                         />
                       )}

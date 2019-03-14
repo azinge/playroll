@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 import { LinearGradient } from 'expo';
 
@@ -24,6 +25,8 @@ import styles from './ManageRollScreen.styles';
 import { ListCurrentUserPlayrollsQuery } from '../../../graphql/requests/Playroll/';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 import PlayrollCard from '../../Playrolls/BrowsePlayrollsScreen/PlayrollCard';
+import { CreateRollMutation } from '../../../graphql/requests/Roll';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -130,20 +133,6 @@ export default class ManageRollScreen extends React.Component<Props, State> {
                         {playrolls &&
                           playrolls.map((playroll, idx) => {
                             return (
-                              //   <PlayrollCard
-                              //     playroll={playroll}
-                              //     editPlayroll={() =>
-                              //       this.props.navigation &&
-                              //       this.props.navigation.navigate(
-                              //         'ManagePlayroll',
-                              //         {
-                              //           managePlayroll: 'Manage Playroll',
-                              //           playroll,
-                              //         }
-                              //       )
-                              //     }
-                              //     key={playroll.id}
-                              //   />
                               <TouchableOpacity key={playroll.id}>
                                 <View
                                   style={{

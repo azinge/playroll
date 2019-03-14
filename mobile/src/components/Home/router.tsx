@@ -45,7 +45,8 @@ const SearchNavigator = createStackNavigator(
 
 export const HomeNavigator = createBottomTabNavigator(
   {
-    Home: {
+    //   Bug where if home is default on first router then it will be default on this router too
+    HomeView: {
       screen: HomeScreen,
       navigationOptions: {
         title: `Home`,
@@ -93,6 +94,6 @@ export const HomeNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Search',
   }
 );

@@ -20,6 +20,7 @@ import { musicSources } from '../../../static/mockData';
 
 import Collapsible from 'react-native-collapsible-header';
 import styles from './YourLibraryScreen.styles';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -41,8 +42,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
             <View style={styles.textContainer}>
               <Text
                 onPress={() => {
-                  this.props.navigation &&
-                    this.props.navigation.navigate('Playrolls');
+                  NavigationService.navigate('Playrolls');
                 }}
                 style={styles.text}
               >
@@ -56,7 +56,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
             </View>
             <View style={styles.textContainer}>
               <Text onPress={() => {}} style={styles.text}>
-                Saved Tracklists
+                Saved Playrolls
               </Text>
             </View>
             <View style={styles.textContainer}>

@@ -14,10 +14,48 @@ import (
 )
 
 type SpotifyMethods struct {
+	ListSpotifyPlaylists    *gqltag.Query    `gql:"listSpotifyPlaylists(offset: Int, count: Int): [MusicSource]"`
+	GetSpotifySavedTracks   *gqltag.Query    `gql:"spotifySavedTracks(offset: Int, count: Int): [MusicSource]"`
+	GetSpotifyPlaylist      *gqltag.Query    `gql:"spotifyPlaylist(playlistID: String, offset: Int, count: Int): [MusicSource]"`
 	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	SearchSpotifyFull       *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
-	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(userID: ID, code: String): MusicServiceCredential"`
+	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String): MusicServiceCredential"`
 	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
+}
+
+var listSpotifyPlaylists = gqltag.Method{
+	Description: `[Search Spotify Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listSpotifyPlaylistsParams struct {
+			Offset uint
+			Count  uint
+		}
+		params := &listSpotifyPlaylistsParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		client, err := spotifyhelpers.GetSpotifyClientForUser(user.ID, mctx.DB)
+		if err != nil {
+			fmt.Println("Error getting spotify client: ", err.Error())
+			return nil, err
+		}
+
+		output, err := spotifyhelpers.ListPlaylistsForUser(client, mctx.DB)
+		if err != nil {
+			fmt.Println("Error searching spotify: ", err.Error())
+			return nil, err
+		}
+		return output, nil
+	},
 }
 
 var searchSpotify = gqltag.Method{
@@ -98,20 +136,23 @@ var searchSpotifyFull = gqltag.Method{
 var registerSpotifyAuthCode = gqltag.Method{
 	Description: `[Register Spotify Auth Code Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
-		type registerSpotifyAuthCodeParams struct {
-			UserID string
-			Code   string
-		}
-		params := &registerSpotifyAuthCodeParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		user, err := models.AuthorizeUser(mctx)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
 
-		userID := utils.StringIDToNumber(params.UserID)
+		type registerSpotifyAuthCodeParams struct {
+			Code string
+		}
+		params := &registerSpotifyAuthCodeParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
 
-		ec, err := spotifyhelpers.RegisterSpotifyAuthCodeForUser(userID, params.Code, mctx.DB)
+		ec, err := spotifyhelpers.RegisterSpotifyAuthCodeForUser(user.ID, params.Code, mctx.DB)
 		if err != nil {
 			fmt.Println("Error Registering Spotify Auth Code for User: ", err.Error())
 			return nil, err

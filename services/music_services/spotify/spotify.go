@@ -11,7 +11,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const redirectURL = "http://localhost:8888/callback"
+const redirectURL = "http://app.playroll.io"
 
 var spotifyScopes = []string{
 	spotify.ScopeUserReadPrivate,
@@ -200,16 +200,30 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 	return &output, nil
 }
 
+func ListPlaylistsForUser(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	playlistsPage, err := client.CurrentUsersPlaylists()
+	if err != nil {
+		fmt.Println("error fetching playlists: ", err.Error())
+		return nil, err
+	}
+	playlists := make([]jsonmodels.MusicSource, len(playlistsPage.Playlists))
+	for i, playlist := range playlistsPage.Playlists {
+		playlists[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(playlist.ID),
+			Name:       playlist.Name,
+			Creator:    playlist.Owner.DisplayName,
+			Cover:      extractCover(playlist.Images),
+		}
+	}
+	return &playlists, nil
+}
+
 func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistName string, client *spotify.Client, db *gorm.DB) (*[]spotify.ID, error) {
 	trackIDs := []spotify.ID{}
 	for _, track := range *tracks {
 		trackIDs = append(trackIDs, spotify.ID(track.ProviderID))
-	}
-
-	client, err := GetSpotifyClientForUser(1, db)
-	if err != nil {
-		fmt.Println("error getting spotify client: ", err.Error())
-		return nil, err
 	}
 
 	user, err := client.CurrentUser()

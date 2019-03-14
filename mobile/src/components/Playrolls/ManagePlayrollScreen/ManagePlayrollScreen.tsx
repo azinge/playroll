@@ -46,6 +46,9 @@ export default class ManagePlayrollScreen extends React.Component<
     return (
       <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
         {({ loading, error, data, client: { cache } }) => {
+
+          // console.log("MANAGE > render > return > data: ")
+          // console.log(data)
           const playroll: Playroll =
             (data && data.private.currentUserPlayroll) || {};
           return (

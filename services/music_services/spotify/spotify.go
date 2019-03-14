@@ -200,7 +200,7 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 	return &output, nil
 }
 
-func ListPlaylistsForUser(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+func ListPlaylistsFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
 	playlistsPage, err := client.CurrentUsersPlaylists()
 	if err != nil {
 		fmt.Println("error fetching playlists: ", err.Error())
@@ -218,6 +218,49 @@ func ListPlaylistsForUser(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.Mu
 		}
 	}
 	return &playlists, nil
+}
+
+func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	fullPlaylist, err := client.GetPlaylist(spotify.ID(playlistID))
+	if err != nil {
+		fmt.Println("error fetching playlist: ", err.Error())
+		return nil, err
+	}
+	playlistTracks := make([]jsonmodels.MusicSource, len(fullPlaylist.Tracks.Tracks))
+	for i, playlistTrack := range fullPlaylist.Tracks.Tracks {
+		track := playlistTrack.Track
+		_, artistName := extractArtist(track.Artists)
+		playlistTracks[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(track.ID),
+			Name:       track.Name,
+			Creator:    artistName,
+			Cover:      extractCover(track.Album.Images),
+		}
+	}
+	return &playlistTracks, nil
+}
+
+func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	savedTracksPage, err := client.CurrentUsersTracks()
+	if err != nil {
+		fmt.Println("error fetching savedTracks: ", err.Error())
+		return nil, err
+	}
+	savedTracks := make([]jsonmodels.MusicSource, len(savedTracksPage.Tracks))
+	for i, savedTrack := range savedTracksPage.Tracks {
+		_, artistName := extractArtist(savedTrack.Artists)
+		savedTracks[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(savedTrack.ID),
+			Name:       savedTrack.Name,
+			Creator:    artistName,
+			Cover:      extractCover(savedTrack.Album.Images),
+		}
+	}
+	return &savedTracks, nil
 }
 
 func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistName string, client *spotify.Client, db *gorm.DB) (*[]spotify.ID, error) {

@@ -14,13 +14,32 @@ import (
 )
 
 type SpotifyMethods struct {
-	ListSpotifyPlaylists    *gqltag.Query    `gql:"listSpotifyPlaylists(offset: Int, count: Int): [MusicSource]"`
-	GetSpotifySavedTracks   *gqltag.Query    `gql:"spotifySavedTracks(offset: Int, count: Int): [MusicSource]"`
-	GetSpotifyPlaylist      *gqltag.Query    `gql:"spotifyPlaylist(playlistID: String, offset: Int, count: Int): [MusicSource]"`
-	SearchSpotify           *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
-	SearchSpotifyFull       *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
-	RegisterSpotifyAuthCode *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String): MusicServiceCredential"`
-	GeneratePlaylist        *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
+	CurrentUserSpotifyStatus  *gqltag.Query    `gql:"currentUserSpotifyStatus: String"`
+	ListSpotifyPlaylists      *gqltag.Query    `gql:"listSpotifyPlaylists(offset: Int, count: Int): [MusicSource]"`
+	ListSpotifyPlaylistTracks *gqltag.Query    `gql:"listSpotifyPlaylistTracks(playlistID: String, offset: Int, count: Int): [MusicSource]"`
+	ListSpotifySavedTracks    *gqltag.Query    `gql:"listSpotifySavedTracks(offset: Int, count: Int): [MusicSource]"`
+	SearchSpotify             *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
+	SearchSpotifyFull         *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
+	RegisterSpotifyAuthCode   *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String): MusicServiceCredential"`
+	GeneratePlaylist          *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
+}
+
+var currentUserSpotifyStatus = gqltag.Method{
+	Description: `[Current User Spotify Status Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		_, err = spotifyhelpers.GetSpotifyClientForUser(user.ID, mctx.DB)
+		if err != nil {
+			fmt.Println("Error getting spotify client: ", err.Error())
+			return nil, err
+		}
+		return "authenticated", nil
+	},
 }
 
 var listSpotifyPlaylists = gqltag.Method{
@@ -49,7 +68,78 @@ var listSpotifyPlaylists = gqltag.Method{
 			return nil, err
 		}
 
-		output, err := spotifyhelpers.ListPlaylistsForUser(client, mctx.DB)
+		mss, err := spotifyhelpers.ListPlaylistsFromClient(client, mctx.DB)
+		if err != nil {
+			fmt.Println("Error searching spotify: ", err.Error())
+			return nil, err
+		}
+		return *mss, nil
+	},
+}
+
+var listSpotifyPlaylistTracks = gqltag.Method{
+	Description: `[List Spotify Playlist Tracks Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listSpotifyPlaylistTracksParams struct {
+			PlaylistID string
+			Offset     uint
+			Count      uint
+		}
+		params := &listSpotifyPlaylistTracksParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		client, err := spotifyhelpers.GetSpotifyClientForUser(user.ID, mctx.DB)
+		if err != nil {
+			fmt.Println("Error getting spotify client: ", err.Error())
+			return nil, err
+		}
+
+		output, err := spotifyhelpers.ListPlaylistTracksFromClient(params.PlaylistID, client, mctx.DB)
+		if err != nil {
+			fmt.Println("Error searching spotify: ", err.Error())
+			return nil, err
+		}
+		return output, nil
+	},
+}
+
+var listSpotifySavedTracks = gqltag.Method{
+	Description: `[List Spotify Saved Tracks Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listSpotifySavedTracksParams struct {
+			Offset uint
+			Count  uint
+		}
+		params := &listSpotifySavedTracksParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		client, err := spotifyhelpers.GetSpotifyClientForUser(user.ID, mctx.DB)
+		if err != nil {
+			fmt.Println("Error getting spotify client: ", err.Error())
+			return nil, err
+		}
+
+		output, err := spotifyhelpers.ListSavedTracksFromClient(client, mctx.DB)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
 			return nil, err
@@ -164,12 +254,18 @@ var registerSpotifyAuthCode = gqltag.Method{
 var generatePlaylist = gqltag.Method{
 	Description: `[Generate Playlist Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
 		type generatePlaylistParams struct {
 			TracklistID  string
 			PlaylistName string
 		}
 		params := &generatePlaylistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -183,7 +279,7 @@ var generatePlaylist = gqltag.Method{
 			return nil, err
 		}
 
-		client, err := spotifyhelpers.GetSpotifyClientForUser(1, mctx.DB)
+		client, err := spotifyhelpers.GetSpotifyClientForUser(user.ID, mctx.DB)
 		if err != nil {
 			fmt.Println("Error getting spotify client: ", err.Error())
 			return nil, err
@@ -199,8 +295,12 @@ var generatePlaylist = gqltag.Method{
 }
 
 var LinkedSpotifyMethods = SpotifyMethods{
-	SearchSpotify:           gqltag.LinkQuery(searchSpotify),
-	SearchSpotifyFull:       gqltag.LinkQuery(searchSpotifyFull),
-	RegisterSpotifyAuthCode: gqltag.LinkMutation(registerSpotifyAuthCode),
-	GeneratePlaylist:        gqltag.LinkMutation(generatePlaylist),
+	CurrentUserSpotifyStatus:  gqltag.LinkQuery(currentUserSpotifyStatus),
+	ListSpotifyPlaylists:      gqltag.LinkQuery(listSpotifyPlaylists),
+	ListSpotifyPlaylistTracks: gqltag.LinkQuery(listSpotifyPlaylistTracks),
+	ListSpotifySavedTracks:    gqltag.LinkQuery(listSpotifySavedTracks),
+	SearchSpotify:             gqltag.LinkQuery(searchSpotify),
+	SearchSpotifyFull:         gqltag.LinkQuery(searchSpotifyFull),
+	RegisterSpotifyAuthCode:   gqltag.LinkMutation(registerSpotifyAuthCode),
+	GeneratePlaylist:          gqltag.LinkMutation(generatePlaylist),
 }

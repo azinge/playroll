@@ -61,7 +61,7 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
             </View>
             <View style={styles.textContainer}>
               <Text onPress={() => {}} style={styles.text}>
-                Saved Rolls
+                Saved Sources
               </Text>
             </View>
             <View style={styles.textContainer}>

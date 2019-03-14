@@ -98,4 +98,6 @@ var dismissRecommendation = gqltag.Method{
 // LinkedRecommendationMethods exports the methods for the Recommendations entity.
 var LinkedRecommendationMethods = RecommendationMethods{
 	ListCurrentUserRecommendations: gqltag.LinkQuery(listCurrentUserRecommendations),
+	CreateRecommendation:           gqltag.LinkMutation(createRecommendation),
+	DismissRecommendation:          gqltag.LinkMutation(dismissRecommendation),
 }

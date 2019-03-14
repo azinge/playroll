@@ -47,7 +47,17 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
                 }}
                 style={styles.text}
               >
-                Playrolls
+                Your Playrolls
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text onPress={() => {}} style={styles.text}>
+                Your Discovery Queue
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text onPress={() => {}} style={styles.text}>
+                Your Recommendations
               </Text>
             </View>
             <View style={styles.textContainer}>
@@ -58,16 +68,6 @@ export default class YourLibraryScreen extends React.Component<Props, State> {
             <View style={styles.textContainer}>
               <Text onPress={() => {}} style={styles.text}>
                 Saved Playrolls
-              </Text>
-            </View>
-            <View style={styles.textContainer}>
-              <Text onPress={() => {}} style={styles.text}>
-                Saved Sources
-              </Text>
-            </View>
-            <View style={styles.textContainer}>
-              <Text onPress={() => {}} style={styles.text}>
-                Your Recommendations
               </Text>
             </View>
             <View style={{ marginLeft: 15, marginTop: 10 }}>

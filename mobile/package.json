@@ -1,0 +1,50 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "lint": "tslint 'src/**/*.ts?(x)'",
+    "lint:fix": "tslint 'src/**/*.ts?(x)' --fix",
+    "test": "jest --watch"
+  },
+  "dependencies": {
+    "@types/react-navigation": "^3.0.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link-logger": "^1.2.3",
+    "apollo-link-state": "^0.4.2",
+    "aws-amplify": "^1.1.19",
+    "aws-appsync": "^1.7.1",
+    "aws-sdk": "^2.401.0",
+    "expo": "^32.0.0",
+    "graphql-tag": "^2.10.1",
+    "react": "16.5.0",
+    "react-apollo": "^2.4.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-collapsible-header": "^0.0.14",
+    "react-native-collapsible-header-views": "^1.0.0",
+    "react-native-elements": "^1.0.0",
+    "react-native-image-color-picker": "^1.0.4",
+    "react-native-iphone-x-helper": "^1.2.0",
+    "react-native-picker-select": "^6.0.0",
+    "react-native-snap-carousel": "^3.7.5",
+    "react-navigation": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "@types/react": "^16.8.2",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-native": "^0.57.35",
+    "@types/react-test-renderer": "^16.8.0",
+    "babel-preset-expo": "^5.0.0",
+    "concurrently": "^4.1.0",
+    "jest": "^24.1.0",
+    "jest-expo": "^32.0.0",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "private": true
+}

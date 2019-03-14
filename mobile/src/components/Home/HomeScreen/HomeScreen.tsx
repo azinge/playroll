@@ -36,7 +36,7 @@ export default class HomeScreen extends React.Component<Props, State> {
       //   <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Collapsible
         max={45}
-        min={isIphoneX() ? 45 : 20}
+        min={isIphoneX() ? 41 : 19}
         backgroundColor={'purple'}
         renderHeader={this.renderHeader()}
         // renderContent is not needed if using FlatList
@@ -149,7 +149,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               marginTop: -40,
             },
             {
-              marginTop: -20,
+              marginTop: -19,
             }
           ),
         }}
@@ -175,6 +175,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               name='search'
               size={27}
               color='white'
+              underlayColor='rgba(255,255,255,0)'
               containerStyle={{ marginTop: 5, marginLeft: 5 }}
               onPress={() =>
                 this.props.navigation &&

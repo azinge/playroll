@@ -13,10 +13,10 @@ import {
   Keyboard,
   Platform,
   SafeAreaView,
-  Image
+  Image,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { WebBrowser } from 'expo';
+import { WebBrowser, ImagePicker, Permissions } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
@@ -31,7 +31,10 @@ interface State {
   email: string;
   password: string;
   confirmPassword: string;
-  avatar: string;
+  avatar: {
+    uri: string;
+    source: string;
+  };
   error?: string;
 }
 
@@ -43,10 +46,14 @@ export default class SignUpScreen extends React.Component<Props, State> {
       email: '',
       password: '',
       confirmPassword: '',
-      avatar: '',
-      error: undefined
+      avatar: {
+        uri: '',
+        source: '',
+      },
+      error: undefined,
     };
     this.renderError = this.renderError.bind(this);
+    this.selectProfileImage = this.selectProfileImage.bind(this);
   }
 
   handleOpenTOSURL() {
@@ -58,23 +65,37 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
 
   validateInput(signUp) {
-    if (this.state.username === '' || this.state.email === '' ||
-        this.state.password === '' || this.state.confirmPassword === '' ||
-        this.state.avatar === '') {
-          return this.setState({
-            error: 'All fields must have a value'
-          }, () => {
-            setTimeout(() => {this.setState({ error: null })}, 3000);
-          });
+    if (
+      this.state.username === '' ||
+      this.state.email === '' ||
+      this.state.password === '' ||
+      this.state.confirmPassword === '' ||
+      this.state.avatar.source === ''
+    ) {
+      return this.setState(
+        {
+          error: 'All fields must have a value',
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ error: null });
+          }, 3000);
+        },
+      );
     }
     if (this.state.password !== this.state.confirmPassword) {
-      return this.setState({
-        password: '',
-        confirmPassword: '',
-        error: 'Passwords do not match!'
-      }, () => {
-        setTimeout(() => {this.setState({ error: null })}, 3000);
-      });
+      return this.setState(
+        {
+          password: '',
+          confirmPassword: '',
+          error: 'Passwords do not match!',
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ error: null });
+          }, 3000);
+        },
+      );
     }
     signUp();
   }
@@ -83,11 +104,11 @@ export default class SignUpScreen extends React.Component<Props, State> {
     return (
       <View style={styles.segueToSignInContainer}>
         <Icon
-          name="arrow-back"
-          type="material"
-          color="#6A0070"
+          name='arrow-back'
+          type='material'
+          color='#6A0070'
           onPress={() => {
-            this.props.navigation && this.props.navigation.navigate("SignIn");
+            this.props.navigation && this.props.navigation.navigate('SignIn');
           }}
         />
         <Text style={styles.signInTitle}>Sign In</Text>
@@ -96,7 +117,27 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
 
   selectProfileImage() {
-    // TODO: pull image from gallery.
+    Permissions.askAsync(Permissions.CAMERA_ROLL)
+      .then(async data => {
+        console.log('Permissions.getAsync data', data);
+        if (data.status === 'granted') {
+          const image = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: 'Images',
+            allowsEditing: true,
+            base64: true,
+          });
+          console.log('image', image);
+          this.setState({
+            avatar: {
+              uri: image.uri,
+              source: image.base64,
+            },
+          });
+        }
+      })
+      .catch(error => {
+        console.log('selectProfileImage() error', error);
+      });
   }
 
   renderHeader() {
@@ -105,11 +146,11 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Sign Up</Text>
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.imageSelectionContainer}
-          onPress={() => this.selectProfileImage}
+          onPress={this.selectProfileImage}
         >
-          <Image source={{uri: this.state.avatar}} style={styles.image}/>
+          <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
           <Text style={styles.editPhotoText}>Edit Photo</Text>
         </TouchableOpacity>
       </View>
@@ -133,12 +174,12 @@ export default class SignUpScreen extends React.Component<Props, State> {
           username: this.state.username,
           password: this.state.password,
           email: this.state.email,
-          avatar: this.state.avatar,
+          avatar: this.state.avatar.source,
         }}
       >
         {(signUp, { loading, error, data }) => {
           if (data) {
-            this.props.navigation.navigate("Confirmation");
+            this.props.navigation.navigate('Confirmation');
           }
           return (
             <TouchableOpacity
@@ -200,7 +241,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
             <TextInput
               placeholder='Confirm Password'
               style={styles.inputContainer}
-              onChangeText={(confirmPassword: string) => this.setState({ confirmPassword })}
+              onChangeText={(confirmPassword: string) =>
+                this.setState({ confirmPassword })
+              }
               secureTextEntry={true}
               value={this.state.confirmPassword}
             />

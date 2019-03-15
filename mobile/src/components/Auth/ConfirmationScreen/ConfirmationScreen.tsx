@@ -13,6 +13,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './ConfirmationScreen.styles';
 import { NavigationScreenProp } from 'react-navigation';
@@ -51,16 +52,55 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
           setTimeout(() => {
             this.setState({ error: null });
           }, 3000);
-        }
+        },
       );
     }
     confirmSignUp();
+  }
+
+  renderSegueToSignIn() {
+    return (
+      <View style={styles.segueToSignInContainer}>
+        <Icon
+          name='arrow-back'
+          type='material'
+          color='#6A0070'
+          onPress={() => {
+            this.props.navigation && this.props.navigation.navigate('SignIn');
+          }}
+        />
+        <Text style={styles.signInTitle}>Sign In</Text>
+      </View>
+    );
   }
 
   renderHeader() {
     return (
       <View style={styles.confirmationHeader}>
         <Text style={styles.signupText}>Confirm Account</Text>
+      </View>
+    );
+  }
+
+  resendConfirmationCode() {
+    // TODO: Waiting on endpoint
+  }
+
+  renderInfoContainer() {
+    return (
+      <View style={styles.informationContainer}>
+        <View style={styles.infoTextContainer}>
+          <Text style={styles.infoText}>
+            We have just sent an email to your account, please enter the
+            confirmation code provided.
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.infoTextContainer}
+          onPress={this.resendConfirmationCode}
+        >
+          <Text style={styles.infoText}>Resend Code</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -104,10 +144,11 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
       >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
+            {this.renderSegueToSignIn()}
             {this.renderHeader()}
+            {this.renderInfoContainer()}
             <TextInput
-              placeholder='Confirm
-'
+              placeholder='Confirm'
               style={styles.inputContainer}
               onChangeText={text => this.setState({ username: text.trim() })}
               autoCapitalize={'sentences'}

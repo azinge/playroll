@@ -11,6 +11,17 @@ export default StyleSheet.create({
     width: '95%',
     paddingLeft: 20,
   },
+  segueToSignInContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '22%', //TODO: handle spacing
+    opacity: 0.5,
+  },
+  signInTitle: {
+    fontSize: 17,
+    color: '#6A0070',
+  },
   confirmationHeader: {
     paddingTop: 50,
     paddingBottom: 20,
@@ -20,6 +31,19 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
     color: '#6A0070',
+  },
+  informationContainer: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  infoText: {
+    fontSize: 15,
+    color: '#931389',
+  },
+  infoTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     marginTop: 25,
@@ -51,5 +75,5 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: '#FF0000',
-  }
+  },
 });

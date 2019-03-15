@@ -2,7 +2,7 @@ import { createStackNavigator } from 'react-navigation';
 
 import LoadingScreen from './LoadingScreen';
 
-export const LoadingNavigator = createStackNavigator(
+export const CoreNavigator = createStackNavigator(
   {
     Loading: {
       screen: LoadingScreen,

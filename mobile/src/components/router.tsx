@@ -1,21 +1,23 @@
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 import { AuthNavigator } from './Auth/router';
-import { HomeNavigator } from './Home/router';
-import { PlayrollsNavigator } from './Playrolls/router';
-import { LoadingNavigator } from './Loading/router';
+import { MainNavigator } from './Main/router';
+import { LibraryNavigator } from './Library/router';
+import { CoreNavigator } from './Core/router';
 import { ProfileNavigator } from './Profile/router';
+import { SearchNavigator } from './Search/router';
 
 const AppNavigator = createStackNavigator(
   {
     Auth: AuthNavigator,
-    Loading: LoadingNavigator,
-    Home: HomeNavigator,
-    Playrolls: PlayrollsNavigator,
+    Core: CoreNavigator,
+    Main: MainNavigator,
+    Library: LibraryNavigator,
     Profile: ProfileNavigator,
+    Search: SearchNavigator,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Main',
     headerMode: 'none',
     navigationOptions: {
       header: null,

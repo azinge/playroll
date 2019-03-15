@@ -7,7 +7,7 @@ import ManagePlayrollScreen from './ManagePlayrollScreen';
 import TracklistScreen from './TracklistScreen';
 import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 
-export const PlayrollsNavigator = createStackNavigator(
+export const LibraryNavigator = createStackNavigator(
   {
     BrowsePlayrolls: {
       screen: BrowsePlayrollsScreen,

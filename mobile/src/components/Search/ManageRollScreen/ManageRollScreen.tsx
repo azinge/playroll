@@ -35,6 +35,7 @@ export interface Props {
 interface State {
   isVisible: boolean;
 }
+
 export default class ManageRollScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -46,7 +47,6 @@ export default class ManageRollScreen extends React.Component<Props, State> {
   render() {
     const currentSource =
       this.props.navigation && this.props.navigation.getParam('currentSource');
-    // console.log(currentSource.cover);
     return (
       <View style={{ flex: 2, backgroundColor: 'white' }}>
         <LinearGradient colors={['#9333CC', 'white']} style={{ flex: 3 }}>
@@ -92,9 +92,7 @@ export default class ManageRollScreen extends React.Component<Props, State> {
             isVisible={this.state.isVisible}
             fullScreen={false}
             animationType={'fade'}
-            //   overlayBackgroundColor={'purple'}
             onBackdropPress={() => this.setState({ isVisible: false })}
-            // containerStyle={{ margin: 0 }}
           >
             <View
               style={{

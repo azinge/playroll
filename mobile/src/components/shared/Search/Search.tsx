@@ -20,7 +20,7 @@ import styles from './Search.styles';
 import RNPickerSelect from 'react-native-picker-select';
 import { MusicSource } from '../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify/';
-import CreateModal from '../../Home/SearchScreen/CreateModal/CreateModal';
+import CreateModal from './CreateModal';
 import { render } from 'react-dom';
 import NavigationService from '../../../services/NavigationService';
 
@@ -81,11 +81,6 @@ export default class Search extends Component<Props, State> {
 
   closeModal(redirect?: boolean) {
     this.setState({ modalVisible: false, currentSource: {} });
-    // if (redirect) {
-    //   this.props &&
-    //     this.props.navigation &&
-    //     this.props.navigation.navigate('Tracklist');
-    // }
   }
 
   manageRoll(source) {

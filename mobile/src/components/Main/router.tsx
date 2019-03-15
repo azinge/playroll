@@ -6,47 +6,13 @@ import {
 import { Icon } from 'react-native-elements';
 
 import HomeScreen from './HomeScreen';
-import SearchScreen from './SearchScreen';
-import ManageRollScreen from './ManageRollScreen';
 import YourLibraryScreen from './YourLibraryScreen';
+import DiscoverScreen from './DiscoverScreen';
 
-const SearchNavigator = createStackNavigator(
-  {
-    Search: {
-      screen: SearchScreen,
-      navigationOptions: {
-        title: 'Search',
-        header: null,
-      },
-    },
-    ManageRoll: {
-      screen: ManageRollScreen,
-      navigationOptions: () => ({
-        title: `ManageRoll`,
-        header: null,
-      }),
-    },
-  },
-  {
-    initialRouteName: 'Search',
-    navigationOptions: () => ({
-      tabBarLabel: 'Search',
-      tabBarIcon: ({ tintColor = '' }) => (
-        <Icon
-          type='material-community'
-          name='spotify'
-          size={35}
-          // color={tintColor}
-        />
-      ),
-    }),
-  }
-);
-
-export const HomeNavigator = createBottomTabNavigator(
+export const MainNavigator = createBottomTabNavigator(
   {
     //   Bug where if home is default on first router then it will be default on this router too
-    HomeView: {
+    Home: {
       screen: HomeScreen,
       navigationOptions: {
         title: `Home`,
@@ -62,21 +28,20 @@ export const HomeNavigator = createBottomTabNavigator(
       },
     },
 
-    Search: {
-      screen: SearchNavigator,
+    Discover: {
+      screen: DiscoverScreen,
       navigationOptions: {
-        tabBarLabel: 'Search',
+        tabBarLabel: 'Discover',
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
-            name='spotify'
+            name='compass'
             size={35}
             color={tintColor}
           />
         ),
       },
     },
-
     YourLibrary: {
       screen: YourLibraryScreen,
       navigationOptions: {
@@ -85,7 +50,7 @@ export const HomeNavigator = createBottomTabNavigator(
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
-            name='library-music'
+            name='folder'
             size={35}
             color={tintColor}
           />
@@ -94,6 +59,9 @@ export const HomeNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Search',
+    initialRouteName: 'Discover',
+    tabBarOptions: {
+      activeTintColor: 'purple',
+    },
   }
 );

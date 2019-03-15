@@ -37,11 +37,13 @@ export default class BrowsePlayrollsScreen extends React.Component<
       addPlayrollName: '',
     };
   }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
+            console.log(error && error.message);
             if (loading || error) {
               return (
                 <Header
@@ -74,7 +76,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   input: { name: 'New Playroll', userID: currentUser.id },
                 }}
                 onCompleted={data2 => {
-                  const playroll = data2.admin.createPlayroll;
+                  const playroll =
+                    data2 &&
+                    data2.private &&
+                    data2.private.createCurrentUserPlayroll &&
+                    data2.private.createCurrentUserPlayroll;
                   NavigationService.navigate('ManagePlayroll', {
                     playroll,
                   });

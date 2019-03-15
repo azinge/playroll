@@ -3,12 +3,14 @@ package models
 import (
 	"fmt"
 
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/jinzhu/gorm"
 )
 
 type Relationship struct {
 	Model
 	Status      string
+	IsBlocking  bool
 	UserID      uint `gorm:"primary_key"`
 	User        User
 	OtherUserID uint `gorm:"primary_key"`
@@ -16,7 +18,8 @@ type Relationship struct {
 }
 
 type RelationshipInput struct {
-	Status      string `gql:"String"`
+	Status      string `gql:"status: String"`
+	IsBlocking  bool   `gql:"isBlocking: Boolean"`
 	UserID      string `gql:"userID: ID"`
 	OtherUserID string `gql:"otherUserID: ID"`
 }
@@ -24,6 +27,7 @@ type RelationshipInput struct {
 type RelationshipOutput struct {
 	Model       `gql:"MODEL"`
 	Status      string     `gql:"status: String"`
+	IsBlocking  bool       `gql:"isBlocking: Boolean"`
 	UserID      uint       `gql:"userID: ID"`
 	User        UserOutput `gql:"user: User"`
 	OtherUserID uint       `gql:"otherUserID: ID"`
@@ -32,16 +36,16 @@ type RelationshipOutput struct {
 
 // Utility Methods
 
-func GetRelationshipsByUserID(id uint, db *gorm.DB) (*[]User, error) {
-	fs := &[]Relationship{}
-	if err := db.Preload("OtherUser").Where(&Relationship{UserID: id}).Find(&fs).Error; err != nil {
+func GetFriendsByUserID(id uint, db *gorm.DB) (*[]User, error) {
+	rs := &[]Relationship{}
+	if err := db.Preload("OtherUser").Where(&Relationship{UserID: id, Status: "Friend"}).Find(&rs).Error; err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
 	otherUsers := []User{}
-	for _, f := range *fs {
-		otherUsers = append(otherUsers, f.OtherUser)
+	for _, r := range *rs {
+		otherUsers = append(otherUsers, r.OtherUser)
 	}
 
 	return &otherUsers, nil
@@ -51,7 +55,10 @@ func GetRelationshipsByUserID(id uint, db *gorm.DB) (*[]User, error) {
 
 func RelationshipInputToModel(ri *RelationshipInput) (*Relationship, error) {
 	r := &Relationship{}
-	// ADD METHODS TO ENCODE PROPERTIES HERE
+	r.Status = ri.Status
+	r.IsBlocking = ri.IsBlocking
+	r.UserID = utils.StringIDToNumber(ri.UserID)
+	r.OtherUserID = utils.StringIDToNumber(ri.OtherUserID)
 	return r, nil
 }
 
@@ -62,7 +69,20 @@ func RelationshipOutputToModel(r *RelationshipOutput) (*Relationship, error) {
 func RelationshipModelToOutput(r *Relationship) (*RelationshipOutput, error) {
 	ro := &RelationshipOutput{}
 	ro.Model = r.Model
-	// ADD METHODS TO DECODE PROPERTIES HERE
+	ro.Status = r.Status
+	ro.IsBlocking = r.IsBlocking
+	ro.UserID = r.UserID
+	ro.OtherUserID = r.OtherUserID
+	user, err := FormatUser(&r.User)
+	if err != nil {
+		return nil, err
+	}
+	ro.User = *user
+	otherUser, err := FormatUser(&r.OtherUser)
+	if err != nil {
+		return nil, err
+	}
+	ro.OtherUser = *otherUser
 	return ro, nil
 }
 

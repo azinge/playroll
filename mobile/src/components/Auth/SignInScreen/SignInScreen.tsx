@@ -24,6 +24,7 @@ import {
 import { SignInMutation } from '../../../graphql/requests/Auth';
 
 import styles from './SignInScreen.styles';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   onLoginPress?: () => void;
@@ -56,7 +57,7 @@ export default class SignInScreen extends React.Component<Props, State> {
   }
 
   toggleSignUp() {
-    this.props.navigation && this.props.navigation.navigate('SignUp');
+    NavigationService.navigate('SignUp');
   }
 
   renderHeader() {
@@ -75,7 +76,7 @@ export default class SignInScreen extends React.Component<Props, State> {
           StackActions.reset({
             key: null,
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Home' })],
+            actions: [NavigationActions.navigate({ routeName: 'Main' })],
           })
         )
     );

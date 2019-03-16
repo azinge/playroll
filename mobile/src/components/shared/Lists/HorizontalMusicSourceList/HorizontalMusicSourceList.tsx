@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, View, ScrollView, Image } from 'react-native';
+import { Text, View, Image, FlatList } from 'react-native';
 import { MusicSource } from '../../../../graphql/types';
 
 import styles from './HorizontalMusicSourceList.styles';
@@ -25,23 +25,27 @@ export default class HorizontalMusicSourceList extends React.Component<
         <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
           <Text style={styles.title}>{this.props.title}</Text>
         </View>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {this.props.musicSources.map((val, idx) => {
-            return (
-              <View style={{ width: 125, marginHorizontal: 10 }} key={idx}>
-                <Image style={styles.image} source={{ uri: val.cover }} />
-                <Text style={styles.sourceTitle} numberOfLines={2}>
-                  {val.name}
+        <FlatList
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={this.props.musicSources.map((ms, i) => ({
+            ...ms,
+            key: `${i}`,
+          }))}
+          renderItem={({ item }) => (
+            <View style={{ width: 125, marginHorizontal: 10 }}>
+              <Image style={styles.image} source={{ uri: item.cover }} />
+              <Text style={styles.sourceTitle} numberOfLines={2}>
+                {item.name}
+              </Text>
+              {item.creator && (
+                <Text style={styles.sourceCreator} numberOfLines={1}>
+                  {item.creator}
                 </Text>
-                {val.creator && (
-                  <Text style={styles.sourceCreator} numberOfLines={1}>
-                    {val.creator}
-                  </Text>
-                )}
-              </View>
-            );
-          })}
-        </ScrollView>
+              )}
+            </View>
+          )}
+        />
       </View>
     );
   }

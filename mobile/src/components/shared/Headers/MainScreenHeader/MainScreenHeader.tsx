@@ -13,9 +13,17 @@ import NavigationService from '../../../../services/NavigationService';
 export interface Props {
   hideBottomBar?: boolean;
   hideSearchIcon?: boolean;
+  icons?: HeaderIcon[];
 }
 
 interface State {}
+
+type HeaderIcon = {
+  name: string;
+  type?: string;
+  onPress?: () => void;
+  render?: () => JSX.Element;
+};
 
 export default class MainScreenHeader extends React.Component<Props, State> {
   render() {
@@ -39,7 +47,6 @@ export default class MainScreenHeader extends React.Component<Props, State> {
           backgroundColor='purple'
           containerStyle={this.props.hideBottomBar && { borderBottomWidth: 0 }}
           placement='right'
-          //   statusBarProps={{ translucent: false }}
           leftComponent={
             <View style={{ flexDirection: 'row' }}>
               <Icon
@@ -52,33 +59,53 @@ export default class MainScreenHeader extends React.Component<Props, State> {
               <Text style={styles.headerTitle}>Playroll</Text>
             </View>
           }
-          centerComponent={
-            !this.props.hideSearchIcon && (
-              <Icon
-                name='search'
-                size={27}
-                color='white'
-                underlayColor='rgba(255,255,255,0)'
-                containerStyle={{ marginTop: 5, marginLeft: 5 }}
-                onPress={() => NavigationService.navigate('Search')}
-              />
-            )
-          }
           rightComponent={
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableHighlight
-                onPress={() => NavigationService.navigate('Profile')}
-                style={styles.profileAvatar}
-              >
-                <Image
-                  style={styles.profileAvatar}
-                  source={require('../../../../assets/wack.jpg')}
-                />
-              </TouchableHighlight>
-            </View>
+            <View style={{ flexDirection: 'row' }}>{this.renderIcons()}</View>
           }
         />
       </View>
+    );
+  }
+
+  renderIcons() {
+    const profileIcon: HeaderIcon = {
+      name: 'profile',
+      render: () => (
+        <TouchableHighlight
+          onPress={() => NavigationService.navigate('Account')}
+          style={styles.profileAvatarContainer}
+          key='profile'
+        >
+          <Image
+            style={styles.profileAvatar}
+            source={require('../../../../assets/wack.jpg')}
+          />
+        </TouchableHighlight>
+      ),
+    };
+    const searchIcon: HeaderIcon = {
+      name: 'search',
+      onPress: () => NavigationService.navigate('Search'),
+    };
+    const icons =
+      this.props.icons || this.props.hideSearchIcon
+        ? [profileIcon]
+        : [searchIcon, profileIcon];
+    return icons.map(icon =>
+      icon.render ? (
+        icon.render()
+      ) : (
+        <Icon
+          name={icon.name}
+          type={icon.type}
+          size={27}
+          color='white'
+          underlayColor='rgba(255,255,255,0)'
+          containerStyle={{ marginTop: 2, marginLeft: 16 }}
+          onPress={icon.onPress}
+          key={icon.name}
+        />
+      )
     );
   }
 }

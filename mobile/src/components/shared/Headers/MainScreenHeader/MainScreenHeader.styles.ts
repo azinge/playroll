@@ -12,4 +12,11 @@ export default StyleSheet.create({
     borderRadius: 15,
     overflow: 'hidden',
   },
+  profileAvatarContainer: {
+    marginLeft: 16,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
 });

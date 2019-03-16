@@ -22,6 +22,10 @@ function navigate(routeName: string, params?: NavigationParams) {
   );
 }
 
+function goBack() {
+  navigator.dispatch(NavigationActions.back());
+}
+
 function dispatch(action: NavigationAction) {
   return navigator.dispatch(action);
 }
@@ -31,5 +35,6 @@ function dispatch(action: NavigationAction) {
 export default {
   dispatch,
   navigate,
+  goBack,
   setTopLevelNavigator,
 };

@@ -6,12 +6,13 @@ import {
 import { Icon } from 'react-native-elements';
 
 import HomeScreen from './HomeScreen';
-import YourLibraryScreen from './YourLibraryScreen';
 import DiscoverScreen from './DiscoverScreen';
+import { LibraryNavigator } from '../Library/router';
+import { ProfileRoutes } from '../Profile/router';
+import { SearchRoutes } from '../Search/router';
 
-export const MainNavigator = createBottomTabNavigator(
+export const MainTabsNavigator = createBottomTabNavigator(
   {
-    //   Bug where if home is default on first router then it will be default on this router too
     Home: {
       screen: HomeScreen,
       navigationOptions: {
@@ -42,8 +43,8 @@ export const MainNavigator = createBottomTabNavigator(
         ),
       },
     },
-    YourLibrary: {
-      screen: YourLibraryScreen,
+    Library: {
+      screen: LibraryNavigator,
       navigationOptions: {
         title: `Library`,
         tabBarLabel: 'Your Library',
@@ -59,9 +60,21 @@ export const MainNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Discover',
+    initialRouteName: 'Home',
     tabBarOptions: {
       activeTintColor: 'purple',
     },
+  }
+);
+
+export const MainNavigator = createStackNavigator(
+  {
+    MainTabs: MainTabsNavigator,
+    ...ProfileRoutes,
+    ...SearchRoutes,
+  },
+  {
+    initialRouteName: 'MainTabs',
+    headerMode: 'none',
   }
 );

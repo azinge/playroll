@@ -12,6 +12,7 @@ import {
 
 import styles from './LoadingScreen.styles';
 import { GetCurrentUserQuery } from '../../../graphql/requests/User';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -26,18 +27,17 @@ export default class LoadingScreen extends React.Component<Props, State> {
         {({ loading, error }) => {
           if (!loading) {
             setTimeout(() => {
-              this.props.navigation &&
-                this.props.navigation.dispatch(
-                  StackActions.reset({
-                    key: null,
-                    index: 0,
-                    actions: [
-                      NavigationActions.navigate({
-                        routeName: error ? 'Auth' : 'Home',
-                      }),
-                    ],
-                  })
-                );
+              NavigationService.dispatch(
+                StackActions.reset({
+                  key: null,
+                  index: 0,
+                  actions: [
+                    NavigationActions.navigate({
+                      routeName: error ? 'Auth' : 'Main',
+                    }),
+                  ],
+                })
+              );
             }, 1250);
           }
           return (

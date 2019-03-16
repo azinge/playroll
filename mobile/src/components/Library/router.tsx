@@ -1,38 +1,27 @@
-import React from 'react';
-
 import { createStackNavigator } from 'react-navigation';
-import { Icon } from 'react-native-elements';
 
-import ManagePlayrollScreen from './ManagePlayrollScreen';
-import TracklistScreen from './TracklistScreen';
-import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
+import EditPlayrollScreen from './EditPlayrollScreen';
+import ViewTracklistScreen from './ViewTracklistScreen';
+import ViewRecommendationsScreen from './ViewRecommendationsScreen';
+import ViewDiscoveryQueueScreen from './ViewDiscoveryQueueScreen';
+import ViewPlayrollScreen from './ViewPlayrollScreen';
+import ViewPlayrollsScreen from './ViewPlayrollsScreen';
+import LibraryMenuScreen from './LibraryMenuScreen';
+import { MusicServicePlaylistsRoutes } from '../MusicServices/Playlists/router';
 
 export const LibraryNavigator = createStackNavigator(
   {
-    BrowsePlayrolls: {
-      screen: BrowsePlayrollsScreen,
-      navigationOptions: () => ({
-        title: `BrowsePlayrolls`,
-        header: null,
-      }),
-    },
-    ManagePlayroll: {
-      screen: ManagePlayrollScreen,
-      navigationOptions: () => ({
-        title: 'ManagePlayroll',
-        header: null,
-      }),
-    },
-    Tracklist: {
-      screen: TracklistScreen,
-      navigationOptions: () => ({
-        title: 'Tracklist',
-        header: null,
-      }),
-    },
+    LibraryMenu: LibraryMenuScreen,
+    EditPlayroll: EditPlayrollScreen,
+    ViewDiscoveryQueue: ViewDiscoveryQueueScreen,
+    ViewPlayroll: ViewPlayrollScreen,
+    ViewPlayrolls: ViewPlayrollsScreen,
+    ViewRecommendations: ViewRecommendationsScreen,
+    ViewTracklist: ViewTracklistScreen,
+    ...MusicServicePlaylistsRoutes,
   },
   {
-    initialRouteName: 'BrowsePlayrolls',
-    headerMode: 'screen',
+    initialRouteName: 'LibraryMenu',
+    headerMode: 'none',
   }
 );

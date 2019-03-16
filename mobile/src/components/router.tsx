@@ -15,7 +15,7 @@ const AppNavigator = createStackNavigator(
     Profile: ProfileNavigator,
   },
   {
-    initialRouteName: 'Loading',
+    initialRouteName: 'Home',
     headerMode: 'none',
     navigationOptions: {
       header: null,

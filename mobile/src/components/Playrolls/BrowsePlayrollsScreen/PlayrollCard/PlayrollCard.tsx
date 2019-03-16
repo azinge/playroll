@@ -3,9 +3,17 @@
  */
 
 import * as React from 'react';
-import { View, Image, Button } from 'react-native';
+import {
+  View,
+  Image,
+  Button,
+  TouchableOpacity,
+  ActivityIndicator,
+  Text,
+  FlatList,
+} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { Card } from 'react-native-elements';
+import { Card, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
 import {
@@ -16,6 +24,7 @@ import {
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
 import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
+import styles from './PlayrollCard.styles';
 
 export interface Props {
   playroll?: Playroll;
@@ -36,12 +45,13 @@ export default class PlayrollCard extends React.Component<Props, State> {
         {source && (
           <Image
             source={{ uri: source.cover }}
-            style={{ height: 100, width: 100, borderRadius: 5 }}
+            style={{ height: 75, width: 75, borderRadius: 5, marginRight: 5 }}
           />
         )}
       </View>
     );
   }
+
   render() {
     const { editPlayroll = () => {} } = this.props;
     console.log(this.props.playroll.id);
@@ -71,11 +81,18 @@ export default class PlayrollCard extends React.Component<Props, State> {
           //     />
           //   );
           // }
-          const playroll = (data && data.private.currentUserPlayroll) || {};
+          const playroll: any =
+            (data && data.private.currentUserPlayroll) || {};
           return (
             <Card
               title={playroll.name}
               // image={require("../../assets/wack.jpg")}
+              titleStyle={{
+                textAlign: 'left',
+                fontWeight: 'bold',
+                fontSize: 28,
+                margin: 0,
+              }}
               key={playroll.id}
               containerStyle={{
                 borderRadius: 12,
@@ -92,16 +109,12 @@ export default class PlayrollCard extends React.Component<Props, State> {
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ height: 110 }}>
                   {playroll.rolls && playroll.rolls.length > 0 ? (
-                    <Carousel
+                    <FlatList
                       data={playroll.rolls}
                       renderItem={this._renderItem}
-                      hasParallaxImages={false}
-                      sliderWidth={110}
-                      itemWidth={100}
-                      itemHeight={100}
-                      layout={'tinder'}
-                      layoutCardOffset={5}
-                      loop={true}
+                      keyExtractor={item => item.id.toString()}
+                      horizontal={true}
+                      style={{ height: 80, width: 329 }}
                     />
                   ) : (
                     <Image
@@ -109,28 +122,56 @@ export default class PlayrollCard extends React.Component<Props, State> {
                         uri:
                           'https://www.unesale.com/ProductImages/Large/notfound.png',
                       }}
-                      style={{ height: 110, width: 110, borderRadius: 5 }}
+                      style={{ height: 75, width: 75, borderRadius: 5 }}
                     />
                   )}
                 </View>
-                <View>
-                  <Button onPress={editPlayroll} title='Edit Playroll' />
-                  <DeletePlayrollMutation
-                    variables={{
-                      id: playroll.id,
-                    }}
-                    refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
-                  >
-                    {deletePlayroll => (
-                      <Button
-                        title='Delete Playroll'
-                        onPress={() => {
-                          deletePlayroll();
-                        }}
-                      />
-                    )}
-                  </DeletePlayrollMutation>
-                </View>
+                <View />
+              </View>
+              <View style={{ margin: -16, flexDirection: 'row' }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    editPlayroll();
+                  }}
+                  style={styles.submitButtonLeft}
+                >
+                  {loading ? (
+                    <ActivityIndicator color={'white'} />
+                  ) : (
+                    // <Text style={styles.submitButtonText}>Sign In</Text>
+                    <Icon
+                      type='material-community'
+                      name='playlist-edit'
+                      color='white'
+                      size={30}
+                    />
+                  )}
+                </TouchableOpacity>
+                <DeletePlayrollMutation
+                  variables={{
+                    id: playroll.id,
+                  }}
+                  refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+                >
+                  {deletePlayroll => (
+                    <TouchableOpacity
+                      onPress={() => deletePlayroll()}
+                      style={styles.submitButtonRight}
+                    >
+                      {loading ? (
+                        <ActivityIndicator color={'white'} />
+                      ) : (
+                        <Icon
+                          type='material-community'
+                          name='delete'
+                          color='white'
+                          containerStyle={{ top: 3 }}
+                          size={25}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  )}
+                </DeletePlayrollMutation>
               </View>
             </Card>
           );

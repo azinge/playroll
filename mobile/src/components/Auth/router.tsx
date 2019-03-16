@@ -38,7 +38,7 @@ export const AuthNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Landing',
+    initialRouteName: 'Confirmation',
     headerMode: 'screen',
-  }
+  },
 );

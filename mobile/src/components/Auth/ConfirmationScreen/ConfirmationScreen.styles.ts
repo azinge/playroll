@@ -27,33 +27,47 @@ export default StyleSheet.create({
     paddingBottom: 20,
     paddingRight: 20,
   },
-  signupText: {
+  confirmationLabel: {
     fontWeight: 'bold',
     fontSize: 30,
-    color: '#6A0070',
+    color: '#931389',
+    marginBottom: 20,
   },
   informationContainer: {
     flexDirection: 'row',
     width: '100%',
+    marginBottom: 50,
   },
   infoText: {
     fontSize: 15,
     color: '#931389',
+    opacity: 0.8,
   },
   infoTextContainer: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  resendContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  formText: {
+    fontSize: 15,
+    color: '#6A0070',
+  },
   inputContainer: {
-    marginTop: 25,
     width: '100%',
-    height: 45,
+    height: 35,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderColor: '#6A0070',
     color: '#6A0070',
+    paddingBottom: 15,
+    marginTop: 25,
+    marginBottom: 20,
   },
   submitButton: {
     flex: 1,
@@ -68,7 +82,7 @@ export default StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
   },
   errorMessage: {
     marginTop: 15,

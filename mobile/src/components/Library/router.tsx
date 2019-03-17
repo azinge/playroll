@@ -12,7 +12,6 @@ import { MusicServicePlaylistsRoutes } from '../MusicServices/Playlists/router';
 export const LibraryNavigator = createStackNavigator(
   {
     LibraryMenu: LibraryMenuScreen,
-    EditPlayroll: EditPlayrollScreen,
     ViewDiscoveryQueue: ViewDiscoveryQueueScreen,
     ViewPlayroll: ViewPlayrollScreen,
     ViewPlayrolls: ViewPlayrollsScreen,
@@ -25,3 +24,7 @@ export const LibraryNavigator = createStackNavigator(
     headerMode: 'none',
   }
 );
+
+export const LibraryModalRoutes = {
+  EditPlayroll: EditPlayrollScreen,
+};

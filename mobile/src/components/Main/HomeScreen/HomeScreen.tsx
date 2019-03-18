@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import DiscoverCarousel from './DiscoverCarousel';
@@ -32,7 +32,9 @@ export default class HomeScreen extends React.Component<Props, State> {
             <Text style={styles.title}>Suggested Playrolls</Text>
           </View>
 
-          <DiscoverCarousel />
+          <TouchableOpacity onPress={() => {}}>
+              <DiscoverCarousel />
+          </TouchableOpacity>
 
           <HorizontalMusicSourceList
             title={'Discovery Queue'}

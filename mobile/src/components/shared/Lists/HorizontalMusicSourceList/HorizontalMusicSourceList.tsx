@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, View, Image, FlatList } from 'react-native';
+import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
 import { MusicSource } from '../../../../graphql/types';
 
 import styles from './HorizontalMusicSourceList.styles';
@@ -34,15 +34,19 @@ export default class HorizontalMusicSourceList extends React.Component<
           }))}
           renderItem={({ item }) => (
             <View style={{ width: 125, marginHorizontal: 10 }}>
-              <Image style={styles.image} source={{ uri: item.cover }} />
-              <Text style={styles.sourceTitle} numberOfLines={2}>
-                {item.name}
-              </Text>
-              {item.creator && (
-                <Text style={styles.sourceCreator} numberOfLines={1}>
-                  {item.creator}
+              <TouchableOpacity onPress={() => {}}>
+                <Image style={styles.image} source={{ uri: item.cover }} />
+                <Text style={styles.sourceTitle} numberOfLines={2}>
+                  {item.name}
                 </Text>
-              )}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {}}>
+                {item.creator && (
+                  <Text style={styles.sourceCreator} numberOfLines={1}>
+                    {item.creator}
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
           )}
         />

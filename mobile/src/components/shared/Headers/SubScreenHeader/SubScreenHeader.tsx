@@ -9,20 +9,15 @@ import styles from './SubScreenHeader.styles';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { Header, Icon } from 'react-native-elements';
 import NavigationService from '../../../../services/NavigationService';
+import Icons, { HeaderIconType } from '../../../../themes/Icons';
 
 export interface Props {
-  title: string;
-  icons?: HeaderIcon[];
+  title?: string;
+  modal?: boolean;
+  icons?: HeaderIconType[];
 }
 
 interface State {}
-
-type HeaderIcon = {
-  name: string;
-  type?: string;
-  onPress?: () => void;
-  render?: () => JSX.Element;
-};
 
 export default class SubScreenHeader extends React.Component<Props, State> {
   render() {
@@ -48,7 +43,7 @@ export default class SubScreenHeader extends React.Component<Props, State> {
           leftComponent={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
-                name='arrow-left'
+                name={this.props.modal ? 'close' : 'arrow-left'}
                 type='material-community'
                 color='white'
                 onPress={() => NavigationService.goBack()}
@@ -65,13 +60,8 @@ export default class SubScreenHeader extends React.Component<Props, State> {
     );
   }
   renderIcons() {
-    const menuIcon: HeaderIcon = {
-      name: 'dots-vertical',
-      type: 'material-community',
-    };
-    const searchIcon: HeaderIcon = {
-      name: 'search',
-      onPress: () => NavigationService.navigate('Search'),
+    const menuIcon: HeaderIconType = {
+      ...Icons.menuIcon,
     };
     const icons = this.props.icons || [menuIcon];
     return icons.map(icon =>

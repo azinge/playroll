@@ -51,12 +51,13 @@ func GetTracksByTracklistID(id uint, db *gorm.DB) (*[]jsonmodels.MusicSource, er
 
 func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playrollID uint, db *gorm.DB) (*TracklistOutput, error) {
 	tx := db.Begin()
-	tracklistInput := TracklistInput{IsStarred: false, IsPrimary: true, PlayrollID: string(playrollID)}
-	tracklist, err := tracklistInput.ToModel()
+	tracklistInput := TracklistInput{IsStarred: false, IsPrimary: true}
+	tracklist, err := TracklistInputToModel(&tracklistInput)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
 	}
+	tracklist.PlayrollID = playrollID
 	tDAO := InitTracklistDAO(tx)
 
 	rawTracklist, err := tDAO.Create(tracklist)

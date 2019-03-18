@@ -7,9 +7,10 @@ import { Icon } from 'react-native-elements';
 
 import HomeScreen from './HomeScreen';
 import DiscoverScreen from './DiscoverScreen';
-import { LibraryNavigator } from '../Library/router';
-import { ProfileRoutes } from '../Profile/router';
-import { SearchRoutes } from '../Search/router';
+import { LibraryNavigator, LibraryModalRoutes } from '../Library/router';
+import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
+import { SearchRoutes, SearchModalRoutes } from '../Search/router';
+import { MusicServiceSettingsModalRoutes } from '../MusicServices/Settings/router';
 
 export const MainTabsNavigator = createBottomTabNavigator(
   {
@@ -67,7 +68,7 @@ export const MainTabsNavigator = createBottomTabNavigator(
   }
 );
 
-export const MainNavigator = createStackNavigator(
+export const MainWithoutModalsNavigator = createStackNavigator(
   {
     MainTabs: MainTabsNavigator,
     ...ProfileRoutes,
@@ -75,6 +76,22 @@ export const MainNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'MainTabs',
+    headerMode: 'none',
+  }
+);
+
+export const MainNavigator = createStackNavigator(
+  {
+    MainWithoutModals: MainWithoutModalsNavigator,
+    ...LibraryModalRoutes,
+    ...SearchModalRoutes,
+    ...ProfileModalRoutes,
+    ...MusicServiceSettingsModalRoutes,
+  },
+  {
+    initialRouteName: 'EditRoll',
+    // initialRouteName: 'MainWithoutModals',
+    mode: 'modal',
     headerMode: 'none',
   }
 );

@@ -9,7 +9,7 @@ import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 export default class ConnectAppleMusicScreen extends React.Component {
   render() {
     return (
-      <SubScreenContainer title='Connect To Apple Music'>
+      <SubScreenContainer title='Connect To Apple Music' modal>
         <Text>ConnectAppleMusicScreen</Text>
       </SubScreenContainer>
     );

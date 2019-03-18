@@ -17,9 +17,10 @@ import styles from './SearchScreenHeader.styles';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { Header, Icon } from 'react-native-elements';
 import NavigationService from '../../../../services/NavigationService';
+import { HeaderIconType } from '../../../../themes/Icons';
 
 export interface Props {
-  icons?: HeaderIcon[];
+  icons?: HeaderIconType[];
   title?: string;
   onChangeText?: (text: string) => void;
   onSubmitEditing?: (text: string) => void;
@@ -28,14 +29,6 @@ export interface Props {
 interface State {
   text: string;
 }
-
-type HeaderIcon = {
-  name: string;
-  type?: string;
-  style?: StyleProp<ViewStyle>;
-  onPress?: () => void;
-  render?: () => JSX.Element;
-};
 
 export default class SearchScreenHeader extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -125,12 +118,12 @@ export default class SearchScreenHeader extends React.Component<Props, State> {
     );
   }
   renderIcons() {
-    const menuIcon: HeaderIcon = {
+    const menuIcon: HeaderIconType = {
       name: 'dots-vertical',
       type: 'material-community',
       style: { marginRight: 0 },
     };
-    const searchIcon: HeaderIcon = {
+    const searchIcon: HeaderIconType = {
       name: 'search',
       onPress: () => NavigationService.navigate('Search'),
     };

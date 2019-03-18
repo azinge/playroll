@@ -5,5 +5,8 @@ import ManageRollScreen from './ManageRollScreen';
 
 export const SearchRoutes = {
   Search: SearchScreen,
+};
+
+export const SearchModalRoutes = {
   ManageRoll: ManageRollScreen,
 };

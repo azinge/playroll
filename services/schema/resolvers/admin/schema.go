@@ -17,6 +17,7 @@ type AdminMethods struct {
 	MusicServiceTrackMethods      `gql:"GROUP"`
 	MusicServiceUserMethods       `gql:"GROUP"`
 	RelationshipMethods           `gql:"GROUP"`
+	SpotifyMethods                `gql:"GROUP"`
 }
 
 var LinkedAdminMethods = AdminMethods{
@@ -36,4 +37,5 @@ var LinkedAdminMethods = AdminMethods{
 	MusicServiceTrackMethods:      LinkedMusicServiceTrackMethods,
 	MusicServiceUserMethods:       LinkedMusicServiceUserMethods,
 	RelationshipMethods:           LinkedRelationshipMethods,
+	SpotifyMethods:                LinkedSpotifyMethods,
 }

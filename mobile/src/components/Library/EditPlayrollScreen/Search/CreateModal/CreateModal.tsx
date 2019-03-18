@@ -125,15 +125,6 @@ export default class CreateModal extends React.Component<Props, State> {
             </View>
             <View style={styles.formfooter}>
               <CreateRollMutation
-                variables={{
-                  input: {
-                    playrollID: this.props.playrollID,
-                    data: {
-                      sources: [this.props.currentSource],
-                      filters: [this.state.filter, this.state.length],
-                    },
-                  },
-                }}
                 onCompleted={() => {
                   this.props.closeModal(true);
                 }}
@@ -143,7 +134,25 @@ export default class CreateModal extends React.Component<Props, State> {
                   <TouchableHighlight
                     style={{ marginLeft: 20 }}
                     onPress={() => {
-                      createRoll();
+                      // const filters = [];
+                      // console.log(filters);
+                      createRoll({
+                        variables: {
+                          input: {
+                            playrollID: this.props.playrollID,
+                            data: {
+                              sources: [this.props.currentSource],
+                              filters: [
+                                {
+                                  type: 'Length',
+                                  name: 'NumberOfSongs',
+                                  modifications: ['0', '7'],
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      });
                     }}
                   >
                     <Text>{this.props.playrollID ? 'Add' : 'Continue'}</Text>

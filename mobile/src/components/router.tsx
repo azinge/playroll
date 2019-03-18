@@ -11,7 +11,8 @@ const AppNavigator = createStackNavigator(
     Main: MainNavigator,
   },
   {
-    initialRouteName: 'Core',
+    initialRouteName: 'Main',
+    // initialRouteName: 'Core',
     headerMode: 'none',
   }
 );

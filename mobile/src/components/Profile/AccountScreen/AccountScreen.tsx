@@ -28,11 +28,11 @@ export default class AccountScreen extends React.Component<Props, State> {
       <GetCurrentUserQuery>
         {({ loading, error, data }) => {
           if (loading || error || Object.keys(data).length === 0) {
-            return <SubScreenContainer title='My Account' />;
+            return <SubScreenContainer title='My Account' modal />;
           }
           const currentUser = (data && data.private.currentUser) || {};
           return (
-            <SubScreenContainer title='My Account'>
+            <SubScreenContainer title='My Account' modal>
               <View>
                 <Text>AccountScreen</Text>
               </View>

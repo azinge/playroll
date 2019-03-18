@@ -31,7 +31,7 @@ export default class ConnectSpotifyScreen extends React.Component {
 
   render() {
     return (
-      <SubScreenContainer title='Connect to Spotify'>
+      <SubScreenContainer title='Connect to Spotify' modal>
         <Text>ConnectSpotifyScreen</Text>
         <Image
           style={styles.spotifyIcon}

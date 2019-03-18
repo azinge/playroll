@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 
 import EditPlayrollScreen from './EditPlayrollScreen';
+import EditRollScreen from './EditRollScreen';
 import ViewTracklistScreen from './ViewTracklistScreen';
 import ViewRecommendationsScreen from './ViewRecommendationsScreen';
 import ViewDiscoveryQueueScreen from './ViewDiscoveryQueueScreen';
@@ -25,3 +26,7 @@ export const LibraryNavigator = createStackNavigator(
     headerMode: 'none',
   }
 );
+
+export const LibraryModalRoutes = {
+  EditRoll: EditRollScreen,
+};

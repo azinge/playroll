@@ -9,11 +9,14 @@ import ViewProfileScreen from './ViewProfileScreen';
 import { MusicServiceSettingsRoutes } from '../MusicServices/Settings/router';
 
 export const ProfileRoutes = {
-  Account: AccountScreen,
   AddFriend: AddFriendScreen,
   EditProfile: EditProfileScreen,
   Settings: SettingsScreen,
   ViewFriends: ViewFriendsScreen,
   ViewProfile: ViewProfileScreen,
   ...MusicServiceSettingsRoutes,
+};
+
+export const ProfileModalRoutes = {
+  Account: AccountScreen,
 };

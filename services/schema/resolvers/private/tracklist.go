@@ -36,7 +36,9 @@ var getCurrentUserTracklist = gqltag.Method{
 		id := utils.StringIDToNumber(params.ID)
 		tracklistModel := &models.Tracklist{}
 
-		db := mctx.DB.Table("tracklists").
+		db := mctx.DB.Preload("CompiledRolls")
+
+		db = db.Table("tracklists").
 			Joins("LEFT JOIN playrolls ON playrolls.id = tracklists.playroll_id")
 
 		if err := db.Where(&models.Playroll{UserID: user.ID}).First(tracklistModel, id).Error; err != nil {

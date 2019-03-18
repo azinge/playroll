@@ -71,7 +71,3 @@ func main() {
 	// for _, mst := range *msts {
 	// 	fmt.Println(mst.Name, "-", mst.ArtistName)
 	// }
-=======
-		HandleLocalErrors("error migrating db: " + err.Error())
-	}
-

@@ -40,7 +40,7 @@ var listCurrentUserRecommendations = gqltag.Method{
 
 		recommendationsModels := &[]models.Recommendation{}
 		db := mctx.DB
-		if err := db.Where(models.Recommendation{UserID: user.ID}).Find(recommendationsModels).Error; err != nil {
+		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}

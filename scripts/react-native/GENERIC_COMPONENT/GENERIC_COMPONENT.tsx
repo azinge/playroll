@@ -2,10 +2,16 @@
  * GENERIC_COMPONENT
  */
 
-import * as React from "react";
-import { Text, View } from "react-native";
+import * as React from 'react';
+import { Text, View } from 'react-native';
 
-export default class GENERIC_COMPONENT extends React.Component {
+import styles from './GENERIC_COMPONENT.styles';
+
+export interface Props {}
+
+interface State {}
+
+export default class GENERIC_COMPONENT extends React.Component<Props, State> {
   render() {
     return (
       <View>

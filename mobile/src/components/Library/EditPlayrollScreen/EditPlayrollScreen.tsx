@@ -6,6 +6,9 @@ import * as React from 'react';
 import { View, TextInput, ScrollView, Image } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
+
+import { Font } from 'expo';
+
 import styles, { rawStyles } from './EditPlayrollScreen.styles';
 import Search from './Search';
 import { Playroll, MusicSource } from '../../../graphql/types';
@@ -21,6 +24,10 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
+
+Font.loadAsync({
+  Avenir: require('../../../assets/fonts/AvenirLTStd-Black.otf'),
+});
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;

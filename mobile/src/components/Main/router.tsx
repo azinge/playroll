@@ -89,7 +89,8 @@ export const MainNavigator = createStackNavigator(
     ...MusicServiceSettingsModalRoutes,
   },
   {
-    initialRouteName: 'MainWithoutModals',
+    initialRouteName: 'EditRoll',
+    // initialRouteName: 'MainWithoutModals',
     mode: 'modal',
     headerMode: 'none',
   }

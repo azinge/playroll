@@ -69,7 +69,7 @@ func (dop *DefaultOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 }
 
 func (dop *DefaultOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	return db.Order("random()"), nil
+	return db, nil
 }
 
 type RandomOrderPolicy struct {

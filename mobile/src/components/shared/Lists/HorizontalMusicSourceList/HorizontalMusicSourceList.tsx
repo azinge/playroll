@@ -9,7 +9,7 @@ import { MusicSource } from '../../../../graphql/types';
 import styles from './HorizontalMusicSourceList.styles';
 
 export interface Props {
-  title: string;
+  title?: string;
   musicSources: MusicSource[];
 }
 

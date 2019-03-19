@@ -38,11 +38,39 @@ func (lp *LengthPolicy) Load(rf *jsonmodels.RollFilter) error {
 
 func NewLengthPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) (GeneratePolicy, error) {
 	switch filter.Name {
+	case "Default":
+		return NewDefaultLengthPolicy(filter, sources, db, client)
 	case "NumberOfSongs":
 		return NewNumberOfSongsLengthPolicy(filter, sources, db, client)
 	default:
 		return nil, fmt.Errorf("error, invalid filter")
 	}
+}
+
+type DefaultLengthPolicy struct {
+	LengthPolicy
+}
+
+func NewDefaultLengthPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*DefaultLengthPolicy, error) {
+	dlp := &DefaultLengthPolicy{}
+	dlp.Init(sources, cleanDB, client)
+	if ok := dlp.Validate(filter); !ok {
+		return nil, fmt.Errorf("number of songs length policy error, could not validate filter: %v", filter)
+	}
+	if err := dlp.Load(filter); err != nil {
+		return nil, fmt.Errorf("number of songs length policy error, could not load filter: %v", filter)
+	}
+	return dlp, nil
+}
+
+func (dlp *DefaultLengthPolicy) Name() string { return "Default" }
+
+func (dlp *DefaultLengthPolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return dlp.LengthPolicy.Validate(rf) && rf.Name == dlp.Name()
+}
+
+func (dlp *DefaultLengthPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+	return db.Offset(0).Limit(20), nil
 }
 
 type NumberOfSongsLengthPolicy struct {
@@ -66,7 +94,7 @@ func NewNumberOfSongsLengthPolicy(filter *jsonmodels.RollFilter, sources *[]json
 func (noslp *NumberOfSongsLengthPolicy) Name() string { return "NumberOfSongs" }
 
 func (noslp *NumberOfSongsLengthPolicy) Validate(rf *jsonmodels.RollFilter) bool {
-	return rf.Type == noslp.Type() && rf.Name == noslp.Name()
+	return noslp.LengthPolicy.Validate(rf) && rf.Name == noslp.Name()
 }
 
 func (noslp *NumberOfSongsLengthPolicy) Load(rf *jsonmodels.RollFilter) error {

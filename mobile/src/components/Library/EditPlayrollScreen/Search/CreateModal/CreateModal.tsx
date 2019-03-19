@@ -144,6 +144,11 @@ export default class CreateModal extends React.Component<Props, State> {
                               sources: [this.props.currentSource],
                               filters: [
                                 {
+                                  type: 'Source',
+                                  name: 'Union',
+                                  modifications: ['0'],
+                                },
+                                {
                                   type: 'Length',
                                   name: 'NumberOfSongs',
                                   modifications: ['0', '7'],

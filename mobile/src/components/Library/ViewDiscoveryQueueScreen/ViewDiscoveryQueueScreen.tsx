@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { Text, ActivityIndicator } from 'react-native';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import { GetCurrentUserDiscoveryQueueQuery } from '../../../graphql/requests/DiscoveryQueue/GetCurrentUserDiscoveryQueueQuery';
+import { ListCurrentUserDiscoveryQueuesQuery } from '../../../graphql/requests/DiscoveryQueue/ListCurrentUserDiscoveryQueuesQuery';
 import DiscoveryQueueEntryCard from '../../shared/Cards/DiscoveryQueueEntryCard';
 
 export default class ViewDiscoveryQueueScreen extends React.Component {
@@ -13,14 +13,15 @@ export default class ViewDiscoveryQueueScreen extends React.Component {
     const extractDiscoveryQueue = data => {
       if (
         Object.keys(data).length === 0 ||
-        Object.keys(data.private).length === 0
+        Object.keys(data.private).length === 0 ||
+        data.private.listCurrentUserDiscoveryQueues.length === 0
       ) {
         return {};
       }
-      return data.private.currentUserDiscoveryQueue;
+      return data.private.listCurrentUserDiscoveryQueues[0];
     };
     return (
-      <GetCurrentUserDiscoveryQueueQuery>
+      <ListCurrentUserDiscoveryQueuesQuery>
         {({ loading, error, data }) => {
           const discoveryQueue = extractDiscoveryQueue(data);
           return (
@@ -47,7 +48,7 @@ export default class ViewDiscoveryQueueScreen extends React.Component {
             </SubScreenContainer>
           );
         }}
-      </GetCurrentUserDiscoveryQueueQuery>
+      </ListCurrentUserDiscoveryQueuesQuery>
     );
   }
 }

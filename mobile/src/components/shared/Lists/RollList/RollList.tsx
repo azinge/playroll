@@ -12,16 +12,30 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   rolls: Roll[];
+  onPress?: (roll: Roll) => void;
 }
 
 interface State {}
 
 export default class RollList extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.onRollPress = this.onRollPress.bind(this);
+    this.renderItem = this.renderItem.bind(this);
+  }
+
+  onRollPress(roll) {
+    this.props.onPress(roll);
+  }
+
   renderItem({ item: roll }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
     return (
-      <TouchableOpacity onPress={() => {}} key={roll.id}>
+      <TouchableOpacity
+        onPress={this.onRollPress.bind(this, roll)}
+        key={roll.id}
+      >
         <View style={{ width: '100%', alignItems: 'center' }} key={roll.id}>
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <Image style={styles.cover} source={{ uri: mainSource.cover }} />

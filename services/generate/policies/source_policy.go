@@ -47,8 +47,8 @@ func (sp *SourcePolicy) Load(rf *jsonmodels.RollFilter) error {
 
 func NewSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) (GeneratePolicy, error) {
 	switch filter.Name {
-	case "Intersect":
-		return NewIntersectSourcePolicy(filter, sources, db, client)
+	case "Intersection":
+		return NewIntersectionSourcePolicy(filter, sources, db, client)
 	case "Union":
 		return NewUnionSourcePolicy(filter, sources, db, client)
 	default:
@@ -56,12 +56,12 @@ func NewSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicS
 	}
 }
 
-type IntersectSourcePolicy struct {
+type IntersectionSourcePolicy struct {
 	SourcePolicy
 }
 
-func NewIntersectSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*IntersectSourcePolicy, error) {
-	isp := &IntersectSourcePolicy{}
+func NewIntersectionSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*IntersectionSourcePolicy, error) {
+	isp := &IntersectionSourcePolicy{}
 	isp.Init(sources, cleanDB, client)
 	if ok := isp.Validate(filter); !ok {
 		return nil, fmt.Errorf("intersect source policy error, could not validate filter: %v", filter)
@@ -72,13 +72,13 @@ func NewIntersectSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmode
 	return isp, nil
 }
 
-func (isp *IntersectSourcePolicy) Name() string { return "Intersect" }
+func (isp *IntersectionSourcePolicy) Name() string { return "Intersection" }
 
-func (isp *IntersectSourcePolicy) Validate(rf *jsonmodels.RollFilter) bool {
-	return rf.Type == isp.Type() && rf.Name == isp.Name()
+func (isp *IntersectionSourcePolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return isp.SourcePolicy.Validate(rf) && rf.Name == isp.Name()
 }
 
-func (isp *IntersectSourcePolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+func (isp *IntersectionSourcePolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 	subQueryDB := isp.cleanDB.
 		Table("music_service_tracks").
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
@@ -112,7 +112,7 @@ func NewUnionSourcePolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.M
 func (usp *UnionSourcePolicy) Name() string { return "Union" }
 
 func (usp *UnionSourcePolicy) Validate(rf *jsonmodels.RollFilter) bool {
-	return rf.Type == usp.Type() && rf.Name == usp.Name()
+	return usp.SourcePolicy.Validate(rf) && rf.Name == usp.Name()
 }
 
 func (usp *UnionSourcePolicy) Apply(db *gorm.DB) (*gorm.DB, error) {

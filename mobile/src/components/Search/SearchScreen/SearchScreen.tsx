@@ -27,6 +27,7 @@ import { BlurView } from 'expo';
 
 export interface Props {
   playrollID?: any;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
@@ -152,6 +153,8 @@ export default class SearchScreen extends React.Component<Props, State> {
   }
 
   renderSearch() {
+    const navigationOnPress =
+      this.props.navigation && this.props.navigation.getParam('onPress');
     return (
       <BlurView blurType='light' blurAmount={10}>
         <SearchSpotifyQuery

@@ -9,35 +9,219 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import styles, { pickerStyle } from './EditRollScreen.styles';
 import { Icon } from 'react-native-elements';
-import { musicSources } from '../../../static/mockData';
-import { MusicSource } from '../../../graphql/types';
+import { MusicSource, Roll } from '../../../graphql/types';
+import Icons from '../../../themes/Icons';
+import NavigationService from '../../../services/NavigationService';
 
-export interface Props {}
+interface EditRollFilter {
+  name: string;
+  data: { sources: MusicSource[]; modifications: string[]; open: boolean };
+}
+
+export interface Props {
+  roll?: Roll;
+}
 
 interface State {
-  sourceType: { label: string; val: string };
-  filterType: { label: string; val: string };
-  orderType: { label: string; val: string };
-  lengthType: { label: string; val: string };
+  sourceType: EditRollFilter;
+  draftFilterType: EditRollFilter;
+  filterTypes: EditRollFilter[];
+  orderType: EditRollFilter;
+  lengthType: EditRollFilter;
 }
+
+const rollFilterNameToLabel = {
+  Union: 'Union',
+  Intersection: 'Intersection',
+  'N/A': 'Not Selected',
+  ExcludeSources: 'Exclude Sources',
+  IncludeSources: 'Include Sources',
+  Default: 'Default',
+  Random: 'Random',
+  NumberOfSongs: 'Number Of Songs',
+};
 
 export default class EditRollScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    const createDefaultEditRollFilter = name => ({
+      name,
+      data: { sources: [], modifications: [], open: false },
+    });
     this.state = {
-      sourceType: { label: 'Union', val: 'Union' },
-      filterType: { label: 'Not Selected', val: undefined },
-      orderType: { label: 'Default', val: 'Default' },
-      lengthType: { label: 'Default', val: 'Default' },
+      sourceType: createDefaultEditRollFilter('Union'),
+      draftFilterType: createDefaultEditRollFilter('N/A'),
+      filterTypes: [],
+      orderType: createDefaultEditRollFilter('Default'),
+      lengthType: createDefaultEditRollFilter('Default'),
     };
+    this.importRoll(props.roll);
+  }
+  importRoll(roll: Roll) {
+    if (!roll || !roll.data) {
+      return;
+    }
+    let sourceType = undefined;
+    let orderType = undefined;
+    let lengthType = undefined;
+    let filterTypes = [];
+    const { sources, filters } = roll.data;
+    filters.forEach((filter, i) => {
+      switch (filter.type) {
+        case 'Source':
+          switch (filter.name) {
+            case 'Union':
+            case 'Intersection':
+              sourceType = {
+                name: filter.name,
+                data: {
+                  sources: filter.modifications.map(
+                    sourceIndex => sources[sourceIndex]
+                  ),
+                  modifications: filter.modifications,
+                  open: false,
+                },
+              };
+              break;
+            default:
+          }
+          break;
+        case 'Filter':
+          switch (filter.name) {
+            case 'ExcludeSources':
+            case 'IncludeSources':
+              filterTypes.push({
+                name: filter.name,
+                data: {
+                  sources: filter.modifications.map(
+                    sourceIndex => sources[sourceIndex]
+                  ),
+                  modifications: filter.modifications,
+                  open: false,
+                },
+              });
+              break;
+            default:
+          }
+          break;
+        case 'Order':
+          switch (filter.name) {
+            case 'Default':
+            case 'Random':
+              orderType = {
+                name: filter.name,
+                data: {
+                  sources: [],
+                  modifications: filter.modifications,
+                  open: false,
+                },
+              };
+              break;
+            default:
+          }
+          break;
+        case 'Length':
+          switch (filter.name) {
+            case 'Default':
+            case 'NumberOfSongs':
+              lengthType = {
+                name: filter.name,
+                data: {
+                  sources: [],
+                  modifications: filter.modifications,
+                  open: false,
+                },
+              };
+              break;
+            default:
+          }
+          break;
+        default:
+      }
+    });
+    const stateOverride: any = { filterTypes };
+    if (sourceType) stateOverride.sourceType = sourceType;
+    if (orderType) stateOverride.orderType = orderType;
+    if (lengthType) stateOverride.lengthType = lengthType;
+    this.setState(stateOverride);
+  }
+  exportRoll(): Roll {
+    const compileEditRollFilter = (erf, type, rollSources, rollFilters) => {
+      let i = sources.length;
+      const modifications = [];
+      erf.data.sources.forEach(source => {
+        rollSources.push(source);
+        modifications.push(i);
+        i += 1;
+      });
+      rollFilters.push({
+        type,
+        name: erf.name,
+        modifications,
+      });
+    };
+    const compileEditRollFilterPreserveModifications = (
+      erf,
+      type,
+      rollSources,
+      rollFilters
+    ) => {
+      erf.data.sources.forEach(source => {
+        rollSources.push(source);
+      });
+      rollFilters.push({
+        type,
+        name: erf.name,
+        modifications: erf.data.modifications,
+      });
+    };
+
+    const { sourceType, filterTypes, orderType, lengthType } = this.state;
+    const sources = [];
+    const filters = [];
+
+    compileEditRollFilter(sourceType, 'Source', sources, filters);
+    filterTypes.forEach(filter => {
+      compileEditRollFilter(filter, 'Filter', sources, filters);
+    });
+    compileEditRollFilterPreserveModifications(
+      orderType,
+      'Order',
+      sources,
+      filters
+    );
+    compileEditRollFilterPreserveModifications(
+      lengthType,
+      'Length',
+      sources,
+      filters
+    );
+
+    const roll = { data: { sources, filters } };
+    return roll;
   }
   render() {
     return (
-      <SubScreenContainer title={'Edit Roll'} modal>
-        {this.renderSourceSection()}
-        {this.renderFiltersSection()}
-        {this.renderOrderSection()}
-        {this.renderLengthSection()}
+      <SubScreenContainer
+        title={'Edit Roll'}
+        icons={[
+          {
+            ...Icons.saveIcon,
+            onPress: () => {
+              console.log(this.exportRoll());
+            },
+          },
+          Icons.menuIcon,
+        ]}
+        modal
+      >
+        <View style={{ marginBottom: 50 }}>
+          {this.renderSourceSection()}
+          {this.renderFiltersSection()}
+          {this.renderOrderSection()}
+          {this.renderLengthSection()}
+        </View>
       </SubScreenContainer>
     );
   }
@@ -49,11 +233,9 @@ export default class EditRollScreen extends React.Component<Props, State> {
         <Text style={styles.sourceTitle} numberOfLines={2}>
           {item.name}
         </Text>
-        {item.creator && (
-          <Text style={styles.sourceCreator} numberOfLines={1}>
-            {item.creator}
-          </Text>
-        )}
+        <Text style={styles.sourceCreator} numberOfLines={1}>
+          {item.creator}
+        </Text>
       </View>
     );
     const renderAddIcon = () => (
@@ -68,22 +250,25 @@ export default class EditRollScreen extends React.Component<Props, State> {
           size={100}
           containerStyle={{ top: 10 }}
           color={'purple'}
+          onPress={() => {
+            NavigationService.navigate('SearchMusicSource', {
+              onPress: (ms: MusicSource) => {
+                NavigationService.goBack();
+                const sourceType = this.state.sourceType;
+                sourceType.data.sources.push(ms);
+                this.setState({ sourceType });
+              },
+            });
+          }}
         />
       </View>
     );
-    const items = [
-      { label: 'Union', value: { label: 'Union', val: 'Union' } },
-      {
-        label: 'Intersection',
-        value: { label: 'Intersection', val: 'Intersection' },
-      },
-    ];
+    const items = ['Union', 'Intersection'];
     const onValueChange = value => {
       this.setState({
-        sourceType: value,
+        sourceType: { ...this.state.sourceType, name: value },
       });
     };
-    type AddIcon = MusicSource & { isAddIcon: boolean };
     const addIcon = {
       name: '',
       cover: '',
@@ -104,8 +289,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
           <FlatList
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            data={[...musicSources, addIcon]}
-            keyExtractor={ms => ms.providerID}
+            data={[...this.state.sourceType.data.sources, addIcon]}
+            keyExtractor={(ms, i) => ms.providerID + i}
             renderItem={({ item }) => {
               if (item.providerID === 'AddIcon') {
                 return renderAddIcon();
@@ -124,14 +309,12 @@ export default class EditRollScreen extends React.Component<Props, State> {
         <Text style={styles.sourceTitle} numberOfLines={2}>
           {item.name}
         </Text>
-        {item.creator && (
-          <Text style={styles.sourceCreator} numberOfLines={1}>
-            {item.creator}
-          </Text>
-        )}
+        <Text style={styles.sourceCreator} numberOfLines={1}>
+          {item.creator}
+        </Text>
       </View>
     );
-    const renderAddIcon = () => (
+    const renderAddIcon = onPress => (
       <View
         style={{
           width: 125,
@@ -143,6 +326,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           size={100}
           containerStyle={{ top: 10 }}
           color={'purple'}
+          onPress={onPress}
         />
       </View>
     );
@@ -153,23 +337,11 @@ export default class EditRollScreen extends React.Component<Props, State> {
       creator: '',
       providerID: 'AddIcon',
     };
-    const items = [
-      {
-        label: 'Not Selected',
-        value: { label: 'Not Selected', val: undefined },
-      },
-      {
-        label: 'Exclude Sources',
-        value: { label: 'Exclude Sources', val: 'ExcludeSources' },
-      },
-      {
-        label: 'Include Sources',
-        value: { label: 'Include Sources', val: 'IncludeSources' },
-      },
-    ];
+    const items = ['N/A', 'ExcludeSources', 'IncludeSources'];
+    const { draftFilterType, filterTypes } = this.state;
     const onValueChange = value => {
       this.setState({
-        filterType: value,
+        draftFilterType: { ...draftFilterType, name: value },
       });
     };
     return (
@@ -179,20 +351,28 @@ export default class EditRollScreen extends React.Component<Props, State> {
             'Filters',
             items,
             onValueChange,
-            this.state.filterType
+            draftFilterType
           )}
         </View>
-        {(this.state.filterType.val === 'ExcludeSources' ||
-          this.state.filterType.val === 'IncludeSources') && (
+        {(draftFilterType.name === 'ExcludeSources' ||
+          draftFilterType.name === 'IncludeSources') && (
           <View style={{ flex: 1, height: 205 }}>
             <FlatList
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              data={[...musicSources, addIcon]}
+              data={[...this.state.draftFilterType.data.sources, addIcon]}
               keyExtractor={ms => ms.providerID}
               renderItem={({ item }) => {
                 if (item.providerID === 'AddIcon') {
-                  return renderAddIcon();
+                  return renderAddIcon(() => {
+                    NavigationService.navigate('SearchMusicSource', {
+                      onPress: (ms: MusicSource) => {
+                        NavigationService.goBack();
+                        draftFilterType.data.sources.push(ms);
+                        this.setState({ draftFilterType });
+                      },
+                    });
+                  });
                 }
                 return renderMusicSource(item);
               }}
@@ -203,68 +383,139 @@ export default class EditRollScreen extends React.Component<Props, State> {
                 justifyContent: 'center',
               }}
             >
-              <Text style={[styles.title, { flex: 1, textAlign: 'center' }]}>
+              <Text
+                style={[styles.title, { flex: 1, textAlign: 'center' }]}
+                onPress={() => {
+                  draftFilterType.data.open = true;
+                  this.setState({
+                    draftFilterType: {
+                      label: 'Not Selected',
+                      name: 'N/A',
+                      data: {
+                        sources: [],
+                        modifications: [],
+                        open: false,
+                      },
+                    },
+                    filterTypes: [draftFilterType, ...filterTypes],
+                  });
+                }}
+              >
                 Save
               </Text>
-              <Text style={[styles.title, { flex: 1, textAlign: 'center' }]}>
+              <Text
+                style={[styles.title, { flex: 1, textAlign: 'center' }]}
+                onPress={() => {
+                  this.setState({
+                    draftFilterType: {
+                      name: 'N/A',
+                      data: {
+                        sources: [],
+                        modifications: [],
+                        open: false,
+                      },
+                    },
+                  });
+                }}
+              >
                 Discard
               </Text>
             </View>
           </View>
         )}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              borderWidth: 1,
-              borderRadius: 5,
-              borderColor: 'grey',
-              margin: 10,
-              paddingVertical: 3,
-              paddingHorizontal: 10,
-              flexDirection: 'row',
-            }}
-          >
-            <Text
-              style={[
-                styles.title,
-                {
-                  flex: 1,
-                },
-              ]}
-            >
-              Include Sources
-            </Text>
-            <Icon
-              name='delete'
-              size={24}
-              color={'purple'}
-              containerStyle={{ top: 2 }}
-            />
-          </View>
-          <Icon
-            name={true ? 'arrow-drop-down' : 'arrow-drop-up'}
-            size={40}
-            color={'purple'}
-            containerStyle={{ top: 8, right: 6 }}
-          />
-        </View>
+        {this.state.filterTypes.map((filter, i) => {
+          console.log(filter);
+          return (
+            <View key={`${i}`}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    borderColor: 'grey',
+                    margin: 10,
+                    paddingVertical: 3,
+                    paddingHorizontal: 10,
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        flex: 1,
+                      },
+                    ]}
+                  >
+                    {rollFilterNameToLabel[filter.name]}
+                  </Text>
+                  <Icon
+                    name='delete'
+                    size={24}
+                    color={'purple'}
+                    containerStyle={{ top: 2 }}
+                    onPress={() => {
+                      filterTypes.splice(i, 1);
+                      this.setState({
+                        filterTypes,
+                      });
+                    }}
+                  />
+                </View>
+                <Icon
+                  name={filter.data.open ? 'arrow-drop-up' : 'arrow-drop-down'}
+                  size={40}
+                  color={'purple'}
+                  containerStyle={{ top: 8, right: 6 }}
+                  onPress={() => {
+                    filterTypes[i].data.open = !filterTypes[i].data.open;
+                    this.setState({
+                      filterTypes,
+                    });
+                  }}
+                />
+              </View>
+              {filter.data.open && (
+                <View style={{ flex: 1, height: 180 }}>
+                  <FlatList
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    data={[...this.state.filterTypes[i].data.sources, addIcon]}
+                    keyExtractor={ms => ms.providerID}
+                    renderItem={({ item }) => {
+                      if (item.providerID === 'AddIcon') {
+                        return renderAddIcon(() => {
+                          NavigationService.navigate('SearchMusicSource', {
+                            onPress: (ms: MusicSource) => {
+                              NavigationService.goBack();
+                              filterTypes[i].data.sources.push(ms);
+                              this.setState({ filterTypes });
+                            },
+                          });
+                        });
+                      }
+                      return renderMusicSource(item);
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+          );
+        })}
       </View>
     );
   }
   renderOrderSection() {
-    const items = [
-      { label: 'Default', value: { label: 'Default', val: 'Default' } },
-      { label: 'Random', value: { label: 'Random', val: 'Random' } },
-    ];
+    const items = ['Default', 'Random'];
     const onValueChange = value => {
       this.setState({
-        orderType: value,
+        orderType: { ...this.state.orderType, name: value },
       });
     };
     return (
@@ -279,20 +530,12 @@ export default class EditRollScreen extends React.Component<Props, State> {
     );
   }
   renderLengthSection() {
-    const items = [
-      {
-        label: 'Default',
-        value: { label: 'Default', val: 'Default' },
-      },
-      {
-        label: 'Number Of Songs',
-        value: { label: 'Number Of Songs', val: 'NumberOfSongs' },
-      },
-    ];
+    const items = ['Default', 'NumberOfSongs'];
     const onValueChange = value => {
-      this.setState({
-        lengthType: value,
-      });
+      const { lengthType } = this.state;
+      lengthType.name = value;
+      lengthType.data.modifications = ['0', '5'];
+      this.setState({ lengthType });
     };
     return (
       <View>
@@ -304,7 +547,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
             this.state.lengthType
           )}
         </View>
-        {this.state.lengthType.val === 'NumberOfSongs' && (
+        {this.state.lengthType.name === 'NumberOfSongs' && (
           <View
             style={{
               flexDirection: 'row',
@@ -321,7 +564,16 @@ export default class EditRollScreen extends React.Component<Props, State> {
                   paddingHorizontal: 10,
                 },
               ]}
+              placeholder={'5'}
               keyboardType='numeric'
+              value={this.state.lengthType.data.modifications[1]}
+              onChangeText={value => {
+                const { lengthType } = this.state;
+                lengthType.data.modifications = ['0', value];
+                this.setState({
+                  lengthType,
+                });
+              }}
             />
             <Text style={[styles.title]}> Songs</Text>
           </View>
@@ -359,7 +611,10 @@ export default class EditRollScreen extends React.Component<Props, State> {
         <RNPickerSelect
           placeholder={{}}
           // hideIcon={true}
-          items={items}
+          items={items.map(name => ({
+            label: rollFilterNameToLabel[name],
+            value: name,
+          }))}
           onValueChange={onValueChange}
           style={pickerStyle}
         >
@@ -372,7 +627,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
             <Text
               style={{ fontSize: 20, fontWeight: 'bold', color: '#993399' }}
             >
-              {pickedType.label}
+              {rollFilterNameToLabel[pickedType.name]}
             </Text>
             <Icon
               name='arrow-drop-down'

@@ -12,6 +12,9 @@ import { Icon } from 'react-native-elements';
 import { MusicSource, Roll } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
+import { NavigationScreenProp } from 'react-navigation';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
+import { UpdateRollMutation } from '../../../graphql/requests/Roll/UpdateRollMutation';
 
 interface EditRollFilter {
   name: string;
@@ -19,10 +22,13 @@ interface EditRollFilter {
 }
 
 export interface Props {
-  roll?: Roll;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
+  rollID: 0;
+  playrollID: 0;
+  rollOrder: -1;
   sourceType: EditRollFilter;
   draftFilterType: EditRollFilter;
   filterTypes: EditRollFilter[];
@@ -50,14 +56,23 @@ export default class EditRollScreen extends React.Component<Props, State> {
       data: { sources: [], modifications: [], open: false },
     });
     this.state = {
+      rollID: 0,
+      playrollID: 0,
+      rollOrder: -1,
       sourceType: createDefaultEditRollFilter('Union'),
       draftFilterType: createDefaultEditRollFilter('N/A'),
       filterTypes: [],
       orderType: createDefaultEditRollFilter('Default'),
       lengthType: createDefaultEditRollFilter('Default'),
     };
-    this.importRoll(props.roll);
   }
+
+  componentDidMount() {
+    const roll =
+      this.props.navigation && this.props.navigation.getParam('roll');
+    this.importRoll(roll);
+  }
+
   importRoll(roll: Roll) {
     if (!roll || !roll.data) {
       return;
@@ -140,17 +155,31 @@ export default class EditRollScreen extends React.Component<Props, State> {
         default:
       }
     });
-    const stateOverride: any = { filterTypes };
+    const stateOverride: any = {
+      filterTypes,
+      rollID: roll.id,
+      playrollID: roll.playrollID,
+      rollOrder: roll.order,
+    };
     if (sourceType) stateOverride.sourceType = sourceType;
     if (orderType) stateOverride.orderType = orderType;
     if (lengthType) stateOverride.lengthType = lengthType;
     this.setState(stateOverride);
   }
   exportRoll(): Roll {
+    const formatSource = ms => ({
+      cover: ms.cover,
+      creator: ms.creator,
+      name: ms.name,
+      provider: ms.provider,
+      providerID: ms.providerID,
+      type: ms.type,
+    });
     const compileEditRollFilter = (erf, type, rollSources, rollFilters) => {
       let i = sources.length;
       const modifications = [];
       erf.data.sources.forEach(source => {
+        source = formatSource(source);
         rollSources.push(source);
         modifications.push(i);
         i += 1;
@@ -168,6 +197,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       rollFilters
     ) => {
       erf.data.sources.forEach(source => {
+        source = formatSource(source);
         rollSources.push(source);
       });
       rollFilters.push({
@@ -198,31 +228,58 @@ export default class EditRollScreen extends React.Component<Props, State> {
       filters
     );
 
-    const roll = { data: { sources, filters } };
+    const roll = {
+      id: this.state.rollID,
+      playrollID: this.state.playrollID,
+      order: this.state.rollOrder,
+      data: { sources, filters },
+    };
     return roll;
   }
   render() {
     return (
-      <SubScreenContainer
-        title={'Edit Roll'}
-        icons={[
-          {
-            ...Icons.saveIcon,
-            onPress: () => {
-              console.log(this.exportRoll());
-            },
-          },
-          Icons.menuIcon,
-        ]}
-        modal
+      <UpdateRollMutation
+        onCompleted={() => {
+          NavigationService.goBack();
+        }}
+        refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
       >
-        <View style={{ marginBottom: 50 }}>
-          {this.renderSourceSection()}
-          {this.renderFiltersSection()}
-          {this.renderOrderSection()}
-          {this.renderLengthSection()}
-        </View>
-      </SubScreenContainer>
+        {(updateRoll, { data }) => {
+          return (
+            <SubScreenContainer
+              title={'Edit Roll'}
+              icons={[
+                {
+                  ...Icons.saveIcon,
+                  onPress: () => {
+                    const roll = this.exportRoll();
+
+                    updateRoll({
+                      variables: {
+                        id: roll.id,
+                        input: {
+                          playrollID: roll.playrollID,
+                          order: roll.order,
+                          data: roll.data,
+                        },
+                      },
+                    });
+                  },
+                },
+                Icons.menuIcon,
+              ]}
+              modal
+            >
+              <View style={{ marginBottom: 50 }}>
+                {this.renderSourceSection()}
+                {this.renderFiltersSection()}
+                {this.renderOrderSection()}
+                {this.renderLengthSection()}
+              </View>
+            </SubScreenContainer>
+          );
+        }}
+      </UpdateRollMutation>
     );
   }
 

@@ -134,6 +134,15 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     );
   }
   renderRolls(playroll) {
-    return <RollList rolls={playroll.rolls || []} />;
+    return (
+      <RollList
+        rolls={playroll.rolls || []}
+        onPress={roll => {
+          NavigationService.navigate('EditRoll', {
+            roll,
+          });
+        }}
+      />
+    );
   }
 }

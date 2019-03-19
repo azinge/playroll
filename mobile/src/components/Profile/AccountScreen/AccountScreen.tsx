@@ -48,7 +48,7 @@ export default class AccountScreen extends React.Component<Props, State> {
               <Button
                 title='My Friends'
                 onPress={() => {
-                  NavigationService.navigate('ViewFriends');
+                  NavigationService.navigate('FriendsMenu');
                 }}
               />
               <Button

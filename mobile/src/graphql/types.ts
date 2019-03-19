@@ -73,6 +73,48 @@ export const RollDataFragments = {
   `,
 };
 
+// DiscoveryQueueEntry Types / Fragments
+
+export type DiscoveryQueueEntry = {
+  id?: number;
+  discoveryQueueID?: number;
+  data?: RollData;
+};
+
+export const DiscoveryQueueEntryFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueueEntry on DiscoveryQueueEntry {
+      id
+      discoveryQueueID
+      data {
+        ...DefaultRollData
+      }
+    }
+    ${RollDataFragments.default}
+  `,
+};
+
+// DiscoveryQueue Types / Fragments
+
+export type DiscoveryQueue = {
+  id?: number;
+  userID?: number;
+  entries?: DiscoveryQueueEntry[];
+};
+
+export const DiscoveryQueueFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueue on DiscoveryQueue {
+      id
+      userID
+      entries {
+        ...DefaultDiscoveryQueueEntry
+      }
+    }
+    ${DiscoveryQueueEntryFragments.default}
+  `,
+};
+
 // User Types / Fragments
 
 export type User = {
@@ -211,5 +253,41 @@ export const PlayrollFragments = {
     }
     ${RollFragments.default}
     ${TracklistFragments.default}
+  `,
+};
+
+// Recommendation Types / Fragments
+
+export type Recommendation = {
+  id?: number;
+  userID?: number;
+  recommenderID?: number;
+  recommender?: User;
+  isActive?: boolean;
+  data?: RollData;
+  playroll?: Playroll;
+};
+
+export const RecommendationFragments = {
+  default: gql`
+    fragment DefaultRecommendation on Recommendation {
+      id
+      isActive
+      data {
+        ...DefaultRollData
+      }
+      playroll {
+        ...DefaultPlayroll
+      }
+      recommender {
+        ...DefaultUser
+      }
+      user {
+        ...DefaultUser
+      }
+    }
+    ${RollDataFragments.default}
+    ${PlayrollFragments.default}
+    ${UserFragments.default}
   `,
 };

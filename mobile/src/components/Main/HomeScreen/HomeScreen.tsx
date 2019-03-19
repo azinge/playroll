@@ -6,7 +6,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
-import DiscoverCarousel from './DiscoverCarousel';
+import HomeCarousel from './HomeCarousel';
 import { musicSources } from '../../../static/mockData';
 import styles from './HomeScreen.styles';
 import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
@@ -32,7 +32,7 @@ export default class HomeScreen extends React.Component<Props, State> {
             <Text style={styles.title}>Suggested Playrolls</Text>
           </View>
 
-          <DiscoverCarousel />
+          <HomeCarousel />
 
           <HorizontalMusicSourceList
             title={'Discovery Queue'}

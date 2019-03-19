@@ -1,38 +1,41 @@
 /**
- * ViewDiscoveryQueueScreen
+ * BrowseRecommendationsScreen
  */
 
 import * as React from 'react';
 import { Text, ActivityIndicator } from 'react-native';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import { GetCurrentUserDiscoveryQueueQuery } from '../../../graphql/requests/DiscoveryQueue/GetCurrentUserDiscoveryQueueQuery';
-import DiscoveryQueueEntryCard from '../../shared/Cards/DiscoveryQueueEntryCard';
+import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
+import RecommendationCard from '../../shared/Cards/RecommendationCard';
 
-export default class ViewDiscoveryQueueScreen extends React.Component {
+export default class BrowseRecommendationsScreen extends React.Component {
   render() {
-    const extractDiscoveryQueue = data => {
+    const extractRecommendations = data => {
       if (
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
-        return {};
+        return [];
       }
-      return data.private.currentUserDiscoveryQueue;
+      return data.private.listCurrentUserRecommendations;
     };
     return (
-      <GetCurrentUserDiscoveryQueueQuery>
+      <ListCurrentUserRecommendationsQuery>
         {({ loading, error, data }) => {
-          const discoveryQueue = extractDiscoveryQueue(data);
+          const recommendations = extractRecommendations(data);
           return (
             <SubScreenContainer
-              title={'My Discovery Queue'}
+              title={'My Recommendations'}
               flatList={!loading && !error}
               contentContainerStyle={{ marginTop: 10 }}
-              data={discoveryQueue.entries || []}
+              data={recommendations}
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (
-                  <DiscoveryQueueEntryCard entry={item} onPress={() => {}} />
+                  <RecommendationCard
+                    recommendation={item}
+                    onPress={() => {}}
+                  />
                 );
               }}
             >
@@ -41,13 +44,13 @@ export default class ViewDiscoveryQueueScreen extends React.Component {
               )}
               {error && (
                 <Text style={{ paddingTop: 50 }}>
-                  Error Loading Discovery Queue
+                  Error Loading Recommendation
                 </Text>
               )}
             </SubScreenContainer>
           );
         }}
-      </GetCurrentUserDiscoveryQueueQuery>
+      </ListCurrentUserRecommendationsQuery>
     );
   }
 }

@@ -59,7 +59,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         <View style={styles.textContainer}>
           <Text
             onPress={() => {
-              NavigationService.navigate('ViewPlayrolls');
+              NavigationService.navigate('BrowsePlayrolls');
             }}
             style={styles.playrollsText}
           >
@@ -79,7 +79,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         <View style={styles.textContainer}>
           <Text
             onPress={() => {
-              NavigationService.navigate('ViewRecommendations');
+              NavigationService.navigate('BrowseRecommendations');
             }}
             style={styles.text}
           >
@@ -172,7 +172,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         name: 'tidal',
         source: require('../../../assets/tidalIcon.png'),
         authenticated: false,
-        playlistsNav: () => NavigationService.navigate('ViewTidalPlaylists'),
+        playlistsNav: () => NavigationService.navigate('BrowseTidalPlaylists'),
         connectNav: () => NavigationService.navigate('ConnectTidal'),
       },
       {
@@ -180,14 +180,15 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         source: require('../../../assets/appleMusicIcon.png'),
         authenticated: false,
         playlistsNav: () =>
-          NavigationService.navigate('ViewAppleMusicPlaylists'),
+          NavigationService.navigate('BrowseAppleMusicPlaylists'),
         connectNav: () => NavigationService.navigate('ConnectAppleMusic'),
       },
       {
         name: 'spotify',
         source: require('../../../assets/spotifyIconBlack.png'),
         authenticated: true,
-        playlistsNav: () => NavigationService.navigate('ViewSpotifyPlaylists'),
+        playlistsNav: () =>
+          NavigationService.navigate('BrowseSpotifyPlaylists'),
         connectNav: () => NavigationService.navigate('ConnectSpotify'),
       },
     ];

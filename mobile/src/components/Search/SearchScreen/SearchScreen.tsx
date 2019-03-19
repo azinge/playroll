@@ -178,12 +178,17 @@ export default class SearchScreen extends React.Component<Props, State> {
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() => {
-                          this.props.playrollID
-                            ? this.setModal(item)
-                            : this.setState({
-                                isVisible: true,
-                                currentSource: item,
-                              });
+                          if (navigationOnPress) {
+                            navigationOnPress(item);
+                          } else {
+                            this.props.playrollID
+                              ? this.setModal(item)
+                              : // : this.setState({
+                                //     isVisible: true,
+                                //     currentSource: item,
+                                //   });
+                                this.manageRoll(item);
+                          }
                         }}
                         key={item.providerID}
                       >

@@ -8,6 +8,8 @@ import { Icon } from 'react-native-elements';
 
 import NavigationService from '../../../../services/NavigationService';
 
+import { Roll } from '../../../../graphql/types';
+
 import styles from './RollCard.styles';
 
 export interface Props {

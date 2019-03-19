@@ -81,7 +81,10 @@ export default class SearchScreenHeader extends React.Component<Props, State> {
               }}
             >
               <TextInput
-                style={[styles.headerTitle, { flex: 2, color: 'white' }]}
+                style={[
+                  styles.headerTitle,
+                  { flex: 2, color: 'white', fontSize: 18 },
+                ]}
                 value={this.state.text}
                 onChangeText={text => {
                   this.setState({ text });
@@ -100,10 +103,10 @@ export default class SearchScreenHeader extends React.Component<Props, State> {
               <Icon
                 name={'close'}
                 type={'material-community'}
-                size={27}
+                size={25}
                 color='white'
                 underlayColor='rgba(255,255,255,0)'
-                containerStyle={{ top: 2 }}
+                containerStyle={{ top: 1 }}
                 onPress={() => {
                   this.setState({ text: '' });
                 }}

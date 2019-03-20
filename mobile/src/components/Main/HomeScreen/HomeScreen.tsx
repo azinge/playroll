@@ -11,6 +11,9 @@ import { musicSources } from '../../../static/mockData';
 import styles from './HomeScreen.styles';
 import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
+import HorizontalComingSoonList from '../../shared/Lists/HorizontalComingSoonList';
+import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -23,33 +26,23 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       <MainScreenContainer>
         <View style={{ marginTop: 5, flex: 1 }}>
-          <View
-            style={{
-              marginVertical: 10,
-              paddingHorizontal: 10,
-            }}
-          >
-            <Text style={styles.title}>Suggested Playrolls</Text>
-          </View>
-
-          <HomeCarousel />
-
-          <HorizontalMusicSourceList
-            title={'Discovery Queue'}
-            musicSources={musicSources}
+          <HomeCarousel
+            title={'Your Featured Playrolls'}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
 
-          <HorizontalMusicSourceList
+          <HorizontalPlaceholderList
+            title={'Discovery Queues'}
+            numItems={5}
+            overlayText={'Coming Soon...'}
+          />
+
+          <PlaceholderList
             title={'Recommendations'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
-
-          <HorizontalMusicSourceList
-            title={'Friends'}
-            musicSources={musicSources}
-          />
-
-          <View style={{ marginVertical: 10 }} />
         </View>
       </MainScreenContainer>
     );

@@ -23,6 +23,7 @@ import Collapsible from 'react-native-collapsible-header';
 import styles from './LibraryMenuScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import MainScreenHeader from '../../shared/Headers/MainScreenHeader';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -73,7 +74,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
             }}
             style={styles.text}
           >
-            Your Discovery Queue
+            Your Discovery Queues
           </Text>
         </View>
         <View style={styles.textContainer}>
@@ -85,7 +86,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           >
             Your Recommendations
           </Text>
-          {this.renderRecommendationsNotification()}
+          {/* {this.renderRecommendationsNotification()} */}
         </View>
         <View style={styles.textContainer}>
           <Text
@@ -108,12 +109,17 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
             Saved Playrolls
           </Text>
         </View> */}
-        <View style={{ marginLeft: 15, marginTop: 10 }}>
+        {/* <View style={{ marginLeft: 15, marginTop: 10 }}>
           <Text onPress={() => {}} style={styles.title}>
             Recently Viewed
           </Text>
-        </View>
-        <ScrollView
+        </View> */}
+        <PlaceholderList
+          title={'Recently Viewed'}
+          numItems={10}
+          overlayText={'Coming Soon...'}
+        />
+        {/* <ScrollView
           style={{ marginLeft: 15, marginVertical: 10, paddingBottom: 10 }}
         >
           {musicSources.map((val, idx) => {
@@ -162,7 +168,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
               </TouchableOpacity>
             );
           })}
-        </ScrollView>
+        </ScrollView> */}
       </View>
     );
   }

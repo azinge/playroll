@@ -11,6 +11,7 @@ import NavigationService from '../../../services/NavigationService';
 import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
 import { musicSources } from '../../../static/mockData';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
+import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
 
 export interface Props {}
 
@@ -54,24 +55,28 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             </TouchableOpacity>
           </LinearGradient>
 
-          <HorizontalMusicSourceList
+          <HorizontalPlaceholderList
             title={'Suggested Playrolls'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
 
-          <HorizontalMusicSourceList
+          <HorizontalPlaceholderList
             title={'Suggested Rolls'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
 
-          <HorizontalMusicSourceList
+          <HorizontalPlaceholderList
             title={'Popular Playrolls'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
 
-          <HorizontalMusicSourceList
+          <HorizontalPlaceholderList
             title={'New Releases'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
         </View>
       </MainScreenContainer>

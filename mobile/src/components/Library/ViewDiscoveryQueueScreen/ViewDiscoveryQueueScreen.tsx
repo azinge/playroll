@@ -7,6 +7,7 @@ import { Text, ActivityIndicator } from 'react-native';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import { ListCurrentUserDiscoveryQueuesQuery } from '../../../graphql/requests/DiscoveryQueue/ListCurrentUserDiscoveryQueuesQuery';
 import DiscoveryQueueEntryCard from '../../shared/Cards/DiscoveryQueueEntryCard';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export default class ViewDiscoveryQueueScreen extends React.Component {
   render() {
@@ -21,34 +22,42 @@ export default class ViewDiscoveryQueueScreen extends React.Component {
       return data.private.listCurrentUserDiscoveryQueues[0];
     };
     return (
-      <ListCurrentUserDiscoveryQueuesQuery>
-        {({ loading, error, data }) => {
-          const discoveryQueue = extractDiscoveryQueue(data);
-          return (
-            <SubScreenContainer
-              title={'My Discovery Queue'}
-              flatList={!loading && !error}
-              contentContainerStyle={{ marginTop: 10 }}
-              data={discoveryQueue.entries || []}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => {
-                return (
-                  <DiscoveryQueueEntryCard entry={item} onPress={() => {}} />
-                );
-              }}
-            >
-              {loading && (
-                <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
-              )}
-              {error && (
-                <Text style={{ paddingTop: 50 }}>
-                  Error Loading Discovery Queue
-                </Text>
-              )}
-            </SubScreenContainer>
-          );
-        }}
-      </ListCurrentUserDiscoveryQueuesQuery>
+      <SubScreenContainer
+        title={'My Discovery Queue'}
+        contentContainerStyle={{ marginTop: 10 }}
+      >
+        <PlaceholderList numItems={20} overlayText={'Coming Soon...'} />
+      </SubScreenContainer>
     );
+    // return (
+    //   <ListCurrentUserDiscoveryQueuesQuery>
+    //     {({ loading, error, data }) => {
+    //       const discoveryQueue = extractDiscoveryQueue(data);
+    //       return (
+    //         <SubScreenContainer
+    //           title={'My Discovery Queue'}
+    //           flatList={!loading && !error}
+    //           contentContainerStyle={{ marginTop: 10 }}
+    //           data={discoveryQueue.entries || []}
+    //           keyExtractor={item => item.id}
+    //           renderItem={({ item }) => {
+    //             return (
+    //               <DiscoveryQueueEntryCard entry={item} onPress={() => {}} />
+    //             );
+    //           }}
+    //         >
+    //           {loading && (
+    //             <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
+    //           )}
+    //           {error && (
+    //             <Text style={{ paddingTop: 50 }}>
+    //               Error Loading Discovery Queue
+    //             </Text>
+    //           )}
+    //         </SubScreenContainer>
+    //       );
+    //     }}
+    //   </ListCurrentUserDiscoveryQueuesQuery>
+    // );
   }
 }

@@ -12,7 +12,7 @@ import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
 import {
   SearchRoutes,
   SearchModalRoutes,
-  SearchNavigator,
+  //   SearchNavigator,
 } from '../Search/router';
 import { MusicServiceSettingsModalRoutes } from '../MusicServices/Settings/router';
 
@@ -65,7 +65,7 @@ export const MainTabsNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Library',
     tabBarOptions: {
       activeTintColor: 'purple',
     },

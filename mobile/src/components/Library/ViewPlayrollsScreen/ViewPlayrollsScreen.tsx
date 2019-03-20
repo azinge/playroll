@@ -85,7 +85,7 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
                 flatList={!error}
                 data={playrolls}
                 keyExtractor={item => item.id}
-                refreshing={loading}
+                refreshing={loading};
                 onRefresh={() => refetch()}
                 renderItem={({ item }) => {
                   const playroll = item as Playroll;

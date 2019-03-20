@@ -2,23 +2,29 @@
  * Application component for Playroll mobile application.
  */
 
-import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
+import React from "react";
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView
+} from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 
-import NavigationService from '../../../services/NavigationService';
+import NavigationService from "../../../services/NavigationService";
 
 import {
   ListCurrentUserPlayrollsQuery,
-  CreatePlayrollMutation,
-} from '../../../graphql/requests/Playroll/';
+  CreatePlayrollMutation
+} from "../../../graphql/requests/Playroll/";
 
-import PlayrollCard from './PlayrollCard';
-import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
-import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import { Playroll } from '../../../graphql/types';
-import Icons from '../../../themes/Icons';
-import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
+import PlayrollCard from "./PlayrollCard";
+import SubScreenHeader from "../../shared/Headers/SubScreenHeader";
+import SubScreenContainer from "../../shared/Containers/SubScreenContainer";
+import { Playroll } from "../../../graphql/types";
+import Icons from "../../../themes/Icons";
+import { LIST_CURRENT_USER_PLAYROLLS } from "../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -26,17 +32,32 @@ export interface Props {
 
 interface State {
   addPlayrollName: string;
+  refreshing: boolean;
 }
 
 export default class ViewPlayrollsScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      addPlayrollName: '',
+      addPlayrollName: "",
+      refreshing: false
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
 
+  // async fetchData() {
+  //   console.log("test");
+  // }
+
+  // _onRefresh = () => {
+  //   this.setState({ refreshing: true });
+
+  //   //async property
+  //   this.fetchData().then(() => {
+  //     this.setState({ refreshing: false });
+  //   });
+  //   // this.fetchData();
+  // };
   render() {
     const extractPlayrolls = data => {
       if (
@@ -49,22 +70,23 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
     };
     return (
       <ListCurrentUserPlayrollsQuery>
-        {({ loading, error, data }) => {
+        {({ loading, error, data, refetch }) => {
           const playrolls = extractPlayrolls(data);
-          const success = !loading && !error;
           return (
             <View
               style={{
                 flex: 1,
                 // TODO(ianlizzo): Fix this pls
-                marginBottom: 30,
+                marginBottom: 30
               }}
             >
               <SubScreenContainer
                 renderHeader={this.renderHeader}
-                flatList={success}
+                flatList={!error}
                 data={playrolls}
                 keyExtractor={item => item.id}
+                refreshing={loading}
+                onRefresh={() => refetch()}
                 renderItem={({ item }) => {
                   const playroll = item as Playroll;
                   return (
@@ -72,9 +94,9 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
                       playroll={playroll}
                       editPlayroll={() =>
                         this.props.navigation &&
-                        this.props.navigation.navigate('ViewPlayroll', {
-                          managePlayroll: 'View Playroll',
-                          playroll,
+                        this.props.navigation.navigate("ViewPlayroll", {
+                          managePlayroll: "View Playroll",
+                          playroll
                         })
                       }
                       key={playroll.id}
@@ -82,12 +104,6 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
                   );
                 }}
               >
-                {loading && (
-                  <ActivityIndicator
-                    color={'gray'}
-                    style={{ paddingTop: 50 }}
-                  />
-                )}
                 {error && (
                   <Text style={{ paddingTop: 50 }}>
                     Error Loading Playrolls
@@ -114,12 +130,12 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
     return (
       <CreatePlayrollMutation
         variables={{
-          input: { name: 'New Playroll' },
+          input: { name: "New Playroll" }
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
-          NavigationService.navigate('EditPlayroll', {
-            playroll,
+          NavigationService.navigate("EditPlayroll", {
+            playroll
           });
         }}
         refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
@@ -127,11 +143,11 @@ export default class ViewPlayrollsScreen extends React.Component<Props, State> {
         {createPlayroll => {
           const addPlayrollIcon = {
             ...Icons.addIcon,
-            onPress: () => createPlayroll(),
+            onPress: () => createPlayroll()
           };
           return (
             <SubScreenHeader
-              title={'My Playrolls'}
+              title={"My Playrolls"}
               icons={[addPlayrollIcon, Icons.menuIcon]}
             />
           );

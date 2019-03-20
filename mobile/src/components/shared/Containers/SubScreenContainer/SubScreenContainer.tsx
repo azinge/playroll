@@ -2,11 +2,12 @@
  * SubScreenContainer
  */
 
-import * as React from 'react';
-import Collapsible from 'react-native-collapsible-header';
-import { isIphoneX } from 'react-native-iphone-x-helper';
-import SubScreenHeader from '../../Headers/SubScreenHeader';
-import { HeaderIconType } from '../../../../themes/Icons';
+import * as React from "react";
+import Collapsible from "react-native-collapsible-header";
+import { isIphoneX } from "react-native-iphone-x-helper";
+import SubScreenHeader from "../../Headers/SubScreenHeader";
+import { HeaderIconType } from "../../../../themes/Icons";
+import { RefreshControl, View } from "react-native";
 
 interface HeaderProps {
   title?: string;
@@ -20,6 +21,8 @@ interface ContainerProps extends HeaderProps {
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderItem?: (obj: any) => any;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 
 interface Props extends ContainerProps {}
@@ -32,7 +35,7 @@ export default class SubScreenContainer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      key: `${this.props.title},${this.props.flatList}`,
+      key: `${this.props.title},${this.props.flatList}`
     };
   }
   componentWillReceiveProps(nextProps, prevState) {
@@ -41,24 +44,45 @@ export default class SubScreenContainer extends React.Component<Props, State> {
       this.setState({ key });
     }
   }
+  getRefreshProps() {
+    const { flatList, refreshing, onRefresh } = this.props;
+    if (!onRefresh) {
+      return {};
+    }
+    if (flatList) {
+      return { refreshing, onRefresh };
+    } else {
+      return {
+        refreshControl: (
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        )
+      };
+    }
+  }
   render() {
+    const {
+      renderHeader,
+      flatList,
+      data,
+      keyExtractor,
+      renderItem
+    } = this.props;
     return (
-      <Collapsible
-        key={this.state.key}
-        max={45}
-        min={isIphoneX() ? 41 : 19}
-        backgroundColor={'purple'}
-        renderHeader={
-          this.props.renderHeader
-            ? this.props.renderHeader()
-            : this.renderHeader()
-        }
-        renderContent={this.renderContent()}
-        flatList={this.props.flatList}
-        data={this.props.data}
-        keyExtractor={this.props.keyExtractor}
-        renderItem={this.props.renderItem}
-      />
+      <View style={{ flex: 1 }}>
+        <Collapsible
+          key={this.state.key}
+          max={45}
+          min={isIphoneX() ? 41 : 19}
+          backgroundColor={"purple"}
+          renderHeader={renderHeader ? renderHeader() : this.renderHeader()}
+          renderContent={this.renderContent()}
+          flatList={flatList}
+          data={data}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          {...this.getRefreshProps()}
+        />
+      </View>
     );
   }
   renderHeader() {

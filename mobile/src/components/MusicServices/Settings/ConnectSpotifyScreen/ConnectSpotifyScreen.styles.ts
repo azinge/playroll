@@ -14,6 +14,7 @@ export default StyleSheet.create({
     width: 200,
   },
   connectButton: {
+    marginVertical: 10,
     borderRadius: 10,
     backgroundColor: '#A753AA',
   },

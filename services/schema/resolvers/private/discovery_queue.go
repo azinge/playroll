@@ -10,10 +10,10 @@ import (
 
 // DiscoveryQueueMethods defines the methods for the discovery queue entity.
 type DiscoveryQueueMethods struct {
-	GetCurrentUserDiscoveryQueue *gqltag.Query `gql:"currentUserDiscoveryQueue: DiscoveryQueue"`
+	ListCurrentUserDiscoveryQueues *gqltag.Query `gql:"listCurrentUserDiscoveryQueues: [DiscoveryQueue]"`
 }
 
-var getCurrentUserDiscoveryQueue = gqltag.Method{
+var listCurrentUserDiscoveryQueues = gqltag.Method{
 	Description: `Get discovery queue for a given user.`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
 		user, err := models.AuthorizeUser(mctx)
@@ -21,17 +21,17 @@ var getCurrentUserDiscoveryQueue = gqltag.Method{
 			fmt.Println("error authorizing user: ", err.Error())
 			return nil, err
 		}
-		discoveryQueue, err := models.GetDiscoveryQueueByUserID(user.ID, mctx.DB)
+		discoveryQueues, err := models.GetDiscoveryQueuesByUserID(user.ID, mctx.DB)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
 
-		return discoveryQueue, nil
+		return discoveryQueues, nil
 	},
 }
 
 // LinkedDiscoveryQueueMethods exports the methods for the discovery queue entity.
 var LinkedDiscoveryQueueMethods = DiscoveryQueueMethods{
-	GetCurrentUserDiscoveryQueue: gqltag.LinkQuery(getCurrentUserDiscoveryQueue),
+	ListCurrentUserDiscoveryQueues: gqltag.LinkQuery(listCurrentUserDiscoveryQueues),
 }

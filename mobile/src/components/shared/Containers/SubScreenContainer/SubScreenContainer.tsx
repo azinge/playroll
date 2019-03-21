@@ -8,6 +8,7 @@ import { isIphoneX } from 'react-native-iphone-x-helper';
 import SubScreenHeader from '../../Headers/SubScreenHeader';
 import { HeaderIconType } from '../../../../themes/Icons';
 import { SafeAreaView } from 'react-navigation';
+import { ViewStyle, StyleProp } from 'react-native';
 
 interface HeaderProps {
   title?: string;
@@ -18,6 +19,7 @@ interface HeaderProps {
 interface ContainerProps extends HeaderProps {
   renderHeader?: () => JSX.Element;
   flatList?: boolean;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderItem?: (obj: any) => any;
@@ -55,6 +57,7 @@ export default class SubScreenContainer extends React.Component<Props, State> {
             : this.renderHeader()
         }
         renderContent={this.renderContent()}
+        contentContainerStyle={this.props.contentContainerStyle}
         flatList={this.props.flatList}
         data={this.props.data}
         keyExtractor={this.props.keyExtractor}

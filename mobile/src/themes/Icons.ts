@@ -42,6 +42,18 @@ const settingsIcon: IconType = {
   name: 'settings',
 };
 
+const deleteIcon: IconType = {
+  name: 'delete',
+};
+
+const dropDownIcon: IconType = {
+  name: 'arrow-drop-down',
+};
+
+const dropUpIcon: IconType = {
+  name: 'arrow-drop-up',
+};
+
 export default {
   menuIcon,
   closeIcon,
@@ -50,4 +62,7 @@ export default {
   addIcon,
   saveIcon,
   settingsIcon,
+  deleteIcon,
+  dropDownIcon,
+  dropUpIcon,
 };

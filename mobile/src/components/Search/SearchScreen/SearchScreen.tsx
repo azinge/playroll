@@ -25,6 +25,7 @@ import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   playrollID?: any;
+  navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
@@ -37,7 +38,7 @@ export default class SearchScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      query: '',
+      query: 'Drake',
       searchType: 'Artist',
       modalVisible: false,
       currentSource: {},
@@ -148,6 +149,8 @@ export default class SearchScreen extends React.Component<Props, State> {
   }
 
   renderSearch() {
+    const navigationOnPress =
+      this.props.navigation && this.props.navigation.getParam('onPress');
     return (
       <SearchSpotifyQuery
         variables={{
@@ -170,9 +173,13 @@ export default class SearchScreen extends React.Component<Props, State> {
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       onPress={() => {
-                        this.props.playrollID
-                          ? this.setModal(item)
-                          : this.manageRoll(item);
+                        if (navigationOnPress) {
+                          navigationOnPress(item);
+                        } else {
+                          this.props.playrollID
+                            ? this.setModal(item)
+                            : this.manageRoll(item);
+                        }
                       }}
                       key={item.providerID}
                     >

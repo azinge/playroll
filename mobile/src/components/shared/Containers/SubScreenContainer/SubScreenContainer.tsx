@@ -7,6 +7,7 @@ import Collapsible from 'react-native-collapsible-header';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import SubScreenHeader from '../../Headers/SubScreenHeader';
 import { HeaderIconType } from '../../../../themes/Icons';
+import { SafeAreaView } from 'react-navigation';
 
 interface HeaderProps {
   title?: string;

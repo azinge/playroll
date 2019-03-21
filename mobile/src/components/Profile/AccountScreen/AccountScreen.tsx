@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, View, SafeAreaView, Button, Image } from 'react-native';
+import { Text, View, SafeAreaView, Image } from 'react-native';
 
 import styles from './AccountScreen.styles';
 import { SignOutMutation } from '../../../graphql/requests/Auth';
@@ -15,6 +15,7 @@ import {
 } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import { Button } from 'react-native-elements';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -54,7 +55,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                 <Button
                   title='Connect Spotify'
                   onPress={() => {
-                    NavigationService.navigate('ConnectSpotify');
+                    NavigationService.navigate('Connect');
                   }}
                 />
                 <Button

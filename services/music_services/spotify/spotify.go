@@ -300,19 +300,23 @@ func GetSpotifyTrack(id spotify.ID, client *spotify.Client) (*models.MusicServic
 }
 
 func GetSpotifyTracks(ids *[]spotify.ID, client *spotify.Client) (*[]models.MusicServiceTrack, error) {
-	audioFeatures, err := client.GetAudioFeatures(*ids...)
+	ids2 := *ids
+	if len(ids2) > 50 {
+		ids2 = ids2[:50]
+	}
+	audioFeatures, err := client.GetAudioFeatures(ids2...)
 	if err != nil {
 		fmt.Println("Error retrieving audio features: ", err.Error())
 		return nil, err
 	}
-	tracks, err := client.GetTracks(*ids...)
+	tracks, err := client.GetTracks(ids2...)
 	if err != nil {
 		fmt.Println("Error retrieving tracks: ", err.Error())
 		return nil, err
 	}
 
-	msts := make([]models.MusicServiceTrack, len(*ids))
-	for i, id := range *ids {
+	msts := make([]models.MusicServiceTrack, len(ids2))
+	for i, id := range ids2 {
 		// TODO: Link Genres, Secondary Artists, Available Markets
 		msts[i].Provider = "Spotify"
 		msts[i].ProviderID = string(id)

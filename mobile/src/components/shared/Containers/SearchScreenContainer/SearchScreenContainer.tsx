@@ -6,9 +6,11 @@ import * as React from 'react';
 import Collapsible from 'react-native-collapsible-header';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import SearchScreenHeader from '../../Headers/SearchScreenHeader';
+import { HeaderIconType } from '../../../../themes/Icons';
 
 export interface Props {
   title?: string;
+  icons?: HeaderIconType[];
   onChangeText?: (text: string) => void;
   onSubmitEditing?: (text: string) => void;
   renderHeader?: () => JSX.Element;
@@ -39,6 +41,7 @@ export default class SearchScreenContainer extends React.Component<
     return (
       <SearchScreenHeader
         title={this.props.title}
+        icons={this.props.icons}
         onChangeText={this.props.onChangeText}
         onSubmitEditing={this.props.onSubmitEditing}
       />

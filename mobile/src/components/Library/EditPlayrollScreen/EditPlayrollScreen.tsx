@@ -18,6 +18,9 @@ import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
+import Icons from '../../../themes/Icons';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -33,6 +36,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     this.state = {
       editPlayrollName: '',
     };
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
@@ -47,7 +51,10 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
           return (
-            <SubScreenContainer title='Edit Playroll'>
+            <SubScreenContainer
+              title='Edit Playroll'
+              renderHeader={this.renderHeader}
+            >
               <View style={styles.screenContainer}>
                 {/* {this.renderHeader(playroll)} */}
                 {this.renderEditingBar(playroll)}
@@ -60,7 +67,12 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GetCurrentUserPlayrollQuery>
     );
   }
-  renderHeader(playroll: Playroll) {
+  renderHeader() {
+    const playroll: Playroll =
+      (this.props &&
+        this.props.navigation &&
+        this.props.navigation.getParam('playroll')) ||
+      {};
     return (
       <GenerateTracklistMutation
         variables={{ playrollID: playroll.id }}
@@ -76,30 +88,14 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
         }
       >
         {(generateTracklist, { data }) => {
+          const generateTracklistIcon = {
+            ...Icons.saveIcon,
+            onPress: () => generateTracklist(),
+          };
           return (
-            <Header
-              backgroundColor='purple'
-              leftComponent={
-                <Icon
-                  name='arrow-back'
-                  color='white'
-                  onPress={() =>
-                    this.props.navigation && this.props.navigation.goBack(null)
-                  }
-                  underlayColor='purple'
-                />
-              }
-              centerComponent={{
-                text: playroll.name,
-                style: styles.headerCenterComponent,
-              }}
-              rightComponent={
-                <Icon
-                  name='save'
-                  color='white'
-                  onPress={() => generateTracklist()}
-                />
-              }
+            <SubScreenHeader
+              title={playroll.name}
+              icons={[generateTracklistIcon, Icons.menuIcon]}
             />
           );
         }}

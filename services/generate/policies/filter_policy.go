@@ -47,46 +47,85 @@ func (fp *FilterPolicy) Load(rf *jsonmodels.RollFilter) error {
 
 func NewFilterPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) (GeneratePolicy, error) {
 	switch filter.Name {
-	case "Exclude":
-		return NewExcludeFilterPolicy(filter, sources, db, client)
+	case "ExcludeSources":
+		return NewExcludeSourcesFilterPolicy(filter, sources, db, client)
+	case "IncludeSources":
+		return NewIncludeSourcesFilterPolicy(filter, sources, db, client)
 	default:
 		return nil, fmt.Errorf("error, invalid filter")
 	}
 }
 
-type ExcludeFilterPolicy struct {
+type ExcludeSourcesFilterPolicy struct {
 	FilterPolicy
 }
 
-func NewExcludeFilterPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*ExcludeFilterPolicy, error) {
-	esp := &ExcludeFilterPolicy{}
-	esp.Init(sources, cleanDB, client)
-	if ok := esp.Validate(filter); !ok {
+func NewExcludeSourcesFilterPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*ExcludeSourcesFilterPolicy, error) {
+	esfp := &ExcludeSourcesFilterPolicy{}
+	esfp.Init(sources, cleanDB, client)
+	if ok := esfp.Validate(filter); !ok {
 		return nil, fmt.Errorf("exclude filter policy error, could not validate filter: %v", filter)
 	}
-	if err := esp.Load(filter); err != nil {
+	if err := esfp.Load(filter); err != nil {
 		return nil, fmt.Errorf("exclude filter policy error, could not load filter: %v", filter)
 	}
-	return esp, nil
+	return esfp, nil
 }
 
-func (efp *ExcludeFilterPolicy) Name() string { return "Exclude" }
+func (esfp *ExcludeSourcesFilterPolicy) Name() string { return "ExcludeSources" }
 
-func (efp *ExcludeFilterPolicy) Validate(rf *jsonmodels.RollFilter) bool {
-	return rf.Type == efp.Type() && rf.Name == efp.Name()
+func (esfp *ExcludeSourcesFilterPolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return esfp.FilterPolicy.Validate(rf) && rf.Name == esfp.Name()
 }
 
-func (efp *ExcludeFilterPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	subQueryDB := efp.cleanDB.
+func (esfp *ExcludeSourcesFilterPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+	subQueryDB := esfp.cleanDB.
 		Table("music_service_tracks").
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
 		Select("music_service_tracks.id")
-	for _, source := range efp.Sources {
-		if err := CollectSource(&source, efp.cleanDB, efp.client); err != nil {
+	for _, source := range esfp.Sources {
+		if err := CollectSource(&source, esfp.cleanDB, esfp.client); err != nil {
 			return nil, err
 		}
 		subQueryDB = subQueryDB.Or(createTrackLinkedToSource(&source))
 	}
 	subQuery := subQueryDB.SubQuery()
 	return db.Not("music_service_tracks.id IN ?", subQuery), nil
+}
+
+type IncludeSourcesFilterPolicy struct {
+	FilterPolicy
+}
+
+func NewIncludeSourcesFilterPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*IncludeSourcesFilterPolicy, error) {
+	isfp := &IncludeSourcesFilterPolicy{}
+	isfp.Init(sources, cleanDB, client)
+	if ok := isfp.Validate(filter); !ok {
+		return nil, fmt.Errorf("exclude filter policy error, could not validate filter: %v", filter)
+	}
+	if err := isfp.Load(filter); err != nil {
+		return nil, fmt.Errorf("exclude filter policy error, could not load filter: %v", filter)
+	}
+	return isfp, nil
+}
+
+func (isfp *IncludeSourcesFilterPolicy) Name() string { return "IncludeSources" }
+
+func (isfp *IncludeSourcesFilterPolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return isfp.FilterPolicy.Validate(rf) && rf.Name == isfp.Name()
+}
+
+func (isfp *IncludeSourcesFilterPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+	subQueryDB := isfp.cleanDB.
+		Table("music_service_tracks").
+		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
+		Select("music_service_tracks.id")
+	for _, source := range isfp.Sources {
+		if err := CollectSource(&source, isfp.cleanDB, isfp.client); err != nil {
+			return nil, err
+		}
+		subQueryDB = subQueryDB.Or(createTrackLinkedToSource(&source))
+	}
+	subQuery := subQueryDB.SubQuery()
+	return db.Where("music_service_tracks.id IN ?", subQuery), nil
 }

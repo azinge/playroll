@@ -10,10 +10,13 @@ import TidalSettingsScreen from './TidalSettingsScreen';
 
 export const MusicServiceSettingsRoutes = {
   MusicServiceSettingsMenu: MusicServiceSettingsMenuScreen,
-  ConnectAppleMusic: ConnectAppleMusicScreen,
-  ConnectSpotify: ConnectSpotifyScreen,
-  ConnectTidal: ConnectTidalScreen,
   AppleMusicSettings: AppleMusicSettingsScreen,
   SpotifySettings: SpotifySettingsScreen,
   TidalSettings: TidalSettingsScreen,
+};
+
+export const MusicServiceSettingsModalRoutes = {
+  ConnectAppleMusic: ConnectAppleMusicScreen,
+  ConnectSpotify: ConnectSpotifyScreen,
+  ConnectTidal: ConnectTidalScreen,
 };

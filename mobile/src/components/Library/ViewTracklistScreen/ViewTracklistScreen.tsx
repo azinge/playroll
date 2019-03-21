@@ -34,6 +34,9 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
       // <SafeAreaView style={styles.screenContainer} forceInset={{ top: 'never' }}>
       <GetTracklistQuery variables={{ id: tracklistID }}>
         {({ loading, error, data }) => {
+          if (loading || error) {
+            return <SubScreenContainer title='View Tracklist' />;
+          }
           return (
             <SubScreenContainer title='View Tracklist'>
               <View style={styles.tracklistView}>

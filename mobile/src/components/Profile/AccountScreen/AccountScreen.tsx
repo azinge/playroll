@@ -53,30 +53,35 @@ export default class AccountScreen extends React.Component<Props, State> {
                   </Text>
                 </View>
                 <Button
+                  style={{ marginVertical: 3 }}
                   title='Connect Spotify'
                   onPress={() => {
-                    NavigationService.navigate('Connect');
+                    NavigationService.navigate('ConnectSpotify');
                   }}
                 />
                 <Button
+                  style={{ marginVertical: 3 }}
                   title='My Public Profile'
                   onPress={() => {
                     NavigationService.navigate('ViewProfile');
                   }}
                 />
                 <Button
+                  style={{ marginVertical: 3 }}
                   title='My Friends'
                   onPress={() => {
                     NavigationService.navigate('FriendsMenu');
                   }}
                 />
                 <Button
+                  style={{ marginVertical: 3 }}
                   title='Edit Profile'
                   onPress={() => {
                     NavigationService.navigate('EditProfile');
                   }}
                 />
                 <Button
+                  style={{ marginVertical: 3 }}
                   title='Settings'
                   onPress={() => {
                     NavigationService.navigate('Settings');
@@ -86,6 +91,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   {signOut => {
                     return (
                       <Button
+                        style={{ marginVertical: 50 }}
                         title='Sign Out'
                         onPress={() => {
                           signOut().then(

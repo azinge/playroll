@@ -266,7 +266,6 @@ export default class EditRollScreen extends React.Component<Props, State> {
                     });
                   },
                 },
-                Icons.menuIcon,
               ]}
               modal
             >

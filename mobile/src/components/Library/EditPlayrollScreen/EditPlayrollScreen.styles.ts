@@ -37,6 +37,8 @@ export default StyleSheet.create({
     borderTopColor: 'lightgrey',
     borderTopWidth: 1,
     width: '100%',
+    position: 'absolute',
+    bottom: 0,
     backgroundColor: '#f5eeed',
     paddingBottom: 5,
     paddingHorizontal: 5,

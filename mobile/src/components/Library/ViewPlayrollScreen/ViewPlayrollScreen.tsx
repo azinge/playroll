@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { View, TextInput, ScrollView, Image } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
 import { Playroll, MusicSource } from '../../../graphql/types';
@@ -46,23 +46,24 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         this.props.navigation.getParam('playroll').id) ||
       {};
     return (
-      <SubScreenContainer
-        title='View Playroll'
-        renderHeader={this.renderHeader}
-      >
-        <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
-          {({ loading, error, data, client: { cache } }) => {
-            const playroll: any =
-              (data && data.private && data.private.currentUserPlayroll) || {};
-            return (
-              <View style={styles.screenContainer}>
+      <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
+        {({ loading, error, data, client: { cache } }) => {
+          const playroll: any =
+            (data && data.private && data.private.currentUserPlayroll) || {};
+          return (
+            <View style={styles.screenContainer}>
+              <SubScreenContainer
+                title='View Playroll'
+                renderHeader={this.renderHeader}
+              >
                 {this.renderEditingBar(playroll)}
                 {this.renderRolls(playroll)}
-              </View>
-            );
-          }}
-        </GetCurrentUserPlayrollQuery>
-      </SubScreenContainer>
+              </SubScreenContainer>
+              {this.renderNewRollButton(playroll)}
+            </View>
+          );
+        }}
+      </GetCurrentUserPlayrollQuery>
     );
   }
   renderHeader() {
@@ -85,10 +86,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }),
     };
     return (
-      <SubScreenHeader
-        title={'View Playroll'}
-        icons={[addRollIcon, editPlayrollIcon, Icons.menuIcon]}
-      />
+      <SubScreenHeader title={'View Playroll'} icons={[editPlayrollIcon]} />
     );
   }
   renderEditingBar(playroll: Playroll) {
@@ -143,6 +141,22 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           });
         }}
       />
+    );
+  }
+  renderNewRollButton(playroll) {
+    return (
+      <View style={styles.footerView}>
+        <Button
+          title='New Roll'
+          containerStyle={styles.newRollButton}
+          onPress={() => {
+            NavigationService.navigate('EditPlayroll', {
+              managePlayroll: 'View Playroll',
+              playroll,
+            });
+          }}
+        />
+      </View>
     );
   }
 }

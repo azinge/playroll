@@ -33,68 +33,81 @@ export default class AccountScreen extends React.Component<Props, State> {
           const currentUser = (data && data.private.currentUser) || {};
           return (
             <SubScreenContainer title='My Account' modal>
-              <View>
-                <Text>AccountScreen</Text>
-              </View>
-              <View style={{ height: 100 }}>
-                <Image
-                  source={{
-                    uri: currentUser.avatar,
+              <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center', marginVertical: 20 }}>
+                  <Image
+                    source={{
+                      uri: currentUser.avatar,
+                    }}
+                    style={{ height: 100, width: 100, borderRadius: 5 }}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 20,
+                      color: '#993399',
+                    }}
+                  >
+                    {currentUser.name}
+                  </Text>
+                </View>
+                <Button
+                  title='Connect Spotify'
+                  onPress={() => {
+                    NavigationService.navigate('ConnectSpotify');
                   }}
-                  style={{ height: 100, width: 100, borderRadius: 5 }}
                 />
-                <Text>{currentUser.name}</Text>
+                <Button
+                  title='My Public Profile'
+                  onPress={() => {
+                    NavigationService.navigate('ViewProfile');
+                  }}
+                />
+                <Button
+                  title='My Friends'
+                  onPress={() => {
+                    NavigationService.navigate('FriendsMenu');
+                  }}
+                />
+                <Button
+                  title='Edit Profile'
+                  onPress={() => {
+                    NavigationService.navigate('EditProfile');
+                  }}
+                />
+                <Button
+                  title='Settings'
+                  onPress={() => {
+                    NavigationService.navigate('Settings');
+                  }}
+                />
+                <SignOutMutation>
+                  {signOut => {
+                    return (
+                      <Button
+                        title='Sign Out'
+                        onPress={() => {
+                          signOut().then(
+                            () =>
+                              this.props.navigation &&
+                              this.props.navigation.dispatch(
+                                StackActions.reset({
+                                  key: null,
+                                  index: 0,
+                                  actions: [
+                                    NavigationActions.navigate({
+                                      routeName: 'Auth',
+                                    }),
+                                  ],
+                                })
+                              )
+                          );
+                        }}
+                      />
+                    );
+                  }}
+                </SignOutMutation>
               </View>
-              <Button
-                title='My Public Profile'
-                onPress={() => {
-                  NavigationService.navigate('ViewProfile');
-                }}
-              />
-              <Button
-                title='My Friends'
-                onPress={() => {
-                  NavigationService.navigate('FriendsMenu');
-                }}
-              />
-              <Button
-                title='Edit Profile'
-                onPress={() => {
-                  NavigationService.navigate('EditProfile');
-                }}
-              />
-              <Button
-                title='Settings'
-                onPress={() => {
-                  NavigationService.navigate('Settings');
-                }}
-              />
-              <SignOutMutation>
-                {signOut => {
-                  return (
-                    <Button
-                      title='Sign Out'
-                      onPress={() => {
-                        signOut().then(
-                          () =>
-                            this.props.navigation &&
-                            this.props.navigation.dispatch(
-                              StackActions.reset({
-                                key: null,
-                                index: 0,
-                                actions: [
-                                  NavigationActions.navigate({
-                                    routeName: 'Auth',
-                                  }),
-                                ],
-                              })
-                            )
-                        );
-                      }}
-                    />
-                  );
-                }}
-              </SignOutMutation>
             </SubScreenContainer>
           );
         }}

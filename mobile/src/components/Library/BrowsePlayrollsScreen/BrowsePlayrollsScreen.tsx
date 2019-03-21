@@ -121,7 +121,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
-          NavigationService.navigate('EditPlayroll', {
+          NavigationService.navigate('ViewPlayroll', {
             playroll,
           });
         }}
@@ -133,10 +133,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             onPress: () => createPlayroll(),
           };
           return (
-            <SubScreenHeader
-              title={'My Playrolls'}
-              icons={[addPlayrollIcon, Icons.menuIcon]}
-            />
+            <SubScreenHeader title={'My Playrolls'} icons={[addPlayrollIcon]} />
           );
         }}
       </CreatePlayrollMutation>

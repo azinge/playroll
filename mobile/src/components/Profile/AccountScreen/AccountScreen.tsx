@@ -46,6 +46,12 @@ export default class AccountScreen extends React.Component<Props, State> {
                 <Text>{currentUser.name}</Text>
               </View>
               <Button
+                title='My Public Profile'
+                onPress={() => {
+                  NavigationService.navigate('ViewProfile');
+                }}
+              />
+              <Button
                 title='My Friends'
                 onPress={() => {
                   NavigationService.navigate('FriendsMenu');

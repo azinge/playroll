@@ -3,21 +3,10 @@
  */
 
 import * as React from 'react';
-import {
-  Text,
-  View,
-  ScrollView,
-  Image,
-  TouchableHighlight,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import { Text, View, Image, TouchableHighlight } from 'react-native';
 
 import { NavigationScreenProp } from 'react-navigation';
-import { ifIphoneX, isIphoneX } from 'react-native-iphone-x-helper';
-import { Header, Icon } from 'react-native-elements';
-import { musicSources } from '../../../static/mockData';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 import Collapsible from 'react-native-collapsible-header';
 import styles from './LibraryMenuScreen.styles';

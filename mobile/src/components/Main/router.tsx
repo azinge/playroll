@@ -12,6 +12,12 @@ import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
 import { SearchRoutes, SearchModalRoutes } from '../Search/router';
 import { MusicServiceSettingsModalRoutes } from '../MusicServices/Settings/router';
 
+// Add Avenir to all screens (for Android)
+import { Font } from 'expo';
+Font.loadAsync({
+  Avenir: require('../../assets/fonts/AvenirLTStd-Black.otf'),
+});
+
 export const MainTabsNavigator = createBottomTabNavigator(
   {
     Home: {

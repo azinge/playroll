@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, View, SafeAreaView, Button, Image } from 'react-native';
+import { Text, View, SafeAreaView, Image } from 'react-native';
 
 import styles from './AccountScreen.styles';
 import { SignOutMutation } from '../../../graphql/requests/Auth';
@@ -15,6 +15,7 @@ import {
 } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import { Button } from 'react-native-elements';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -33,62 +34,87 @@ export default class AccountScreen extends React.Component<Props, State> {
           const currentUser = (data && data.private.currentUser) || {};
           return (
             <SubScreenContainer title='My Account' modal>
-              <View>
-                <Text>AccountScreen</Text>
-              </View>
-              <View style={{ height: 100 }}>
-                <Image
-                  source={{
-                    uri: currentUser.avatar,
+              <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center', marginVertical: 20 }}>
+                  <Image
+                    source={{
+                      uri: currentUser.avatar,
+                    }}
+                    style={{ height: 100, width: 100, borderRadius: 5 }}
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 20,
+                      color: '#993399',
+                    }}
+                  >
+                    {currentUser.name}
+                  </Text>
+                </View>
+                <Button
+                  style={{ marginVertical: 3 }}
+                  title='Connect Spotify'
+                  onPress={() => {
+                    NavigationService.navigate('ConnectSpotify');
                   }}
-                  style={{ height: 100, width: 100, borderRadius: 5 }}
                 />
-                <Text>{currentUser.name}</Text>
+                <Button
+                  style={{ marginVertical: 3 }}
+                  title='My Public Profile'
+                  onPress={() => {
+                    NavigationService.navigate('ViewProfile');
+                  }}
+                />
+                <Button
+                  style={{ marginVertical: 3 }}
+                  title='My Friends'
+                  onPress={() => {
+                    NavigationService.navigate('FriendsMenu');
+                  }}
+                />
+                <Button
+                  style={{ marginVertical: 3 }}
+                  title='Edit Profile'
+                  onPress={() => {
+                    NavigationService.navigate('EditProfile');
+                  }}
+                />
+                <Button
+                  style={{ marginVertical: 3 }}
+                  title='Settings'
+                  onPress={() => {
+                    NavigationService.navigate('Settings');
+                  }}
+                />
+                <SignOutMutation>
+                  {signOut => {
+                    return (
+                      <Button
+                        style={{ marginVertical: 50 }}
+                        title='Sign Out'
+                        onPress={() => {
+                          signOut().then(
+                            () =>
+                              this.props.navigation &&
+                              this.props.navigation.dispatch(
+                                StackActions.reset({
+                                  key: null,
+                                  index: 0,
+                                  actions: [
+                                    NavigationActions.navigate({
+                                      routeName: 'Auth',
+                                    }),
+                                  ],
+                                })
+                              )
+                          );
+                        }}
+                      />
+                    );
+                  }}
+                </SignOutMutation>
               </View>
-              <Button
-                title='My Friends'
-                onPress={() => {
-                  NavigationService.navigate('ViewFriends');
-                }}
-              />
-              <Button
-                title='Edit Profile'
-                onPress={() => {
-                  NavigationService.navigate('EditProfile');
-                }}
-              />
-              <Button
-                title='Settings'
-                onPress={() => {
-                  NavigationService.navigate('Settings');
-                }}
-              />
-              <SignOutMutation>
-                {signOut => {
-                  return (
-                    <Button
-                      title='Sign Out'
-                      onPress={() => {
-                        signOut().then(
-                          () =>
-                            this.props.navigation &&
-                            this.props.navigation.dispatch(
-                              StackActions.reset({
-                                key: null,
-                                index: 0,
-                                actions: [
-                                  NavigationActions.navigate({
-                                    routeName: 'Auth',
-                                  }),
-                                ],
-                              })
-                            )
-                        );
-                      }}
-                    />
-                  );
-                }}
-              </SignOutMutation>
             </SubScreenContainer>
           );
         }}

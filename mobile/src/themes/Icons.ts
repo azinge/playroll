@@ -54,6 +54,11 @@ const dropUpIcon: IconType = {
   name: 'arrow-drop-up',
 };
 
+const exportIcon: IconType = {
+  name: 'export',
+  type: 'material-community',
+};
+
 export default {
   menuIcon,
   closeIcon,
@@ -65,4 +70,5 @@ export default {
   deleteIcon,
   dropDownIcon,
   dropUpIcon,
+  exportIcon,
 };

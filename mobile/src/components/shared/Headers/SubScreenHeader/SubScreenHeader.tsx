@@ -60,10 +60,7 @@ export default class SubScreenHeader extends React.Component<Props, State> {
     );
   }
   renderIcons() {
-    const menuIcon: HeaderIconType = {
-      ...Icons.menuIcon,
-    };
-    const icons = this.props.icons || [menuIcon];
+    const icons = this.props.icons || [];
     return icons.map(icon =>
       icon.render ? (
         icon.render()

@@ -27,19 +27,19 @@ type DiscoveryQueueOutput struct {
 
 // Utility Functions
 
-func GetDiscoveryQueueByUserID(id uint, db *gorm.DB) (*DiscoveryQueueOutput, error) {
-	dq := &DiscoveryQueue{}
+func GetDiscoveryQueuesByUserID(id uint, db *gorm.DB) (*[]DiscoveryQueueOutput, error) {
+	dqs := &[]DiscoveryQueue{}
 	db = db.Preload("Entries")
-	if err := db.Where(DiscoveryQueue{UserID: id}).First(dq).Error; err != nil {
-		fmt.Printf("error getting discovery queue: %s", err.Error())
+	if err := db.Where(DiscoveryQueue{UserID: id}).Find(dqs).Error; err != nil {
+		fmt.Printf("error getting discovery queues: %s", err.Error())
 		return nil, err
 	}
 
-	discoveryQueue, err := FormatDiscoveryQueue(dq)
+	discoveryQueues, err := FormatDiscoveryQueueSlice(dqs)
 	if err != nil {
 		return nil, err
 	}
-	return discoveryQueue, nil
+	return &discoveryQueues, nil
 }
 
 // Entity Specific Methods

@@ -3,9 +3,10 @@
  */
 
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View } from 'react-native';
 import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import NavigationService from '../../../../services/NavigationService';
+import { Button } from 'react-native-elements';
 
 export default class TidalSettingsScreen extends React.Component {
   render() {

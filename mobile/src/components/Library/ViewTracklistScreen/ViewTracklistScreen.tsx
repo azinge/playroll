@@ -38,71 +38,72 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
             return <SubScreenContainer title='View Tracklist' />;
           }
           return (
-            <SubScreenContainer title='View Tracklist'>
-              <View style={styles.tracklistView}>
-                {/* Scroll View Content */}
-                <ScrollView
-                  style={styles.scrollView}
-                  contentContainerStyle={styles.scrollViewContent}
-                >
-                  {data &&
-                    data.private.currentUserTracklist &&
-                    data.private.currentUserTracklist.compiledRolls &&
-                    data.private.currentUserTracklist.compiledRolls.map(
-                      compiledRoll => {
-                        return (
-                          compiledRoll &&
-                          compiledRoll.data &&
-                          compiledRoll.data.tracks &&
-                          compiledRoll.data.tracks.length > 0 && (
-                            <Card
-                              key={compiledRoll.id}
-                              containerStyle={styles.rollCardContainer}
-                            >
-                              {compiledRoll.data.tracks.map(track => {
-                                return (
-                                  track && (
-                                    <View
-                                      style={styles.trackView}
-                                      key={track.providerID}
-                                    >
-                                      <Image
-                                        style={styles.trackImage}
-                                        source={{ uri: track.cover }}
-                                      />
-                                      <Text>{track.name}</Text>
-                                    </View>
-                                  )
-                                );
-                              })}
-                            </Card>
-                          )
-                        );
-                      }
-                    )}
-                </ScrollView>
-
-                {/* "Generate Playlist" Button */}
-                <View style={styles.footerView}>
-                  <GeneratePlaylistMutation
-                    variables={{
-                      tracklistID,
-                      playlistName,
-                    }}
+            <View style={{ flex: 1 }}>
+              <SubScreenContainer title='View Tracklist'>
+                <View style={styles.tracklistView}>
+                  {/* Scroll View Content */}
+                  <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollViewContent}
                   >
-                    {generatePlaylist => (
-                      <Button
-                        title='Generate Playlist'
-                        containerStyle={styles.genPlaylistButton}
-                        onPress={() => {
-                          generatePlaylist();
-                        }}
-                      />
-                    )}
-                  </GeneratePlaylistMutation>
+                    {data &&
+                      data.private.currentUserTracklist &&
+                      data.private.currentUserTracklist.compiledRolls &&
+                      data.private.currentUserTracklist.compiledRolls.map(
+                        compiledRoll => {
+                          return (
+                            compiledRoll &&
+                            compiledRoll.data &&
+                            compiledRoll.data.tracks &&
+                            compiledRoll.data.tracks.length > 0 && (
+                              <Card
+                                key={compiledRoll.id}
+                                containerStyle={styles.rollCardContainer}
+                              >
+                                {compiledRoll.data.tracks.map(track => {
+                                  return (
+                                    track && (
+                                      <View
+                                        style={styles.trackView}
+                                        key={track.providerID}
+                                      >
+                                        <Image
+                                          style={styles.trackImage}
+                                          source={{ uri: track.cover }}
+                                        />
+                                        <Text>{track.name}</Text>
+                                      </View>
+                                    )
+                                  );
+                                })}
+                              </Card>
+                            )
+                          );
+                        }
+                      )}
+                  </ScrollView>
                 </View>
+              </SubScreenContainer>
+              {/* "Generate Playlist" Button */}
+              <View style={styles.footerView}>
+                <GeneratePlaylistMutation
+                  variables={{
+                    tracklistID,
+                    playlistName,
+                  }}
+                >
+                  {generatePlaylist => (
+                    <Button
+                      title='Generate Playlist'
+                      containerStyle={styles.genPlaylistButton}
+                      onPress={() => {
+                        generatePlaylist();
+                      }}
+                    />
+                  )}
+                </GeneratePlaylistMutation>
               </View>
-            </SubScreenContainer>
+            </View>
           );
         }}
       </GetTracklistQuery>

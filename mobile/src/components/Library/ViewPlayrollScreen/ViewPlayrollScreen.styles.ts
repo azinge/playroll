@@ -55,6 +55,21 @@ export default StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#FFFFFF9F',
   },
+  newRollButton: {
+    width: '90%',
+  },
+  footerView: {
+    backgroundColor: '#fff',
+    flex: 1,
+    position: 'absolute',
+    bottom: 0, // stick to bottom
+    left: 0, // stretch to left
+    right: 0, // stretch to right
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1, // float on top
+  },
 });
 
 export const rawStyles = {

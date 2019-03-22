@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, SafeAreaView, Image } from 'react-native';
+import { Text, SafeAreaView, Image, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 import url from 'url';
@@ -32,29 +32,30 @@ export default class ConnectSpotifyScreen extends React.Component {
   render() {
     return (
       <SubScreenContainer title='Connect to Spotify' modal>
-        <Text>ConnectSpotifyScreen</Text>
-        <Image
-          style={styles.spotifyIcon}
-          source={require('../../../../assets/spotifyIcon.png')}
-        />
-        <RegisterSpotifyAuthCodeMutation>
-          {registerSpotifyAuthCode => {
-            return (
-              <Button
-                title='Connect to Spotify'
-                containerStyle={styles.connectButton}
-                onPress={async () => {
-                  try {
-                    const code = await this.handleOpenSpotifyAuthView();
-                    registerSpotifyAuthCode({ variables: { code } });
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }}
-              />
-            );
-          }}
-        </RegisterSpotifyAuthCodeMutation>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            style={styles.spotifyIcon}
+            source={require('../../../../assets/spotifyIcon.png')}
+          />
+          <RegisterSpotifyAuthCodeMutation>
+            {registerSpotifyAuthCode => {
+              return (
+                <Button
+                  title='Connect to Spotify'
+                  containerStyle={styles.connectButton}
+                  onPress={async () => {
+                    try {
+                      const code = await this.handleOpenSpotifyAuthView();
+                      registerSpotifyAuthCode({ variables: { code } });
+                    } catch (err) {
+                      console.log(err);
+                    }
+                  }}
+                />
+              );
+            }}
+          </RegisterSpotifyAuthCodeMutation>
+        </View>
       </SubScreenContainer>
     );
   }

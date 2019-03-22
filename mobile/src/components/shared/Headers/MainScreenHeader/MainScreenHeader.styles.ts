@@ -13,6 +13,9 @@ export default StyleSheet.create({
     overflow: 'hidden',
   },
   profileAvatarContainer: {
+    borderWidth: 1,
+    borderColor: '#660066',
+    backgroundColor: '#660066',
     marginLeft: 16,
     width: 30,
     height: 30,

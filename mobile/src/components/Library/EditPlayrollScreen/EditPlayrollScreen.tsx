@@ -51,17 +51,19 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
           return (
-            <SubScreenContainer
-              title='Edit Playroll'
-              renderHeader={this.renderHeader}
-            >
-              <View style={styles.screenContainer}>
-                {/* {this.renderHeader(playroll)} */}
-                {this.renderEditingBar(playroll)}
-                {this.renderSearchMusic(playroll)}
-                {/* {this.renderBottomBar(playroll)} */}
-              </View>
-            </SubScreenContainer>
+            <View style={{ flex: 1 }}>
+              <SubScreenContainer
+                title='Edit Playroll'
+                renderHeader={this.renderHeader}
+              >
+                <View style={styles.screenContainer}>
+                  {/* {this.renderHeader(playroll)} */}
+                  {this.renderEditingBar(playroll)}
+                  {this.renderSearchMusic(playroll)}
+                </View>
+              </SubScreenContainer>
+              {this.renderBottomBar(playroll)}
+            </View>
           );
         }}
       </GetCurrentUserPlayrollQuery>
@@ -89,13 +91,13 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       >
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
-            ...Icons.saveIcon,
+            ...Icons.exportIcon,
             onPress: () => generateTracklist(),
           };
           return (
             <SubScreenHeader
               title={playroll.name}
-              icons={[generateTracklistIcon, Icons.menuIcon]}
+              icons={[generateTracklistIcon]}
             />
           );
         }}

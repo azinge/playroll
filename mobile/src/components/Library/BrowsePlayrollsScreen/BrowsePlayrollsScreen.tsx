@@ -19,6 +19,9 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import { Playroll } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
+import { Button } from 'react-native-elements';
+
+import styles from './BrowsePlayrollsScreen.styles';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -60,7 +63,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
               style={{
                 flex: 1,
                 // TODO(ianlizzo): Fix this pls
-                marginBottom: 30,
+                // marginBottom: 30,
               }}
             >
               <SubScreenContainer
@@ -97,6 +100,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   </Text>
                 )}
               </SubScreenContainer>
+              {this.renderNewPlayrollButton()}
             </View>
           );
         }}
@@ -134,6 +138,46 @@ export default class BrowsePlayrollsScreen extends React.Component<
           };
           return (
             <SubScreenHeader title={'My Playrolls'} icons={[addPlayrollIcon]} />
+          );
+        }}
+      </CreatePlayrollMutation>
+    );
+  }
+  renderNewPlayrollButton() {
+    // return (
+    const extractPlayroll = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return null;
+      }
+      return data.private.createCurrentUserPlayroll;
+    };
+    return (
+      <CreatePlayrollMutation
+        variables={{
+          input: { name: 'New Playroll' },
+        }}
+        onCompleted={data => {
+          const playroll = extractPlayroll(data);
+          NavigationService.navigate('ViewPlayroll', {
+            playroll,
+          });
+        }}
+        refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+      >
+        {createPlayroll => {
+          return (
+            <View style={styles.footerView}>
+              <Button
+                title='New Playroll'
+                containerStyle={styles.newPlayrollButton}
+                onPress={() => {
+                  createPlayroll();
+                }}
+              />
+            </View>
           );
         }}
       </CreatePlayrollMutation>

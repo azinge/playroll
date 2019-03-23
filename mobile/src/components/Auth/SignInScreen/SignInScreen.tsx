@@ -25,6 +25,7 @@ import { SignInMutation } from '../../../graphql/requests/Auth';
 
 import styles from './SignInScreen.styles';
 import NavigationService from '../../../services/NavigationService';
+import { Icon } from 'react-native-elements';
 
 export interface Props {
   onLoginPress?: () => void;
@@ -43,8 +44,8 @@ export default class SignInScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      username: 'test',
-      password: 'Password123!',
+      username: '',
+      password: '',
       showPassword: true,
       signedUp: true,
     };
@@ -58,6 +59,27 @@ export default class SignInScreen extends React.Component<Props, State> {
 
   toggleSignUp() {
     NavigationService.navigate('SignUp');
+  }
+
+  renderSegueToSignIn() {
+    return (
+      <TouchableOpacity
+        style={styles.segueToSignInContainer}
+        onPress={() => {
+          NavigationService.goBack();
+        }}
+      >
+        <Icon
+          name='arrow-back'
+          type='material'
+          color='#6A0070'
+          onPress={() => {
+            NavigationService.goBack();
+          }}
+        />
+        <Text style={styles.signInTitle}>Sign In</Text>
+      </TouchableOpacity>
+    );
   }
 
   renderHeader() {
@@ -118,6 +140,7 @@ export default class SignInScreen extends React.Component<Props, State> {
       >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
+            {this.renderSegueToSignIn()}
             {this.renderHeader()}
             <TextInput
               placeholder='Username'

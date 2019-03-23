@@ -61,7 +61,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
             onPress={() => {
               NavigationService.navigate('ViewDiscoveryQueue');
             }}
-            style={styles.text}
+            style={styles.disabledText}
           >
             Your Discovery Queues
           </Text>
@@ -71,7 +71,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
             onPress={() => {
               NavigationService.navigate('BrowseRecommendations');
             }}
-            style={styles.text}
+            style={styles.disabledText}
           >
             Your Recommendations
           </Text>
@@ -82,7 +82,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
             onPress={() => {
               NavigationService.navigate('MusicServicePlaylistsMenu');
             }}
-            style={styles.text}
+            style={styles.disabledText}
           >
             Your Playlists
           </Text>

@@ -65,6 +65,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   onPress={() => {
                     NavigationService.navigate('ViewProfile');
                   }}
+                  disabled
                 />
                 <Button
                   style={{ marginVertical: 3 }}
@@ -72,6 +73,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   onPress={() => {
                     NavigationService.navigate('FriendsMenu');
                   }}
+                  disabled
                 />
                 <Button
                   style={{ marginVertical: 3 }}
@@ -79,6 +81,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   onPress={() => {
                     NavigationService.navigate('EditProfile');
                   }}
+                  disabled
                 />
                 <Button
                   style={{ marginVertical: 3 }}
@@ -86,6 +89,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   onPress={() => {
                     NavigationService.navigate('Settings');
                   }}
+                  disabled
                 />
                 <SignOutMutation>
                   {signOut => {

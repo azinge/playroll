@@ -21,7 +21,9 @@ export default class PlaceholderList extends React.Component<Props, State> {
       <View>
         {this.props.title && (
           <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-            <Text style={styles.title}>{this.props.title}</Text>
+            <Text style={[styles.title, { color: 'grey' }]}>
+              {this.props.title}
+            </Text>
           </View>
         )}
         <View>
@@ -50,6 +52,7 @@ export default class PlaceholderList extends React.Component<Props, State> {
             style={[
               styles.title,
               {
+                color: 'grey',
                 position: 'absolute',
                 top: 12,
                 right: 12,

@@ -17,6 +17,7 @@ import { Icon } from 'react-native-elements';
 import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './ConfirmationScreen.styles';
 import { NavigationScreenProp } from 'react-navigation';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   toggleSignUp: () => void;
@@ -52,25 +53,27 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
           setTimeout(() => {
             this.setState({ error: null });
           }, 3000);
-        },
+        }
       );
     }
     confirmSignUp();
+    NavigationService.goBack();
+    NavigationService.goBack();
+    NavigationService.navigate('SignIn');
   }
 
   renderSegueToSignIn() {
     return (
-      <View style={styles.segueToSignInContainer}>
-        <Icon
-          name='arrow-back'
-          type='material'
-          color='#6A0070'
-          onPress={() => {
-            this.props.navigation && this.props.navigation.navigate('SignIn');
-          }}
-        />
+      <TouchableOpacity
+        style={styles.segueToSignInContainer}
+        onPress={() => {
+          NavigationService.goBack();
+          NavigationService.goBack();
+        }}
+      >
+        <Icon name='arrow-back' type='material' color='#6A0070' />
         <Text style={styles.signInTitle}>Sign In</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 

@@ -20,6 +20,7 @@ import { WebBrowser, ImagePicker, Permissions } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   toggleSignUp?: () => void;
@@ -47,7 +48,8 @@ export default class SignUpScreen extends React.Component<Props, State> {
       password: '',
       confirmPassword: '',
       avatar: {
-        uri: '',
+        uri:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
         source: '',
       },
       error: undefined,
@@ -57,10 +59,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
 
   handleOpenTOSURL() {
-    const url = 'http://www.playroll.io/tos';
-    if (Platform.OS === 'ios') {
-      WebBrowser.openBrowserAsync(url);
-    }
+    const url =
+      'https://www.freeprivacypolicy.com/privacy/view/919ec0f8123830156075504b5da568d3';
+
     WebBrowser.openBrowserAsync(url);
   }
 
@@ -70,7 +71,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
       this.state.email === '' ||
       this.state.password === '' ||
       this.state.confirmPassword === '' ||
-      this.state.avatar.source === ''
+      this.state.avatar.uri === ''
     ) {
       return this.setState(
         {
@@ -80,7 +81,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
           setTimeout(() => {
             this.setState({ error: null });
           }, 3000);
-        },
+        }
       );
     }
     if (this.state.password !== this.state.confirmPassword) {
@@ -94,7 +95,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
           setTimeout(() => {
             this.setState({ error: null });
           }, 3000);
-        },
+        }
       );
     }
     signUp();
@@ -102,17 +103,22 @@ export default class SignUpScreen extends React.Component<Props, State> {
 
   renderSegueToSignIn() {
     return (
-      <View style={styles.segueToSignInContainer}>
+      <TouchableOpacity
+        style={styles.segueToSignInContainer}
+        onPress={() => {
+          NavigationService.goBack();
+        }}
+      >
         <Icon
           name='arrow-back'
           type='material'
           color='#6A0070'
           onPress={() => {
-            this.props.navigation && this.props.navigation.navigate('SignIn');
+            NavigationService.goBack();
           }}
         />
         <Text style={styles.signInTitle}>Sign In</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -149,9 +155,12 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <TouchableOpacity
           style={styles.imageSelectionContainer}
           onPress={this.selectProfileImage}
+          disabled
         >
           <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
-          <Text style={styles.editPhotoText}>Edit Photo</Text>
+          <Text style={[styles.editPhotoText, { color: 'grey' }]}>
+            Edit Photo
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -174,7 +183,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
           username: this.state.username,
           password: this.state.password,
           email: this.state.email,
-          avatar: this.state.avatar.source,
+          avatar: this.state.avatar.uri,
         }}
       >
         {(signUp, { loading, error, data }) => {

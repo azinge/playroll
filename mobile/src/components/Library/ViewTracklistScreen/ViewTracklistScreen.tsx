@@ -14,6 +14,7 @@ import {
 
 import styles from './ViewTracklistScreen.styles';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -84,6 +85,15 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
                   </ScrollView>
                 </View>
               </SubScreenContainer>
+              <View style={styles.footer2View}>
+                <Button
+                  title='Connect Spotify'
+                  containerStyle={styles.genPlaylistButton}
+                  onPress={() => {
+                    NavigationService.navigate('ConnectSpotify');
+                  }}
+                />
+              </View>
               {/* "Generate Playlist" Button */}
               <View style={styles.footerView}>
                 <GeneratePlaylistMutation

@@ -15,6 +15,7 @@ import NavigationService from '../../../services/NavigationService';
 import { NavigationScreenProp } from 'react-navigation';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import { UpdateRollMutation } from '../../../graphql/requests/Roll/UpdateRollMutation';
+import { DeleteRollMutation } from '../../../graphql/requests/Roll';
 
 interface EditRollFilter {
   name: string;
@@ -238,47 +239,70 @@ export default class EditRollScreen extends React.Component<Props, State> {
   }
   render() {
     return (
-      <UpdateRollMutation
+      <DeleteRollMutation
         onCompleted={() => {
           NavigationService.goBack();
         }}
         refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
       >
-        {(updateRoll, { data }) => {
+        {(deleteRoll, { data }) => {
           return (
-            <SubScreenContainer
-              title={'Edit Roll'}
-              icons={[
-                {
-                  ...Icons.saveIcon,
-                  onPress: () => {
-                    const roll = this.exportRoll();
+            <UpdateRollMutation
+              onCompleted={() => {
+                NavigationService.goBack();
+              }}
+              refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+            >
+              {(updateRoll, { data }) => {
+                return (
+                  <SubScreenContainer
+                    title={'Edit Roll'}
+                    icons={[
+                      {
+                        ...Icons.deleteIcon,
+                        onPress: () => {
+                          const roll = this.exportRoll();
 
-                    updateRoll({
-                      variables: {
-                        id: roll.id,
-                        input: {
-                          playrollID: roll.playrollID,
-                          order: roll.order,
-                          data: roll.data,
+                          deleteRoll({
+                            variables: {
+                              id: roll.id,
+                            },
+                          });
                         },
                       },
-                    });
-                  },
-                },
-              ]}
-              modal
-            >
-              <View style={{ marginBottom: 50 }}>
-                {this.renderSourceSection()}
-                {this.renderFiltersSection()}
-                {this.renderOrderSection()}
-                {this.renderLengthSection()}
-              </View>
-            </SubScreenContainer>
+                      {
+                        ...Icons.saveIcon,
+                        onPress: () => {
+                          const roll = this.exportRoll();
+
+                          updateRoll({
+                            variables: {
+                              id: roll.id,
+                              input: {
+                                playrollID: roll.playrollID,
+                                order: roll.order,
+                                data: roll.data,
+                              },
+                            },
+                          });
+                        },
+                      },
+                    ]}
+                    modal
+                  >
+                    <View style={{ marginBottom: 50 }}>
+                      {this.renderSourceSection()}
+                      {this.renderFiltersSection()}
+                      {this.renderOrderSection()}
+                      {this.renderLengthSection()}
+                    </View>
+                  </SubScreenContainer>
+                );
+              }}
+            </UpdateRollMutation>
           );
         }}
-      </UpdateRollMutation>
+      </DeleteRollMutation>
     );
   }
 

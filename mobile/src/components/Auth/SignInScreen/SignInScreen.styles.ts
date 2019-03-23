@@ -51,4 +51,15 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  segueToSignInContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '22%',
+    opacity: 0.5,
+  },
+  signInTitle: {
+    fontSize: 17,
+    color: '#6A0070',
+  },
 });

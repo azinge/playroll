@@ -86,7 +86,32 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }),
     };
     return (
-      <SubScreenHeader title={'View Playroll'} icons={[editPlayrollIcon]} />
+      <GenerateTracklistMutation
+        variables={{ playrollID: playroll.id }}
+        onCompleted={data =>
+          this.props.navigation &&
+          this.props.navigation.navigate('ViewTracklist', {
+            playrollName: playroll.name,
+            tracklistID:
+              data &&
+              data.private.generateTracklist &&
+              data.private.generateTracklist.id,
+          })
+        }
+      >
+        {(generateTracklist, { data }) => {
+          const generateTracklistIcon = {
+            ...Icons.exportIcon,
+            onPress: () => generateTracklist(),
+          };
+          return (
+            <SubScreenHeader
+              title={'View Playroll'}
+              icons={[editPlayrollIcon, generateTracklistIcon]}
+            />
+          );
+        }}
+      </GenerateTracklistMutation>
     );
   }
   renderEditingBar(playroll: Playroll) {

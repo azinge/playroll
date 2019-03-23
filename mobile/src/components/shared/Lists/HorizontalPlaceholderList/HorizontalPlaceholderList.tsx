@@ -24,7 +24,9 @@ export default class HorizontalPlaceholderList extends React.Component<
       <View style={{ flex: 1, height: 220 }}>
         {this.props.title && (
           <View style={{ marginVertical: 10, paddingHorizontal: 10 }}>
-            <Text style={styles.title}>{this.props.title}</Text>
+            <Text style={[styles.title, { color: 'grey' }]}>
+              {this.props.title}
+            </Text>
           </View>
         )}
         <View>
@@ -62,7 +64,13 @@ export default class HorizontalPlaceholderList extends React.Component<
           <Text
             style={[
               styles.title,
-              { position: 'absolute', bottom: 4, right: 12, opacity: 0.8 },
+              {
+                position: 'absolute',
+                bottom: 4,
+                right: 12,
+                opacity: 0.8,
+                color: 'grey',
+              },
             ]}
           >
             {this.props.overlayText}

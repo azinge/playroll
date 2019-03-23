@@ -83,7 +83,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
               Spotify
             </Text>
           </View>
-          <ListSpotifyPlaylistsQuery variables={{ count: 4 }}>
+          <ListSpotifyPlaylistsQuery variables={{ count: 3 }}>
             {({ loading, error, data }) => {
               console.log(error && error.message);
               console.log(

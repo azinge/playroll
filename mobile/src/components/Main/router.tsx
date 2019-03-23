@@ -71,7 +71,7 @@ export const MainTabsNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Library',
+    initialRouteName: 'Home',
     tabBarOptions: {
       activeTintColor: 'purple',
     },

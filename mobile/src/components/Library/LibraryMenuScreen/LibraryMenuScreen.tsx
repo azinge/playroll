@@ -200,7 +200,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         <View style={{ flexDirection: 'row', opacity: 0.2 }}>
           {unauthenticatedMusicServiceIcons.map(msi => (
             <TouchableHighlight
-              onPress={msi.connectNav}
+              //   onPress={msi.connectNav}
               style={styles.musicServiceButtonContainer}
               key={msi.name}
             >
@@ -226,6 +226,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
               onPress={msi.playlistsNav}
               style={styles.musicServiceButtonContainer}
               key={msi.name}
+              underlayColor='rgba(255,255,255,0)'
             >
               <View>
                 <Image

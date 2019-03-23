@@ -22,7 +22,7 @@ export const LibraryNavigator = createStackNavigator(
     ...MusicServicePlaylistsRoutes,
   },
   {
-    initialRouteName: 'MusicServicePlaylistsMenu',
+    initialRouteName: 'LibraryMenu',
     headerMode: 'none',
   }
 );

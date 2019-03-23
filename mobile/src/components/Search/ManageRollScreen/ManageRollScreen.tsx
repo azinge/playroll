@@ -48,8 +48,8 @@ export default class ManageRollScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const currentSource = this.props.source;
-    //   this.props.navigation && this.props.navigation.getParam('currentSource');
+    const currentSource =
+      this.props.navigation && this.props.navigation.getParam('currentSource');
     return (
       //   <SubScreenContainer title='Manage Roll' modal>
       <View style={{ flex: 2, backgroundColor: 'white', margin: -10 }}>
@@ -128,6 +128,7 @@ export default class ManageRollScreen extends React.Component<Props, State> {
                 name='close'
                 type='material-community'
                 onPress={() => this.setState({ isVisible: false })}
+                underlayColor='rgba(255,255,255,0)'
               />
               <ListCurrentUserPlayrollsQuery>
                 {({ loading, error, data }) => {

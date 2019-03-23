@@ -70,7 +70,7 @@ func (dlp *DefaultLengthPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 }
 
 func (dlp *DefaultLengthPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	return db.Offset(0).Limit(20), nil
+	return db.Offset(0).Limit(10), nil
 }
 
 type NumberOfSongsLengthPolicy struct {

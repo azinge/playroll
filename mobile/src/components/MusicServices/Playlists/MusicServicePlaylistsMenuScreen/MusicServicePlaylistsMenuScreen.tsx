@@ -9,6 +9,7 @@ import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import {
   CurrentUserSpotifyStatusQuery,
   ListSpotifyPlaylistsQuery,
+  ListSpotifySavedTracksQuery,
 } from '../../../../graphql/requests/Spotify/';
 import PlaceholderList from '../../../shared/Lists/PlaceholderList';
 
@@ -90,12 +91,12 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                 data && data.private && data.private.listSpotifyPlaylists
               );
               return (
-                <View style={{ marginBottom: 20, flex: 1 }}>
+                <View style={{ marginBottom: 0, flex: 1 }}>
                   <FlatList
                     data={
                       data &&
                       data.private &&
-                      data.private.listSpotifyPlaylists.slice(0, 4)
+                      data.private.listSpotifyPlaylists.slice(0, 3)
                     }
                     keyExtractor={this._keyExtractor}
                     renderItem={this._renderItem}
@@ -104,6 +105,38 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
               );
             }}
           </ListSpotifyPlaylistsQuery>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: 'black',
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginVertical: 2,
+            }}
+          >
+            Your Saved Tracks
+          </Text>
+          <ListSpotifySavedTracksQuery variables={{ count: 3 }}>
+            {({ loading, error, data }) => {
+              console.log(error && error.message);
+              console.log(
+                data && data.private && data.private.listSpotifySavedTracks
+              );
+              return (
+                <View style={{ marginBottom: 20, flex: 1 }}>
+                  <FlatList
+                    data={
+                      data &&
+                      data.private &&
+                      data.private.listSpotifySavedTracks.slice(0, 3)
+                    }
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderItem}
+                  />
+                </View>
+              );
+            }}
+          </ListSpotifySavedTracksQuery>
         </View>
       </SubScreenContainer>
     );

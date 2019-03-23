@@ -7,7 +7,12 @@ export const LIST_SPOTIFY_SAVED_TRACKS = 'LIST_SPOTIFY_SAVED_TRACKS';
 export const LIST_SPOTIFY_SAVED_TRACKS_QUERY = gql`
   query LIST_SPOTIFY_SAVED_TRACKS($count: Int!) {
     private {
-      listSpotifySavedTracks(count: $count)
+      listSpotifySavedTracks(count: $count) {
+        provider
+        providerID
+        cover
+        name
+      }
     }
   }
 `;

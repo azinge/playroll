@@ -49,6 +49,19 @@ var listCurrentUserPlayrolls = gqltag.Method{
 	},
 }
 
+var AddToPlayroll = gqltag.Method{
+	Description: `[FILL].`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		userID := user.ID
+		return roll
+	},
+}
+
 var LinkedPlayrollMethods = PlayrollMethods{
 	ListCurrentUserPlayrolls: gqltag.LinkQuery(listCurrentUserPlayrolls),
 }

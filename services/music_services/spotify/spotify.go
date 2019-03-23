@@ -11,7 +11,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const redirectURL = "http://localhost:8888/callback"
+const redirectURL = "http://app.playroll.io"
 
 var spotifyScopes = []string{
 	spotify.ScopeUserReadPrivate,
@@ -22,34 +22,35 @@ var spotifyScopes = []string{
 }
 
 func GetSpotifyClientForUser(userID uint, db *gorm.DB) (*spotify.Client, error) {
-	ec, err := models.FindExternalCredentialByUserID(userID, db)
+	msc, err := models.FindMusicServiceCredentialByUserID(userID, db)
 	if err != nil {
-		fmt.Println("Error Finding External Credential by userID: ", err.Error(), ", UserID:", userID)
+		fmt.Println("error finding MusicServiceCredential by userID: ", err.Error(), ", UserID:", userID)
 		return nil, err
 	}
 
-	eco, err := models.ExternalCredentialModelToOutput(ec)
+	msco, err := models.MusicServiceCredentialModelToOutput(msc)
 	if err != nil {
-		fmt.Println("Error creating output object for External Credential: ", err.Error())
+		fmt.Println("error creating output object for MusicServiceCredential: ", err.Error())
 		return nil, err
 	}
-	token := &eco.Token
+	token := &msco.Token
 
 	client := spotify.NewAuthenticator(redirectURL, spotifyScopes...).NewClient(token)
+	client.AutoRetry = true
 	token, err = client.Token()
 	if err != nil {
-		fmt.Println("Error fetching token: ", err.Error())
+		fmt.Println("error fetching token: ", err.Error())
 		return nil, err
 	}
 
-	dao := models.InitExternalCredentialDAO(db)
-	ec.Token, err = json.Marshal(token)
+	dao := models.InitMusicServiceCredentialDAO(db)
+	msc.Token, err = json.Marshal(token)
 	if err != nil {
 		fmt.Println("Error Marshalling token: ", err.Error())
 		return nil, err
 	}
 
-	_, err = dao.Update(ec)
+	_, err = dao.Update(msc)
 	if err != nil {
 		fmt.Println("Error Updating Credentials: ", err.Error())
 		return nil, err
@@ -57,19 +58,8 @@ func GetSpotifyClientForUser(userID uint, db *gorm.DB) (*spotify.Client, error) 
 	return &client, err
 }
 
-func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*models.ExternalCredentialOutput, error) {
-	auth := spotify.NewAuthenticator(redirectURL, spotifyScopes...)
-	url := auth.AuthURL("")
-	fmt.Println(url)
-	// TEMPORARY
-
-	if code == "" {
-		return nil, fmt.Errorf(fmt.Sprintf("Please log in: " + url))
-	}
-
+func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*models.MusicServiceCredentialOutput, error) {
 	oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(code)
-
-	fmt.Printf("Recieved Token: %#v\n", oauthToken)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -77,25 +67,37 @@ func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*mod
 
 	t2 := &oauth2.Token{}
 
-	b, e := json.Marshal(oauthToken)
-	fmt.Println(e)
+	b, _ := json.Marshal(oauthToken)
 	json.Unmarshal(b, t2)
-	fmt.Printf("Translated Token: %#v\n", t2)
 
-	ec := models.InitExternalCredentialDAO(db)
-	externalCredential := &models.ExternalCredential{
+	msc := models.InitMusicServiceCredentialDAO(db)
+	musicServiceCredential := &models.MusicServiceCredential{
 		Provider: "Spotify",
 		UserID:   userID,
 		Token:    b,
 	}
 
-	fmt.Printf("Saved Token: %#v\n", externalCredential)
-
-	rawExternalCredential, err := ec.Create(externalCredential)
+	rawMusicServiceCredential, err := msc.Create(musicServiceCredential)
 	if err != nil {
 		return nil, err
 	}
-	return models.FormatExternalCredential(rawExternalCredential)
+	return models.FormatMusicServiceCredential(rawMusicServiceCredential)
+}
+
+func extractCover(images []spotify.Image) string {
+	cover := "https://www.unesale.com/ProductImages/Large/notfound.png"
+	if len(images) > 0 {
+		cover = images[0].URL
+	}
+	return cover
+}
+
+func extractArtist(artists []spotify.SimpleArtist) (id, name string) {
+	if len(artists) > 0 {
+		id = string(artists[0].ID)
+		name = artists[0].Name
+	}
+	return id, name
 }
 
 func SearchSpotify(query string, searchType string, client *spotify.Client) (*jsonmodels.SearchSpotifyOutput, error) {
@@ -198,79 +200,313 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 	return &output, nil
 }
 
+func ListPlaylistsFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	playlistsPage, err := client.CurrentUsersPlaylists()
+	if err != nil {
+		fmt.Println("error fetching playlists: ", err.Error())
+		return nil, err
+	}
+	playlists := make([]jsonmodels.MusicSource, len(playlistsPage.Playlists))
+	for i, playlist := range playlistsPage.Playlists {
+		playlists[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(playlist.ID),
+			Name:       playlist.Name,
+			Creator:    playlist.Owner.DisplayName,
+			Cover:      extractCover(playlist.Images),
+		}
+	}
+	return &playlists, nil
+}
+
+func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	fullPlaylist, err := client.GetPlaylist(spotify.ID(playlistID))
+	if err != nil {
+		fmt.Println("error fetching playlist: ", err.Error())
+		return nil, err
+	}
+	playlistTracks := make([]jsonmodels.MusicSource, len(fullPlaylist.Tracks.Tracks))
+	for i, playlistTrack := range fullPlaylist.Tracks.Tracks {
+		track := playlistTrack.Track
+		_, artistName := extractArtist(track.Artists)
+		playlistTracks[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(track.ID),
+			Name:       track.Name,
+			Creator:    artistName,
+			Cover:      extractCover(track.Album.Images),
+		}
+	}
+	return &playlistTracks, nil
+}
+
+func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
+	offset := 0
+	limit := 20
+	savedTracksPage, err := client.CurrentUsersTracksOpt(&spotify.Options{Offset: &offset, Limit: &limit})
+	if err != nil {
+		fmt.Println("error fetching savedTracks: ", err.Error())
+		return nil, err
+	}
+	savedTracks := make([]jsonmodels.MusicSource, len(savedTracksPage.Tracks))
+	for i, savedTrack := range savedTracksPage.Tracks {
+		_, artistName := extractArtist(savedTrack.Artists)
+		savedTracks[i] = jsonmodels.MusicSource{
+			Type:       "Playlist",
+			Provider:   "Spotify",
+			ProviderID: string(savedTrack.ID),
+			Name:       savedTrack.Name,
+			Creator:    artistName,
+			Cover:      extractCover(savedTrack.Album.Images),
+		}
+	}
+	return &savedTracks, nil
+}
+
 func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistName string, client *spotify.Client, db *gorm.DB) (*[]spotify.ID, error) {
 	trackIDs := []spotify.ID{}
 	for _, track := range *tracks {
 		trackIDs = append(trackIDs, spotify.ID(track.ProviderID))
 	}
 
-	client, err := GetSpotifyClientForUser(1, db)
-	if err != nil {
-		fmt.Println("Error getting spotify client: ", err.Error())
-		return nil, err
-	}
-
 	user, err := client.CurrentUser()
 	if err != nil {
-		fmt.Println("Error fetching user: ", err.Error())
+		fmt.Println("error fetching user: ", err.Error())
 		return nil, err
 	}
 	playlist, err := client.CreatePlaylistForUser(user.ID, "Playroll: "+playlistName, "", true)
 	if err != nil {
-		fmt.Println("Error creating playlist for user: ", err.Error())
+		fmt.Println("error creating playlist for user: ", err.Error())
 		return nil, err
 	}
 	_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs...)
 	if err != nil {
-		fmt.Println("Error adding songs for user: ", err.Error())
+		fmt.Println("error adding songs for user: ", err.Error())
 		return nil, err
 	}
 	return &trackIDs, nil
 }
 
-func GetSpotifyTrack(source *jsonmodels.MusicSource, _ *spotify.Client) (*[]jsonmodels.MusicSource, error) {
-	return &[]jsonmodels.MusicSource{
-		*jsonmodels.CreateTrack(source.Cover, source.Name, source.Creator, source.Provider, source.ProviderID),
-	}, nil
+func GetSpotifyTrack(id spotify.ID, client *spotify.Client) (*models.MusicServiceTrack, error) {
+	tracks, err := GetSpotifyTracks(&[]spotify.ID{id}, client)
+	if err != nil {
+		fmt.Println("error retrieving track: ", err.Error())
+		return nil, err
+	}
+	if len(*tracks) <= 0 || &(*tracks)[0] == nil {
+		return nil, fmt.Errorf("error retrieving tracks, no tracks found")
+	}
+	return &(*tracks)[0], nil
 }
 
-func GetSpotifyAlbumTracks(source *jsonmodels.MusicSource, client *spotify.Client) (*[]jsonmodels.MusicSource, error) {
-	tracks := []jsonmodels.MusicSource{}
-	simpleTrackPage, err := client.GetAlbumTracksOpt(spotify.ID(source.ProviderID), 50, 0)
+func GetSpotifyTracks(ids *[]spotify.ID, client *spotify.Client) (*[]models.MusicServiceTrack, error) {
+	ids2 := *ids
+	if len(ids2) > 50 {
+		ids2 = ids2[:50]
+	}
+	audioFeatures, err := client.GetAudioFeatures(ids2...)
+	if err != nil {
+		fmt.Println("Error retrieving audio features: ", err.Error())
+		return nil, err
+	}
+	tracks, err := client.GetTracks(ids2...)
+	if err != nil {
+		fmt.Println("Error retrieving tracks: ", err.Error())
+		return nil, err
+	}
+
+	msts := make([]models.MusicServiceTrack, len(ids2))
+	for i, id := range ids2 {
+		// TODO: Link Genres, Secondary Artists, Available Markets
+		msts[i].Provider = "Spotify"
+		msts[i].ProviderID = string(id)
+
+		// Full Track Attributes
+		msts[i].Cover = extractCover(tracks[i].Album.Images)
+		msts[i].Popularity = tracks[i].Popularity
+		msts[i].AlbumID = string(tracks[i].Album.ID)
+		msts[i].AlbumName = tracks[i].Album.Name
+		msts[i].ArtistID, msts[i].ArtistName = extractArtist(tracks[i].Artists)
+		msts[i].DiscNumber = tracks[i].DiscNumber
+		msts[i].Duration = tracks[i].Duration
+		msts[i].Explicit = tracks[i].Explicit
+		msts[i].Name = tracks[i].Name
+		msts[i].TrackNumber = tracks[i].TrackNumber
+
+		// Audio Features
+		msts[i].Acousticness = audioFeatures[i].Acousticness
+		msts[i].Danceability = audioFeatures[i].Danceability
+		msts[i].Energy = audioFeatures[i].Energy
+		msts[i].Instrumentalness = audioFeatures[i].Instrumentalness
+		msts[i].Key = audioFeatures[i].Key
+		msts[i].Liveness = audioFeatures[i].Liveness
+		msts[i].Loudness = audioFeatures[i].Loudness
+		msts[i].Mode = audioFeatures[i].Mode
+		msts[i].Speechiness = audioFeatures[i].Speechiness
+		msts[i].Tempo = audioFeatures[i].Tempo
+		msts[i].TimeSignature = audioFeatures[i].TimeSignature
+		msts[i].Valence = audioFeatures[i].Valence
+	}
+
+	return &msts, nil
+}
+
+func GetSpotifyAlbum(id spotify.ID, client *spotify.Client) (msa *models.MusicServiceAlbum, err error) {
+	albums, err := GetSpotifyAlbums(&[]spotify.ID{id}, client)
+	if err != nil {
+		fmt.Println("error retrieving album: ", err.Error())
+		return nil, err
+	}
+	if len(*albums) <= 0 || &(*albums)[0] == nil {
+		return nil, fmt.Errorf("error retrieving albums, no albums found")
+	}
+	return &(*albums)[0], nil
+}
+
+func GetSpotifyAlbums(ids *[]spotify.ID, client *spotify.Client) (msa *[]models.MusicServiceAlbum, err error) {
+	albums, err := client.GetAlbums(*ids...)
 	if err != nil {
 		return nil, err
 	}
-	for _, track := range simpleTrackPage.Tracks {
-		tracks = append(tracks, *jsonmodels.CreateTrack(source.Cover, track.Name, source.Creator, source.Provider, string(track.ID)))
+	msas := make([]models.MusicServiceAlbum, len(albums))
+	for i, album := range albums {
+		artistID, artistName := extractArtist(album.Artists)
+		msas[i] =
+			models.MusicServiceAlbum{
+				Provider:             "Spotify",
+				ProviderID:           string(album.ID),
+				Popularity:           album.Popularity,
+				ReleaseDate:          album.ReleaseDate,
+				ReleaseDatePrecision: album.ReleaseDatePrecision,
+				Name:                 album.Name,
+				ArtistID:             artistID,
+				ArtistName:           artistName,
+				AlbumGroup:           album.AlbumGroup,
+				AlbumType:            album.AlbumType,
+				Cover:                extractCover(album.Images),
+			}
 	}
-	return &tracks, nil
+	return &msas, nil
 }
 
-func GetSpotifyArtistTracks(source *jsonmodels.MusicSource, client *spotify.Client) (*[]jsonmodels.MusicSource, error) {
-	tracks := []jsonmodels.MusicSource{}
-	fullTracks, err := client.GetArtistsTopTracks(spotify.ID(source.ProviderID), "US")
+func GetSpotifyAlbumWithTracks(id spotify.ID, client *spotify.Client) (msa *models.MusicServiceAlbum, trackIDs *[]spotify.ID, err error) {
+	album, err := client.GetAlbum(id)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	for _, track := range fullTracks {
-		tracks = append(tracks, *jsonmodels.CreateTrack(source.Cover, track.Name, source.Name, source.Provider, string(track.ID)))
+	ids := make([]spotify.ID, len(album.Tracks.Tracks))
+	for i, track := range album.Tracks.Tracks {
+		ids[i] = track.ID
 	}
-	return &tracks, nil
-}
-
-func GetSpotifyPlaylistTracks(source *jsonmodels.MusicSource, client *spotify.Client) (*[]jsonmodels.MusicSource, error) {
-	tracks := []jsonmodels.MusicSource{}
-	playlistTrackPage, err := client.GetPlaylistTracks(spotify.ID(source.ProviderID))
-	if err != nil {
-		return nil, err
-	}
-	for _, playlistTrack := range playlistTrackPage.Tracks {
-		cover := source.Cover
-		track := playlistTrack.Track
-		if images := track.Album.Images; len(images) > 0 {
-			cover = images[0].URL
+	artistID, artistName := extractArtist(album.Artists)
+	msa =
+		&models.MusicServiceAlbum{
+			Provider:             "Spotify",
+			ProviderID:           string(album.ID),
+			Popularity:           album.Popularity,
+			ReleaseDate:          album.ReleaseDate,
+			ReleaseDatePrecision: album.ReleaseDatePrecision,
+			Name:                 album.Name,
+			ArtistID:             artistID,
+			ArtistName:           artistName,
+			AlbumGroup:           album.AlbumGroup,
+			AlbumType:            album.AlbumType,
+			Cover:                extractCover(album.Images),
 		}
-		tracks = append(tracks, *jsonmodels.CreateTrack(cover, track.Name, source.Creator, source.Provider, string(track.ID)))
+	return msa, &ids, nil
+}
+
+func GetSpotifyArtist(id spotify.ID, client *spotify.Client) (msa *models.MusicServiceArtist, err error) {
+	artists, err := GetSpotifyArtists(&[]spotify.ID{id}, client)
+	if err != nil {
+		fmt.Println("error retrieving artist: ", err.Error())
+		return nil, err
 	}
-	return &tracks, nil
+	if len(*artists) <= 0 || &(*artists)[0] == nil {
+		return nil, fmt.Errorf("error retrieving artists, no artists found")
+	}
+	return &(*artists)[0], nil
+}
+
+func GetSpotifyArtists(ids *[]spotify.ID, client *spotify.Client) (msa *[]models.MusicServiceArtist, err error) {
+	artists, err := client.GetArtists(*ids...)
+	if err != nil {
+		return nil, err
+	}
+	msas := make([]models.MusicServiceArtist, len(artists))
+	for i, artist := range artists {
+		msas[i] =
+			models.MusicServiceArtist{
+				Provider:   "Spotify",
+				ProviderID: string(artist.ID),
+				Popularity: artist.Popularity,
+				Name:       artist.Name,
+				Cover:      extractCover(artist.Images),
+			}
+	}
+	return &msas, nil
+}
+
+func GetSpotifyArtistWithAlbums(id spotify.ID, client *spotify.Client) (msa *models.MusicServiceArtist, albumIDs *[]spotify.ID, err error) {
+	artist, err := client.GetArtist(id)
+	if err != nil {
+		return nil, nil, err
+	}
+	albums, err := client.GetArtistAlbums(id)
+	ids := make([]spotify.ID, len(albums.Albums))
+	for i, album := range albums.Albums {
+		ids[i] = album.ID
+	}
+	msa = &models.MusicServiceArtist{
+		Provider:   "Spotify",
+		ProviderID: string(artist.ID),
+		Popularity: artist.Popularity,
+		Name:       artist.Name,
+		Cover:      extractCover(artist.Images),
+	}
+	return msa, &ids, nil
+}
+
+func GetSpotifyPlaylist(id spotify.ID, client *spotify.Client) (msp *models.MusicServicePlaylist, err error) {
+	playlist, err := client.GetPlaylist(id)
+	if err != nil {
+		return nil, err
+	}
+	msp = &models.MusicServicePlaylist{
+		Provider:    "Spotify",
+		ProviderID:  string(playlist.ID),
+		Description: playlist.Description,
+		Cover:       extractCover(playlist.Images),
+		Name:        playlist.Name,
+		OwnerID:     playlist.Owner.ID,
+		OwnerName:   playlist.Owner.DisplayName,
+		SnapshotID:  playlist.SnapshotID,
+		IsPublic:    playlist.IsPublic,
+	}
+	return msp, nil
+}
+
+func GetSpotifyPlaylistWithTracks(id spotify.ID, client *spotify.Client) (msp *models.MusicServicePlaylist, trackIDs *[]spotify.ID, err error) {
+	playlist, err := client.GetPlaylist(id)
+	if err != nil {
+		return nil, nil, err
+	}
+	ids := make([]spotify.ID, len(playlist.Tracks.Tracks))
+	for i, track := range playlist.Tracks.Tracks {
+		ids[i] = track.Track.ID
+	}
+	msp = &models.MusicServicePlaylist{
+		Provider:    "Spotify",
+		ProviderID:  string(playlist.ID),
+		Description: playlist.Description,
+		Cover:       extractCover(playlist.Images),
+		Name:        playlist.Name,
+		OwnerID:     playlist.Owner.ID,
+		OwnerName:   playlist.Owner.DisplayName,
+		SnapshotID:  playlist.SnapshotID,
+		IsPublic:    playlist.IsPublic,
+	}
+	return msp, &ids, nil
 }

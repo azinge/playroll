@@ -30,6 +30,23 @@ type PlayrollOutput struct {
 	Tracklists []TracklistOutput `gql:"tracklists: [Tracklist]"`
 }
 
+// Utility Methods
+
+func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
+	playrollModels := &[]Playroll{}
+	db = db.Preload("Rolls").Preload("Tracklists")
+	if err := db.Where(Playroll{UserID: id}).Find(playrollModels).Error; err != nil {
+		fmt.Printf("error getting playrolls: %s", err.Error())
+		return nil, err
+	}
+
+	playrolls, err := FormatPlayrollSlice(playrollModels)
+	if err != nil {
+		return nil, err
+	}
+	return playrolls, nil
+}
+
 // Entity Specific Methods
 
 func PlayrollInputToModel(pi *PlayrollInput) (*Playroll, error) {

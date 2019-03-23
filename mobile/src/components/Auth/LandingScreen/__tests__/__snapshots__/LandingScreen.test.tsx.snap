@@ -88,6 +88,19 @@ exports[`renders correctly 1`] = `
     >
       Sign Up
     </Text>
+    <Text
+      onPress={[Function]}
+      style={
+        Object {
+          "color": "white",
+          "fontSize": 15,
+          "fontWeight": "bold",
+          "margin": 10,
+        }
+      }
+    >
+      Confirm User (TEMP)
+    </Text>
   </View>
 </RCTSafeAreaView>
 `;

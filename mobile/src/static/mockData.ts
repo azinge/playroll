@@ -73,7 +73,8 @@ export const musicSources: MusicSource[] = [
 ];
 
 export interface Roll {
-  source: MusicSource;
+  id?: number;
+  sources?: MusicSource[];
   filter?: string;
   length?: string;
 }
@@ -90,66 +91,69 @@ export const playrolls: Playroll[] = [
     name: 'Overseas Bops',
     cover: musicSources[1].cover,
     rolls: [
-      { source: musicSources[1] },
-      { source: musicSources[2] },
-      { source: musicSources[5] },
+      { id: 1, sources: [musicSources[1]] },
+      { id: 2, sources: [musicSources[2]] },
+      { id: 3, sources: [musicSources[5]] },
     ],
   },
   {
     name: "Poppin' Rap",
     cover: musicSources[7].cover,
     rolls: [
-      { source: musicSources[7] },
-      { source: musicSources[0] },
-      { source: musicSources[3] },
-      { source: musicSources[4] },
+      { id: 1, sources: [musicSources[7]] },
+      { id: 2, sources: [musicSources[0]] },
+      { id: 3, sources: [musicSources[3]] },
+      { id: 4, sources: [musicSources[4]] },
     ],
   },
   {
     name: 'Velvety Goodness',
     cover: musicSources[5].cover,
-    rolls: [{ source: musicSources[5] }],
+    rolls: [{ id: 1, sources: [musicSources[5]] }],
   },
   {
     name: "Why aren't ya listenin' son?",
     cover: musicSources[6].cover,
-    rolls: [{ source: musicSources[6] }],
+    rolls: [{ id: 1, sources: [musicSources[6]] }],
   },
   {
     name: 'Songs Only',
     cover: musicSources[2].cover,
-    rolls: [{ source: musicSources[0] }, { source: musicSources[2] }],
+    rolls: [
+      { id: 1, sources: [musicSources[0]] },
+      { id: 2, sources: [musicSources[2]] },
+    ],
   },
   {
     name: 'Albums Only',
     cover: musicSources[4].cover,
     rolls: [
-      { source: musicSources[1] },
-      { source: musicSources[4] },
-      { source: musicSources[6] },
+      { id: 1, sources: [musicSources[1]] },
+      { id: 2, sources: [musicSources[4]] },
+      { id: 3, sources: [musicSources[6]] },
     ],
   },
   {
     name: 'Artists Only',
     cover: musicSources[3].cover,
     rolls: [
-      { source: musicSources[3] },
-      { source: musicSources[5] },
-      { source: musicSources[7] },
+      { id: 1, sources: [musicSources[3]] },
+      { id: 2, sources: [musicSources[5]] },
+      { id: 3, sources: [musicSources[7]] },
     ],
   },
   {
     name: 'Everything',
     cover: musicSources[0].cover,
     rolls: [
-      { source: musicSources[0] },
-      { source: musicSources[1] },
-      { source: musicSources[2] },
-      { source: musicSources[3] },
-      { source: musicSources[4] },
-      { source: musicSources[5] },
-      { source: musicSources[6] },
-      { source: musicSources[7] },
+      { id: 1, sources: [musicSources[0]] },
+      { id: 2, sources: [musicSources[1]] },
+      { id: 3, sources: [musicSources[2]] },
+      { id: 4, sources: [musicSources[3]] },
+      { id: 5, sources: [musicSources[4]] },
+      { id: 6, sources: [musicSources[5]] },
+      { id: 7, sources: [musicSources[6]] },
+      { id: 8, sources: [musicSources[7]] },
     ],
   },
 ];

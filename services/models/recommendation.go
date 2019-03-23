@@ -16,6 +16,8 @@ type Recommendation struct {
 	User          User
 	RecommenderID uint
 	Recommender   User
+	PlayrollID    uint
+	Playroll      Playroll
 }
 
 type RecommendationInput struct {
@@ -23,6 +25,7 @@ type RecommendationInput struct {
 	Data          jsonmodels.RollDataInput `gql:"data: RollDataInput"`
 	UserID        string                   `gql:"userID: ID"`
 	RecommenderID string                   `gql:"recommenderID: ID"`
+	PlayrollID    string                   `gql:"playrollID: ID"`
 }
 
 type RecommendationOutput struct {
@@ -33,6 +36,8 @@ type RecommendationOutput struct {
 	User          UserOutput                `gql:"user: User"`
 	RecommenderID uint                      `gql:"recommenderID: ID"`
 	Recommender   UserOutput                `gql:"recommender: User"`
+	PlayrollID    uint                      `gql:"playrollID: ID"`
+	Playroll      PlayrollOutput            `gql:"playroll: Playroll"`
 }
 
 // Entity Specific Methods
@@ -47,6 +52,7 @@ func RecommendationInputToModel(ri *RecommendationInput) (*Recommendation, error
 	r.Data = *data
 	r.UserID = utils.StringIDToNumber(ri.UserID)
 	r.RecommenderID = utils.StringIDToNumber(ri.RecommenderID)
+	r.PlayrollID = utils.StringIDToNumber(ri.PlayrollID)
 	return r, nil
 }
 
@@ -75,6 +81,12 @@ func RecommendationModelToOutput(r *Recommendation) (*RecommendationOutput, erro
 		return nil, err
 	}
 	ro.Recommender = *recommender
+	ro.PlayrollID = r.PlayrollID
+	playroll, err := FormatPlayroll(&r.Playroll)
+	if err != nil {
+		return nil, err
+	}
+	ro.Playroll = *playroll
 	return ro, nil
 }
 

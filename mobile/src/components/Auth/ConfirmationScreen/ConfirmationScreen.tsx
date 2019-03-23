@@ -2,16 +2,21 @@
  * Signup component for Playroll mobile application.
  */
 
-import * as React from "react";
+import * as React from 'react';
 import {
-  Text, TextInput,
+  Text,
+  TextInput,
   ActivityIndicator,
-  SafeAreaView, View,
-  TouchableOpacity, Keyboard,
+  SafeAreaView,
+  View,
+  TouchableOpacity,
+  Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ConfirmSignUpMutation } from "../../../graphql/requests/Auth";
+import { Icon } from 'react-native-elements';
+import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './ConfirmationScreen.styles';
+import { NavigationScreenProp } from 'react-navigation';
 
 export interface Props {
   toggleSignUp: () => void;
@@ -21,16 +26,16 @@ export interface Props {
 interface State {
   authCode: string;
   username: string;
-  error?: string
+  error?: string;
 }
 
- export default class ConfirmationScreen extends React.Component<Props, State> {
-   constructor(props: Props) {
+export default class ConfirmationScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
-      authCode: "",
-      username: "",
+      authCode: '',
+      username: '',
       error: undefined,
     };
 
@@ -39,21 +44,69 @@ interface State {
 
   validateInput(confirmSignUp) {
     if (this.state.username === '' || this.state.authCode === '') {
-      return this.setState({
-        error: 'All fields must have a value.'
-      }, () => {
-        setTimeout(() => {this.setState({ error: null })}, 3000);
-      });
+      return this.setState(
+        {
+          error: 'All fields must have a value.',
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ error: null });
+          }, 3000);
+        },
+      );
     }
     confirmSignUp();
+  }
+
+  renderSegueToSignIn() {
+    return (
+      <View style={styles.segueToSignInContainer}>
+        <Icon
+          name='arrow-back'
+          type='material'
+          color='#6A0070'
+          onPress={() => {
+            this.props.navigation && this.props.navigation.navigate('SignIn');
+          }}
+        />
+        <Text style={styles.signInTitle}>Sign In</Text>
+      </View>
+    );
   }
 
   renderHeader() {
     return (
       <View style={styles.confirmationHeader}>
-        <Text style={styles.signupText}>Confirm Account</Text>
+        <Text style={styles.confirmationLabel}>Confirm Account</Text>
       </View>
-    )
+    );
+  }
+
+  resendConfirmationCode() {
+    // TODO: Waiting on endpoint
+  }
+
+  renderInfoContainer() {
+    return (
+      <View style={styles.informationContainer}>
+        <View style={styles.infoTextContainer}>
+          <Text style={styles.infoText}>
+            We have just sent an email to your account, please enter the
+            confirmation code provided.
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.resendContainer}
+          onPress={this.resendConfirmationCode}
+        >
+          <Text style={styles.infoText}>Resend Code</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  renderFormLabel(label) {
+    return <Text style={styles.formText}>{label}</Text>;
   }
 
   renderConfirmButton() {
@@ -70,44 +123,48 @@ interface State {
               onPress={() => this.validateInput(confirmSignUp)}
               style={styles.submitButton}
             >
-              {loading
-                ? <ActivityIndicator color={'white'}/>
-                : <Text style={styles.submitButtonText}>Confirm</Text>
-              }
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text style={styles.submitButtonText}>Confirm Account</Text>
+              )}
             </TouchableOpacity>
           );
         }}
       </ConfirmSignUpMutation>
-    )
+    );
   }
 
   renderError() {
-    return (
-      <Text style={styles.errorMessage}>
-        {this.state.error}
-      </Text>
-    )
+    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
-    return(
-      <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
+            {this.renderSegueToSignIn()}
             {this.renderHeader()}
+            {this.renderInfoContainer()}
+            {this.renderFormLabel('Username')}
             <TextInput
-              placeholder="Confirm 
-"
+              placeholder='Username'
               style={styles.inputContainer}
               onChangeText={text => this.setState({ username: text.trim() })}
-              autoCapitalize={'sentences'}
+              autoCapitalize={'none'}
               value={this.state.username}
             />
+            {this.renderFormLabel('Confirmation Code')}
             <TextInput
-              placeholder="Confirmation Code"
+              placeholder='Confirmation Code'
               style={styles.inputContainer}
               onChangeText={text => this.setState({ authCode: text.trim() })}
-              autoCapitalize={'sentences'}
+              autoCapitalize={'none'}
               value={this.state.authCode}
             />
             {this.renderError()}
@@ -117,4 +174,4 @@ interface State {
       </TouchableWithoutFeedback>
     );
   }
- }
+}

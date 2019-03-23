@@ -44,13 +44,15 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 		HandleLocalErrors("error migrating db: " + err.Error())
 	}
 
+	// db.LogMode(true)
+
 	mctx := &gqltag.MethodContext{
 		DB: db,
 		// Request: request,
 	}
 	schema, err := gqltag.GenerateGraphQLSchema(
-		schema.LinkedTypes,
-		schema.LinkedMethods,
+		schema.LinkedAdminTypes,
+		schema.LinkedAdminMethods,
 		mctx,
 	)
 
@@ -83,22 +85,8 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(out))
 }
 
-func spotifyOAuth(w http.ResponseWriter, r *http.Request) {
-	// redirectURL := spotify.HandleSpotifyOAuth()
-	// fmt.Printf("\nredirectURL:\n%s", redirectURL)
-	// // fmt.Fprintf(w, redirectURL)
-	// http.Redirect(w, r, redirectURL, http.StatusSeeOther)
-}
-
-func spotifyCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	// code := spotify.HandleSpotifyCallback(w, r)
-	fmt.Fprintf(w, string("success"))
-}
-
 func main() {
-	http.HandleFunc("/graphql", adminHandler)
-	http.HandleFunc("/spotify/oAuth", spotifyOAuth)
-	http.HandleFunc("/callback", spotifyCallbackHandler)
+	http.HandleFunc("/admin_graphql", adminHandler)
 	fmt.Printf("\nrunning on localhost %v\n", os.Getenv("PORT"))
 	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), nil))
 }

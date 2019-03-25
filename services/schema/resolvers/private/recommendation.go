@@ -16,6 +16,7 @@ type RecommendationMethods struct {
 	ListCurrentUserRecommendations *gqltag.Query    `gql:"listCurrentUserRecommendations(offset: Int, count: Int): [Recommendation]"`
 	CreateRecommendation           *gqltag.Mutation `gql:"createRecommendation(input: RecommendationInput): Recommendation"`
 	DismissRecommendation          *gqltag.Mutation `gql:"dismissRecommendation(recommendationID: ID): Recommendation"`
+	RecommendToAFriend             *gqltag.Mutation `gql:"recommendToAFriend(senderID: Int, receiverID: Int, playrollID: Int): Recommendation"`
 }
 
 var listCurrentUserRecommendations = gqltag.Method{
@@ -95,9 +96,45 @@ var dismissRecommendation = gqltag.Method{
 	},
 }
 
+var recommendToAFriend = gqltag.Method{
+	Description: `Recommends the selected Playroll to a friend.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		// TODO: keep or delete commented authorization
+		// user, err := models.AuthorizeUser(mctx)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	return nil, err
+		// }
+		type recommendToAFriendParams struct {
+			SenderID   uint
+			ReceiverID uint
+			PlayrollID uint
+		}
+
+		params := &recommendToAFriendParams{}
+		err := mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		// strSenderID := strconv.Itoa(int(params.SenderID))
+		// strReceiverID := strconv.Itoa(int(params.ReceiverID))
+		// strPlayrollID := strconv.Itoa(int(params.PlayrollID))
+		// recommendationInput := models.RecommendationInput{UserID: strReceiverID, RecommenderID: strSenderID, PlayrollID: strPlayrollID}
+		// recommendation := createRecommendation(recommendationInput)
+
+		recommendation := models.Recommendation{UserID: params.ReceiverID, RecommenderID: params.SenderID, PlayrollID: params.PlayrollID}
+		mctx.DB.Create(&recommendation)
+
+		return recommendation, nil
+	},
+}
+
 // LinkedRecommendationMethods exports the methods for the Recommendations entity.
 var LinkedRecommendationMethods = RecommendationMethods{
 	ListCurrentUserRecommendations: gqltag.LinkQuery(listCurrentUserRecommendations),
 	CreateRecommendation:           gqltag.LinkMutation(createRecommendation),
 	DismissRecommendation:          gqltag.LinkMutation(dismissRecommendation),
+	RecommendToAFriend:             gqltag.LinkMutation(recommendToAFriend),
 }

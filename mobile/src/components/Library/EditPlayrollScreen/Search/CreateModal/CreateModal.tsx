@@ -70,7 +70,7 @@ export default class CreateModal extends React.Component<Props, State> {
                 marginBottom: 0,
               }}
             >
-              <RNPickerSelect
+              {/* <RNPickerSelect
                 placeholder={{ label: 'Select Filter...', value: undefined }}
                 items={[
                   { label: 'Play Songs In Order', value: 'In Order' },
@@ -121,7 +121,7 @@ export default class CreateModal extends React.Component<Props, State> {
                   }
                 }}
                 style={pickerStyle}
-              />
+              /> */}
             </View>
             <View style={styles.formfooter}>
               <CreateRollMutation
@@ -149,9 +149,13 @@ export default class CreateModal extends React.Component<Props, State> {
                                   modifications: ['0'],
                                 },
                                 {
+                                  type: 'Order',
+                                  name: 'Random',
+                                },
+                                {
                                   type: 'Length',
                                   name: 'NumberOfSongs',
-                                  modifications: ['0', '7'],
+                                  modifications: ['0', '10'],
                                 },
                               ],
                             },

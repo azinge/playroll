@@ -79,4 +79,16 @@ export default StyleSheet.create({
     justifyContent: 'center',
     zIndex: 1, // float on top
   },
+  footer2View: {
+    backgroundColor: '#fff',
+    flex: 1,
+    position: 'absolute',
+    bottom: 60, // stick to bottom
+    left: 0, // stretch to left
+    right: 0, // stretch to right
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1, // float on top
+  },
 });

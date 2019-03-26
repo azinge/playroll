@@ -154,6 +154,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
+  // Bottom Bar of Icons to display current list of Rolls
   renderBottomBar(playroll: Playroll) {
     const iconMap: { [index: string]: string } = {
       Track: 'audiotrack',

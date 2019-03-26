@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
-import commonStyles from '../common.styles';
+import componentStyles from '../../component.styles';
+import libraryStyles from '../library.styles';
 
 const localStyles = StyleSheet.create({
   headerCenterComponent: {
@@ -17,12 +18,7 @@ const localStyles = StyleSheet.create({
   editingBarNameInput: {
     fontSize: 20
   },
-  horizontalRule: {
-    width: '75%',
-    marginVertical: 5,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth
-  },
+
   editingBarTagInput: {
     fontSize: 15
   },
@@ -76,4 +72,8 @@ export const rawStyles = {
   }
 };
 
-export default StyleSheet.flatten([commonStyles, localStyles]);
+export default StyleSheet.flatten([
+  componentStyles,
+  libraryStyles,
+  localStyles
+]);

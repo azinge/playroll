@@ -92,6 +92,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }),
     };
     return (
+
+      // TODO: remove this mutation
       <GenerateTracklistMutation
         variables={{ playrollID: playroll.id }}
         onCompleted={data =>

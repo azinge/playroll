@@ -17,7 +17,6 @@ export default StyleSheet.create({
     fontSize: 20
   },
   horizontalRule: {
-    width: '90%',
     marginVertical: 5,
     borderBottomColor: 'lightgray',
     borderBottomWidth: StyleSheet.hairlineWidth

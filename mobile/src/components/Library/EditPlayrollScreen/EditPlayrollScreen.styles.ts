@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
-import componentStyles from '../../component.styles';
 import libraryStyles from '../library.styles';
 
-const localStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   headerCenterComponent: {
     color: '#fff',
     fontSize: 20
@@ -72,8 +71,4 @@ export const rawStyles = {
   }
 };
 
-export default StyleSheet.flatten([
-  componentStyles,
-  libraryStyles,
-  localStyles
-]);
+export default StyleSheet.flatten([libraryStyles, styles]);

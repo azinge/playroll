@@ -18,14 +18,14 @@ export default StyleSheet.create({
     fontSize: 20,
   },
   horizontalRule: {
-    width: '75%',
+    width: '90%',
     marginVertical: 5,
-    borderBottomColor: 'lightgrey',
+    borderBottomColor: 'lightgray',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  titleBarTags: {
+  subtitle: {
     fontSize: 15,
-    color: 'lightgrey'
+    color: 'gray'
   },
 
   // Bottom View for Button

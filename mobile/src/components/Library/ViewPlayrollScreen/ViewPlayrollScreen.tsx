@@ -141,8 +141,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           <View style={styles.horizontalRule} />
           <Text
             selectionColor={'purple'}
-
-            style={styles.titleBarTags}
+            style={styles.subtitle}
           >This playroll contains {playroll.rolls.length} rolls.</Text>
         </View>
       </View>

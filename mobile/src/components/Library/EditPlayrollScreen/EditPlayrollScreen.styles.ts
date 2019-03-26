@@ -1,37 +1,36 @@
 import { StyleSheet } from 'react-native';
+import commonStyles from '../common.styles';
 
-export default StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+const localStyles = StyleSheet.create({
   headerCenterComponent: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 20
   },
   editingBarContainer: {
     flexDirection: 'row',
     height: 100,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   editingBarNameContainer: {
-    flex: 1,
+    flex: 1
   },
   editingBarNameInput: {
-    fontSize: 20,
+    fontSize: 20
   },
   horizontalRule: {
     width: '75%',
     marginVertical: 5,
     borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth
   },
   editingBarTagInput: {
-    fontSize: 15,
+    fontSize: 15
   },
+
   searchMusicContainer: {
-    flex: 1,
+    flex: 1
   },
+
   bottomBarContainer: {
     height: 83,
     borderTopColor: 'lightgrey',
@@ -41,22 +40,22 @@ export default StyleSheet.create({
     bottom: 0,
     backgroundColor: '#f5eeed',
     paddingBottom: 5,
-    paddingHorizontal: 5,
+    paddingHorizontal: 5
   },
   bottomBarScrollViewStyle: { alignItems: 'center' },
   bottomBarItemContainer: {
     height: 65,
     width: 65,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   bottomBarIconContainer: {
     position: 'absolute',
     bottom: 4,
     left: 4,
     borderRadius: 5,
-    backgroundColor: '#FFFFFF9F',
-  },
+    backgroundColor: '#FFFFFF9F'
+  }
 });
 
 export const rawStyles = {
@@ -66,13 +65,15 @@ export const rawStyles = {
     marginHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: 'lightgrey'
   },
   bottomBarItemImage: {
     width: 50,
     height: 50,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'lightgrey',
-  },
+    borderColor: 'lightgrey'
+  }
 };
+
+export default StyleSheet.flatten([commonStyles, localStyles]);

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import NavigationService from '../../../services/NavigationService';
@@ -19,7 +19,6 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import { Playroll } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
-import { Button } from 'react-native-elements';
 
 import styles from './BrowsePlayrollsScreen.styles';
 
@@ -170,13 +169,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
         {createPlayroll => {
           return (
             <View style={styles.footerView}>
-              <Button
-                title='New Playroll'
-                containerStyle={styles.newPlayrollButton}
+              <TouchableOpacity
+                style={styles.newButton}
                 onPress={() => {
                   createPlayroll();
                 }}
-              />
+              ><Text style={styles.buttonText}>Create a Playroll</Text></TouchableOpacity>
             </View>
           );
         }}

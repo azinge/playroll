@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  newPlayrollButton: {
-    width: '90%',
-  },
+
+
+  // Footer View with Button
   footerView: {
     backgroundColor: '#fff',
     flex: 1,
@@ -16,4 +16,22 @@ export default StyleSheet.create({
     justifyContent: 'center',
     zIndex: 1, // float on top
   },
+
+  // Bottom Button
+  newButton: {
+    width: '90%',
+    backgroundColor: '#af00bc',  // brighter purple
+    borderRadius: 3,
+    height: 40,
+
+    // Center text contents
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'Avenir',
+    fontSize: 18,
+    fontWeight: 'bold',
+  }
 });

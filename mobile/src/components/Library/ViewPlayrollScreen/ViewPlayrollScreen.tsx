@@ -139,10 +139,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             {playroll.name}
           </Text>
           <View style={styles.horizontalRule} />
-          <Text
-            selectionColor={'purple'}
-            style={styles.subtitle}
-          >This playroll contains {playroll.rolls.length} rolls.</Text>
+          {playroll && playroll.rolls &&
+            <Text
+              selectionColor={'purple'}
+              style={styles.subtitle}
+            >This playroll contains {playroll.rolls.length} {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.</Text>
+          }
         </View>
       </View>
     );

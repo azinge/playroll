@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
 import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import {
@@ -12,6 +12,8 @@ import {
   ListSpotifySavedTracksQuery,
 } from '../../../../graphql/requests/Spotify/';
 import PlaceholderList from '../../../shared/Lists/PlaceholderList';
+import NavigationService from '../../../../services/NavigationService';
+import { from } from 'zen-observable';
 
 export default class MusicServicePlaylistsMenuScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -26,8 +28,10 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
         // borderWidth: 0.1,
         // marginHorizontal: 10,
         // marginVertical: 7,
+        // color: 'red',
         marginHorizontal: 30,
-        marginBottom: 10,
+        marginBottom: 5,
+        marginTop: 5,
         borderColor: 'white',
         borderRadius: 10,
         shadowColor: 'gray',
@@ -84,6 +88,37 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
               Spotify
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() =>
+              NavigationService.navigate('BrowseSpotifySavedTracks')
+            }
+          >
+            <ListItem
+              title={'Your Saved Tracks'}
+              titleStyle={{ textAlign: 'center', fontWeight: 'bold' }}
+              //   subtitle={item.type}
+              //   leftAvatar={{
+              //     source: { uri: item.cover },
+              //   }}
+              containerStyle={{
+                // borderWidth: 0.1,
+                // marginHorizontal: 10,
+                // marginVertical: 7,
+                marginHorizontal: 30,
+                marginBottom: 10,
+                borderColor: 'white',
+                borderRadius: 10,
+                shadowColor: 'gray',
+                shadowOffset: {
+                  width: 2,
+                  height: 1,
+                },
+                shadowRadius: 5,
+                shadowOpacity: 0.2,
+                overflow: 'visible',
+              }}
+            />
+          </TouchableOpacity>
           <ListSpotifyPlaylistsQuery variables={{ count: 3 }}>
             {({ loading, error, data }) => {
               console.log(error && error.message);
@@ -105,38 +140,6 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
               );
             }}
           </ListSpotifyPlaylistsQuery>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'black',
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginVertical: 2,
-            }}
-          >
-            Your Saved Tracks
-          </Text>
-          <ListSpotifySavedTracksQuery variables={{ count: 3 }}>
-            {({ loading, error, data }) => {
-              console.log(error && error.message);
-              console.log(
-                data && data.private && data.private.listSpotifySavedTracks
-              );
-              return (
-                <View style={{ marginBottom: 20, flex: 1 }}>
-                  <FlatList
-                    data={
-                      data &&
-                      data.private &&
-                      data.private.listSpotifySavedTracks.slice(0, 3)
-                    }
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderItem}
-                  />
-                </View>
-              );
-            }}
-          </ListSpotifySavedTracksQuery>
         </View>
       </SubScreenContainer>
     );

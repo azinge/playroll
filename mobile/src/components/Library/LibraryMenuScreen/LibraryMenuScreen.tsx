@@ -3,7 +3,13 @@
  */
 
 import * as React from 'react';
-import { Text, View, Image, TouchableHighlight } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native';
 
 import { NavigationScreenProp } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -46,48 +52,49 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
   renderContent() {
     return (
       <View style={{ marginTop: 5, flex: 1 }}>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('BrowsePlayrolls');
-            }}
-            style={styles.playrollsText}
-          >
-            Your Playrolls
-          </Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('ViewDiscoveryQueue');
-            }}
-            style={styles.disabledText}
-          >
-            Your Discovery Queues
-          </Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('BrowseRecommendations');
-            }}
-            style={styles.disabledText}
-          >
-            Your Recommendations
-          </Text>
-          {/* {this.renderRecommendationsNotification()} */}
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('MusicServicePlaylistsMenu');
-            }}
-            style={styles.disabledText}
-          >
-            Your Playlists
-          </Text>
-          {this.renderMusicServiceIcons()}
-        </View>
+        {/* Your Playrolls */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('BrowsePlayrolls');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.enabledText}>Your Playrolls</Text>
+          </View>
+        </TouchableOpacity>
+        {/* Your Discovery Queues */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('ViewDiscoveryQueue');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>Your Discovery Queues</Text>
+          </View>
+        </TouchableOpacity>
+        {/* Your Reommendations */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('BrowseRecommendations');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>Your Recommendations</Text>
+            {/* {this.renderRecommendationsNotification()} */}
+          </View>
+        </TouchableOpacity>
+        {/* Your Playlists */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('MusicServicePlaylistsMenu');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.enabledText}>Your Playlists</Text>
+            {this.renderMusicServiceIcons()}
+          </View>
+        </TouchableOpacity>
+
         {/* <View style={styles.textContainer}>
           <Text onPress={() => {}} style={styles.disabledText}>
             Made For You

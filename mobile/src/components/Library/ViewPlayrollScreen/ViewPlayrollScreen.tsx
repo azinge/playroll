@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -159,16 +159,15 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   renderNewRollButton(playroll) {
     return (
       <View style={styles.footerView}>
-        <Button
-          title='New Roll'
-          containerStyle={styles.newRollButton}
+        <TouchableOpacity
+          style={styles.newRollButton}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',
               playroll,
             });
           }}
-        />
+        ><Text style={styles.buttonText}>Add a Roll</Text></TouchableOpacity>
       </View>
     );
   }

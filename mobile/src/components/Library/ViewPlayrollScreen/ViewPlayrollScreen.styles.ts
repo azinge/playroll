@@ -45,7 +45,20 @@ export default StyleSheet.create({
   // Bottom Button
   newRollButton: {
     width: '90%',
+    backgroundColor: '#af00bc',  // brighter purple
+    borderRadius: 3,
+    height: 40,
+
+    // Center text contents
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'Avenir',
+    fontSize: 18,
+    fontWeight: 'bold',
+  }
 });
 
 // TODO: this is required, but explanation needed here...

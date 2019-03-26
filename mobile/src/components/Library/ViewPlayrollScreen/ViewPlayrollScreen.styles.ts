@@ -9,26 +9,34 @@ export default StyleSheet.create({
     color: '#fff',
     fontSize: 20,
   },
-  editingBarContainer: {
+  titleBarContainer: {
     flexDirection: 'row',
     height: 100,
     alignItems: 'center',
   },
-  editingBarNameContainer: {
+  titleBarNameContainer: {
     flex: 1,
   },
-  editingBarNameInput: {
+
+
+  titleBarName: {
     fontSize: 20,
   },
+
+
   horizontalRule: {
     width: '75%',
     marginVertical: 5,
     borderBottomColor: 'lightgrey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  editingBarTagInput: {
+
+
+  titleBarTags: {
     fontSize: 15,
+    color: 'lightgrey'
   },
+
   searchMusicContainer: {
     flex: 1,
   },
@@ -73,7 +81,7 @@ export default StyleSheet.create({
 });
 
 export const rawStyles = {
-  editingBarImage: {
+  titleBarImage: {
     width: 65,
     height: 65,
     marginHorizontal: 20,

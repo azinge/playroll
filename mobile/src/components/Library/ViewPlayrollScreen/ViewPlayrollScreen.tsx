@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { View, TextInput, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -122,29 +122,29 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   }
   renderTitleBar(playroll: Playroll) {
     return (
-      <View style={styles.editingBarContainer}>
+      <View style={styles.titleBarContainer}>
         <Image
-          style={rawStyles.editingBarImage}
+          style={rawStyles.titleBarImage}
           source={require('../../../assets/new_playroll.png')}
         />
-        <View style={styles.editingBarNameContainer}>
-          <TextInput
+        <View style={styles.titleBarNameContainer}>
+          <Text
             selectionColor={'purple'}
             placeholder='Name Your Playroll'
             placeholderTextColor='lightgrey'
-            style={styles.editingBarNameInput}
+            style={styles.titleBarName}
             onChangeText={name => this.setState({ editPlayrollName: name })}
             onSubmitEditing={() => updatePlayroll()}
           >
             {playroll.name}
-          </TextInput>
+          </Text>
           <View style={styles.horizontalRule} />
-          <TextInput
+          <Text
             selectionColor={'purple'}
-            placeholder='#Existential #Chill #Help #Test'
-            placeholderTextColor='lightgrey'
-            style={styles.editingBarTagInput}
-          />
+            // placeholder='#Existential #Chill #Help #Test'
+            // placeholderTextColor='lightgrey'
+            style={styles.titleBarTags}
+          >#Existential #Chill #Help #Test</Text>
         </View>
       </View>
     );

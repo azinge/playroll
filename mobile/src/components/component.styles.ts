@@ -27,6 +27,14 @@ export default StyleSheet.create({
     color: 'gray'
   },
 
+  // Horizontal Spacer between rows
+  spacing: {
+    width: '90%',
+    marginVertical: 10,
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+
   // Bottom View for Button
   footerView: {
     backgroundColor: '#fff',

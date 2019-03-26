@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -48,11 +48,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
         {({ loading, error, data, client: { cache } }) => {
-          // console.log(data)
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
 
-          console.log(playroll)
+          // console.log(playroll)
+          // console.log(playroll.rolls.length)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
@@ -112,8 +112,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           };
           return (
             <SubScreenHeader
-              title={'View Playroll'}
-              icons={[editPlayrollIcon, generateTracklistIcon]}
+              title={'View Playroll'}  // visible screen title
+              icons={[editPlayrollIcon, generateTracklistIcon]}  // top right buttons
             />
           );
         }}
@@ -139,12 +139,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             {playroll.name}
           </Text>
           <View style={styles.horizontalRule} />
-          <Text
-            selectionColor={'purple'}
-            // placeholder='#Existential #Chill #Help #Test'
-            // placeholderTextColor='lightgrey'
-            style={styles.titleBarTags}
-          >#Existential #Chill #Help #OK</Text>
+          {playroll && playroll.rolls &&
+            <Text
+              selectionColor={'purple'}
+              style={styles.subtitle}
+            >This playroll contains {playroll.rolls.length} {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.</Text>
+          }
         </View>
       </View>
     );
@@ -153,27 +153,22 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <RollList
         rolls={playroll.rolls || []}
-        onPress={roll => {
-          NavigationService.navigate('EditRoll', {
-            roll,
-          });
-        }}
+        onPress={() => {}}
       />
     );
   }
   renderNewRollButton(playroll) {
     return (
       <View style={styles.footerView}>
-        <Button
-          title='New Roll'
-          containerStyle={styles.newRollButton}
+        <TouchableOpacity
+          style={styles.newRollButton}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',
               playroll,
             });
           }}
-        />
+        ><Text style={styles.buttonText}>Add a Roll</Text></TouchableOpacity>
       </View>
     );
   }

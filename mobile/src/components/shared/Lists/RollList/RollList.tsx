@@ -12,7 +12,7 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   rolls: Roll[];
-  onPress?: (roll: Roll) => void;
+  // onPress?: (roll: Roll) => void;  // removing, edit icon is enough
 }
 
 interface State {}
@@ -26,32 +26,48 @@ export default class RollList extends React.Component<Props, State> {
   renderItem({ item: roll }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+    // console.log(mainSource)
     return (
-      <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
-        <View style={{ width: '100%', alignItems: 'center' }} key={roll.id}>
-          <View style={{ flexDirection: 'row', width: '100%' }}>
-            <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={styles.artist} numberOfLines={2}>
-                {mainSource.name}
+      // Removing TouchableOpacity because the Edit Icon is enough
+      // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
+      <View style={styles.outerContainer} key={roll.id}>
+        <View style={styles.innerContainer}>
+          <Image style={styles.cover} source={{ uri: mainSource.cover }} />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
+              {mainSource.type}
+            </Text>
+            <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+              {mainSource.name}
+            </Text>
+            <Text style={[styles.text, styles.source]} numberOfLines={2}>
+              {mainSource.provider}
+            </Text>
+            {mainSource.creator ? (
+              <Text style={styles.noArtist} numberOfLines={2}>
+                {mainSource.creator}
               </Text>
-              {mainSource.creator ? (
-                <Text style={styles.noArtist} numberOfLines={2}>
-                  {mainSource.creator}
-                </Text>
-              ) : null}
-            </View>
-            <Icon
-              size={35}
-              name='more-vert'
-              color='lightgrey'
-              underlayColor='rgba(255,255,255,0)'
-              onPress={() => NavigationService.goBack()}
-            />
+            ) : null}
           </View>
-          <View style={styles.spacing} />
+          <Icon
+            size={25}
+            name='edit'
+            color='lightgrey'
+            onPress={roll => {
+              NavigationService.navigate('EditRoll', {
+                roll,
+              });
+            }}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            iconStyle={styles.editIcon}
+          />
         </View>
-      </TouchableOpacity>
+        <View style={styles.spacing} />
+      </View>
+      // </TouchableOpacity>
     );
   }
 

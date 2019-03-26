@@ -14,7 +14,7 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
     <ListItem
       title={item.name}
       titleStyle={{ color: 'purple' }}
-      subtitle={item.type}
+      subtitle={item.creator}
       leftAvatar={{
         source: { uri: item.cover },
       }}
@@ -56,12 +56,11 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
               <View style={{ marginBottom: 20, flex: 1 }}>
                 <FlatList
                   data={
-                    data &&
-                    data.private &&
-                    data.private.listSpotifySavedTracks.slice(0, 3)
+                    data && data.private && data.private.listSpotifySavedTracks
                   }
                   keyExtractor={this._keyExtractor}
                   renderItem={this._renderItem}
+                  style={{ marginBottom: 35 }}
                 />
               </View>
             );

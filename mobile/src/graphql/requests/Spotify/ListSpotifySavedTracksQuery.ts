@@ -12,6 +12,7 @@ export const LIST_SPOTIFY_SAVED_TRACKS_QUERY = gql`
         providerID
         cover
         name
+        creator
       }
     }
   }

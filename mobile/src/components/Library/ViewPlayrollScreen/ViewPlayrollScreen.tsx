@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { View, TextInput, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -48,15 +48,21 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
         {({ loading, error, data, client: { cache } }) => {
+          // console.log(data)
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
+
+          console.log(playroll)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
                 title='View Playroll'
                 renderHeader={this.renderHeader}
               >
-                {this.renderEditingBar(playroll)}
+                {/* Icon, Title, and Hashtags */}
+                {this.renderTitleBar(playroll)}
+
+                {/* List the Rolls */}
                 {this.renderRolls(playroll)}
               </SubScreenContainer>
               {this.renderNewRollButton(playroll)}
@@ -114,45 +120,32 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       </GenerateTracklistMutation>
     );
   }
-  renderEditingBar(playroll: Playroll) {
+  renderTitleBar(playroll: Playroll) {
     return (
-      <View style={styles.editingBarContainer}>
+      <View style={styles.titleBarContainer}>
         <Image
-          style={rawStyles.editingBarImage}
+          style={rawStyles.titleBarImage}
           source={require('../../../assets/new_playroll.png')}
         />
-        <UpdatePlayrollMutation
-          variables={{
-            id: playroll.id,
-            input: {
-              name: this.state.editPlayrollName,
-              userID: playroll.userID,
-            },
-          }}
-          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
-        >
-          {(updatePlayroll, { data }) => (
-            <View style={styles.editingBarNameContainer}>
-              <TextInput
-                selectionColor={'purple'}
-                placeholder='Name Your Playroll'
-                placeholderTextColor='lightgrey'
-                style={styles.editingBarNameInput}
-                onChangeText={name => this.setState({ editPlayrollName: name })}
-                onSubmitEditing={() => updatePlayroll()}
-              >
-                {playroll.name}
-              </TextInput>
-              <View style={styles.horizontalRule} />
-              <TextInput
-                selectionColor={'purple'}
-                placeholder='#Existential #Chill #Help'
-                placeholderTextColor='lightgrey'
-                style={styles.editingBarTagInput}
-              />
-            </View>
-          )}
-        </UpdatePlayrollMutation>
+        <View style={styles.titleBarNameContainer}>
+          <Text
+            selectionColor={'purple'}
+            placeholder='Name Your Playroll'
+            placeholderTextColor='lightgrey'
+            style={styles.titleBarName}
+            onChangeText={name => this.setState({ editPlayrollName: name })}
+            onSubmitEditing={() => updatePlayroll()}
+          >
+            {playroll.name}
+          </Text>
+          <View style={styles.horizontalRule} />
+          <Text
+            selectionColor={'purple'}
+            // placeholder='#Existential #Chill #Help #Test'
+            // placeholderTextColor='lightgrey'
+            style={styles.titleBarTags}
+          >#Existential #Chill #Help #OK</Text>
+        </View>
       </View>
     );
   }

@@ -92,8 +92,6 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }),
     };
     return (
-
-      // TODO: remove this mutation
       <GenerateTracklistMutation
         variables={{ playrollID: playroll.id }}
         onCompleted={data =>
@@ -114,8 +112,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           };
           return (
             <SubScreenHeader
-              title={'View Playroll'}
-              icons={[editPlayrollIcon, generateTracklistIcon]}
+              title={'View Playroll'}  // visible screen title
+              icons={[editPlayrollIcon, generateTracklistIcon]}  // top right buttons
             />
           );
         }}

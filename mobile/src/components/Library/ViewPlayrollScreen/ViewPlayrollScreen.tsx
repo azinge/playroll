@@ -144,7 +144,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             // placeholder='#Existential #Chill #Help #Test'
             // placeholderTextColor='lightgrey'
             style={styles.titleBarTags}
-          >#Existential #Chill #Help #Test</Text>
+          >#Existential #Chill #Help #OK</Text>
         </View>
       </View>
     );

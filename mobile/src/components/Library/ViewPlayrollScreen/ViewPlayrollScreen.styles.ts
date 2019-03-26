@@ -1,23 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+
+  // General Container
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  headerCenterComponent: {
-    color: '#fff',
-    fontSize: 20,
-  },
-  editingBarContainer: {
+
+  // Title Bar for Playroll
+  titleBarContainer: {
     flexDirection: 'row',
     height: 100,
     alignItems: 'center',
   },
-  editingBarNameContainer: {
-    flex: 1,
-  },
-  editingBarNameInput: {
+  titleBarName: {
     fontSize: 20,
   },
   horizontalRule: {
@@ -26,38 +23,12 @@ export default StyleSheet.create({
     borderBottomColor: 'lightgrey',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  editingBarTagInput: {
+  titleBarTags: {
     fontSize: 15,
+    color: 'lightgrey'
   },
-  searchMusicContainer: {
-    flex: 1,
-  },
-  bottomBarContainer: {
-    height: 83,
-    borderTopColor: 'lightgrey',
-    borderTopWidth: 1,
-    width: '100%',
-    backgroundColor: '#f5eeed',
-    paddingBottom: 5,
-    paddingHorizontal: 5,
-  },
-  bottomBarScrollViewStyle: { alignItems: 'center' },
-  bottomBarItemContainer: {
-    height: 65,
-    width: 65,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomBarIconContainer: {
-    position: 'absolute',
-    bottom: 4,
-    left: 4,
-    borderRadius: 5,
-    backgroundColor: '#FFFFFF9F',
-  },
-  newRollButton: {
-    width: '90%',
-  },
+
+  // Bottom View for Button
   footerView: {
     backgroundColor: '#fff',
     flex: 1,
@@ -70,20 +41,19 @@ export default StyleSheet.create({
     justifyContent: 'center',
     zIndex: 1, // float on top
   },
+
+  // Bottom Button
+  newRollButton: {
+    width: '90%',
+  },
 });
 
+// TODO: this is required, but explanation needed here...
 export const rawStyles = {
-  editingBarImage: {
+  titleBarImage: {
     width: 65,
     height: 65,
     marginHorizontal: 20,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'lightgrey',
-  },
-  bottomBarItemImage: {
-    width: 50,
-    height: 50,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'lightgrey',

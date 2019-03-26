@@ -5,6 +5,7 @@ import (
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/cazinge/playroll/services/schema/resolvers/admin"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -16,7 +17,7 @@ type RecommendationMethods struct {
 	ListCurrentUserRecommendations *gqltag.Query    `gql:"listCurrentUserRecommendations(offset: Int, count: Int): [Recommendation]"`
 	CreateRecommendation           *gqltag.Mutation `gql:"createRecommendation(input: RecommendationInput): Recommendation"`
 	DismissRecommendation          *gqltag.Mutation `gql:"dismissRecommendation(recommendationID: ID): Recommendation"`
-	RecommendToAFriend             *gqltag.Mutation `gql:"recommendToAFriend(senderID: Int, receiverID: Int, playrollID: Int): Recommendation"`
+	RecommendToAUser               *gqltag.Mutation `gql:"recommendToAUser(receiverID: Int, playrollID: Int, rollData: RollDataInput): Recommendation"`
 }
 
 var listCurrentUserRecommendations = gqltag.Method{
@@ -96,36 +97,44 @@ var dismissRecommendation = gqltag.Method{
 	},
 }
 
-var recommendToAFriend = gqltag.Method{
-	Description: `Recommends the selected Playroll to a friend.`,
+var recommendToAUser = gqltag.Method{
+	Description: `Recommends the selected Playroll to a user.`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
-		// TODO: keep or delete commented authorization
-		// user, err := models.AuthorizeUser(mctx)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	return nil, err
-		// }
-		type recommendToAFriendParams struct {
-			SenderID   uint
-			ReceiverID uint
-			PlayrollID uint
-		}
-
-		params := &recommendToAFriendParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		user, err := models.AuthorizeUser(mctx)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
 
-		// strSenderID := strconv.Itoa(int(params.SenderID))
-		// strReceiverID := strconv.Itoa(int(params.ReceiverID))
-		// strPlayrollID := strconv.Itoa(int(params.PlayrollID))
-		// recommendationInput := models.RecommendationInput{UserID: strReceiverID, RecommenderID: strSenderID, PlayrollID: strPlayrollID}
-		// recommendation := createRecommendation(recommendationInput)
+		type recommendToAUserParams struct {
+			ReceiverID    uint
+			PlayrollID    uint
+			RollDataInput jsonmodels.RollDataInput
+		}
 
-		recommendation := models.Recommendation{UserID: params.ReceiverID, RecommenderID: params.SenderID, PlayrollID: params.PlayrollID}
-		mctx.DB.Create(&recommendation)
+		params := &recommendToAUserParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		relationship := &models.Relationship{}
+		db := mctx.DB
+		err = db.Where(&models.Relationship{UserID: params.ReceiverID, OtherUserID: user.ID, IsBlocking: false}).First(relationship).Error
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		rollData, err := params.RollDataInput.ToModel()
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		recommendation := models.Recommendation{Data: *rollData, UserID: params.ReceiverID, RecommenderID: user.ID, PlayrollID: params.PlayrollID}
+		db.Create(&recommendation)
 
 		return recommendation, nil
 	},
@@ -136,5 +145,5 @@ var LinkedRecommendationMethods = RecommendationMethods{
 	ListCurrentUserRecommendations: gqltag.LinkQuery(listCurrentUserRecommendations),
 	CreateRecommendation:           gqltag.LinkMutation(createRecommendation),
 	DismissRecommendation:          gqltag.LinkMutation(dismissRecommendation),
-	RecommendToAFriend:             gqltag.LinkMutation(recommendToAFriend),
+	RecommendToAUser:               gqltag.LinkMutation(recommendToAUser),
 }

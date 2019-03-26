@@ -87,6 +87,17 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
             >
               Spotify
             </Text>
+
+            <Text
+              style={{
+                color: 'black',
+                // fontWeight: 'bold',
+                fontSize: 24,
+                left: 150,
+              }}
+            >
+              See all...
+            </Text>
           </View>
           <TouchableOpacity
             onPress={() =>

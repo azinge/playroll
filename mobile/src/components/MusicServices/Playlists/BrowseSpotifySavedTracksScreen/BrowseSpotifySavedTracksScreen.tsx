@@ -8,6 +8,7 @@ import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../../shared/Lists/PlaceholderList';
 import { ListSpotifySavedTracksQuery } from '../../../../graphql/requests/Spotify';
 import { ListItem } from 'react-native-elements';
+import MusicSourceList from '../../../shared/Lists/MusicSourceList';
 
 export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -53,14 +54,19 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
               data && data.private && data.private.listSpotifySavedTracks
             );
             return (
-              <View style={{ marginBottom: 20, flex: 1 }}>
-                <FlatList
+              <View style={{ marginBottom: 40, flex: 1 }}>
+                {/* <FlatList
                   data={
                     data && data.private && data.private.listSpotifySavedTracks
                   }
                   keyExtractor={this._keyExtractor}
                   renderItem={this._renderItem}
                   style={{ marginBottom: 35 }}
+                /> */}
+                <MusicSourceList
+                  sources={
+                    data && data.private && data.private.listSpotifySavedTracks
+                  }
                 />
               </View>
             );

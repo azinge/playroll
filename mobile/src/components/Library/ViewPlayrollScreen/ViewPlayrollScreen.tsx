@@ -48,11 +48,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
         {({ loading, error, data, client: { cache } }) => {
-          // console.log(data)
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
 
-          console.log(playroll)
+          // console.log(playroll)
+          // console.log(playroll.rolls.length)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
@@ -141,10 +141,9 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           <View style={styles.horizontalRule} />
           <Text
             selectionColor={'purple'}
-            // placeholder='#Existential #Chill #Help #Test'
-            // placeholderTextColor='lightgrey'
+
             style={styles.titleBarTags}
-          >#Existential #Chill #Help #OK</Text>
+          >This playroll contains {playroll.rolls.length} rolls.</Text>
         </View>
       </View>
     );
@@ -153,11 +152,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <RollList
         rolls={playroll.rolls || []}
-        onPress={roll => {
-          NavigationService.navigate('EditRoll', {
-            roll,
-          });
-        }}
+        onPress={() => {}}
       />
     );
   }

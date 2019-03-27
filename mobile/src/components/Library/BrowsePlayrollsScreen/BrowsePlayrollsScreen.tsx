@@ -68,6 +68,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             >
               <View style={{ flex: 1 }}>
                 <SubScreenContainer
+                  contentContainerStyle={{ paddingBottom: 120 }}
                   renderHeader={this.renderHeader}
                   flatList={success}
                   data={playrolls}
@@ -100,6 +101,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                       Error Loading Playrolls
                     </Text>
                   )}
+                  {/* <View style={{ margin: 10 }} /> */}
                 </SubScreenContainer>
               </View>
               {this.renderNewPlayrollButton()}
@@ -181,10 +183,31 @@ export default class BrowsePlayrollsScreen extends React.Component<
             //     <Text style={styles.buttonText}>Create a Playroll</Text>
             //   </TouchableOpacity>
             // </View>
-            <View style={{ bottom: 20 }}>
+            <View
+              style={{
+                bottom: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                // marginBottom: 20,
+              }}
+            >
               <Button
-                style={{ marginHorizontal: 20 }}
+                linearGradientProps={{
+                  colors: ['#DA22FF', '#00c6ff'],
+                  start: { x: 0 },
+                  end: { x: 1 },
+                }}
+                containerStyle={{
+                  borderRadius: 80,
+                  width: '75%',
+                  position: 'absolute',
+                  bottom: 5,
+                  height: 50,
+                }}
+                buttonStyle={{ borderRadius: 80, height: 50 }}
+                raised
                 title={'Create New Playroll'}
+                titleStyle={{ fontWeight: 'bold' }}
                 onPress={() => {
                   createPlayroll();
                 }}

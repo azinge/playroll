@@ -10,7 +10,7 @@ import NavigationService from '../../../services/NavigationService';
 
 import {
   ListCurrentUserPlayrollsQuery,
-  CreatePlayrollMutation
+  CreatePlayrollMutation,
 } from '../../../graphql/requests/Playroll/';
 
 import PlayrollCard from '../../shared/Cards/PlayrollCard';
@@ -37,7 +37,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      addPlayrollName: ''
+      addPlayrollName: '',
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
@@ -60,9 +60,9 @@ export default class BrowsePlayrollsScreen extends React.Component<
           return (
             <View
               style={{
-                flex: 1
+                flex: 1,
                 // TODO(ianlizzo): Fix this pls
-                // marginBottom: 40 // makes the button move up
+                // marginBottom: 30,
               }}
             >
               <SubScreenContainer
@@ -79,7 +79,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         this.props.navigation &&
                         this.props.navigation.navigate('ViewPlayroll', {
                           managePlayroll: 'View Playroll',
-                          playroll
+                          playroll,
                         })
                       }
                       key={playroll.id}
@@ -120,12 +120,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
     return (
       <CreatePlayrollMutation
         variables={{
-          input: { name: 'New Playroll' }
+          input: { name: 'New Playroll' },
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
           NavigationService.navigate('ViewPlayroll', {
-            playroll
+            playroll,
           });
         }}
         refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
@@ -133,7 +133,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
         {createPlayroll => {
           const addPlayrollIcon = {
             ...Icons.addIcon,
-            onPress: () => createPlayroll()
+            onPress: () => createPlayroll(),
           };
           return (
             <SubScreenHeader title={'My Playrolls'} icons={[addPlayrollIcon]} />
@@ -142,8 +142,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
       </CreatePlayrollMutation>
     );
   }
-
   renderNewPlayrollButton() {
+    // return (
     const extractPlayroll = data => {
       if (
         Object.keys(data).length === 0 ||
@@ -156,12 +156,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
     return (
       <CreatePlayrollMutation
         variables={{
-          input: { name: 'New Playroll' }
+          input: { name: 'New Playroll' },
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
           NavigationService.navigate('ViewPlayroll', {
-            playroll
+            playroll,
           });
         }}
         refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
@@ -170,13 +170,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
           return (
             <View style={styles.footerView}>
               <TouchableOpacity
-                style={styles.bottomButton}
+                style={styles.newButton}
                 onPress={() => {
                   createPlayroll();
                 }}
-              >
-                <Text style={styles.buttonText}>Create a Playroll</Text>
-              </TouchableOpacity>
+              ><Text style={styles.buttonText}>Create a Playroll</Text></TouchableOpacity>
             </View>
           );
         }}

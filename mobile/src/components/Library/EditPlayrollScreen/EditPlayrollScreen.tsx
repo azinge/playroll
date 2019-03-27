@@ -36,7 +36,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     this.state = {
       editPlayrollName: ''
     };
-    // this.renderHeader = this.renderHeader.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
@@ -57,12 +57,9 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                 renderHeader={this.renderHeader}
               >
                 <View style={styles.screenContainer}>
-                  {/* Playroll Icon, Name and Subtitle */}
-                  {this.renderPlayrollHeader(playroll)}
-
-                  {/* Search Bar and Results */}
-                  {/* TODO: This should be a list of current Rolls, not search results */}
-                  {this.renderSearch(playroll)}
+                  {/* {this.renderHeader(playroll)} */}
+                  {this.renderEditingBar(playroll)}
+                  {this.renderSearchMusic(playroll)}
                 </View>
               </SubScreenContainer>
               {this.renderBottomBar(playroll)}
@@ -72,8 +69,6 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GetCurrentUserPlayrollQuery>
     );
   }
-
-  // Header of the screen
   renderHeader() {
     const playroll: Playroll =
       (this.props &&
@@ -109,9 +104,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GenerateTracklistMutation>
     );
   }
-
-  // Thumbnail, Name, and Subtitle
-  renderPlayrollHeader(playroll: Playroll) {
+  renderEditingBar(playroll: Playroll) {
     return (
       <View style={styles.editingBarContainer}>
         <Image
@@ -143,7 +136,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               <View style={styles.horizontalRule} />
               {playroll && playroll.rolls && (
                 <Text style={styles.subtitle}>
-                  Select a roll below to add to this playroll.
+                  Add a roll below to this playroll.
                 </Text>
               )}
             </View>
@@ -153,8 +146,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
-  // Search Bar and Results
-  renderSearch(playroll: Playroll) {
+  renderSearchMusic(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
         <Search playrollID={playroll.id} />
@@ -180,7 +172,6 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             playroll.rolls.map((roll, idx) => {
               const val: MusicSource =
                 (roll.data && roll.data.sources && roll.data.sources[0]) || {};
-              // console.log(val);
               return (
                 <View style={styles.bottomBarItemContainer} key={idx}>
                   <Image

@@ -11,7 +11,7 @@ import {
   Picker,
   FlatList,
   ListRenderItem,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
@@ -42,8 +42,8 @@ const pickerStyle = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#f5eeed',
     color: 'black',
-    alignItems: 'flex-end'
-  }
+    alignItems: 'flex-end',
+  },
 });
 
 export interface Props {
@@ -68,7 +68,7 @@ export default class Search extends Component<Props, State> {
       query: 'Drake',
       searchType: 'Artist',
       modalVisible: false,
-      currentSource: {}
+      currentSource: {},
     };
     this.setModal = this.setModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -86,31 +86,24 @@ export default class Search extends Component<Props, State> {
 
   manageRoll(source) {
     NavigationService.navigate('ManageRoll', {
-      currentSource: source
+      currentSource: source,
     });
   }
 
   render() {
     return (
       <View>
-        {this.renderSearchBar()}
-
-        {/* Options Bar (Popular, New, ABC, etc) */}
-        {/* TODO: do we need this? */}
-        {/* {this.renderOptionsBar()} */}
-
-        {/* Modal to add selected roll */}
+        {this.renderHeader()}
+        {this.renderOptionsBar()}
         {this.renderModal()}
-
-        {/* Search Results */}
-        {this.renderSearchResults()}
+        {this.renderSearch()}
       </View>
     );
   }
 
-  renderSearchBar() {
+  renderHeader() {
     return (
-      <View style={styles.searchBar}>
+      <View style={styles.main}>
         <Icon
           name={'search'}
           size={35}
@@ -137,7 +130,7 @@ export default class Search extends Component<Props, State> {
             paddingLeft: 20,
             borderLeftWidth: 1,
             borderLeftColor: 'lightgray',
-            width: 100
+            width: 100,
             // height: 100%,
           }}
         >
@@ -148,11 +141,11 @@ export default class Search extends Component<Props, State> {
               { label: 'Artist', value: 'Artist' },
               { label: 'Album', value: 'Album' },
               { label: 'Track', value: 'Track' },
-              { label: 'Playlist', value: 'Playlist' }
+              { label: 'Playlist', value: 'Playlist' },
             ]}
             onValueChange={value => {
               this.setState({
-                searchType: value
+                searchType: value,
               });
             }}
             style={pickerStyle}
@@ -172,7 +165,7 @@ export default class Search extends Component<Props, State> {
 
   renderOptionsBar() {
     return (
-      <View style={{ marginTop: 10, flexDirection: 'row' }}>
+      <View style={{ margin: 10, flexDirection: 'row' }}>
         <View style={{ paddingHorizontal: 7 }}>
           <Text
             style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
@@ -201,18 +194,18 @@ export default class Search extends Component<Props, State> {
     );
   }
 
-  renderSearchResults() {
+  renderSearch() {
     return (
       <SearchSpotifyQuery
         variables={{
           query: this.state.query,
-          searchType: this.state.searchType
+          searchType: this.state.searchType,
         }}
       >
         {({ loading, error, data }) => {
           console.log(error);
           return (
-            <View style={styles.resultsContainer}>
+            <View style={{ marginBottom: 145 }}>
               {loading ? (
                 <ActivityIndicator color={'gray'} />
               ) : (
@@ -221,98 +214,48 @@ export default class Search extends Component<Props, State> {
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => item.providerID}
                   extraData={this.state}
-                  renderItem={({ item }) => {
-                    console.log(item);
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.props.playrollID
-                            ? this.setModal(item)
-                            : this.manageRoll(item);
-                        }}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.props.playrollID
+                          ? this.setModal(item)
+                          : this.manageRoll(item);
+                      }}
+                      key={item.providerID}
+                    >
+                      <View
+                        style={{ width: '100%', alignItems: 'center' }}
                         key={item.providerID}
                       >
-                        <View style={styles.rowOuter} key={item.providerID}>
-                          <View style={styles.rowInner}>
-                            {/* Row thumbnail image */}
-                            <Image
-                              style={styles.cover}
-                              source={{ uri: item.cover }}
-                            />
-
-                            {/* Row text */}
-                            <View style={{ flex: 1, justifyContent: 'center' }}>
-                              <Text
-                                style={[styles.text, styles.rollType]}
-                                numberOfLines={2}
-                              >
-                                {item.type}
+                        <View style={{ flexDirection: 'row', width: '100%' }}>
+                          <Image
+                            style={styles.cover}
+                            source={{ uri: item.cover }}
+                          />
+                          <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <Text style={styles.artist} numberOfLines={2}>
+                              {item.name}
+                            </Text>
+                            {item.creator ? (
+                              <Text style={styles.noArtist} numberOfLines={2}>
+                                {item.creator}
                               </Text>
-                              <Text
-                                style={[styles.text, styles.artistName]}
-                                numberOfLines={2}
-                              >
-                                {item.name}
-                              </Text>
-                              {item.creator ? (
-                                <View style={{ flexDirection: 'row' }}>
-                                  <Text style={[styles.text, styles.creator]}>
-                                    {item.creator}
-                                  </Text>
-                                  <Text style={[styles.text, styles.provider]}>
-                                    &nbsp;&middot; {item.provider}
-                                  </Text>
-                                </View>
-                              ) : (
-                                <Text
-                                  style={[styles.text, styles.provider]}
-                                  numberOfLines={2}
-                                >
-                                  {item.provider}
-                                </Text>
-                              )}
-                            </View>
-
-                            <View style={styles.rowIcons}>
-                              <Icon
-                                size={25}
-                                name='settings'
-                                type='material'
-                                color='lightgrey'
-                                onPress={roll => {
-                                  NavigationService.navigate('EditRoll', {
-                                    roll
-                                  });
-                                }}
-                                style={{
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                                iconStyle={styles.editIcon}
-                              />
-                              <Icon
-                                size={25}
-                                name='delete'
-                                type='material'
-                                color='lightgrey'
-                                onPress={roll => {
-                                  NavigationService.navigate('EditRoll', {
-                                    roll
-                                  });
-                                }}
-                                style={{
-                                  alignItems: 'center',
-                                  justifyContent: 'center'
-                                }}
-                                iconStyle={styles.editIcon}
-                              />
-                            </View>
+                            ) : null}
                           </View>
-                          <View style={styles.spacing} />
+                          <Icon
+                            size={35}
+                            name='more-vert'
+                            color='lightgrey'
+                            onPress={() =>
+                              this.props.navigation &&
+                              this.props.navigation.goBack(null)
+                            }
+                          />
                         </View>
-                      </TouchableOpacity>
-                    );
-                  }}
+                        <View style={styles.spacing} />
+                      </View>
+                    </TouchableOpacity>
+                  )}
                 />
               )}
             </View>

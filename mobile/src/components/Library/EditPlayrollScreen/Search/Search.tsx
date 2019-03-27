@@ -258,18 +258,17 @@ export default class Search extends Component<Props, State> {
                                 {item.name}
                               </Text>
                               {item.creator ? (
-                                <Text
-                                  style={[styles.text, styles.source]}
-                                  numberOfLines={2}
-                                >
-                                  {item.creator}
+                                <View style={{ flexDirection: 'row' }}>
+                                  <Text style={[styles.text, styles.creator]}>
+                                    {item.creator}
+                                  </Text>
                                   <Text style={[styles.text, styles.provider]}>
                                     &nbsp;&middot; {item.provider}
                                   </Text>
-                                </Text>
+                                </View>
                               ) : (
                                 <Text
-                                  style={[styles.text, styles.source]}
+                                  style={[styles.text, styles.provider]}
                                   numberOfLines={2}
                                 >
                                   {item.provider}

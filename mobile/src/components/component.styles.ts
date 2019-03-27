@@ -52,8 +52,8 @@ export default StyleSheet.create({
     fontSize: 15,
     color: 'lightgrey'
   },
-  source: {
-    fontSize: 14,
+  // Creator (of the Album/Playlist/Track)
+  creator: {
     fontWeight: 'bold'
   },
   // Providers: Spotify, etc.

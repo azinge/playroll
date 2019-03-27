@@ -152,7 +152,10 @@ export default class Search extends Component<Props, State> {
           >
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
-              <Icon name='arrow-drop-down' />
+              <Icon
+                name='arrow-drop-down'
+                underlayColor='rgba(255,255,255,0)'
+              />
             </View>
           </RNPickerSelect>
         </View>

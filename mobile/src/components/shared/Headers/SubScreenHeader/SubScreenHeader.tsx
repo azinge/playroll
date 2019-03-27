@@ -46,6 +46,7 @@ export default class SubScreenHeader extends React.Component<Props, State> {
                 name={this.props.modal ? 'close' : 'arrow-left'}
                 type='material-community'
                 color='white'
+                underlayColor='rgba(255,255,255,0)'
                 onPress={() => NavigationService.goBack()}
                 containerStyle={{ marginTop: 5, marginRight: 4 }}
               />

@@ -30,43 +30,43 @@ export default class RollList extends React.Component<Props, State> {
     return (
       // Removing TouchableOpacity because the Edit Icon is enough
       // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
-        <View style={styles.outerContainer} key={roll.id}>
-          <View style={styles.innerContainer}>
-            <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
-                {mainSource.type}
+      <View style={styles.outerContainer} key={roll.id}>
+        <View style={styles.innerContainer}>
+          <Image style={styles.cover} source={{ uri: mainSource.cover }} />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
+              {mainSource.type}
+            </Text>
+            <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+              {mainSource.name}
+            </Text>
+            <Text style={[styles.text, styles.source]} numberOfLines={2}>
+              {mainSource.provider}
+            </Text>
+            {mainSource.creator ? (
+              <Text style={styles.noArtist} numberOfLines={2}>
+                {mainSource.creator}
               </Text>
-              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-                {mainSource.name}
-              </Text>
-              <Text style={[styles.text, styles.source]} numberOfLines={2}>
-                {mainSource.provider}
-              </Text>
-              {mainSource.creator ? (
-                <Text style={styles.noArtist} numberOfLines={2}>
-                  {mainSource.creator}
-                </Text>
-              ) : null}
-            </View>
-            <Icon
-              size={25}
-              name='edit'
-              color='lightgrey'
-              onPress={roll => {
-                NavigationService.navigate('EditRoll', {
-                  roll,
-                });
-              }}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              iconStyle={styles.editIcon}
-            />
+            ) : null}
           </View>
-          <View style={styles.spacing} />
+          <Icon
+            size={25}
+            name='edit'
+            color='lightgrey'
+            onPress={roll => {
+              NavigationService.navigate('EditRoll', {
+                roll,
+              });
+            }}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            iconStyle={styles.editIcon}
+          />
         </View>
+        <View style={styles.spacing} />
+      </View>
       // </TouchableOpacity>
     );
   }

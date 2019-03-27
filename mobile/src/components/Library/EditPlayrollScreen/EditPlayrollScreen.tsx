@@ -189,7 +189,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                             this.props.navigation &&
                             this.props.navigation.goBack(null)
                           }
-                          underlayColor='purple'
+                          underlayColor='rgba(255,255,255,0)'
                         />
                       }
                     </View>

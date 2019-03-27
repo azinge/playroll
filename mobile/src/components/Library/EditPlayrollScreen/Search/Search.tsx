@@ -110,7 +110,7 @@ export default class Search extends Component<Props, State> {
 
   renderSearchBar() {
     return (
-      <View style={styles.main}>
+      <View style={styles.searchBar}>
         <Icon
           name={'search'}
           size={35}
@@ -232,11 +232,8 @@ export default class Search extends Component<Props, State> {
                         }}
                         key={item.providerID}
                       >
-                        <View
-                          style={{ width: '100%', alignItems: 'center' }}
-                          key={item.providerID}
-                        >
-                          <View style={{ flexDirection: 'row', width: '100%' }}>
+                        <View style={styles.rowOuter} key={item.providerID}>
+                          <View style={styles.rowInner}>
                             {/* Row thumbnail image */}
                             <Image
                               style={styles.cover}
@@ -274,6 +271,41 @@ export default class Search extends Component<Props, State> {
                                   {item.provider}
                                 </Text>
                               )}
+                            </View>
+
+                            <View style={styles.rowIcons}>
+                              <Icon
+                                size={25}
+                                name='settings'
+                                type='material'
+                                color='lightgrey'
+                                onPress={roll => {
+                                  NavigationService.navigate('EditRoll', {
+                                    roll
+                                  });
+                                }}
+                                style={{
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                iconStyle={styles.editIcon}
+                              />
+                              <Icon
+                                size={25}
+                                name='delete'
+                                type='material'
+                                color='lightgrey'
+                                onPress={roll => {
+                                  NavigationService.navigate('EditRoll', {
+                                    roll
+                                  });
+                                }}
+                                style={{
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}
+                                iconStyle={styles.editIcon}
+                              />
                             </View>
                           </View>
                           <View style={styles.spacing} />

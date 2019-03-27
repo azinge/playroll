@@ -1,3 +1,6 @@
+/**
+ * Top Level StyleSheet object to be inherited as needed
+ */
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -77,7 +80,7 @@ export default StyleSheet.create({
   },
 
   // Bottom Button
-  newRollButton: {
+  bottomButton: {
     width: '90%',
     backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,

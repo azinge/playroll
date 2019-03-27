@@ -36,7 +36,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     this.state = {
       editPlayrollName: ''
     };
-    this.renderHeader = this.renderHeader.bind(this);
+    // this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
@@ -57,9 +57,12 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                 renderHeader={this.renderHeader}
               >
                 <View style={styles.screenContainer}>
-                  {/* {this.renderHeader(playroll)} */}
-                  {this.renderEditingBar(playroll)}
-                  {this.renderSearchMusic(playroll)}
+                  {/* Playroll Icon, Name and Subtitle */}
+                  {this.renderPlayrollHeader(playroll)}
+
+                  {/* Search Bar and Results */}
+                  {/* TODO: This should be a list of current Rolls, not search results */}
+                  {this.renderSearch(playroll)}
                 </View>
               </SubScreenContainer>
               {this.renderBottomBar(playroll)}
@@ -69,6 +72,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GetCurrentUserPlayrollQuery>
     );
   }
+
+  // Header of the screen
   renderHeader() {
     const playroll: Playroll =
       (this.props &&
@@ -104,7 +109,9 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GenerateTracklistMutation>
     );
   }
-  renderEditingBar(playroll: Playroll) {
+
+  // Thumbnail, Name, and Subtitle
+  renderPlayrollHeader(playroll: Playroll) {
     return (
       <View style={styles.editingBarContainer}>
         <Image
@@ -146,7 +153,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
-  renderSearchMusic(playroll: Playroll) {
+  // Search Bar and Results
+  renderSearch(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
         <Search playrollID={playroll.id} />

@@ -45,7 +45,7 @@ const rollFilterNameToLabel = {
   IncludeSources: 'Include Sources',
   Default: 'Default',
   Random: 'Random',
-  NumberOfSongs: 'Number Of Songs',
+  NumberOfSongs: 'Number Of Songs'
 };
 
 export default class EditRollScreen extends React.Component<Props, State> {
@@ -54,7 +54,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
 
     const createDefaultEditRollFilter = name => ({
       name,
-      data: { sources: [], modifications: [], open: false },
+      data: { sources: [], modifications: [], open: false }
     });
     this.state = {
       rollID: 0,
@@ -64,7 +64,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       draftFilterType: createDefaultEditRollFilter('N/A'),
       filterTypes: [],
       orderType: createDefaultEditRollFilter('Default'),
-      lengthType: createDefaultEditRollFilter('Default'),
+      lengthType: createDefaultEditRollFilter('Default')
     };
   }
 
@@ -96,8 +96,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
                     sourceIndex => sources[sourceIndex]
                   ),
                   modifications: filter.modifications,
-                  open: false,
-                },
+                  open: false
+                }
               };
               break;
             default:
@@ -114,8 +114,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
                     sourceIndex => sources[sourceIndex]
                   ),
                   modifications: filter.modifications,
-                  open: false,
-                },
+                  open: false
+                }
               });
               break;
             default:
@@ -130,8 +130,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
                 data: {
                   sources: [],
                   modifications: filter.modifications,
-                  open: false,
-                },
+                  open: false
+                }
               };
               break;
             default:
@@ -146,8 +146,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
                 data: {
                   sources: [],
                   modifications: filter.modifications,
-                  open: false,
-                },
+                  open: false
+                }
               };
               break;
             default:
@@ -160,7 +160,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       filterTypes,
       rollID: roll.id,
       playrollID: roll.playrollID,
-      rollOrder: roll.order,
+      rollOrder: roll.order
     };
     if (sourceType) stateOverride.sourceType = sourceType;
     if (orderType) stateOverride.orderType = orderType;
@@ -174,7 +174,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       name: ms.name,
       provider: ms.provider,
       providerID: ms.providerID,
-      type: ms.type,
+      type: ms.type
     });
     const compileEditRollFilter = (erf, type, rollSources, rollFilters) => {
       let i = sources.length;
@@ -188,7 +188,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       rollFilters.push({
         type,
         name: erf.name,
-        modifications,
+        modifications
       });
     };
     const compileEditRollFilterPreserveModifications = (
@@ -204,7 +204,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       rollFilters.push({
         type,
         name: erf.name,
-        modifications: erf.data.modifications,
+        modifications: erf.data.modifications
       });
     };
 
@@ -233,7 +233,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       id: this.state.rollID,
       playrollID: this.state.playrollID,
       order: this.state.rollOrder,
-      data: { sources, filters },
+      data: { sources, filters }
     };
     return roll;
   }
@@ -265,10 +265,10 @@ export default class EditRollScreen extends React.Component<Props, State> {
 
                           deleteRoll({
                             variables: {
-                              id: roll.id,
-                            },
+                              id: roll.id
+                            }
                           });
-                        },
+                        }
                       },
                       {
                         ...Icons.saveIcon,
@@ -281,12 +281,12 @@ export default class EditRollScreen extends React.Component<Props, State> {
                               input: {
                                 playrollID: roll.playrollID,
                                 order: roll.order,
-                                data: roll.data,
-                              },
-                            },
+                                data: roll.data
+                              }
+                            }
                           });
-                        },
-                      },
+                        }
+                      }
                     ]}
                     modal
                   >
@@ -322,7 +322,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       <View
         style={{
           width: 125,
-          marginHorizontal: 10,
+          marginHorizontal: 10
         }}
       >
         <Icon
@@ -337,7 +337,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                 const sourceType = this.state.sourceType;
                 sourceType.data.sources.push(ms);
                 this.setState({ sourceType });
-              },
+              }
             });
           }}
         />
@@ -346,14 +346,14 @@ export default class EditRollScreen extends React.Component<Props, State> {
     const items = ['Union', 'Intersection'];
     const onValueChange = value => {
       this.setState({
-        sourceType: { ...this.state.sourceType, name: value },
+        sourceType: { ...this.state.sourceType, name: value }
       });
     };
     const addIcon = {
       name: '',
       cover: '',
       creator: '',
-      providerID: 'AddIcon',
+      providerID: 'AddIcon'
     };
     return (
       <View>
@@ -398,7 +398,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       <View
         style={{
           width: 125,
-          marginHorizontal: 10,
+          marginHorizontal: 10
         }}
       >
         <Icon
@@ -415,13 +415,13 @@ export default class EditRollScreen extends React.Component<Props, State> {
       name: '',
       cover: '',
       creator: '',
-      providerID: 'AddIcon',
+      providerID: 'AddIcon'
     };
     const items = ['N/A', 'ExcludeSources', 'IncludeSources'];
     const { draftFilterType, filterTypes } = this.state;
     const onValueChange = value => {
       this.setState({
-        draftFilterType: { ...draftFilterType, name: value },
+        draftFilterType: { ...draftFilterType, name: value }
       });
     };
     return (
@@ -450,7 +450,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                         NavigationService.goBack();
                         draftFilterType.data.sources.push(ms);
                         this.setState({ draftFilterType });
-                      },
+                      }
                     });
                   });
                 }
@@ -460,7 +460,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'center',
+                justifyContent: 'center'
               }}
             >
               <Text
@@ -474,10 +474,10 @@ export default class EditRollScreen extends React.Component<Props, State> {
                       data: {
                         sources: [],
                         modifications: [],
-                        open: false,
-                      },
+                        open: false
+                      }
                     },
-                    filterTypes: [draftFilterType, ...filterTypes],
+                    filterTypes: [draftFilterType, ...filterTypes]
                   });
                 }}
               >
@@ -492,9 +492,9 @@ export default class EditRollScreen extends React.Component<Props, State> {
                       data: {
                         sources: [],
                         modifications: [],
-                        open: false,
-                      },
-                    },
+                        open: false
+                      }
+                    }
                   });
                 }}
               >
@@ -510,7 +510,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 <View
@@ -522,15 +522,15 @@ export default class EditRollScreen extends React.Component<Props, State> {
                     margin: 10,
                     paddingVertical: 3,
                     paddingHorizontal: 10,
-                    flexDirection: 'row',
+                    flexDirection: 'row'
                   }}
                 >
                   <Text
                     style={[
                       styles.title,
                       {
-                        flex: 1,
-                      },
+                        flex: 1
+                      }
                     ]}
                   >
                     {rollFilterNameToLabel[filter.name]}
@@ -543,7 +543,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                     onPress={() => {
                       filterTypes.splice(i, 1);
                       this.setState({
-                        filterTypes,
+                        filterTypes
                       });
                     }}
                   />
@@ -556,7 +556,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                   onPress={() => {
                     filterTypes[i].data.open = !filterTypes[i].data.open;
                     this.setState({
-                      filterTypes,
+                      filterTypes
                     });
                   }}
                 />
@@ -576,7 +576,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                               NavigationService.goBack();
                               filterTypes[i].data.sources.push(ms);
                               this.setState({ filterTypes });
-                            },
+                            }
                           });
                         });
                       }
@@ -595,7 +595,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
     const items = ['Default', 'Random'];
     const onValueChange = value => {
       this.setState({
-        orderType: { ...this.state.orderType, name: value },
+        orderType: { ...this.state.orderType, name: value }
       });
     };
     return (
@@ -631,7 +631,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <TextInput
@@ -641,8 +641,8 @@ export default class EditRollScreen extends React.Component<Props, State> {
                   borderBottomWidth: 2,
                   borderBottomColor: 'purple',
                   minWidth: 20,
-                  paddingHorizontal: 10,
-                },
+                  paddingHorizontal: 10
+                }
               ]}
               placeholder={'5'}
               keyboardType='numeric'
@@ -651,7 +651,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
                 const { lengthType } = this.state;
                 lengthType.data.modifications = ['0', value];
                 this.setState({
-                  lengthType,
+                  lengthType
                 });
               }}
             />
@@ -685,7 +685,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           borderWidth: 1,
           borderRadius: 5,
           borderColor: 'lightgray',
-          bottom: 1,
+          bottom: 1
         }}
       >
         <RNPickerSelect
@@ -693,7 +693,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           // hideIcon={true}
           items={items.map(name => ({
             label: rollFilterNameToLabel[name],
-            value: name,
+            value: name
           }))}
           onValueChange={onValueChange}
           style={pickerStyle}
@@ -701,7 +701,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <Text

@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
-import componentStyles from '../../../component.styles';
 import libraryStyles from '../../library.styles';
 
-const localStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   main: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -42,8 +41,4 @@ const localStyles = StyleSheet.create({
   }
 });
 
-export default StyleSheet.flatten([
-  componentStyles,
-  libraryStyles,
-  localStyles
-]);
+export default StyleSheet.flatten([libraryStyles, styles]);

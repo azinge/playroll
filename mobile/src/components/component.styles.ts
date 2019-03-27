@@ -34,6 +34,29 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth
   },
 
+  // Text for Rows (Search and RollList)
+  text: {
+    fontFamily: 'Avenir'
+  },
+  rollType: {
+    fontSize: 14
+    // color: 'purple',
+  },
+  artistName: {
+    fontSize: 17,
+    color: 'purple',
+    fontWeight: 'bold'
+  },
+  noArtist: {
+    fontFamily: 'Avenir',
+    fontSize: 15,
+    color: 'lightgrey'
+  },
+  source: {
+    fontSize: 14,
+    fontWeight: 'bold'
+  },
+
   // Bottom View for Button
   footerView: {
     backgroundColor: '#fff',

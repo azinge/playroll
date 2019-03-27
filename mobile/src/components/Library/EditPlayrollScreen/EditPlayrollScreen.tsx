@@ -172,6 +172,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             playroll.rolls.map((roll, idx) => {
               const val: MusicSource =
                 (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+              // console.log(val);
               return (
                 <View style={styles.bottomBarItemContainer} key={idx}>
                   <Image

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
+import componentStyles from '../../../component.styles';
 
-export default StyleSheet.create({
+const styles = StyleSheet.create({
 
   // Container for each Roll Row
   outerContainer: {
@@ -63,3 +64,5 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
+
+export default StyleSheet.flatten([componentStyles, styles]);

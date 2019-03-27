@@ -11,7 +11,7 @@ import {
   Picker,
   FlatList,
   ListRenderItem,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
@@ -42,8 +42,8 @@ const pickerStyle = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#f5eeed',
     color: 'black',
-    alignItems: 'flex-end',
-  },
+    alignItems: 'flex-end'
+  }
 });
 
 export interface Props {
@@ -68,7 +68,7 @@ export default class Search extends Component<Props, State> {
       query: 'Drake',
       searchType: 'Artist',
       modalVisible: false,
-      currentSource: {},
+      currentSource: {}
     };
     this.setModal = this.setModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -86,7 +86,7 @@ export default class Search extends Component<Props, State> {
 
   manageRoll(source) {
     NavigationService.navigate('ManageRoll', {
-      currentSource: source,
+      currentSource: source
     });
   }
 
@@ -130,7 +130,7 @@ export default class Search extends Component<Props, State> {
             paddingLeft: 20,
             borderLeftWidth: 1,
             borderLeftColor: 'lightgray',
-            width: 100,
+            width: 100
             // height: 100%,
           }}
         >
@@ -141,11 +141,11 @@ export default class Search extends Component<Props, State> {
               { label: 'Artist', value: 'Artist' },
               { label: 'Album', value: 'Album' },
               { label: 'Track', value: 'Track' },
-              { label: 'Playlist', value: 'Playlist' },
+              { label: 'Playlist', value: 'Playlist' }
             ]}
             onValueChange={value => {
               this.setState({
-                searchType: value,
+                searchType: value
               });
             }}
             style={pickerStyle}
@@ -199,7 +199,7 @@ export default class Search extends Component<Props, State> {
       <SearchSpotifyQuery
         variables={{
           query: this.state.query,
-          searchType: this.state.searchType,
+          searchType: this.state.searchType
         }}
       >
         {({ loading, error, data }) => {
@@ -214,48 +214,71 @@ export default class Search extends Component<Props, State> {
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => item.providerID}
                   extraData={this.state}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.playrollID
-                          ? this.setModal(item)
-                          : this.manageRoll(item);
-                      }}
-                      key={item.providerID}
-                    >
-                      <View
-                        style={{ width: '100%', alignItems: 'center' }}
+                  renderItem={({ item }) => {
+                    console.log(item);
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.props.playrollID
+                            ? this.setModal(item)
+                            : this.manageRoll(item);
+                        }}
                         key={item.providerID}
                       >
-                        <View style={{ flexDirection: 'row', width: '100%' }}>
-                          <Image
-                            style={styles.cover}
-                            source={{ uri: item.cover }}
-                          />
-                          <View style={{ flex: 1, justifyContent: 'center' }}>
-                            <Text style={styles.artist} numberOfLines={2}>
-                              {item.name}
-                            </Text>
-                            {item.creator ? (
-                              <Text style={styles.noArtist} numberOfLines={2}>
-                                {item.creator}
+                        <View
+                          style={{ width: '100%', alignItems: 'center' }}
+                          key={item.providerID}
+                        >
+                          <View style={{ flexDirection: 'row', width: '100%' }}>
+                            {/* Row thumbnail image */}
+                            <Image
+                              style={styles.cover}
+                              source={{ uri: item.cover }}
+                            />
+
+                            {/* Row text */}
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                              <Text
+                                style={[styles.text, styles.rollType]}
+                                numberOfLines={2}
+                              >
+                                {item.type}
                               </Text>
-                            ) : null}
+                              <Text
+                                style={[styles.text, styles.artistName]}
+                                numberOfLines={2}
+                              >
+                                {item.name}
+                              </Text>
+                              <Text
+                                style={[styles.text, styles.source]}
+                                numberOfLines={2}
+                              >
+                                {item.provider}
+                              </Text>
+                              {item.creator ? (
+                                <Text style={styles.noArtist} numberOfLines={2}>
+                                  {item.creator}
+                                </Text>
+                              ) : null}
+                            </View>
+
+                            {/* Row right menu icon */}
+                            <Icon
+                              size={35}
+                              name='more-vert'
+                              color='lightgrey'
+                              onPress={() =>
+                                this.props.navigation &&
+                                this.props.navigation.goBack(null)
+                              }
+                            />
                           </View>
-                          <Icon
-                            size={35}
-                            name='more-vert'
-                            color='lightgrey'
-                            onPress={() =>
-                              this.props.navigation &&
-                              this.props.navigation.goBack(null)
-                            }
-                          />
+                          <View style={styles.spacing} />
                         </View>
-                        <View style={styles.spacing} />
-                      </View>
-                    </TouchableOpacity>
-                  )}
+                      </TouchableOpacity>
+                    );
+                  }}
                 />
               )}
             </View>

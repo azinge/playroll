@@ -34,15 +34,15 @@ export default StyleSheet.create({
     fontSize: 14,
     // color: 'purple',
   },
-  artistName: {
+  name: {
     fontSize: 17,
     color: 'purple',
     fontWeight: 'bold',
   },
-  noArtist: {
+  artist: {
     fontFamily: 'Avenir',
     fontSize: 15,
-    color: 'lightgrey',
+    color: 'gray',
   },
   source: {
     fontSize: 14,

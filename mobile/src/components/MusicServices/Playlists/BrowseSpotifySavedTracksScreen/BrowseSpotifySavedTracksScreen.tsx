@@ -47,7 +47,7 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
         title={'My Spotify Saved Tracks'}
         contentContainerStyle={{ marginTop: 10 }}
       >
-        <ListSpotifySavedTracksQuery variables={{ count: 3 }}>
+        <ListSpotifySavedTracksQuery variables={{ count: 10 }}>
           {({ loading, error, data }) => {
             console.log(error && error.message);
             console.log(

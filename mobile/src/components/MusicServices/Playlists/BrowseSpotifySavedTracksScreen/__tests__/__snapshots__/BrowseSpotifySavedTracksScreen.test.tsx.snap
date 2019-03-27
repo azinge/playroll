@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "purple",
+        "height": 64,
+        "left": 0,
+        "paddingTop": 19,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "transform": Array [
+          Object {
+            "translateY": 0,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "opacity": 1,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flex": 1,
+            "justifyContent": "center",
+            "marginTop": -19,
+          }
+        }
+      >
+        <View
+          accessibilityIgnoresInvertColors={true}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "purple",
+              "borderBottomColor": "#f2f2f2",
+              "borderBottomWidth": 0.5,
+              "flexDirection": "row",
+              "height": 64,
+              "justifyContent": "space-between",
+              "paddingHorizontal": 10,
+              "paddingTop": 20,
+            }
+          }
+        >
+          <Image
+            style={
+              Array [
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                Object {
+                  "height": 64,
+                  "width": undefined,
+                },
+                undefined,
+              ]
+            }
+            testID="headerContainer"
+          />
+          <View
+            style={
+              Object {
+                "alignItems": "flex-start",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <View
+                style={
+                  Object {
+                    "marginRight": 4,
+                    "marginTop": 5,
+                  }
+                }
+              >
+                <View
+                  accessible={true}
+                  isTVSelectable={true}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    Object {
+                      "alignItems": "center",
+                      "backgroundColor": "transparent",
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text />
+                </View>
+              </View>
+              <Text
+                style={
+                  Object {
+                    "color": "white",
+                    "fontSize": 23,
+                    "paddingLeft": 3,
+                    "paddingTop": 1,
+                  }
+                }
+              >
+                My Spotify Saved Tracks
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              Object {
+                "alignItems": "flex-end",
+                "flex": 3,
+                "paddingHorizontal": 15,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "alignItems": "flex-end",
+              }
+            }
+          >
+            <View
+              style={
+                Object {
+                  "flexDirection": "row",
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

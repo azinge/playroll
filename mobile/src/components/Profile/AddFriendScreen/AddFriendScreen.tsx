@@ -71,6 +71,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
             name='arrow-left'
             type='font-awesome'
             color='#6A0070'
+            underlayColor='rgba(255,255,255,0)'
             onPress={() => {
               this.props.navigation && this.props.navigation.goBack(null);
             }}

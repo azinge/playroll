@@ -112,8 +112,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           };
           return (
             <SubScreenHeader
-              title={'View Playroll'}  // visible screen title
-              icons={[editPlayrollIcon, generateTracklistIcon]}  // top right buttons
+              title={'View Playroll'} // visible screen title
+              icons={[editPlayrollIcon, generateTracklistIcon]} // top right buttons
             />
           );
         }}
@@ -139,12 +139,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             {playroll.name}
           </Text>
           <View style={styles.horizontalRule} />
-          {playroll && playroll.rolls &&
-            <Text
-              selectionColor={'purple'}
-              style={styles.subtitle}
-            >This playroll contains {playroll.rolls.length} {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.</Text>
-          }
+          {playroll && playroll.rolls && (
+            <Text selectionColor={'purple'} style={styles.subtitle}>
+              This playroll contains {playroll.rolls.length}{' '}
+              {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.
+            </Text>
+          )}
         </View>
       </View>
     );
@@ -153,7 +153,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <RollList
         rolls={playroll.rolls || []}
-        onPress={() => {}}
+        // onPress={() => {}}
       />
     );
   }
@@ -168,7 +168,9 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
               playroll,
             });
           }}
-        ><Text style={styles.buttonText}>Add a Roll</Text></TouchableOpacity>
+        >
+          <Text style={styles.buttonText}>Add a Roll</Text>
+        </TouchableOpacity>
       </View>
     );
   }

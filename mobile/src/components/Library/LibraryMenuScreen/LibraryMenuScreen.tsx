@@ -63,7 +63,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           </View>
         </TouchableOpacity>
         {/* Your Discovery Queues */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             NavigationService.navigate('ViewDiscoveryQueue');
           }}
@@ -71,7 +71,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           <View style={styles.textContainer}>
             <Text style={styles.disabledText}>Your Discovery Queues</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {/* Your Reommendations */}
         <TouchableOpacity
           onPress={() => {

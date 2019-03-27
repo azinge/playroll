@@ -13,7 +13,7 @@ import NavigationService from '../../../../services/NavigationService';
 export default class BrowseSpotifyPlaylistsScreen extends React.Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity
-      style={{ marginHorizontal: 30, marginBottom: 10, marginTop: 5 }}
+      style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 5 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
           playlistID: item.providerID,
@@ -35,7 +35,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
             width: 2,
             height: 1,
           },
-          shadowRadius: 5,
+          shadowRadius: 3,
           shadowOpacity: 0.2,
           overflow: 'visible',
         }}

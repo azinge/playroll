@@ -136,7 +136,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               <View style={styles.horizontalRule} />
               {playroll && playroll.rolls && (
                 <Text style={styles.subtitle}>
-                  Add a roll below to this playroll.
+                  Select a roll below to add to this playroll.
                 </Text>
               )}
             </View>

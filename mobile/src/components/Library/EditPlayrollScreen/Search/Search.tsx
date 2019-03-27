@@ -250,29 +250,25 @@ export default class Search extends Component<Props, State> {
                               >
                                 {item.name}
                               </Text>
-                              <Text
-                                style={[styles.text, styles.source]}
-                                numberOfLines={2}
-                              >
-                                {item.provider}
-                              </Text>
                               {item.creator ? (
-                                <Text style={styles.noArtist} numberOfLines={2}>
-                                  {item.creator}
+                                <Text
+                                  style={[styles.text, styles.source]}
+                                  numberOfLines={2}
+                                >
+                                  By {item.creator}
+                                  <Text style={[styles.text, styles.provider]}>
+                                    &nbsp;&middot; {item.provider}
+                                  </Text>
                                 </Text>
-                              ) : null}
+                              ) : (
+                                <Text
+                                  style={[styles.text, styles.source]}
+                                  numberOfLines={2}
+                                >
+                                  {item.provider}
+                                </Text>
+                              )}
                             </View>
-
-                            {/* Row right menu icon */}
-                            <Icon
-                              size={35}
-                              name='more-vert'
-                              color='lightgrey'
-                              onPress={() =>
-                                this.props.navigation &&
-                                this.props.navigation.goBack(null)
-                              }
-                            />
                           </View>
                           <View style={styles.spacing} />
                         </View>

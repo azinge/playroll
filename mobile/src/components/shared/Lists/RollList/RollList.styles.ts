@@ -1,4 +1,6 @@
 import { StyleSheet } from 'react-native';
+
+// TODO: there should be a shared.styles.ts
 import componentStyles from '../../../component.styles';
 
 const styles = StyleSheet.create({

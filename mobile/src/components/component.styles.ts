@@ -56,6 +56,11 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold'
   },
+  // Providers: Spotify, etc.
+  provider: {
+    fontSize: 14,
+    color: 'lightgray'
+  },
 
   // Bottom View for Button
   footerView: {

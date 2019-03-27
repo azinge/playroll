@@ -20,10 +20,10 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
   },
-  playrollsText: {
+  enabledText: {
     marginLeft: 15,
     marginBottom: 5,
-    fontSize: 30,
+    fontSize: 20,
     color: '#993399',
   },
   musicServiceButtonContainer: {

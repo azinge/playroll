@@ -32,6 +32,7 @@ import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  source?: any;
 }
 
 interface State {

@@ -5,6 +5,7 @@ import {
   NavigationContainerComponent,
   NavigationParams,
   NavigationAction,
+  NavigationScreenProp,
 } from 'react-navigation';
 
 let navigator: NavigationContainerComponent;

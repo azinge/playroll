@@ -1,6 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import ViewSpotifyPlaylistScreen from './MusicServices/Playlists/ViewSpotifyPlaylistScreen';
 
-export default StyleSheet.create({
+interface Style {
+  screenContainer: ViewStyle;
+  titleBarContainer: ViewStyle;
+  titleBarName: TextStyle;
+  horizontalRule: ViewStyle;
+  subtitle: TextStyle;
+  spacing: ViewStyle;
+  footerView: ViewStyle;
+  newRollButton: ViewStyle;
+  buttonText: TextStyle;
+}
+
+export default StyleSheet.create<Style>({
   // General Container
   screenContainer: {
     flex: 1,

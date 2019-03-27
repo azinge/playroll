@@ -12,7 +12,7 @@ import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
   UpdatePlayrollMutation,
-  GetCurrentUserPlayrollQuery
+  GetCurrentUserPlayrollQuery,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
@@ -34,7 +34,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      editPlayrollName: ''
+      editPlayrollName: '',
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
@@ -85,14 +85,14 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             tracklistID:
               data &&
               data.private.generateTracklist &&
-              data.private.generateTracklist.id
+              data.private.generateTracklist.id,
           })
         }
       >
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
             ...Icons.exportIcon,
-            onPress: () => generateTracklist()
+            onPress: () => generateTracklist(),
           };
           return (
             <SubScreenHeader
@@ -116,8 +116,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             id: playroll.id,
             input: {
               name: this.state.editPlayrollName,
-              userID: playroll.userID
-            }
+              userID: playroll.userID,
+            },
           }}
           refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
         >
@@ -160,7 +160,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       Track: 'audiotrack',
       Album: 'album',
       Artist: 'mic',
-      Playlist: 'playlist-play'
+      Playlist: 'playlist-play',
     };
     return (
       <View style={styles.bottomBarContainer}>

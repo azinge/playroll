@@ -1,8 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-
-
   // Footer View with Button
   footerView: {
     backgroundColor: '#fff',
@@ -20,7 +18,7 @@ export default StyleSheet.create({
   // Bottom Button
   newButton: {
     width: '90%',
-    backgroundColor: '#af00bc',  // brighter purple
+    backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,
     height: 40,
 
@@ -33,5 +31,5 @@ export default StyleSheet.create({
     fontFamily: 'Avenir',
     fontSize: 18,
     fontWeight: 'bold',
-  }
+  },
 });

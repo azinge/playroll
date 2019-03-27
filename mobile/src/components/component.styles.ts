@@ -4,27 +4,27 @@ export default StyleSheet.create({
   // General Container
   screenContainer: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
 
   // Title Bar for Playroll
   titleBarContainer: {
     flexDirection: 'row',
     height: 100,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   titleBarName: {
-    fontSize: 20
+    fontSize: 20,
   },
   horizontalRule: {
     width: '90%',
     marginVertical: 5,
     borderBottomColor: 'lightgray',
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   subtitle: {
     fontSize: 15,
-    color: 'gray'
+    color: 'gray',
   },
 
   // Horizontal Spacer between rows
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     width: '90%',
     marginVertical: 10,
     borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 
   // Bottom View for Button
@@ -46,7 +46,7 @@ export default StyleSheet.create({
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1 // float on top
+    zIndex: 1, // float on top
   },
 
   // Bottom Button
@@ -58,12 +58,12 @@ export default StyleSheet.create({
 
     // Center text contents
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
     fontFamily: 'Avenir',
     fontSize: 18,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });

@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-
   // General Container
   screenContainer: {
     flex: 1,
@@ -25,7 +24,7 @@ export default StyleSheet.create({
   },
   subtitle: {
     fontSize: 15,
-    color: 'gray'
+    color: 'gray',
   },
 
   // Bottom View for Button
@@ -45,7 +44,7 @@ export default StyleSheet.create({
   // Bottom Button
   newRollButton: {
     width: '90%',
-    backgroundColor: '#af00bc',  // brighter purple
+    backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,
     height: 40,
 
@@ -58,7 +57,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir',
     fontSize: 18,
     fontWeight: 'bold',
-  }
+  },
 });
 
 // TODO: this is required, but explanation needed here...

@@ -49,7 +49,7 @@ export default class SubScreenContainer extends React.Component<Props, State> {
       <Collapsible
         key={this.state.key}
         max={45}
-        min={isIphoneX() ? 41 : 19}
+        min={isIphoneX() ? 48 : 20}
         backgroundColor={'white'}
         renderHeader={
           this.props.renderHeader

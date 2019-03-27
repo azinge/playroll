@@ -32,7 +32,7 @@ export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
               data && data.private && data.private.listSpotifyPlaylistTracks
             );
             return (
-              <View style={{ marginBottom: 40, flex: 1 }}>
+              <View style={{ marginBottom: 45, flex: 1 }}>
                 {/* <FlatList
                   data={
                     data && data.private && data.private.listSpotifyPlaylistTracks

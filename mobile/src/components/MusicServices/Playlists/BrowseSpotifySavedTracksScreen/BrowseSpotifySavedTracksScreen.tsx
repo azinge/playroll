@@ -54,7 +54,7 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
               data && data.private && data.private.listSpotifySavedTracks
             );
             return (
-              <View style={{ marginBottom: 40, flex: 1 }}>
+              <View style={{ marginBottom: 45, flex: 1 }}>
                 {/* <FlatList
                   data={
                     data && data.private && data.private.listSpotifySavedTracks

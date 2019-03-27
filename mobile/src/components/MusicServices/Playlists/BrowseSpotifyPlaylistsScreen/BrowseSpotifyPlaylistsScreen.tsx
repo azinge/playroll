@@ -52,7 +52,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
           style={{
             overflow: 'visible',
             margin: 10,
-            marginBottom: 50,
+            marginBottom: 55,
           }}
         >
           <ListSpotifyPlaylistsQuery variables={{ count: 10 }}>

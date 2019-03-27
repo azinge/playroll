@@ -13,9 +13,10 @@ export default StyleSheet.create({
     height: 100,
     alignItems: 'center',
   },
-  titleBarName: {
-    fontSize: 20,
+  titleBarNameContainer: {
+    flex: 1,
   },
+
   horizontalRule: {
     width: '90%',
     marginVertical: 5,
@@ -40,7 +41,9 @@ export default StyleSheet.create({
     justifyContent: 'center',
     zIndex: 1, // float on top
   },
-
+  titleBarName: {
+    fontSize: 20,
+  },
   // Bottom Button
   newRollButton: {
     width: '90%',

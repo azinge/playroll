@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -128,16 +135,16 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           source={require('../../../assets/new_playroll.png')}
         />
         <View style={styles.titleBarNameContainer}>
-          <Text
+          <TextInput
             selectionColor={'purple'}
             placeholder='Name Your Playroll'
             placeholderTextColor='lightgrey'
             style={styles.titleBarName}
             onChangeText={name => this.setState({ editPlayrollName: name })}
-            onSubmitEditing={() => updatePlayroll()}
+            // onSubmitEditing={() => updatePlayroll()}
           >
             {playroll.name}
-          </Text>
+          </TextInput>
           <View style={styles.horizontalRule} />
           {playroll && playroll.rolls && (
             <Text selectionColor={'purple'} style={styles.subtitle}>

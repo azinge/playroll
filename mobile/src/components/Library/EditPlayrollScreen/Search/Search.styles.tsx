@@ -12,6 +12,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgrey'
   },
+
+  resultsContainer: {
+    marginTop: 15
+  },
+
   options: {
     fontFamily: 'Avenir',
     fontSize: 15

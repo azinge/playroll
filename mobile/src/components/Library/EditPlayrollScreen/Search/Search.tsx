@@ -93,15 +93,22 @@ export default class Search extends Component<Props, State> {
   render() {
     return (
       <View>
-        {this.renderHeader()}
-        {this.renderOptionsBar()}
+        {this.renderSearchBar()}
+
+        {/* Options Bar (Popular, New, ABC, etc) */}
+        {/* TODO: do we need this? */}
+        {/* {this.renderOptionsBar()} */}
+
+        {/* Modal to add selected roll */}
         {this.renderModal()}
-        {this.renderSearch()}
+
+        {/* Search Results */}
+        {this.renderSearchResults()}
       </View>
     );
   }
 
-  renderHeader() {
+  renderSearchBar() {
     return (
       <View style={styles.main}>
         <Icon
@@ -165,7 +172,7 @@ export default class Search extends Component<Props, State> {
 
   renderOptionsBar() {
     return (
-      <View style={{ margin: 10, flexDirection: 'row' }}>
+      <View style={{ marginTop: 10, flexDirection: 'row' }}>
         <View style={{ paddingHorizontal: 7 }}>
           <Text
             style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
@@ -194,7 +201,7 @@ export default class Search extends Component<Props, State> {
     );
   }
 
-  renderSearch() {
+  renderSearchResults() {
     return (
       <SearchSpotifyQuery
         variables={{
@@ -205,7 +212,7 @@ export default class Search extends Component<Props, State> {
         {({ loading, error, data }) => {
           console.log(error);
           return (
-            <View style={{ marginBottom: 145 }}>
+            <View style={styles.resultsContainer}>
               {loading ? (
                 <ActivityIndicator color={'gray'} />
               ) : (
@@ -255,7 +262,7 @@ export default class Search extends Component<Props, State> {
                                   style={[styles.text, styles.source]}
                                   numberOfLines={2}
                                 >
-                                  By {item.creator}
+                                  {item.creator}
                                   <Text style={[styles.text, styles.provider]}>
                                     &nbsp;&middot; {item.provider}
                                   </Text>

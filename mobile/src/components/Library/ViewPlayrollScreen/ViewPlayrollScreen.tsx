@@ -161,7 +161,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <View style={styles.footerView}>
         <TouchableOpacity
-          style={styles.newRollButton}
+          style={styles.bottomButton}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',

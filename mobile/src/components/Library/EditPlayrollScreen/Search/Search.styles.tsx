@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
-import componentStyles from '../../../component.styles';
 import libraryStyles from '../../library.styles';
 
-const localStyles = StyleSheet.create({
-  main: {
+const styles = StyleSheet.create({
+  // Search Bar
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
@@ -13,6 +13,13 @@ const localStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgrey'
   },
+
+  // Search Results
+  resultsContainer: {
+    marginTop: 15
+  },
+
+  // Search Options (not in use)
   options: {
     fontFamily: 'Avenir',
     fontSize: 15
@@ -22,6 +29,19 @@ const localStyles = StyleSheet.create({
     borderLeftColor: 'grey',
     borderLeftWidth: 1
   },
+
+  // Results Row
+  rowOuter: {
+    width: '100%',
+    alignItems: 'center',
+    paddingRight: 10
+  },
+  rowInner: {
+    flexDirection: 'row',
+    width: '100%'
+  },
+
+  // Results Row Thumbnail
   cover: {
     width: 65,
     height: 65,
@@ -30,20 +50,12 @@ const localStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'lightgrey'
   },
-  artist: {
-    fontFamily: 'Avenir',
-    fontSize: 17,
-    color: 'purple'
-  },
-  noArtist: {
-    fontFamily: 'Avenir',
-    fontSize: 15,
-    color: 'lightgrey'
+
+  // Results Row Right Icons
+  rowIcons: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly'
   }
 });
 
-export default StyleSheet.flatten([
-  componentStyles,
-  libraryStyles,
-  localStyles
-]);
+export default StyleSheet.flatten([libraryStyles, styles]);

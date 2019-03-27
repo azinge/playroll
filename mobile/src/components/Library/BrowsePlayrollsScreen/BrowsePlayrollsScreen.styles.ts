@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
+import libraryStyles from '../library.styles';
 
-export default StyleSheet.create({
-
-
+const styles = StyleSheet.create({
   // Footer View with Button
   footerView: {
     backgroundColor: '#fff',
@@ -14,24 +13,8 @@ export default StyleSheet.create({
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1, // float on top
-  },
-
-  // Bottom Button
-  newButton: {
-    width: '90%',
-    backgroundColor: '#af00bc',  // brighter purple
-    borderRadius: 3,
-    height: 40,
-
-    // Center text contents
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontFamily: 'Avenir',
-    fontSize: 18,
-    fontWeight: 'bold',
+    zIndex: 1 // float on top
   }
 });
+
+export default StyleSheet.flatten([libraryStyles, styles]);

@@ -1,3 +1,6 @@
+/**
+ * Top Level StyleSheet object to be inherited as needed
+ */
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -17,7 +20,6 @@ export default StyleSheet.create({
     fontSize: 20
   },
   horizontalRule: {
-    width: '90%',
     marginVertical: 5,
     borderBottomColor: 'lightgray',
     borderBottomWidth: StyleSheet.hairlineWidth
@@ -35,6 +37,34 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth
   },
 
+  // Text for Rows (Search and RollList)
+  text: {
+    fontFamily: 'Avenir'
+  },
+  rollType: {
+    fontSize: 14
+    // color: 'purple',
+  },
+  artistName: {
+    fontSize: 17,
+    color: 'purple',
+    fontWeight: 'bold'
+  },
+  noArtist: {
+    fontFamily: 'Avenir',
+    fontSize: 15,
+    color: 'lightgrey'
+  },
+  // Creator (of the Album/Playlist/Track)
+  creator: {
+    fontWeight: 'bold'
+  },
+  // Providers: Spotify, etc.
+  provider: {
+    fontSize: 14,
+    color: 'lightgray'
+  },
+
   // Bottom View for Button
   footerView: {
     backgroundColor: '#fff',
@@ -50,7 +80,7 @@ export default StyleSheet.create({
   },
 
   // Bottom Button
-  newRollButton: {
+  bottomButton: {
     width: '90%',
     backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,

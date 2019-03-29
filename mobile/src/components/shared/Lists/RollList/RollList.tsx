@@ -12,7 +12,7 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   rolls: Roll[];
-  // onPress?: (roll: Roll) => void;  // removing, edit icon is enough
+  onPress?: (roll: Roll) => void;
 }
 
 interface State {}

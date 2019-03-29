@@ -16,6 +16,8 @@ interface Style {
   creator: TextStyle;
   provider: TextStyle;
 
+  editIcon: ViewStyle;
+
   footerView: ViewStyle;
   newButton: ViewStyle;
   buttonText: TextStyle;
@@ -86,6 +88,11 @@ export default StyleSheet.create<Style>({
   provider: {
     fontSize: 14,
     color: 'lightgray',
+  },
+
+  // Right side icons
+  editIcon: {
+    marginRight: 20,
   },
 
   // Bottom View for Button

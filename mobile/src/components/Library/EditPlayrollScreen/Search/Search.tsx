@@ -18,7 +18,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import styles from './Search.styles';
 
 import RNPickerSelect from 'react-native-picker-select';
-import { MusicSource } from '../../../../graphql/types';
+import { MusicSource, Roll } from '../../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../../graphql/requests/Spotify/';
 import CreateModal from './CreateModal';
 import { render } from 'react-dom';
@@ -50,6 +50,7 @@ export interface Props {
   query?: string;
   navigation?: NavigationScreenProp<{}>;
   playrollID?: any;
+  onPress?: (roll: Roll) => void;
 }
 
 interface State {

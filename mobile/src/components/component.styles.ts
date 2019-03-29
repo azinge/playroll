@@ -1,14 +1,21 @@
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle, TextStyleIOS } from 'react-native';
 
 interface Style {
   screenContainer: ViewStyle;
-  editingBarNameInput: TextStyle;
   titleBarContainer: ViewStyle;
   titleBarNameContainer: ViewStyle;
   titleBarName: TextStyle;
   horizontalRule: ViewStyle;
   subtitle: TextStyle;
   spacing: ViewStyle;
+
+  text: TextStyle;
+  rollType: TextStyle;
+  artistName: TextStyle;
+  noArtist: TextStyle;
+  creator: TextStyle;
+  provider: TextStyle;
+
   footerView: ViewStyle;
   newButton: ViewStyle;
   buttonText: TextStyle;
@@ -19,11 +26,6 @@ export default StyleSheet.create<Style>({
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-
-  // TODO: tested inheritance -- move/rename/edit this later
-  editingBarNameInput: {
-    fontSize: 30,
   },
 
   // Title Bar for Playroll
@@ -37,7 +39,7 @@ export default StyleSheet.create<Style>({
   },
   titleBarName: {
     fontSize: 20,
-    color: 'black',
+    // color: 'black',
   },
   horizontalRule: {
     width: '90%',
@@ -56,6 +58,34 @@ export default StyleSheet.create<Style>({
     marginVertical: 10,
     borderBottomColor: 'lightgrey',
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+
+  // Text for Rows (Search and RollList)
+  text: {
+    fontFamily: 'Avenir',
+  },
+  rollType: {
+    fontSize: 14,
+    // color: 'purple',
+  },
+  artistName: {
+    fontSize: 17,
+    color: 'purple',
+    fontWeight: 'bold',
+  },
+  noArtist: {
+    fontFamily: 'Avenir',
+    fontSize: 15,
+    color: 'lightgrey',
+  },
+  // Creator (of the Album/Playlist/Track)
+  creator: {
+    fontWeight: 'bold',
+  },
+  // Providers: Spotify, etc.
+  provider: {
+    fontSize: 14,
+    color: 'lightgray',
   },
 
   // Bottom View for Button

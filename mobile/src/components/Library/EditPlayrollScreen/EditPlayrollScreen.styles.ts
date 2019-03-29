@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  editingBarNameInput: {
+    fontSize: 20,
+  },
+
   editingBarTagInput: {
     fontSize: 15,
   },

@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import {
   TextInput,
   View,
-  ScrollView,
   Text,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
-  Picker,
   FlatList,
-  ListRenderItem,
   ActivityIndicator,
 } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles from './Search.styles';
 
@@ -21,23 +17,14 @@ import RNPickerSelect from 'react-native-picker-select';
 import { MusicSource, Roll } from '../../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../../graphql/requests/Spotify/';
 import CreateModal from './CreateModal';
-import { render } from 'react-dom';
 import NavigationService from '../../../../services/NavigationService';
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {
     width: 110,
     height: 40,
-    // margin: 10,
     fontSize: 16,
-    // padding: 10,
-    // paddingTop: 13,
-    // paddingHorizontal: 10,
-    // paddingBottom: 12,
-    // borderWidth: 1,
-    // borderLeftWidth: 1,
     borderColor: '#6A0070',
-    // borderRadius: 4,
     borderLeftColor: 'lightgray',
     textAlign: 'center',
     backgroundColor: '#f5eeed',

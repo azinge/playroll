@@ -211,7 +211,9 @@ export default class Search extends Component<Props, State> {
         }}
       >
         {({ loading, error, data }) => {
-          console.log(error);
+          // console.log(error);
+          console.log('DATA');
+          console.log(data.private);
           return (
             <View style={styles.resultsContainer}>
               {loading ? (
@@ -280,14 +282,10 @@ export default class Search extends Component<Props, State> {
                                 name='settings'
                                 type='material'
                                 color='lightgrey'
-                                onPress={roll => {
+                                onPress={() => {
                                   NavigationService.navigate('EditRoll', {
-                                    roll,
+                                    item,
                                   });
-                                }}
-                                style={{
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
                                 }}
                                 iconStyle={styles.editIcon}
                               />
@@ -296,14 +294,10 @@ export default class Search extends Component<Props, State> {
                                 name='delete'
                                 type='material'
                                 color='lightgrey'
-                                onPress={roll => {
+                                onPress={() => {
                                   NavigationService.navigate('EditRoll', {
-                                    roll,
+                                    item,
                                   });
-                                }}
-                                style={{
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
                                 }}
                                 iconStyle={styles.editIcon}
                               />

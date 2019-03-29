@@ -4,12 +4,13 @@ interface Style {
   screenContainer: ViewStyle;
   editingBarNameInput: TextStyle;
   titleBarContainer: ViewStyle;
+  titleBarNameContainer: ViewStyle;
   titleBarName: TextStyle;
   horizontalRule: ViewStyle;
   subtitle: TextStyle;
   spacing: ViewStyle;
   footerView: ViewStyle;
-  newRollButton: ViewStyle;
+  newButton: ViewStyle;
   buttonText: TextStyle;
 }
 
@@ -31,9 +32,12 @@ export default StyleSheet.create<Style>({
     height: 100,
     alignItems: 'center',
   },
+  titleBarNameContainer: {
+    flex: 1,
+  },
   titleBarName: {
     fontSize: 20,
-    color: 'blue',
+    color: 'black',
   },
   horizontalRule: {
     width: '90%',
@@ -69,7 +73,7 @@ export default StyleSheet.create<Style>({
   },
 
   // Bottom Button
-  newRollButton: {
+  newButton: {
     width: '90%',
     backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,

@@ -128,16 +128,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           source={require('../../../assets/new_playroll.png')}
         />
         <View style={styles.titleBarNameContainer}>
-          <Text
-            selectionColor={'purple'}
-            placeholder='Name Your Playroll'
-            placeholderTextColor='lightgrey'
-            style={styles.titleBarName}
-            onChangeText={name => this.setState({ editPlayrollName: name })}
-            onSubmitEditing={() => updatePlayroll()}
-          >
-            {playroll.name}
-          </Text>
+          <Text style={styles.titleBarName}>{playroll.name}</Text>
           <View style={styles.horizontalRule} />
           {playroll && playroll.rolls && (
             <Text selectionColor={'purple'} style={styles.subtitle}>
@@ -161,7 +152,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <View style={styles.footerView}>
         <TouchableOpacity
-          style={styles.newRollButton}
+          style={styles.newButton}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',

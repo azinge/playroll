@@ -54,24 +54,6 @@ const styles = StyleSheet.create<Style>({
     justifyContent: 'center',
     zIndex: 1, // float on top
   },
-
-  // Bottom Button
-  newRollButton: {
-    width: '90%',
-    backgroundColor: '#af00bc', // brighter purple
-    borderRadius: 3,
-    height: 40,
-
-    // Center text contents
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontFamily: 'Avenir',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
 });
 
 export default Object.assign(componentStyles, styles);

@@ -174,7 +174,9 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 onPress={() => {
                   createPlayroll();
                 }}
-              ><Text style={styles.buttonText}>Create a Playroll</Text></TouchableOpacity>
+              >
+                <Text style={styles.buttonText}>Create a Playroll</Text>
+              </TouchableOpacity>
             </View>
           );
         }}

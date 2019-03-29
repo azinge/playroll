@@ -103,6 +103,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   )}
                   {/* <View style={{ margin: 10 }} /> */}
                 </SubScreenContainer>
+                {playrolls.length === 0 && <Text> No Playrolls added</Text>}
               </View>
               {this.renderNewPlayrollButton()}
             </View>

@@ -153,7 +153,7 @@ export default class PlayrollCard extends React.Component<Props, State> {
                   }}
                   refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
                 >
-                  {deletePlayroll => (
+                  {(deletePlayroll, { loading }) => (
                     <TouchableOpacity
                       onPress={() => deletePlayroll()}
                       style={styles.submitButtonRight}

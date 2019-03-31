@@ -88,4 +88,30 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
+
+  errorModalContainer: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorModal: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#931389',
+    borderRadius: 25,
+    width: '75%',
+    height: '33.33%',
+    textAlign: 'center',
+  },
+  errorModalTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'red',
+  },
+  errorDescription: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
 });

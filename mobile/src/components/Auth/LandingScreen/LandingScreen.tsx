@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { Image, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import { SignInMutation } from '../../../graphql/requests/Auth';
@@ -18,6 +25,7 @@ interface State {
   username: string;
   password: string;
   error?: string;
+  displayErrorModal: boolean;
 }
 
 export default class LandingScreen extends React.Component<Props, State> {
@@ -27,17 +35,37 @@ export default class LandingScreen extends React.Component<Props, State> {
       username: '',
       password: '',
       error: null,
+      displayErrorModal: false,
     };
 
     this.renderForm = this.renderForm.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
   }
 
-  handleError(error) {
-    return this.setState({ error }, () => {
-      setTimeout(() => {
-        this.setState({ error: null });
-      }, 3000);
-    });
+  renderErrorModal(error) {
+    return (
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={this.state.displayErrorModal}
+        onRequestClose={() => this.setState({ displayErrorModal: false })}
+      >
+        <View style={styles.errorModalContainer}>
+          <View style={styles.errorModal}>
+            <Text style={styles.errorModalTitle}>Error!</Text>
+            <Text style={styles.errorDescription}>{error}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ displayErrorModal: false, error: null });
+              }}
+            >
+              <Text>Hide</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
   }
 
   renderHeader() {
@@ -86,7 +114,9 @@ export default class LandingScreen extends React.Component<Props, State> {
 
   validateInput(signIn) {
     if (this.state.username === '' || this.state.password === '') {
-      return this.handleError('All fields must have a value');
+      return this.setState({
+        error: 'All fields must have a value',
+      });
     }
     signIn();
   }
@@ -141,6 +171,7 @@ export default class LandingScreen extends React.Component<Props, State> {
         {this.renderHeader()}
         {this.renderForm()}
         {this.renderFooter()}
+        {this.renderErrorModal(this.state.error)}
       </View>
     );
   }

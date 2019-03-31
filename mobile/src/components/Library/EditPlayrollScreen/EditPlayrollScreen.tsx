@@ -224,7 +224,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
         <TouchableOpacity
           style={styles.newButton}
           onPress={() => {
-            NavigationService.navigate('EditPlayroll', {
+            NavigationService.navigate('AddRoll', {
               managePlayroll: 'View Playroll',
               playroll,
             });

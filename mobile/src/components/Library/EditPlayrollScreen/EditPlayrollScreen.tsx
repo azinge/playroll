@@ -12,7 +12,7 @@ import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
   UpdatePlayrollMutation,
-  GetCurrentUserPlayrollQuery
+  GetCurrentUserPlayrollQuery,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
@@ -34,9 +34,9 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      editPlayrollName: ''
+      editPlayrollName: '',
     };
-    this.renderHeader = this.renderHeader.bind(this);
+    // this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
@@ -57,9 +57,12 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                 renderHeader={this.renderHeader}
               >
                 <View style={styles.screenContainer}>
-                  {/* {this.renderHeader(playroll)} */}
-                  {this.renderEditingBar(playroll)}
-                  {this.renderSearchMusic(playroll)}
+                  {/* Playroll Icon, Name and Subtitle */}
+                  {this.renderPlayrollHeader(playroll)}
+
+                  {/* Search Bar and Results */}
+                  {/* TODO: This should be a list of current Rolls, not search results */}
+                  {this.renderSearch(playroll)}
                 </View>
               </SubScreenContainer>
               {this.renderBottomBar(playroll)}
@@ -69,6 +72,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GetCurrentUserPlayrollQuery>
     );
   }
+
+  // Header of the screen
   renderHeader() {
     const playroll: Playroll =
       (this.props &&
@@ -85,14 +90,14 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             tracklistID:
               data &&
               data.private.generateTracklist &&
-              data.private.generateTracklist.id
+              data.private.generateTracklist.id,
           })
         }
       >
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
             ...Icons.exportIcon,
-            onPress: () => generateTracklist()
+            onPress: () => generateTracklist(),
           };
           return (
             <SubScreenHeader
@@ -104,7 +109,9 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       </GenerateTracklistMutation>
     );
   }
-  renderEditingBar(playroll: Playroll) {
+
+  // Thumbnail, Name, and Subtitle
+  renderPlayrollHeader(playroll: Playroll) {
     return (
       <View style={styles.editingBarContainer}>
         <Image
@@ -116,13 +123,13 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             id: playroll.id,
             input: {
               name: this.state.editPlayrollName,
-              userID: playroll.userID
-            }
+              userID: playroll.userID,
+            },
           }}
           refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
-            <View style={styles.editingBarNameContainer}>
+            <View style={styles.titleBarName}>
               <TextInput
                 selectionColor={'purple'}
                 placeholder='Name Your Playroll'
@@ -136,7 +143,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               <View style={styles.horizontalRule} />
               {playroll && playroll.rolls && (
                 <Text style={styles.subtitle}>
-                  Add a roll below to this playroll.
+                  Select a roll below to add to this playroll.
                 </Text>
               )}
             </View>
@@ -146,7 +153,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
-  renderSearchMusic(playroll: Playroll) {
+  // Search Bar and Results
+  renderSearch(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
         <Search playrollID={playroll.id} />
@@ -160,7 +168,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       Track: 'audiotrack',
       Album: 'album',
       Artist: 'mic',
-      Playlist: 'playlist-play'
+      Playlist: 'playlist-play',
     };
     return (
       <View style={styles.bottomBarContainer}>
@@ -172,6 +180,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             playroll.rolls.map((roll, idx) => {
               const val: MusicSource =
                 (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+              // console.log(val);
               return (
                 <View style={styles.bottomBarItemContainer} key={idx}>
                   <Image

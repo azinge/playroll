@@ -29,7 +29,6 @@ export default StyleSheet.create<Style>({
     flex: 1,
     backgroundColor: '#fff',
   },
-
   // Title Bar for Playroll
   titleBarContainer: {
     flexDirection: 'row',

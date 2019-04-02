@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -56,6 +63,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
+                contentContainerStyle={{ paddingBottom: 80 }}
                 title='View Playroll'
                 renderHeader={this.renderHeader}
               >
@@ -150,18 +158,31 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   }
   renderNewRollButton(playroll) {
     return (
-      <View style={styles.footerView}>
-        <TouchableOpacity
-          style={styles.newButton}
+      <View
+        style={{
+          bottom: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          linearGradientProps={{
+            colors: ['#DA22FF', '#00c6ff'],
+            start: { x: 0, y: 0.5 },
+            end: { x: 1, y: 0.5 },
+          }}
+          containerStyle={{ borderRadius: 80, width: '75%' }}
+          buttonStyle={{ borderRadius: 80, height: 50 }}
+          raised
+          title={'Add New Rolls'}
+          titleStyle={{ fontWeight: 'bold' }}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',
               playroll,
             });
           }}
-        >
-          <Text style={styles.buttonText}>Add a Roll</Text>
-        </TouchableOpacity>
+        />
       </View>
     );
   }

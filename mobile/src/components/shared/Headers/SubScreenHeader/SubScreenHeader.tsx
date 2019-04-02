@@ -38,14 +38,15 @@ export default class SubScreenHeader extends React.Component<Props, State> {
         }}
       >
         <Header
-          backgroundColor='purple'
+          backgroundColor='white'
           placement='right'
+          containerStyle={{ borderBottomWidth: 1.5 }}
           leftComponent={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={this.props.modal ? 'close' : 'arrow-left'}
                 type='material-community'
-                color='white'
+                color='purple'
                 underlayColor='rgba(255,255,255,0)'
                 onPress={() => NavigationService.goBack()}
                 containerStyle={{ marginTop: 5, marginRight: 4 }}
@@ -70,7 +71,7 @@ export default class SubScreenHeader extends React.Component<Props, State> {
           name={icon.name}
           type={icon.type}
           size={27}
-          color='white'
+          color='purple'
           underlayColor='rgba(255,255,255,0)'
           containerStyle={{ marginTop: 5, marginLeft: 16 }}
           onPress={icon.onPress}

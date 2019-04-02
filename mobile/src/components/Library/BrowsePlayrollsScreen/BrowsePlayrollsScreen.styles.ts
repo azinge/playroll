@@ -9,7 +9,7 @@ interface Style {
 const styles = StyleSheet.create({
   // Footer View with Button
   footerView: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     flex: 1,
     position: 'absolute',
     bottom: 0, // stick to bottom

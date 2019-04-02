@@ -19,36 +19,19 @@ import styles from './LibraryMenuScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import MainScreenHeader from '../../shared/Headers/MainScreenHeader';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  disableBounce?: boolean;
 }
 
 interface State {}
 
 export default class LibraryMenuScreen extends React.Component<Props, State> {
   render() {
-    return (
-      <Collapsible
-        max={45}
-        min={isIphoneX() ? 41 : 19}
-        backgroundColor={'purple'}
-        renderHeader={this.renderHeader()}
-        // renderContent is not needed if using FlatList
-        renderContent={this.renderContent()}
-
-        // flatList
-        // data={Array(10).fill()}
-        // keyExtractor={(item, i) => String(i)}
-        // renderItem={({ index }) => <Content gray={index % 2 !== 0} />}
-      />
-    );
+    return <MainScreenContainer>{this.renderContent()}</MainScreenContainer>;
   }
-
-  renderHeader() {
-    return <MainScreenHeader />;
-  }
-
   renderContent() {
     return (
       <View style={{ marginTop: 5, flex: 1 }}>
@@ -63,7 +46,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           </View>
         </TouchableOpacity>
         {/* Your Discovery Queues */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             NavigationService.navigate('ViewDiscoveryQueue');
           }}
@@ -71,7 +54,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           <View style={styles.textContainer}>
             <Text style={styles.disabledText}>Your Discovery Queues</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {/* Your Reommendations */}
         <TouchableOpacity
           onPress={() => {

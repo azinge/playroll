@@ -29,6 +29,9 @@ const styles = StyleSheet.create<Style>({
     height: 100,
     alignItems: 'center',
   },
+  titleBarName: {
+    fontSize: 20,
+  },
 
   horizontalRule: {
     width: '90%',
@@ -53,6 +56,24 @@ const styles = StyleSheet.create<Style>({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1, // float on top
+  },
+
+  // Bottom Button
+  newRollButton: {
+    width: '90%',
+    backgroundColor: '#af00bc', // brighter purple
+    borderRadius: 3,
+    height: 40,
+
+    // Center text contents
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'Avenir',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

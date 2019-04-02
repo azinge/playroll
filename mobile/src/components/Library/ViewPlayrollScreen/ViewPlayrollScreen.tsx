@@ -60,6 +60,9 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
 
           // console.log(playroll)
           // console.log(playroll.rolls.length)
+
+          // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
+          // TODO: Add New Roll button should overlay screen from bottom (currently swipes to Edit screen)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer

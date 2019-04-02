@@ -89,6 +89,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                 color: 'black',
                 // fontWeight: 'bold',
                 fontSize: 24,
+                // TODO: figure out a better way to position this
                 left: 150,
               }}
               onPress={() =>

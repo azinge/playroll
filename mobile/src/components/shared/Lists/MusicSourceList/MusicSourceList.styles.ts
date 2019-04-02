@@ -26,7 +26,7 @@ export default StyleSheet.create({
   cover: {
     width: 65,
     height: 65,
-    marginHorizontal: wp(3s),
+    marginHorizontal: wp(3),
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'lightgrey'

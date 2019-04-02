@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
-import { ListItem, Icon } from 'react-native-elements';
+import { ListItem, Icon, Button } from 'react-native-elements';
 import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import {
   CurrentUserSpotifyStatusQuery,
@@ -111,7 +111,34 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
               if (authenticated === 'authenticated') {
                 return (
                   <View>
-                    <TouchableOpacity
+                    <View
+                      style={{
+                        // bottom: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                        // marginBottom: 20,
+                      }}
+                    >
+                      <Button
+                        linearGradientProps={{
+                          colors: ['#DA22FF', '#00c6ff'],
+                          start: { x: 0, y: 0.5 },
+                          end: { x: 1, y: 0.5 }
+                        }}
+                        containerStyle={{
+                          borderRadius: 80,
+                          width: '65%'
+                        }}
+                        buttonStyle={{ borderRadius: 80, height: 50 }}
+                        raised
+                        title={'Saved Tracks'}
+                        titleStyle={{ fontWeight: 'bold' }}
+                        onPress={() =>
+                          NavigationService.navigate('BrowseSpotifySavedTracks')
+                        }
+                      />
+                    </View>
+                    {/* <TouchableOpacity
                       onPress={() =>
                         NavigationService.navigate('BrowseSpotifySavedTracks')
                       }
@@ -141,7 +168,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                           overflow: 'visible'
                         }}
                       />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <ListSpotifyPlaylistsQuery variables={{ count: 3 }}>
                       {({ loading, error, data }) => {
                         console.log(error && error.message);

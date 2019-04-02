@@ -1,11 +1,17 @@
 import { StyleSheet } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+  listenOrientationChange as lor,
+  removeOrientationListener as rol
+} from 'react-native-responsive-screen';
 
 export default StyleSheet.create({
   // Container for each Roll Row
   outerContainer: {
     width: '100%',
     alignItems: 'center',
-    fontFamily: 'Avenir',
+    fontFamily: 'Avenir'
   },
 
   // Container without horizontal bar spacer
@@ -13,52 +19,52 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
 
   // Thumbnail image
   cover: {
     width: 65,
     height: 65,
-    marginHorizontal: 20,
+    marginHorizontal: wp(3s),
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: 'lightgrey'
   },
 
   // Text
   text: {
-    fontFamily: 'Avenir',
+    fontFamily: 'Avenir'
   },
   rollType: {
-    fontSize: 14,
+    fontSize: 14
     // color: 'purple',
   },
   name: {
     fontSize: 17,
     color: 'purple',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   artist: {
     fontFamily: 'Avenir',
     fontSize: 15,
-    color: 'gray',
+    color: 'gray'
   },
   source: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
 
   // Right side icons
   editIcon: {
-    marginRight: 20,
+    marginRight: 20
   },
 
   // Horizontal Spacer
   spacing: {
     width: '90%',
-    marginVertical: 10,
+    marginVertical: hp(1),
     borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+    borderBottomWidth: StyleSheet.hairlineWidth
+  }
 });

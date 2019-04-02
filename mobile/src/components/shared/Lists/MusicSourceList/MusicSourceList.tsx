@@ -31,9 +31,6 @@ export default class MusicSourceList extends React.Component<Props, State> {
           <View style={styles.innerContainer}>
             <Image style={styles.cover} source={{ uri: source.cover }} />
             <View style={{ flex: 1, justifyContent: 'center' }}>
-              {/* <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
-                {source.type}
-              </Text> */}
               <Text style={[styles.text, styles.name]} numberOfLines={2}>
                 {source.name}
               </Text>
@@ -46,21 +43,6 @@ export default class MusicSourceList extends React.Component<Props, State> {
                 </Text>
               ) : null}
             </View>
-            {/* <Icon
-            size={25}
-            name='edit'
-            color='lightgrey'
-            // onPress={roll => {
-            //   NavigationService.navigate('EditRoll', {
-            //     roll,
-            //   });
-            // }}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            iconStyle={styles.editIcon}
-          /> */}
           </View>
           <View style={styles.spacing} />
         </View>

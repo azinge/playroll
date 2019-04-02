@@ -1,6 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
-export default StyleSheet.create({
+import libraryStyles from '../library.styles';
+
+interface Style {
+  footerView: ViewStyle;
+}
+
+const styles = StyleSheet.create({
   // Footer View with Button
   footerView: {
     // backgroundColor: '#fff',
@@ -33,3 +39,5 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default Object.assign(libraryStyles, styles);

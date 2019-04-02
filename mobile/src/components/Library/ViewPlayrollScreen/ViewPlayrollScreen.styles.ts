@@ -1,49 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
-export default StyleSheet.create({
-  // General Container
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+import libraryStyles from '../library.styles';
 
-  // Title Bar for Playroll
-  titleBarContainer: {
-    flexDirection: 'row',
-    height: 100,
-    alignItems: 'center',
-  },
-  titleBarNameContainer: {
-    flex: 1,
-  },
+interface Style {
+  screenContainer: ViewStyle;
+}
 
-  horizontalRule: {
-    width: '90%',
-    marginVertical: 5,
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: 'gray',
-  },
-
-  // Bottom View for Button
-  footerView: {
-    backgroundColor: '#fff',
-    flex: 1,
-    position: 'absolute',
-    bottom: 0, // stick to bottom
-    left: 0, // stretch to left
-    right: 0, // stretch to right
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1, // float on top
-  },
-  titleBarName: {
-    fontSize: 20,
-  },
+const styles = StyleSheet.create({
   // Bottom Button
   newRollButton: {
     width: '90%',
@@ -74,3 +37,5 @@ export const rawStyles = {
     borderColor: 'lightgrey',
   },
 };
+
+export default Object.assign(libraryStyles, styles);

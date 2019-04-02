@@ -1,8 +1,11 @@
-import { StyleSheet } from 'react-native';
-import componentStyles from '../../component.styles';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import libraryStyles from '../library.styles';
 
-const localStyles = StyleSheet.create({
+interface Style {
+  headerCenterComponent: ViewStyle;
+}
+
+const styles = StyleSheet.create({
   headerCenterComponent: {
     color: '#fff',
     fontSize: 20,
@@ -15,6 +18,7 @@ const localStyles = StyleSheet.create({
   editingBarNameContainer: {
     flex: 1,
   },
+
   editingBarNameInput: {
     fontSize: 20,
   },
@@ -71,9 +75,5 @@ export const rawStyles = {
     borderColor: 'lightgrey',
   },
 };
-// @ts-ignore
-export default StyleSheet.flatten([
-  componentStyles,
-  libraryStyles,
-  localStyles,
-]);
+
+export default Object.assign(libraryStyles, styles);

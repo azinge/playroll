@@ -1,6 +1,29 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle, TextStyleIOS } from 'react-native';
 
-export default StyleSheet.create({
+interface Style {
+  screenContainer: ViewStyle;
+  titleBarContainer: ViewStyle;
+  titleBarNameContainer: ViewStyle;
+  titleBarName: TextStyle;
+  horizontalRule: ViewStyle;
+  subtitle: TextStyle;
+  spacing: ViewStyle;
+
+  text: TextStyle;
+  rollType: TextStyle;
+  artistName: TextStyle;
+  noArtist: TextStyle;
+  creator: TextStyle;
+  provider: TextStyle;
+
+  editIcon: ViewStyle;
+
+  footerView: ViewStyle;
+  newButton: ViewStyle;
+  buttonText: TextStyle;
+}
+
+export default StyleSheet.create<Style>({
   // General Container
   screenContainer: {
     flex: 1,
@@ -12,8 +35,12 @@ export default StyleSheet.create({
     height: 100,
     alignItems: 'center',
   },
+  titleBarNameContainer: {
+    flex: 1,
+  },
   titleBarName: {
     fontSize: 20,
+    // color: 'black',
   },
   horizontalRule: {
     width: '90%',
@@ -34,6 +61,39 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 
+  // Text for Rows (Search and RollList)
+  text: {
+    fontFamily: 'Avenir',
+  },
+  rollType: {
+    fontSize: 14,
+    // color: 'purple',
+  },
+  artistName: {
+    fontSize: 17,
+    color: 'purple',
+    fontWeight: 'bold',
+  },
+  noArtist: {
+    fontFamily: 'Avenir',
+    fontSize: 15,
+    color: 'lightgrey',
+  },
+  // Creator (of the Album/Playlist/Track)
+  creator: {
+    fontWeight: 'bold',
+  },
+  // Providers: Spotify, etc.
+  provider: {
+    fontSize: 14,
+    color: 'lightgray',
+  },
+
+  // Right side icons
+  editIcon: {
+    marginRight: 20,
+  },
+
   // Bottom View for Button
   footerView: {
     backgroundColor: '#fff',
@@ -49,7 +109,7 @@ export default StyleSheet.create({
   },
 
   // Bottom Button
-  newRollButton: {
+  newButton: {
     width: '90%',
     backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,

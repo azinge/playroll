@@ -1,6 +1,22 @@
-import { StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  StyleProp,
+  RegisteredStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
-export default StyleSheet.create({
+import componentStyles from '../component.styles';
+
+interface Style {
+  // screenContainer: ViewStyle;
+  // titleBarContainer: ViewStyle;
+  // titleBarName: TextStyle;
+  // horizontalRule: ViewStyle;
+  // subtitle: TextStyle;
+}
+
+const styles = StyleSheet.create<Style>({
   // General Container
   screenContainer: {
     flex: 1,
@@ -16,6 +32,7 @@ export default StyleSheet.create({
   titleBarName: {
     fontSize: 20,
   },
+
   horizontalRule: {
     width: '90%',
     marginVertical: 5,
@@ -59,3 +76,5 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default Object.assign(componentStyles, styles);

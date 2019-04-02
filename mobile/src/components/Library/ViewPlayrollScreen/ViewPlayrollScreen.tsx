@@ -136,16 +136,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           source={require('../../../assets/new_playroll.png')}
         />
         <View style={styles.titleBarNameContainer}>
-          <TextInput
-            selectionColor={'purple'}
-            placeholder='Name Your Playroll'
-            placeholderTextColor='lightgrey'
-            style={styles.titleBarName}
-            onChangeText={name => this.setState({ editPlayrollName: name })}
-            // onSubmitEditing={() => updatePlayroll()}
-          >
-            {playroll.name}
-          </TextInput>
+          <Text style={styles.titleBarName}>{playroll.name}</Text>
           <View style={styles.horizontalRule} />
           {playroll && playroll.rolls && (
             <Text selectionColor={'purple'} style={styles.subtitle}>

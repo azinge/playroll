@@ -11,7 +11,7 @@ import { musicSources } from '../../../static/mockData';
 import styles from './HomeScreen.styles';
 import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
-import HorizontalComingSoonList from '../../shared/Lists/HorizontalComingSoonList';
+// import HorizontalComingSoonList from '../../shared/Lists/HorizontalComingSoonList';
 import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 

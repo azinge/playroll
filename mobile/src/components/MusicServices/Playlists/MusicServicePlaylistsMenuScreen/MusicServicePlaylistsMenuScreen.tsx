@@ -8,13 +8,13 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
 import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import {
   CurrentUserSpotifyStatusQuery,
-  ListSpotifyPlaylistsQuery,
+  ListSpotifyPlaylistsQuery
 } from '../../../../graphql/requests/Spotify/';
 import NavigationService from '../../../../services/NavigationService';
 import LinearGradient from 'expo'; // Only if no expo
@@ -26,7 +26,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
-          playlistID: item.providerID,
+          playlistID: item.providerID
         })
       }
     >
@@ -35,7 +35,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
         titleStyle={{ color: 'purple' }}
         subtitle={item.type}
         leftAvatar={{
-          source: { uri: item.cover },
+          source: { uri: item.cover }
         }}
         containerStyle={{
           borderColor: 'white',
@@ -43,15 +43,15 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
           shadowColor: 'gray',
           shadowOffset: {
             width: 2,
-            height: 1,
+            height: 1
           },
           shadowRadius: 3,
           shadowOpacity: 0.2,
-          overflow: 'visible',
+          overflow: 'visible'
         }}
       />
     </TouchableOpacity>
-  )
+  );
 
   _keyExtractor = (item, index) => item.providerID;
 
@@ -61,7 +61,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
         <View
           style={{
             overflow: 'visible',
-            margin: 10,
+            margin: 10
           }}
         >
           <View
@@ -78,26 +78,26 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                 color: 'black',
                 fontWeight: 'bold',
                 fontSize: 24,
-                left: 3,
+                left: 3
               }}
             >
               Spotify
             </Text>
-
-            <Text
-              style={{
-                color: 'black',
-                // fontWeight: 'bold',
-                fontSize: 24,
-                // TODO: figure out a better way to position this
-                left: 150,
-              }}
-              onPress={() =>
-                NavigationService.navigate('BrowseSpotifyPlaylists')
-              }
-            >
-              See all...
-            </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  alignSelf: 'flex-end',
+                  color: 'black',
+                  fontSize: 22,
+                  textAlign: 'right'
+                }}
+                onPress={() =>
+                  NavigationService.navigate('BrowseSpotifyPlaylists')
+                }
+              >
+                See all...
+              </Text>
+            </View>
           </View>
           <CurrentUserSpotifyStatusQuery>
             {({ loading, error, data }) => {
@@ -123,7 +123,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                           textAlign: 'center',
                           fontWeight: 'bold',
                           fontSize: 17,
-                          color: 'white',
+                          color: 'white'
                         }}
                         containerStyle={{
                           //   marginHorizontal: 30,
@@ -134,11 +134,11 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                           shadowColor: 'gray',
                           shadowOffset: {
                             width: 5,
-                            height: 1,
+                            height: 1
                           },
                           shadowRadius: 9,
                           shadowOpacity: 0.5,
-                          overflow: 'visible',
+                          overflow: 'visible'
                         }}
                       />
                     </TouchableOpacity>

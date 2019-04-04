@@ -11,7 +11,7 @@ import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 import {
   NavigationScreenProp,
   StackActions,
-  NavigationActions,
+  NavigationActions
 } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
@@ -35,10 +35,11 @@ export default class AccountScreen extends React.Component<Props, State> {
           return (
             <SubScreenContainer title='My Account' modal>
               <View style={{ alignItems: 'center' }}>
+                {/* Profile picture */}
                 <View style={{ alignItems: 'center', marginVertical: 20 }}>
                   <Image
                     source={{
-                      uri: currentUser.avatar,
+                      uri: currentUser.avatar
                     }}
                     style={{ height: 100, width: 100, borderRadius: 5 }}
                   />
@@ -46,12 +47,13 @@ export default class AccountScreen extends React.Component<Props, State> {
                     style={{
                       fontWeight: 'bold',
                       fontSize: 20,
-                      color: '#993399',
+                      color: '#993399'
                     }}
                   >
                     {currentUser.name}
                   </Text>
                 </View>
+                {/* Buttons */}
                 <Button
                   style={{ marginVertical: 3 }}
                   title='Connect Spotify'
@@ -107,9 +109,9 @@ export default class AccountScreen extends React.Component<Props, State> {
                                   index: 0,
                                   actions: [
                                     NavigationActions.navigate({
-                                      routeName: 'Auth',
-                                    }),
-                                  ],
+                                      routeName: 'Auth'
+                                    })
+                                  ]
                                 })
                               )
                           );

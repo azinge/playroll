@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  TextInput,
+  TextInput
 } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
@@ -18,7 +18,7 @@ import { Playroll, MusicSource } from '../../../graphql/types';
 
 import {
   UpdatePlayrollMutation,
-  GetCurrentUserPlayrollQuery,
+  GetCurrentUserPlayrollQuery
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 
@@ -41,7 +41,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      editPlayrollName: '',
+      editPlayrollName: ''
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
@@ -92,15 +92,15 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
 
     const addRollIcon = {
       ...Icons.addIcon,
-      onPress: () => NavigationService.navigate('EditRoll'),
+      onPress: () => NavigationService.navigate('EditRoll')
     };
     const editPlayrollIcon = {
       ...Icons.settingsIcon,
       onPress: () =>
         NavigationService.navigate('EditPlayroll', {
           managePlayroll: 'View Playroll',
-          playroll,
-        }),
+          playroll
+        })
     };
     return (
       <GenerateTracklistMutation
@@ -112,14 +112,14 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             tracklistID:
               data &&
               data.private.generateTracklist &&
-              data.private.generateTracklist.id,
+              data.private.generateTracklist.id
           })
         }
       >
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
             ...Icons.exportIcon,
-            onPress: () => generateTracklist(),
+            onPress: () => generateTracklist()
           };
           return (
             <SubScreenHeader
@@ -165,24 +165,24 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         style={{
           bottom: 20,
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <Button
           linearGradientProps={{
             colors: ['#DA22FF', '#00c6ff'],
             start: { x: 0, y: 0.5 },
-            end: { x: 1, y: 0.5 },
+            end: { x: 1, y: 0.5 }
           }}
-          containerStyle={{ borderRadius: 80, width: '75%' }}
-          buttonStyle={{ borderRadius: 80, height: 50 }}
+          containerStyle={{ width: '75%' }}
+          buttonStyle={{ height: 50 }}
           raised
           title={'Add New Rolls'}
           titleStyle={{ fontWeight: 'bold' }}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',
-              playroll,
+              playroll
             });
           }}
         />

@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import Errors from '../../shared/Modals/Errors';
 import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './ConfirmationScreen.styles';
 import { NavigationScreenProp } from 'react-navigation';
@@ -27,6 +28,7 @@ export interface Props {
 interface State {
   authCode: string;
   username: string;
+  displayErrorModal: boolean;
   error?: string;
 }
 
@@ -37,24 +39,42 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     this.state = {
       authCode: '',
       username: '',
+      displayErrorModal: false,
       error: undefined,
     };
 
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      error: undefined,
+      displayErrorModal: false,
+    });
   }
 
   validateInput(confirmSignUp) {
     if (this.state.username === '' || this.state.authCode === '') {
-      return this.setState(
-        {
-          error: 'All fields must have a value.',
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
-      );
+      return this.handleErrors('All fields must have a value.');
     }
     confirmSignUp();
     NavigationService.goBack();
@@ -121,6 +141,9 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         }}
       >
         {(confirmSignUp, { loading, error, data }) => {
+          if (error && error.message) {
+            this.handleErrors(error.message);
+          }
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(confirmSignUp)}
@@ -170,9 +193,9 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
               autoCapitalize={'none'}
               value={this.state.authCode}
             />
-            {this.renderError()}
           </View>
           {this.renderConfirmButton()}
+          {this.renderErrorModal(this.state.error)}
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

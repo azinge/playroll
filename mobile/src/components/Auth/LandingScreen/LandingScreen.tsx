@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import {
+  ActivityIndicator,
   Image,
   Text,
   View,
@@ -12,7 +13,7 @@ import {
   Modal,
 } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-
+import Errors from '../../shared/Modals/Errors';
 import { SignInMutation } from '../../../graphql/requests/Auth';
 
 import styles from './LandingScreen.styles';
@@ -40,31 +41,29 @@ export default class LandingScreen extends React.Component<Props, State> {
 
     this.renderForm = this.renderForm.bind(this);
     this.validateInput = this.validateInput.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.renderErrorModal = this.renderErrorModal.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  handleCloseErrorModal() {
+    this.setState({ displayErrorModal: false, error: null });
   }
 
   renderErrorModal(error) {
     return (
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={this.state.displayErrorModal}
-        onRequestClose={() => this.setState({ displayErrorModal: false })}
-      >
-        <View style={styles.errorModalContainer}>
-          <View style={styles.errorModal}>
-            <Text style={styles.errorModalTitle}>Error!</Text>
-            <Text style={styles.errorDescription}>{error}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({ displayErrorModal: false, error: null });
-              }}
-            >
-              <Text>Hide</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
     );
   }
 
@@ -114,9 +113,7 @@ export default class LandingScreen extends React.Component<Props, State> {
 
   validateInput(signIn) {
     if (this.state.username === '' || this.state.password === '') {
-      return this.setState({
-        error: 'All fields must have a value',
-      });
+      return this.handleErrors('All fields must have a value');
     }
     signIn();
   }
@@ -130,12 +127,19 @@ export default class LandingScreen extends React.Component<Props, State> {
         }}
       >
         {(signIn, { error, loading, data }) => {
+          if (error && error.message) {
+            this.handleErrors(error.message);
+          }
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(signIn)}
               style={styles.signInButton}
             >
-              <Text style={styles.footerButtonText}>Sign In</Text>
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text style={styles.footerButtonText}>Sign In</Text>
+              )}
             </TouchableOpacity>
           );
         }}

@@ -59,7 +59,11 @@
 
     /* Miscellaneous Options */
     "preserveConstEnums": true /* */,
-    "skipLibCheck": true /* */
+    "skipLibCheck": true /* */,
+
+    /* Plugins */
+    // https://github.com/Microsoft/typescript-tslint-plugin
+    "plugins": [{ "name": "typescript-tslint-plugin" }]
   },
   "filesGlob": [
     "typings/index.d.ts",

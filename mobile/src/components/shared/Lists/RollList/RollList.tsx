@@ -12,7 +12,7 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   rolls: Roll[];
-  // onPress?: (roll: Roll) => void;  // removing, edit icon is enough
+  // onPress?: () => void;  // TODO: is this required?
 }
 
 interface State {}
@@ -53,15 +53,8 @@ export default class RollList extends React.Component<Props, State> {
             size={25}
             name='edit'
             color='lightgrey'
-            onPress={roll => {
-              NavigationService.navigate('EditRoll', {
-                roll,
-              });
-            }}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            // tslint:disable-next-line:no-shadowed-variable
+            onPress={() => NavigationService.navigate('EditRoll', roll)}
             iconStyle={styles.editIcon}
           />
         </View>

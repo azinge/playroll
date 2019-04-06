@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -53,9 +60,13 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
 
           // console.log(playroll)
           // console.log(playroll.rolls.length)
+
+          // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
+          // TODO: Add New Roll button should overlay screen from bottom (currently swipes to Edit screen)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
+                contentContainerStyle={{ paddingBottom: 80 }}
                 title='View Playroll'
                 renderHeader={this.renderHeader}
               >
@@ -128,16 +139,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           source={require('../../../assets/new_playroll.png')}
         />
         <View style={styles.titleBarNameContainer}>
-          <Text
-            selectionColor={'purple'}
-            placeholder='Name Your Playroll'
-            placeholderTextColor='lightgrey'
-            style={styles.titleBarName}
-            onChangeText={name => this.setState({ editPlayrollName: name })}
-            onSubmitEditing={() => updatePlayroll()}
-          >
-            {playroll.name}
-          </Text>
+          <Text style={styles.titleBarName}>{playroll.name}</Text>
           <View style={styles.horizontalRule} />
           {playroll && playroll.rolls && (
             <Text selectionColor={'purple'} style={styles.subtitle}>
@@ -159,18 +161,31 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   }
   renderNewRollButton(playroll) {
     return (
-      <View style={styles.footerView}>
-        <TouchableOpacity
-          style={styles.newRollButton}
+      <View
+        style={{
+          bottom: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          linearGradientProps={{
+            colors: ['#DA22FF', '#00c6ff'],
+            start: { x: 0, y: 0.5 },
+            end: { x: 1, y: 0.5 },
+          }}
+          containerStyle={{ borderRadius: 80, width: '75%' }}
+          buttonStyle={{ borderRadius: 80, height: 50 }}
+          raised
+          title={'Add New Rolls'}
+          titleStyle={{ fontWeight: 'bold' }}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',
               playroll,
             });
           }}
-        >
-          <Text style={styles.buttonText}>Add a Roll</Text>
-        </TouchableOpacity>
+        />
       </View>
     );
   }

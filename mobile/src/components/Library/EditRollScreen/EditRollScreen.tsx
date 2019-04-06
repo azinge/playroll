@@ -83,7 +83,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
     let lengthType = undefined;
     let filterTypes = [];
     const { sources, filters } = roll.data;
-    filters.forEach((filter, i) => {
+    filters.forEach(filter => {
       switch (filter.type) {
         case 'Source':
           switch (filter.name) {
@@ -245,7 +245,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
         }}
         refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
       >
-        {(deleteRoll, { data }) => {
+        {deleteRoll => {
           return (
             <UpdateRollMutation
               onCompleted={() => {
@@ -253,7 +253,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
               }}
               refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
             >
-              {(updateRoll, { data }) => {
+              {updateRoll => {
                 return (
                   <SubScreenContainer
                     title={'Edit Roll'}
@@ -410,7 +410,6 @@ export default class EditRollScreen extends React.Component<Props, State> {
         />
       </View>
     );
-    type AddIcon = MusicSource & { isAddIcon: boolean };
     const addIcon = {
       name: '',
       cover: '',

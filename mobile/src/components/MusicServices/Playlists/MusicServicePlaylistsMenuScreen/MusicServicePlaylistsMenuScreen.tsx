@@ -17,11 +17,13 @@ import {
   ListSpotifyPlaylistsQuery,
 } from '../../../../graphql/requests/Spotify/';
 import NavigationService from '../../../../services/NavigationService';
+import LinearGradient from 'expo'; // Only if no expo
+import TouchableScale from 'expo';
 
 export default class MusicServicePlaylistsMenuScreen extends React.Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity
-      style={{ marginHorizontal: 30, marginBottom: 10, marginTop: 5 }}
+      style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
           playlistID: item.providerID,
@@ -43,7 +45,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
             width: 2,
             height: 1,
           },
-          shadowRadius: 5,
+          shadowRadius: 3,
           shadowOpacity: 0.2,
           overflow: 'visible',
         }}
@@ -63,7 +65,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
           }}
         >
           <View
-            style={{ flex: 1, flexDirection: 'row', marginBottom: 3, left: 2 }}
+            style={{ flex: 1, flexDirection: 'row', marginBottom: 5, left: 2 }}
           >
             <Icon
               type='material-community'
@@ -87,6 +89,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                 color: 'black',
                 // fontWeight: 'bold',
                 fontSize: 24,
+                // TODO: figure out a better way to position this
                 left: 150,
               }}
               onPress={() =>
@@ -112,23 +115,29 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                       onPress={() =>
                         NavigationService.navigate('BrowseSpotifySavedTracks')
                       }
-                      style={{ marginHorizontal: 30, marginBottom: 10 }}
+                      style={{ marginHorizontal: 60, marginBottom: 5 }}
                     >
                       <ListItem
                         title={'Your Saved Tracks'}
-                        titleStyle={{ textAlign: 'center', fontWeight: 'bold' }}
+                        titleStyle={{
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          fontSize: 17,
+                          color: 'white',
+                        }}
                         containerStyle={{
                           //   marginHorizontal: 30,
                           //   marginBottom: 10,
+                          backgroundColor: 'purple',
                           borderColor: 'white',
-                          borderRadius: 10,
+                          borderRadius: 30,
                           shadowColor: 'gray',
                           shadowOffset: {
-                            width: 2,
+                            width: 5,
                             height: 1,
                           },
-                          shadowRadius: 5,
-                          shadowOpacity: 0.2,
+                          shadowRadius: 9,
+                          shadowOpacity: 0.5,
                           overflow: 'visible',
                         }}
                       />
@@ -142,7 +151,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                             data.private.listSpotifyPlaylists
                         );
                         return (
-                          <View style={{ marginBottom: 0, flex: 1 }}>
+                          <View style={{ marginBottom: 5, flex: 1 }}>
                             <FlatList
                               data={
                                 data &&

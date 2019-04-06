@@ -5,6 +5,7 @@
 import React from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { Button } from 'react-native-elements';
 
 import NavigationService from '../../../services/NavigationService';
 
@@ -65,40 +66,45 @@ export default class BrowsePlayrollsScreen extends React.Component<
                 // marginBottom: 30,
               }}
             >
-              <SubScreenContainer
-                renderHeader={this.renderHeader}
-                flatList={success}
-                data={playrolls}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => {
-                  const playroll = item as Playroll;
-                  return (
-                    <PlayrollCard
-                      playroll={playroll}
-                      editPlayroll={() =>
-                        this.props.navigation &&
-                        this.props.navigation.navigate('ViewPlayroll', {
-                          managePlayroll: 'View Playroll',
-                          playroll,
-                        })
-                      }
-                      key={playroll.id}
+              <View style={{ flex: 1 }}>
+                <SubScreenContainer
+                  contentContainerStyle={{ paddingBottom: 120 }}
+                  renderHeader={this.renderHeader}
+                  flatList={success}
+                  data={playrolls}
+                  keyExtractor={item => item.id}
+                  renderItem={({ item }) => {
+                    const playroll = item as Playroll;
+                    return (
+                      <PlayrollCard
+                        playroll={playroll}
+                        editPlayroll={() =>
+                          this.props.navigation &&
+                          this.props.navigation.navigate('ViewPlayroll', {
+                            managePlayroll: 'View Playroll',
+                            playroll,
+                          })
+                        }
+                        key={playroll.id}
+                      />
+                    );
+                  }}
+                >
+                  {loading && (
+                    <ActivityIndicator
+                      color={'gray'}
+                      style={{ paddingTop: 50 }}
                     />
-                  );
-                }}
-              >
-                {loading && (
-                  <ActivityIndicator
-                    color={'gray'}
-                    style={{ paddingTop: 50 }}
-                  />
-                )}
-                {error && (
-                  <Text style={{ paddingTop: 50 }}>
-                    Error Loading Playrolls
-                  </Text>
-                )}
-              </SubScreenContainer>
+                  )}
+                  {error && (
+                    <Text style={{ paddingTop: 50 }}>
+                      Error Loading Playrolls
+                    </Text>
+                  )}
+                  {/* <View style={{ margin: 10 }} /> */}
+                </SubScreenContainer>
+                {playrolls.length === 0 && <Text> No Playrolls added</Text>}
+              </View>
               {this.renderNewPlayrollButton()}
             </View>
           );
@@ -168,13 +174,45 @@ export default class BrowsePlayrollsScreen extends React.Component<
       >
         {createPlayroll => {
           return (
-            <View style={styles.footerView}>
-              <TouchableOpacity
-                style={styles.newButton}
+            // <View style={styles.footerView}>
+            //   <TouchableOpacity
+            //     style={styles.newButton}
+            //     onPress={() => {
+            //       createPlayroll();
+            //     }}
+            //   >
+            //     <Text style={styles.buttonText}>Create a Playroll</Text>
+            //   </TouchableOpacity>
+            // </View>
+            <View
+              style={{
+                bottom: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                // marginBottom: 20,
+              }}
+            >
+              <Button
+                linearGradientProps={{
+                  colors: ['#DA22FF', '#00c6ff'],
+                  start: { x: 0 },
+                  end: { x: 1 },
+                }}
+                containerStyle={{
+                  borderRadius: 80,
+                  width: '75%',
+                  position: 'absolute',
+                  bottom: 5,
+                  height: 50,
+                }}
+                buttonStyle={{ borderRadius: 80, height: 50 }}
+                raised
+                title={'Create New Playroll'}
+                titleStyle={{ fontWeight: 'bold' }}
                 onPress={() => {
                   createPlayroll();
                 }}
-              ><Text style={styles.buttonText}>Create a Playroll</Text></TouchableOpacity>
+              />
             </View>
           );
         }}

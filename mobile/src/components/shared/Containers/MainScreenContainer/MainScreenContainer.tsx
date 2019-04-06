@@ -20,8 +20,7 @@ export default class MainScreenContainer extends React.Component<Props, State> {
   render() {
     return (
       <Collapsible
-        max={45}
-        min={isIphoneX() ? 41 : 19}
+        min={isIphoneX() ? 48 : 20}
         backgroundColor={'purple'}
         renderHeader={
           this.props.renderHeader

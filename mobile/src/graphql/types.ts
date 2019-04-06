@@ -291,3 +291,11 @@ export const RecommendationFragments = {
     ${UserFragments.default}
   `,
 };
+
+// Relationship Types / Fragments
+
+export type Relationship = {};
+
+export const RelationshipFragements = {
+  default: gql``,
+};

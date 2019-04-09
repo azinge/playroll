@@ -1,1 +1,1 @@
-export { SendFriendRequest } from './SendFriendRequest';
+export { SendFriendRequestMutation } from './SendFriendRequestMutation';

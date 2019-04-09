@@ -4,17 +4,18 @@
 
 import * as React from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
-  Keyboard,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+import Errors from '../../shared/Modals/Errors';
+import { SearchUsersQuery } from '../../../graphql/requests/User/';
+import { SendFriendRequestMutation } from '../../../graphql/requests/Relationships';
+import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { User } from '../../../graphql/types';
 import styles from './AddFriendScreen.styles';
@@ -24,10 +25,13 @@ export interface Props {
 }
 
 interface State {
-  error?: string;
   renderUsers: boolean;
+  searchForUsers: boolean;
   username: string;
   users?: [User];
+  selectedUser?: User;
+  error?: string;
+  displayErrorModal?: boolean;
 }
 
 export default class AddFriendScreen extends React.Component<Props, State> {
@@ -36,6 +40,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     this.state = {
       error: undefined,
       renderUsers: false,
+      searchForUsers: false,
       username: '',
       users: [
         { id: '0', name: 'username0', avatar: '' },
@@ -57,69 +62,143 @@ export default class AddFriendScreen extends React.Component<Props, State> {
         { id: '16', name: 'username1', avatar: '' },
         { id: '17', name: 'username2', avatar: '' },
         { id: '18', name: 'username3', avatar: '' },
+        { id: '19', name: 'username3', avatar: '' },
+        { id: '20', name: 'username0', avatar: '' },
+        { id: '21', name: 'username1', avatar: '' },
+        { id: '22', name: 'username2', avatar: '' },
+        { id: '23', name: 'username3', avatar: '' },
+        { id: '24', name: 'username0', avatar: '' },
+        { id: '25', name: 'username1', avatar: '' },
+        { id: '26', name: 'username2', avatar: '' },
+        { id: '27', name: 'username3', avatar: '' },
+        { id: '28', name: 'username0', avatar: '' },
+        { id: '29', name: 'username1', avatar: '' },
+        { id: '30', name: 'username2', avatar: '' },
       ],
+      selectedUser: { id: 0 },
     };
 
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.renderUserRow = this.renderUserRow.bind(this);
+    this.handleSearchQueryData = this.handleSearchQueryData.bind(this);
+    this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
+    this.handleFriendRequest = this.handleFriendRequest.bind(this);
   }
 
-  renderHeader() {
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
     return (
-      <View style={styles.header}>
-        <View style={styles.segueToBrowseContainer}>
-          <Icon
-            name='arrow-left'
-            type='font-awesome'
-            color='#6A0070'
-            underlayColor='rgba(255,255,255,0)'
-            onPress={() => {
-              this.props.navigation && this.props.navigation.goBack(null);
-            }}
-          />
-          <Text style={styles.browseTitle}>Browse</Text>
-        </View>
-        <Text style={styles.headerTitle}>Add Friend</Text>
-      </View>
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      displayErrorModal: false,
+      error: null,
+    });
+  }
+
+  handleUpdateUsers(users) {
+    return this.setState({
+      users,
+      searchForUsers: false,
+    });
+  }
+
+  handleSearchQueryData(data) {
+    if (!(data && data.private)) return;
+    const { searchUsers } = data.private;
+    if (searchUsers && this.state.searchForUsers) {
+      return this.handleUpdateUsers(searchUsers);
+    }
+  }
+
+  renderSegueIcon() {
+    return (
+      <Icon
+        name='arrow-back'
+        type='material'
+        color='white'
+        onPress={() => {
+          this.props.navigation && this.props.navigation.goBack(null);
+        }}
+      />
     );
   }
 
   renderSearchBar() {
     return (
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          placeholder='@playroll'
-          style={styles.searchInputContainer}
-          onChangeText={username => this.setState({ username })}
-          autoCapitalize={'none'}
-          value={this.state.username}
-        />
-      </View>
+      <TextInput
+        placeholder='@playroll'
+        placeholderTextColor='#bdbdbd'
+        style={styles.searchInputContainer}
+        onChangeText={username => this.setState({ username })}
+        autoCapitalize={'none'}
+        value={this.state.username}
+        onSubmitEditing={() =>
+          this.setState({ renderUsers: true, searchForUsers: true })
+        }
+      />
     );
   }
 
-  renderSearchButton() {
+  renderClearTextIcon() {
     return (
-      <Button
-        buttonStyle={styles.searchButton}
-        title={'Search'}
-        onPress={() => {
-          this.setState({ renderUsers: !this.state.renderUsers });
-        }}
+      <Icon
+        name='clear'
+        type='material'
+        color='white'
+        onPress={() => this.setState({ username: '' })}
       />
     );
   }
 
   renderSearchContainer() {
     return (
-      <View style={styles.searchContainer}>
+      <View style={styles.searchBarContainer}>
         {this.renderSearchBar()}
-        {this.state.username.length > 0 && this.renderSearchButton()}
+        {this.state.username.length > 0 && this.renderClearTextIcon()}
       </View>
     );
   }
 
-  sendFriendRequest() {
-    console.log('sendFriendRequest()');
+  openOptions() {
+    // TODO: Action to open options.
+  }
+
+  renderOptionIcon() {
+    return (
+      <Icon
+        name='more-vert'
+        type='material'
+        color='white'
+        onPress={this.openOptions}
+      />
+    );
+  }
+
+  renderHeader() {
+    return (
+      <Header
+        backgroundColor='#6A0070'
+        leftComponent={this.renderSegueIcon()}
+        centerComponent={this.renderSearchContainer()}
+        rightComponent={this.renderOptionIcon()}
+      />
+    );
   }
 
   renderAvatar(item) {
@@ -144,15 +223,44 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     );
   }
 
+  handleFriendRequest(sendFriendRequest) {
+    console.log('handleFriendRequest()');
+    sendFriendRequest()
+      .then(result => {
+        console.log('sendFriendRequest() promise resolved', result);
+        if (result && result.data) {
+          // TODO: change (+) to checkmark?
+        }
+      })
+      .catch(error => {
+        console.log('sendFriendRequest() promise rejected', error);
+        this.handleErrors(error.message);
+      });
+  }
+
   renderAddUserButton() {
     return (
-      <View style={styles.addUserButtonContainer}>
-        <Button
-          buttonStyle={styles.addUserButton}
-          title={'+'}
-          onPress={() => this.sendFriendRequest()}
-        />
-      </View>
+      <SendFriendRequestMutation
+        variables={{
+          userID: this.state.selectedUser.id,
+        }}
+      >
+        {(sendFriendRequest, { loading }) => {
+          return (
+            <View style={styles.addUserButtonContainer}>
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Button
+                  buttonStyle={styles.addUserButton}
+                  title={'+'}
+                  onPress={() => this.handleFriendRequest(sendFriendRequest)}
+                />
+              )}
+            </View>
+          );
+        }}
+      </SendFriendRequestMutation>
     );
   }
 
@@ -169,32 +277,39 @@ export default class AddFriendScreen extends React.Component<Props, State> {
   renderUsers() {
     if (this.state.renderUsers) {
       return (
-        <ScrollView style={styles.usersContainer}>
-          <FlatList
-            data={this.state.users}
-            keyExtractor={(user, i) => user.id}
-            renderItem={this.renderUserRow}
-          />
-        </ScrollView>
+        <SearchUsersQuery
+          variables={{
+            query: this.state.username,
+            offset: 0,
+            count: 5,
+          }}
+        >
+          {({ loading, data, error }) => {
+            if (error) console.log('error', error);
+            if (loading) console.log('loading...', loading);
+            if (data) this.handleSearchQueryData(data);
+            return (
+              <ScrollView style={styles.usersContainer}>
+                <FlatList
+                  data={this.state.users}
+                  keyExtractor={(user, i) => user.id}
+                  renderItem={this.renderUserRow}
+                />
+              </ScrollView>
+            );
+          }}
+        </SearchUsersQuery>
       );
     }
   }
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <SafeAreaView style={styles.mainContainer}>
-          <View style={styles.container}>
-            {this.renderHeader()}
-            {this.renderSearchContainer()}
-            {this.renderUsers()}
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+      <View style={styles.mainContainer}>
+        {this.renderHeader()}
+        {this.renderUsers()}
+        {this.renderErrorModal(this.state.error)}
+      </View>
     );
   }
 }

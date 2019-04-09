@@ -99,8 +99,8 @@ export default class SignInScreen extends React.Component<Props, State> {
             key: null,
             index: 0,
             actions: [NavigationActions.navigate({ routeName: 'Main' })],
-          })
-        )
+          }),
+        ),
     );
   }
 

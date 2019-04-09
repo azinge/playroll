@@ -61,6 +61,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
     this.renderErrorModal = this.renderErrorModal.bind(this);
     this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.selectProfileImage = this.selectProfileImage.bind(this);
+    this.validateInput = this.validateInput.bind(this);
   }
 
   handleErrors(error) {
@@ -113,7 +114,16 @@ export default class SignUpScreen extends React.Component<Props, State> {
         () => this.handleErrors('Passwords do not match!'),
       );
     }
-    signUp();
+    signUp()
+      .then(response => {
+        console.log('signUp promise resolved()', response);
+        if (!response.data) return;
+        this.props.navigation.navigate('Confirmation');
+      })
+      .catch(error => {
+        console.log('signUp promise rejected()', error);
+        this.handleErrors(error.message);
+      });
   }
 
   renderSegueToSignIn() {
@@ -201,13 +211,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
           avatar: this.state.avatar.uri,
         }}
       >
-        {(signUp, { loading, error, data }) => {
-          if (error && error.message) {
-            this.handleErrors(error.message);
-          }
-          if (data) {
-            this.props.navigation.navigate('Confirmation');
-          }
+        {(signUp, { loading }) => {
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(signUp)}

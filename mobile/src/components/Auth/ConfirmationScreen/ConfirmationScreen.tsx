@@ -76,10 +76,18 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     if (this.state.username === '' || this.state.authCode === '') {
       return this.handleErrors('All fields must have a value.');
     }
-    confirmSignUp();
-    NavigationService.goBack();
-    NavigationService.goBack();
-    NavigationService.navigate('SignIn');
+    confirmSignUp()
+      .then(response => {
+        console.log('confirmSignUp promise resolved()', response);
+        if (!response.data) return;
+        NavigationService.goBack();
+        NavigationService.goBack();
+        NavigationService.navigate('SignIn');
+      })
+      .catch(error => {
+        console.log('confirmSignUp promise rejected()', error);
+        this.handleErrors(error.message);
+      });
   }
 
   renderSegueToSignIn() {
@@ -140,10 +148,7 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
           code: this.state.authCode,
         }}
       >
-        {(confirmSignUp, { loading, error, data }) => {
-          if (error && error.message) {
-            this.handleErrors(error.message);
-          }
+        {(confirmSignUp, { loading }) => {
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(confirmSignUp)}

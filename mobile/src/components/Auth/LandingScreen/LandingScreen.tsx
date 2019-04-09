@@ -12,7 +12,11 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
+import {
+  NavigationScreenProp,
+  StackActions,
+  NavigationActions,
+} from 'react-navigation';
 import Errors from '../../shared/Modals/Errors';
 import { SignInMutation } from '../../../graphql/requests/Auth';
 
@@ -115,7 +119,24 @@ export default class LandingScreen extends React.Component<Props, State> {
     if (this.state.username === '' || this.state.password === '') {
       return this.handleErrors('All fields must have a value');
     }
-    signIn();
+    signIn().then(response => {
+      console.log('signIn promise resolved()', response);
+      const { data, error } = response.data.signIn;
+      if (error) {
+        return this.handleErrors(error.message);
+      }
+      if (!data) return;
+      console.log('segue to Main');
+      if (this.props.navigation) {
+        this.props.navigation.dispatch(
+          StackActions.reset({
+            key: null,
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Main' })],
+          }),
+        );
+      }
+    });
   }
 
   renderSignInButton() {

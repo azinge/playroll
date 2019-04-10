@@ -1,2 +1,2 @@
 export { GetCurrentUserQuery } from './GetCurrentUserQuery';
-export { SearchUsersQuery } from './SearchUsersQuery';
+export { SEARCH_USERS_QUERY } from './SearchUsersQuery';

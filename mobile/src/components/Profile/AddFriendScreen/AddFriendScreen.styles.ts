@@ -77,7 +77,18 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  addUserButton: {
+  addUserButtonStatic: {
+    borderColor: 'blue',
+    backgroundColor: 'blue',
+    height: 60,
+    width: 60,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 30,
+  },
+  addUserButtonPending: {
+    borderColor: 'red',
+    backgroundColor: 'red',
     height: 60,
     width: 60,
     padding: 10,

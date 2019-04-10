@@ -8,12 +8,14 @@ import {
   FlatList,
   Image,
   ScrollView,
+  RefreshControl,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { ApolloConsumer } from 'react-apollo';
 import Errors from '../../shared/Modals/Errors';
-import { SearchUsersQuery } from '../../../graphql/requests/User/';
+import { SEARCH_USERS_QUERY } from '../../../graphql/requests/User/';
 import { SendFriendRequestMutation } from '../../../graphql/requests/Relationships';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
@@ -25,13 +27,13 @@ export interface Props {
 }
 
 interface State {
-  renderUsers: boolean;
-  searchForUsers: boolean;
-  username: string;
-  users?: [User];
-  selectedUser?: User;
   error?: string;
-  displayErrorModal?: boolean;
+  displayErrorModal: boolean;
+  refreshing: boolean;
+  username: string;
+  fetchingUsers: boolean;
+  dogAvatar: string;
+  users?: [User];
 }
 
 export default class AddFriendScreen extends React.Component<Props, State> {
@@ -39,52 +41,38 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     super(props);
     this.state = {
       error: undefined,
-      renderUsers: false,
-      searchForUsers: false,
+      displayErrorModal: false,
+      refreshing: false,
       username: '',
-      users: [
-        { id: '0', name: 'username0', avatar: '' },
-        { id: '1', name: 'username1', avatar: '' },
-        { id: '2', name: 'username2', avatar: '' },
-        { id: '3', name: 'username3', avatar: '' },
-        { id: '4', name: 'username0', avatar: '' },
-        { id: '5', name: 'username1', avatar: '' },
-        { id: '6', name: 'username2', avatar: '' },
-        { id: '7', name: 'username3', avatar: '' },
-        { id: '8', name: 'username0', avatar: '' },
-        { id: '9', name: 'username1', avatar: '' },
-        { id: '10', name: 'username2', avatar: '' },
-        { id: '11', name: 'username3', avatar: '' },
-        { id: '12', name: 'username1', avatar: '' },
-        { id: '13', name: 'username2', avatar: '' },
-        { id: '14', name: 'username3', avatar: '' },
-        { id: '15', name: 'username0', avatar: '' },
-        { id: '16', name: 'username1', avatar: '' },
-        { id: '17', name: 'username2', avatar: '' },
-        { id: '18', name: 'username3', avatar: '' },
-        { id: '19', name: 'username3', avatar: '' },
-        { id: '20', name: 'username0', avatar: '' },
-        { id: '21', name: 'username1', avatar: '' },
-        { id: '22', name: 'username2', avatar: '' },
-        { id: '23', name: 'username3', avatar: '' },
-        { id: '24', name: 'username0', avatar: '' },
-        { id: '25', name: 'username1', avatar: '' },
-        { id: '26', name: 'username2', avatar: '' },
-        { id: '27', name: 'username3', avatar: '' },
-        { id: '28', name: 'username0', avatar: '' },
-        { id: '29', name: 'username1', avatar: '' },
-        { id: '30', name: 'username2', avatar: '' },
-      ],
-      selectedUser: { id: 0 },
+      fetchingUsers: false,
+      dogAvatar:
+        'https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg',
+      users: [],
     };
 
     this.handleErrors = this.handleErrors.bind(this);
     this.renderErrorModal = this.renderErrorModal.bind(this);
     this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
-    this.renderUserRow = this.renderUserRow.bind(this);
+    this.renderRefreshControl = this.renderRefreshControl.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchQueryData = this.handleSearchQueryData.bind(this);
+    this.renderUserRow = this.renderUserRow.bind(this);
+    this.handleAddFriendButtonStyle = this.handleAddFriendButtonStyle.bind(
+      this,
+    );
+    this.handleAddFriendButtonTitle = this.handleAddFriendButtonTitle.bind(
+      this,
+    );
     this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
     this.handleFriendRequest = this.handleFriendRequest.bind(this);
+    this.handleFriendRequestMutationData = this.handleFriendRequestMutationData.bind(
+      this,
+    );
+  }
+
+  shouldComponentUpdate() {
+    return true;
   }
 
   handleErrors(error) {
@@ -114,15 +102,16 @@ export default class AddFriendScreen extends React.Component<Props, State> {
   handleUpdateUsers(users) {
     return this.setState({
       users,
-      searchForUsers: false,
     });
   }
 
   handleSearchQueryData(data) {
     if (!(data && data.private)) return;
     const { searchUsers } = data.private;
-    if (searchUsers && this.state.searchForUsers) {
-      return this.handleUpdateUsers(searchUsers);
+    if (searchUsers) {
+      this.setState({ fetchingUsers: false, refreshing: false }, () => {
+        return this.handleUpdateUsers(searchUsers);
+      });
     }
   }
 
@@ -139,23 +128,71 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     );
   }
 
+  handleSearch(client) {
+    if (this.state.username.length === 0) {
+      return;
+    }
+    client
+      .query({
+        query: SEARCH_USERS_QUERY,
+        variables: {
+          query: this.state.username,
+          offset: 0,
+          count: 10,
+        },
+      })
+      .then(({ error, data, loading }) => {
+        console.log(
+          'validateSearchInput() client.query promise resolved(data):',
+          data,
+        );
+        if (error) {
+          throw error;
+        }
+        if (loading) {
+          this.setState({ fetchingUsers: true });
+        }
+        if (data) {
+          this.handleSearchQueryData(data);
+        }
+      })
+      .catch(error => {
+        console.log(
+          'validateSearchInput() client.query promise rejected:',
+          error,
+        );
+        if (this.state.fetchingUsers) {
+          this.setState({ fetchingUsers: false });
+        }
+        if (this.state.refreshing) {
+          this.setState({ refreshing: false });
+        }
+        this.handleErrors(error.message);
+      });
+  }
+
   renderSearchBar() {
     return (
-      <TextInput
-        placeholder='@playroll'
-        placeholderTextColor='#bdbdbd'
-        style={styles.searchInputContainer}
-        onChangeText={username => this.setState({ username })}
-        autoCapitalize={'none'}
-        value={this.state.username}
-        onSubmitEditing={() =>
-          this.setState({ renderUsers: true, searchForUsers: true })
-        }
-      />
+      <ApolloConsumer>
+        {client => (
+          <TextInput
+            placeholder='@playroll'
+            placeholderTextColor='#bdbdbd'
+            style={styles.searchInputContainer}
+            onChangeText={username => this.setState({ username })}
+            autoCapitalize={'none'}
+            value={this.state.username}
+            onSubmitEditing={() => this.handleSearch(client)}
+          />
+        )}
+      </ApolloConsumer>
     );
   }
 
   renderClearTextIcon() {
+    if (this.state.fetchingUsers) {
+      return <ActivityIndicator color={'white'} />;
+    }
     return (
       <Icon
         name='clear'
@@ -201,36 +238,42 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     );
   }
 
-  renderAvatar(item) {
+  renderAvatar(user) {
     return (
       <View style={styles.userAvatarContainer}>
         <Image
           style={styles.userAvatar}
           source={{
-            uri:
-              'https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg',
+            uri: user.avatar.length > 0 ? user.avatar : this.state.dogAvatar,
           }}
         />
       </View>
     );
   }
 
-  renderUsername(item) {
+  renderUsername(user) {
     return (
       <View style={styles.usernameContainer}>
-        <Text style={styles.username}>{item.name}</Text>
+        <Text style={styles.username}>{user.name}</Text>
       </View>
     );
   }
 
-  handleFriendRequest(sendFriendRequest) {
+  handleFriendRequestMutationData(selectedUser, response) {
+    const { data } = response;
+    if (!(data && data.private)) return;
+    const { sendFriendRequest } = data.private;
+    if (sendFriendRequest) {
+      // NOTE: display modal? [friend request sent]
+    }
+  }
+
+  handleFriendRequest(user, sendFriendRequest) {
     console.log('handleFriendRequest()');
     sendFriendRequest()
-      .then(result => {
-        console.log('sendFriendRequest() promise resolved', result);
-        if (result && result.data) {
-          // TODO: change (+) to checkmark?
-        }
+      .then(response => {
+        console.log('sendFriendRequest() promise resolved', response);
+        return this.handleFriendRequestMutationData(user, response);
       })
       .catch(error => {
         console.log('sendFriendRequest() promise rejected', error);
@@ -238,11 +281,23 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       });
   }
 
-  renderAddUserButton() {
+  handleAddFriendButtonStyle(user) {
+    // NOTE: Handle if friend request is pending
+    // styles.addUserButtonPending
+    return styles.addUserButtonStatic;
+  }
+
+  handleAddFriendButtonTitle(user) {
+    // NOTE: Handle if friend request is pending
+    // return '...' || {symbol for pending}
+    return '+';
+  }
+
+  renderAddUserButton(user) {
     return (
       <SendFriendRequestMutation
         variables={{
-          userID: this.state.selectedUser.id,
+          userID: user.id,
         }}
       >
         {(sendFriendRequest, { loading }) => {
@@ -252,9 +307,11 @@ export default class AddFriendScreen extends React.Component<Props, State> {
                 <ActivityIndicator color={'white'} />
               ) : (
                 <Button
-                  buttonStyle={styles.addUserButton}
-                  title={'+'}
-                  onPress={() => this.handleFriendRequest(sendFriendRequest)}
+                  buttonStyle={this.handleAddFriendButtonStyle(user)}
+                  title={this.handleAddFriendButtonTitle(user)}
+                  onPress={() =>
+                    this.handleFriendRequest(user, sendFriendRequest)
+                  }
                 />
               )}
             </View>
@@ -269,36 +326,44 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       <View style={styles.userRow}>
         {this.renderAvatar(item)}
         {this.renderUsername(item)}
-        {this.renderAddUserButton()}
+        {this.renderAddUserButton(item)}
       </View>
     );
   }
 
+  handleRefresh(client) {
+    console.log('handleRefresh()');
+    this.setState({ refreshing: true }, () => {
+      this.handleSearch(client);
+    });
+  }
+
+  renderRefreshControl() {
+    return (
+      <ApolloConsumer>
+        {client => (
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => this.handleRefresh(client)}
+          />
+        )}
+      </ApolloConsumer>
+    );
+  }
+
   renderUsers() {
-    if (this.state.renderUsers) {
+    if (this.state.users.length > 0) {
       return (
-        <SearchUsersQuery
-          variables={{
-            query: this.state.username,
-            offset: 0,
-            count: 5,
-          }}
+        <ScrollView
+          style={styles.usersContainer}
+          refreshControl={this.renderRefreshControl()}
         >
-          {({ loading, data, error }) => {
-            if (error) console.log('error', error);
-            if (loading) console.log('loading...', loading);
-            if (data) this.handleSearchQueryData(data);
-            return (
-              <ScrollView style={styles.usersContainer}>
-                <FlatList
-                  data={this.state.users}
-                  keyExtractor={(user, i) => user.id}
-                  renderItem={this.renderUserRow}
-                />
-              </ScrollView>
-            );
-          }}
-        </SearchUsersQuery>
+          <FlatList
+            data={this.state.users}
+            keyExtractor={user => user.id}
+            renderItem={this.renderUserRow}
+          />
+        </ScrollView>
       );
     }
   }

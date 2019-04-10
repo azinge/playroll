@@ -26,7 +26,8 @@ export default class RollList extends React.Component<Props, State> {
   renderItem({ item: roll }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
-    // console.log(mainSource)
+    console.log('ROLL LIST > renderItem > mainSource:');
+    console.log(mainSource);
     return (
       // Removing TouchableOpacity because the Edit Icon is enough
       // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>

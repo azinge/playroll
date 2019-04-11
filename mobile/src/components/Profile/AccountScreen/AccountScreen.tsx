@@ -65,7 +65,6 @@ export default class AccountScreen extends React.Component<Props, State> {
                   onPress={() => {
                     NavigationService.navigate('ViewProfile');
                   }}
-                  disabled
                 />
                 <Button
                   style={{ marginVertical: 3 }}

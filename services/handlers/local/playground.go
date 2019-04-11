@@ -29,7 +29,6 @@ func main() {
 		fmt.Println("error migrating db: " + err.Error())
 	}
 
-	// db.LogMode(true)
 
 	// msts := &[]models.MusicServiceTrack{}
 	// if err := db.Or(models.MusicServiceTrack{AlbumID: "6WrsTb0LameTn7Q4bTzhiW"}).Or(models.MusicServiceTrack{ArtistID: "6U3ybJ9UHNKEdsH7ktGBZ7"}).Find(msts).Error; err != nil {
@@ -72,5 +71,3 @@ func main() {
 	// for _, mst := range *msts {
 	// 	fmt.Println(mst.Name, "-", mst.ArtistName)
 	// }
-
-}

@@ -48,6 +48,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
               size={35}
               name='more-vert'
               color='lightgrey'
+              underlayColor='rgba(255,255,255,0)'
               onPress={() => NavigationService.goBack()}
             />
           </View>

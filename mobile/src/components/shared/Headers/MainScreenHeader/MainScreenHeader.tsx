@@ -54,7 +54,6 @@ export default class MainScreenHeader extends React.Component<Props, State> {
                 name='play-circle'
                 type='font-awesome'
                 color='white'
-                onPress={() => console.log('hello')}
                 containerStyle={{ marginTop: 5, marginRight: 4 }}
               />
               <Text style={styles.headerTitle}>Playroll</Text>
@@ -81,7 +80,7 @@ export default class MainScreenHeader extends React.Component<Props, State> {
     const profileIcon: HeaderIcon = {
       name: 'profile',
       render: () => (
-        <GetCurrentUserQuery>
+        <GetCurrentUserQuery key='user'>
           {({ loading, error, data }) => {
             const user = extractUser(data);
             return (

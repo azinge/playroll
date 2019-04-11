@@ -3,7 +3,13 @@
  */
 
 import * as React from 'react';
-import { Text, View, Image, TouchableHighlight } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  TouchableOpacity,
+} from 'react-native';
 
 import { NavigationScreenProp } from 'react-navigation';
 import { isIphoneX } from 'react-native-iphone-x-helper';
@@ -13,81 +19,65 @@ import styles from './LibraryMenuScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import MainScreenHeader from '../../shared/Headers/MainScreenHeader';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  disableBounce?: boolean;
 }
 
 interface State {}
 
 export default class LibraryMenuScreen extends React.Component<Props, State> {
   render() {
-    return (
-      <Collapsible
-        max={45}
-        min={isIphoneX() ? 41 : 19}
-        backgroundColor={'purple'}
-        renderHeader={this.renderHeader()}
-        // renderContent is not needed if using FlatList
-        renderContent={this.renderContent()}
-
-        // flatList
-        // data={Array(10).fill()}
-        // keyExtractor={(item, i) => String(i)}
-        // renderItem={({ index }) => <Content gray={index % 2 !== 0} />}
-      />
-    );
+    return <MainScreenContainer>{this.renderContent()}</MainScreenContainer>;
   }
-
-  renderHeader() {
-    return <MainScreenHeader />;
-  }
-
   renderContent() {
     return (
       <View style={{ marginTop: 5, flex: 1 }}>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('BrowsePlayrolls');
-            }}
-            style={styles.playrollsText}
-          >
-            Your Playrolls
-          </Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('ViewDiscoveryQueue');
-            }}
-            style={styles.disabledText}
-          >
-            Your Discovery Queues
-          </Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('BrowseRecommendations');
-            }}
-            style={styles.disabledText}
-          >
-            Your Recommendations
-          </Text>
-          {/* {this.renderRecommendationsNotification()} */}
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            onPress={() => {
-              NavigationService.navigate('MusicServicePlaylistsMenu');
-            }}
-            style={styles.disabledText}
-          >
-            Your Playlists
-          </Text>
-          {this.renderMusicServiceIcons()}
-        </View>
+        {/* Your Playrolls */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('BrowsePlayrolls');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.enabledText}>Your Playrolls</Text>
+          </View>
+        </TouchableOpacity>
+        {/* Your Discovery Queues */}
+        {/* <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('ViewDiscoveryQueue');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>Your Discovery Queues</Text>
+          </View>
+        </TouchableOpacity> */}
+        {/* Your Reommendations */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('BrowseRecommendations');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.disabledText}>Your Recommendations</Text>
+            {/* {this.renderRecommendationsNotification()} */}
+          </View>
+        </TouchableOpacity>
+        {/* Your Playlists */}
+        <TouchableOpacity
+          onPress={() => {
+            NavigationService.navigate('MusicServicePlaylistsMenu');
+          }}
+        >
+          <View style={styles.textContainer}>
+            <Text style={styles.enabledText}>Your Playlists</Text>
+            {this.renderMusicServiceIcons()}
+          </View>
+        </TouchableOpacity>
+
         {/* <View style={styles.textContainer}>
           <Text onPress={() => {}} style={styles.disabledText}>
             Made For You
@@ -200,7 +190,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         <View style={{ flexDirection: 'row', opacity: 0.2 }}>
           {unauthenticatedMusicServiceIcons.map(msi => (
             <TouchableHighlight
-              onPress={msi.connectNav}
+              //   onPress={msi.connectNav}
               style={styles.musicServiceButtonContainer}
               key={msi.name}
             >
@@ -226,6 +216,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
               onPress={msi.playlistsNav}
               style={styles.musicServiceButtonContainer}
               key={msi.name}
+              underlayColor='rgba(255,255,255,0)'
             >
               <View>
                 <Image

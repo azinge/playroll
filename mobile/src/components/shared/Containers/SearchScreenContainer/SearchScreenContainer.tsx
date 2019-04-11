@@ -26,7 +26,7 @@ export default class SearchScreenContainer extends React.Component<
     return (
       <Collapsible
         max={45}
-        min={isIphoneX() ? 41 : 19}
+        min={isIphoneX() ? 48 : 19}
         backgroundColor={'purple'}
         renderHeader={
           this.props.renderHeader

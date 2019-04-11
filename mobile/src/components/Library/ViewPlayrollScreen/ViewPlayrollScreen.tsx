@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { View, TextInput, ScrollView, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
@@ -50,13 +57,23 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         {({ loading, error, data, client: { cache } }) => {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
+
+          // console.log(playroll)
+          // console.log(playroll.rolls.length)
+
+          // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
+          // TODO: Add New Roll button should overlay screen from bottom (currently swipes to Edit screen)
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
+                contentContainerStyle={{ paddingBottom: 80 }}
                 title='View Playroll'
                 renderHeader={this.renderHeader}
               >
-                {this.renderEditingBar(playroll)}
+                {/* Icon, Title, and Hashtags */}
+                {this.renderTitleBar(playroll)}
+
+                {/* List the Rolls */}
                 {this.renderRolls(playroll)}
               </SubScreenContainer>
               {this.renderNewRollButton(playroll)}
@@ -106,53 +123,31 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           };
           return (
             <SubScreenHeader
-              title={'View Playroll'}
-              icons={[editPlayrollIcon, generateTracklistIcon]}
+              title={'View Playroll'} // visible screen title
+              icons={[editPlayrollIcon, generateTracklistIcon]} // top right buttons
             />
           );
         }}
       </GenerateTracklistMutation>
     );
   }
-  renderEditingBar(playroll: Playroll) {
+  renderTitleBar(playroll: Playroll) {
     return (
-      <View style={styles.editingBarContainer}>
+      <View style={styles.titleBarContainer}>
         <Image
-          style={rawStyles.editingBarImage}
+          style={rawStyles.titleBarImage}
           source={require('../../../assets/new_playroll.png')}
         />
-        <UpdatePlayrollMutation
-          variables={{
-            id: playroll.id,
-            input: {
-              name: this.state.editPlayrollName,
-              userID: playroll.userID,
-            },
-          }}
-          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
-        >
-          {(updatePlayroll, { data }) => (
-            <View style={styles.editingBarNameContainer}>
-              <TextInput
-                selectionColor={'purple'}
-                placeholder='Name Your Playroll'
-                placeholderTextColor='lightgrey'
-                style={styles.editingBarNameInput}
-                onChangeText={name => this.setState({ editPlayrollName: name })}
-                onSubmitEditing={() => updatePlayroll()}
-              >
-                {playroll.name}
-              </TextInput>
-              <View style={styles.horizontalRule} />
-              <TextInput
-                selectionColor={'purple'}
-                placeholder='#Existential #Chill #Help'
-                placeholderTextColor='lightgrey'
-                style={styles.editingBarTagInput}
-              />
-            </View>
+        <View style={styles.titleBarNameContainer}>
+          <Text style={styles.titleBarName}>{playroll.name}</Text>
+          <View style={styles.horizontalRule} />
+          {playroll && playroll.rolls && (
+            <Text selectionColor={'purple'} style={styles.subtitle}>
+              This playroll contains {playroll.rolls.length}{' '}
+              {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.
+            </Text>
           )}
-        </UpdatePlayrollMutation>
+        </View>
       </View>
     );
   }
@@ -160,20 +155,30 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <RollList
         rolls={playroll.rolls || []}
-        onPress={roll => {
-          NavigationService.navigate('EditRoll', {
-            roll,
-          });
-        }}
+        // onPress={() => {}}
       />
     );
   }
   renderNewRollButton(playroll) {
     return (
-      <View style={styles.footerView}>
+      <View
+        style={{
+          bottom: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Button
-          title='New Roll'
-          containerStyle={styles.newRollButton}
+          linearGradientProps={{
+            colors: ['#DA22FF', '#00c6ff'],
+            start: { x: 0, y: 0.5 },
+            end: { x: 1, y: 0.5 },
+          }}
+          containerStyle={{ borderRadius: 80, width: '75%' }}
+          buttonStyle={{ borderRadius: 80, height: 50 }}
+          raised
+          title={'Add New Rolls'}
+          titleStyle={{ fontWeight: 'bold' }}
           onPress={() => {
             NavigationService.navigate('EditPlayroll', {
               managePlayroll: 'View Playroll',

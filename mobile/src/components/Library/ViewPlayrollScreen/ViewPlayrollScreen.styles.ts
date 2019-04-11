@@ -1,79 +1,34 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
-export default StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  headerCenterComponent: {
-    color: '#fff',
-    fontSize: 20,
-  },
-  editingBarContainer: {
-    flexDirection: 'row',
-    height: 100,
-    alignItems: 'center',
-  },
-  editingBarNameContainer: {
-    flex: 1,
-  },
-  editingBarNameInput: {
-    fontSize: 20,
-  },
-  horizontalRule: {
-    width: '75%',
-    marginVertical: 5,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  editingBarTagInput: {
-    fontSize: 15,
-  },
-  searchMusicContainer: {
-    flex: 1,
-  },
-  bottomBarContainer: {
-    height: 83,
-    borderTopColor: 'lightgrey',
-    borderTopWidth: 1,
-    width: '100%',
-    backgroundColor: '#f5eeed',
-    paddingBottom: 5,
-    paddingHorizontal: 5,
-  },
-  bottomBarScrollViewStyle: { alignItems: 'center' },
-  bottomBarItemContainer: {
-    height: 65,
-    width: 65,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bottomBarIconContainer: {
-    position: 'absolute',
-    bottom: 4,
-    left: 4,
-    borderRadius: 5,
-    backgroundColor: '#FFFFFF9F',
-  },
+import libraryStyles from '../library.styles';
+
+interface Style {
+  screenContainer: ViewStyle;
+}
+
+const styles = StyleSheet.create({
+  // Bottom Button
   newRollButton: {
     width: '90%',
-  },
-  footerView: {
-    backgroundColor: '#fff',
-    flex: 1,
-    position: 'absolute',
-    bottom: 0, // stick to bottom
-    left: 0, // stretch to left
-    right: 0, // stretch to right
-    height: 60,
-    alignItems: 'center',
+    backgroundColor: '#af00bc', // brighter purple
+    borderRadius: 3,
+    height: 40,
+
+    // Center text contents
     justifyContent: 'center',
-    zIndex: 1, // float on top
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontFamily: 'Avenir',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
+// TODO: this is required, but explanation needed here...
 export const rawStyles = {
-  editingBarImage: {
+  titleBarImage: {
     width: 65,
     height: 65,
     marginHorizontal: 20,
@@ -81,11 +36,6 @@ export const rawStyles = {
     borderWidth: 1,
     borderColor: 'lightgrey',
   },
-  bottomBarItemImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'lightgrey',
-  },
 };
+
+export default Object.assign(libraryStyles, styles);

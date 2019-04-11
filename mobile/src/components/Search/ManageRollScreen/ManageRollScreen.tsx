@@ -24,7 +24,7 @@ import styles from './ManageRollScreen.styles';
 
 import { ListCurrentUserPlayrollsQuery } from '../../../graphql/requests/Playroll/';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
-import PlayrollCard from '../../Playrolls/BrowsePlayrollsScreen/PlayrollCard';
+import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import { CreateRollMutation } from '../../../graphql/requests/Roll';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
@@ -32,6 +32,7 @@ import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  source?: any;
 }
 
 interface State {

@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, Overlay } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -22,6 +22,8 @@ import styles, { pickerStyle } from './SearchScreen.styles';
 import CreateModal from './CreateModal';
 import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify';
 import NavigationService from '../../../services/NavigationService';
+import ManageRollScreen from '../ManageRollScreen';
+import { BlurView } from 'expo';
 
 export interface Props {
   playrollID?: any;
@@ -33,15 +35,17 @@ interface State {
   searchType: string;
   modalVisible: boolean;
   currentSource: MusicSource;
+  isVisible: boolean;
 }
 export default class SearchScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      query: 'Drake',
+      query: 'Kendrick Lamar',
       searchType: 'Artist',
       modalVisible: false,
       currentSource: {},
+      isVisible: false,
     };
   }
   render() {
@@ -152,73 +156,94 @@ export default class SearchScreen extends React.Component<Props, State> {
     const navigationOnPress =
       this.props.navigation && this.props.navigation.getParam('onPress');
     return (
-      <SearchSpotifyQuery
-        variables={{
-          query: this.state.query,
-          searchType: this.state.searchType,
-        }}
-      >
-        {({ loading, error, data }) => {
-          console.log(error);
-          return (
-            <View style={{ marginBottom: 145 }}>
-              {loading ? (
-                <ActivityIndicator color={'gray'} />
-              ) : (
-                <FlatList
-                  data={data && data.private.searchSpotify}
-                  showsVerticalScrollIndicator={false}
-                  keyExtractor={(item, index) => item.providerID}
-                  extraData={this.state}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (navigationOnPress) {
-                          navigationOnPress(item);
-                        } else {
-                          this.props.playrollID
-                            ? this.setModal(item)
-                            : this.manageRoll(item);
-                        }
-                      }}
-                      key={item.providerID}
-                    >
-                      <View
-                        style={{ width: '100%', alignItems: 'center' }}
+      <BlurView blurType='light' blurAmount={10}>
+        <SearchSpotifyQuery
+          variables={{
+            query: this.state.query,
+            searchType: this.state.searchType,
+          }}
+        >
+          {({ loading, error, data }) => {
+            console.log(error);
+            return (
+              <View style={{ marginBottom: 145 }}>
+                {loading ? (
+                  <ActivityIndicator color={'gray'} />
+                ) : (
+                  <FlatList
+                    data={data && data.private.searchSpotify}
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={(item, index) => item.providerID}
+                    extraData={this.state}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (navigationOnPress) {
+                            navigationOnPress(item);
+                          } else {
+                            this.props.playrollID
+                              ? this.setModal(item)
+                              : // : this.setState({
+                                //     isVisible: true,
+                                //     currentSource: item,
+                                //   });
+                                this.manageRoll(item);
+                          }
+                        }}
                         key={item.providerID}
                       >
-                        <View style={{ flexDirection: 'row', width: '100%' }}>
-                          <Image
-                            style={styles.cover}
-                            source={{ uri: item.cover }}
-                          />
-                          <View style={{ flex: 1, justifyContent: 'center' }}>
-                            <Text style={styles.artist} numberOfLines={2}>
-                              {item.name}
-                            </Text>
-                            {item.creator ? (
-                              <Text style={styles.noArtist} numberOfLines={2}>
-                                {item.creator}
+                        <View
+                          style={{ width: '100%', alignItems: 'center' }}
+                          key={item.providerID}
+                        >
+                          <View style={{ flexDirection: 'row', width: '100%' }}>
+                            <Image
+                              style={styles.cover}
+                              source={{ uri: item.cover }}
+                            />
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                              <Text style={styles.artist} numberOfLines={2}>
+                                {item.name}
                               </Text>
-                            ) : null}
+                              {item.creator ? (
+                                <Text style={styles.noArtist} numberOfLines={2}>
+                                  {item.creator}
+                                </Text>
+                              ) : null}
+                            </View>
+                            <Icon
+                              size={35}
+                              name='more-vert'
+                              color='lightgrey'
+                              // onPress={() => NavigationService.goBack()}
+                              underlayColor='rgba(255,255,255,0)'
+                            />
                           </View>
-                          <Icon
-                            size={35}
-                            name='more-vert'
-                            color='lightgrey'
-                            onPress={() => NavigationService.goBack()}
-                          />
+                          <View style={styles.spacing} />
                         </View>
-                        <View style={styles.spacing} />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-              )}
-            </View>
-          );
-        }}
-      </SearchSpotifyQuery>
+                      </TouchableOpacity>
+                    )}
+                  />
+                )}
+                <Overlay
+                  isVisible={this.state.isVisible}
+                  fullScreen={true}
+                  animationType={'slide'}
+                  onBackdropPress={() => this.setState({ isVisible: false })}
+                  // transparent={true}
+                  // overlayStyle={{ margin: -20 }}
+                  // containerStyle={{ opacity: 0.5 }}
+                  windowBackgroundColor='rgba(255, 255, 255, .5)'
+                  overlayStyle={{ opacity: 0.9 }}
+                  // windowBackgroundColor='rgba(012, 012, 123, .1)'
+                >
+                  <ManageRollScreen source={this.state.currentSource} />
+                </Overlay>
+              </View>
+            );
+          }}
+        </SearchSpotifyQuery>
+      </BlurView>
     );
   }
 

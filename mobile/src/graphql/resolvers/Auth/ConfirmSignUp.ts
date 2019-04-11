@@ -5,7 +5,7 @@ export const confirmSignUp = async (_, { username, code }) => {
     const confirmSignUpData = await Auth.confirmSignUp(username, code, {
       forceAliasCreation: true,
     });
-    return confirmSignUpData;
+    return { data: { confirmSignUp: confirmSignUpData } };
   } catch (e) {
     console.log(e);
     throw e;

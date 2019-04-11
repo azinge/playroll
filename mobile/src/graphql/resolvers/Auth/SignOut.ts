@@ -3,7 +3,7 @@ export const signOut = async (_1, _2, { cache }) => {
   try {
     const signOutData = await Auth.signOut();
     cache.reset();
-    return signOutData;
+    return { data: { signOut: signOutData } };
   } catch (e) {
     console.log(e);
     throw e;

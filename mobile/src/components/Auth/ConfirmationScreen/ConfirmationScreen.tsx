@@ -54,8 +54,10 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
   componentDidMount() {
     const username =
       this.props.navigation && this.props.navigation.getParam('username');
+    const password =
+      this.props.navigation && this.props.navigation.getParam('password');
     if (username) {
-      this.setState({ username, triggerResendSignUp: true });
+      this.setState({ username, triggerResendSignUp: !password });
     }
   }
 
@@ -84,7 +86,7 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
 
   async resendSignUpWrapper(resendSignUp) {
     try {
-      await resendSignUp();
+      await resendSignUp({ variables: { username: this.state.username } });
       this.dropdown.alertWithType(
         'info',
         'Confirmation Code Sent!',
@@ -93,6 +95,12 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     } catch (err) {
       if (err.code === 'UserNotFoundException') {
         this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
+      } else if (err.code === 'InvalidParameterException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'User is already confirmed.'
+        );
       } else {
         this.dropdown.alertWithType(
           'error',
@@ -139,9 +147,16 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
 
   async confirmSignUpWrapper(confirmSignUp) {
     try {
-      await confirmSignUp();
+      await confirmSignUp({
+        variables: {
+          username: this.state.username,
+          code: this.state.authCode,
+        },
+      });
       const password =
         this.props.navigation && this.props.navigation.getParam('password');
+      NavigationService.goBack();
+      NavigationService.goBack();
       NavigationService.navigate('SignIn', {
         username: this.state.username,
         password: password || undefined,
@@ -166,6 +181,12 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         );
       } else if (err.code === 'UserNotFoundException') {
         this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
+      } else if (err.code === 'NotAuthorizedException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'User is already confirmed.'
+        );
       } else {
         console.log(err);
         this.dropdown.alertWithType(
@@ -185,20 +206,12 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         'All fields must have a value.'
       );
     }
-    confirmSignUp();
-    NavigationService.goBack();
-    NavigationService.goBack();
-    NavigationService.navigate('SignIn');
+    this.confirmSignUpWrapper(confirmSignUp);
   }
 
   renderConfirmButton() {
     return (
-      <ConfirmSignUpMutation
-        variables={{
-          username: this.state.username,
-          code: this.state.authCode,
-        }}
-      >
+      <ConfirmSignUpMutation>
         {(confirmSignUp, { loading }) => {
           return (
             <TouchableOpacity

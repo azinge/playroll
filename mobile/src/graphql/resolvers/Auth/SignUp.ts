@@ -10,7 +10,7 @@ export const signUp = async (_, { username, password, email, avatar }) => {
         profile: avatar,
       },
     });
-    return signUpData;
+    return { data: { signUp: signUpData } };
   } catch (e) {
     console.log(e);
     throw e;

@@ -64,7 +64,11 @@ export default class SignInScreen extends React.Component<Props, State> {
     const password =
       this.props.navigation && this.props.navigation.getParam('password');
     if (username) {
-      this.setState({ username, password, triggerSignIn: true });
+      this.setState({
+        username,
+        password: password,
+        triggerSignIn: !!password,
+      });
     }
   }
 
@@ -105,9 +109,14 @@ export default class SignInScreen extends React.Component<Props, State> {
     );
   }
 
-  async toggleSignIn(signIn) {
+  async signInWrapper(signIn) {
     try {
-      await signIn();
+      await signIn({
+        variables: {
+          username: this.state.username,
+          password: this.state.password,
+        },
+      });
       NavigationService.dispatch(
         StackActions.reset({
           key: null,
@@ -138,21 +147,16 @@ export default class SignInScreen extends React.Component<Props, State> {
 
   renderSigninButton() {
     return (
-      <SignInMutation
-        variables={{
-          username: this.state.username,
-          password: this.state.password,
-        }}
-      >
+      <SignInMutation>
         {(signIn, { loading }) => {
           if (this.state.triggerSignIn) {
             this.setState({ triggerSignIn: false }, () => {
-              this.toggleSignIn(signIn);
+              this.signInWrapper(signIn);
             });
           }
           return (
             <TouchableOpacity
-              onPress={() => this.toggleSignIn(signIn)}
+              onPress={() => this.signInWrapper(signIn)}
               style={styles.submitButton}
             >
               {loading ? (

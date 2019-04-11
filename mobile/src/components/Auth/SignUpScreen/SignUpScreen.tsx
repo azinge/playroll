@@ -145,7 +145,14 @@ export default class SignUpScreen extends React.Component<Props, State> {
 
   async signUpWrapper(signUp) {
     try {
-      await signUp();
+      await signUp({
+        variables: {
+          username: this.state.username,
+          password: this.state.password,
+          email: this.state.email,
+          avatar: this.state.avatar.uri,
+        },
+      });
       NavigationService.navigate('Confirmation', {
         username: this.state.username,
         password: this.state.password,
@@ -212,14 +219,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
 
   renderSignupButton() {
     return (
-      <SignUpMutation
-        variables={{
-          username: this.state.username,
-          password: this.state.password,
-          email: this.state.email,
-          avatar: this.state.avatar.uri,
-        }}
-      >
+      <SignUpMutation>
         {(signUp, { loading, error, data }) => {
           if (data) {
           }

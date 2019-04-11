@@ -77,7 +77,7 @@ export default class LandingScreen extends React.Component<Props, State> {
         <View style={styles.headerTitleRow}>
           <Image
             style={styles.playrollLogo}
-            source={require('../../../assets/new_playroll.png')}
+            source={require('../../../../assets/playroll_icon.png')}
           />
           <Text style={styles.headerTitleLabel}>Playroll</Text>
         </View>

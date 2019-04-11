@@ -82,7 +82,6 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         if (!response.data) return;
         NavigationService.goBack();
         NavigationService.goBack();
-        NavigationService.navigate('SignIn');
       })
       .catch(error => {
         console.log('confirmSignUp promise rejected()', error);

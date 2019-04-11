@@ -24,6 +24,8 @@ export default class RollList extends React.Component<Props, State> {
   }
 
   renderItem({ item: roll }: { item: Roll }) {
+    console.log('ROLL LIST > renderItem > roll:');
+    console.log(roll);
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
     console.log('ROLL LIST > renderItem > mainSource:');

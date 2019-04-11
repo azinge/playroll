@@ -18,6 +18,7 @@ import {
   ConfirmSignUpMutation,
   ResendSignUpMutation,
 } from '../../../graphql/requests/Auth';
+import Errors from '../../shared/Modals/Errors';
 import styles from './ConfirmationScreen.styles';
 import { NavigationScreenProp } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
@@ -32,6 +33,7 @@ interface State {
   authCode: string;
   username: string;
   triggerResendSignUp: boolean;
+  displayErrorModal: boolean;
   error?: string;
 }
 
@@ -44,11 +46,38 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     this.state = {
       authCode: '',
       username: '',
+      displayErrorModal: false,
       error: undefined,
       triggerResendSignUp: false,
     };
 
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      error: undefined,
+      displayErrorModal: false,
+    });
   }
 
   componentDidMount() {
@@ -157,7 +186,7 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         this.props.navigation && this.props.navigation.getParam('password');
       NavigationService.goBack();
       NavigationService.goBack();
-      NavigationService.navigate('SignIn', {
+      NavigationService.navigate('Landing', {
         username: this.state.username,
         password: password || undefined,
       });
@@ -200,7 +229,7 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
 
   validateInput(confirmSignUp) {
     if (this.state.username === '' || this.state.authCode === '') {
-      this.dropdown.alertWithType(
+      return this.dropdown.alertWithType(
         'error',
         'Error',
         'All fields must have a value.'
@@ -262,7 +291,6 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
               autoCapitalize={'none'}
               value={this.state.authCode}
             />
-            {this.renderError()}
           </View>
           {this.renderConfirmButton()}
           <DropdownAlert ref={ref => (this.dropdown = ref)} />

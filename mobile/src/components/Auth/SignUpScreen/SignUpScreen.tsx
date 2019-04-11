@@ -18,6 +18,7 @@ import {
 import { Icon } from 'react-native-elements';
 import { WebBrowser, ImagePicker, Permissions } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
+import Errors from '../../shared/Modals/Errors';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
 import NavigationService from '../../../services/NavigationService';
@@ -37,6 +38,7 @@ interface State {
     uri: string;
     source: string;
   };
+  displayErrorModal: boolean;
   error?: string;
 }
 
@@ -55,10 +57,38 @@ export default class SignUpScreen extends React.Component<Props, State> {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
         source: '',
       },
+      displayErrorModal: false,
       error: undefined,
     };
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.selectProfileImage = this.selectProfileImage.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      displayErrorModal: false,
+      error: null,
+    });
   }
 
   handleOpenTOSURL() {
@@ -122,10 +152,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <TouchableOpacity
           style={styles.imageSelectionContainer}
           onPress={this.selectProfileImage}
-          disabled
         >
           <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
-          <Text style={[styles.editPhotoText, { color: 'grey' }]}>
+          <Text style={[styles.editPhotoText, { color: '#6A0070' }]}>
             Edit Photo
           </Text>
         </TouchableOpacity>
@@ -205,14 +234,18 @@ export default class SignUpScreen extends React.Component<Props, State> {
       confirmPassword === '' ||
       avatar.uri === ''
     ) {
-      this.dropdown.alertWithType(
+      return this.dropdown.alertWithType(
         'error',
         'Error',
         'All fields must have a value.'
       );
     }
     if (password !== confirmPassword) {
-      this.dropdown.alertWithType('error', 'Error', 'Passwords do not match.');
+      return this.dropdown.alertWithType(
+        'error',
+        'Error',
+        'Passwords do not match.'
+      );
     }
     this.signUpWrapper(signUp);
   }
@@ -238,10 +271,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
         }}
       </SignUpMutation>
     );
-  }
-
-  renderError() {
-    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
@@ -290,7 +319,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
               value={this.state.confirmPassword}
             />
             {this.termsOfServiceLink()}
-            {this.renderError()}
           </View>
           {this.renderSignupButton()}
           <DropdownAlert ref={ref => (this.dropdown = ref)} />

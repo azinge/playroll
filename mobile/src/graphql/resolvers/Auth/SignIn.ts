@@ -9,7 +9,7 @@ export const signIn = async (_, { username, password }, { cache }) => {
     //     coreData: { isAuthenticated: true, __typename: 'CoreData' },
     //   },
     // });
-    return { data: { signIn: signInData } };
+    return { signIn: signInData };
   } catch (e) {
     console.log(e);
     throw e;

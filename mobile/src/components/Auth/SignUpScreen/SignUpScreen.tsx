@@ -18,6 +18,7 @@ import {
 import { Icon } from 'react-native-elements';
 import { WebBrowser, ImagePicker, Permissions } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
+import Errors from '../../shared/Modals/Errors';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
 import NavigationService from '../../../services/NavigationService';
@@ -36,6 +37,7 @@ interface State {
     uri: string;
     source: string;
   };
+  displayErrorModal: boolean;
   error?: string;
 }
 
@@ -52,10 +54,38 @@ export default class SignUpScreen extends React.Component<Props, State> {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
         source: '',
       },
+      displayErrorModal: false,
       error: undefined,
     };
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.selectProfileImage = this.selectProfileImage.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      displayErrorModal: false,
+      error: null,
+    });
   }
 
   handleOpenTOSURL() {
@@ -73,32 +103,27 @@ export default class SignUpScreen extends React.Component<Props, State> {
       this.state.confirmPassword === '' ||
       this.state.avatar.uri === ''
     ) {
-      return this.setState(
-        {
-          error: 'All fields must have a value',
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
-      );
+      return this.handleErrors('All fields must have a value');
     }
     if (this.state.password !== this.state.confirmPassword) {
       return this.setState(
         {
           password: '',
           confirmPassword: '',
-          error: 'Passwords do not match!',
         },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
+        () => this.handleErrors('Passwords do not match!'),
       );
     }
-    signUp();
+    signUp()
+      .then(response => {
+        console.log('signUp promise resolved()', response);
+        if (!response.data) return;
+        this.props.navigation.navigate('Confirmation');
+      })
+      .catch(error => {
+        console.log('signUp promise rejected()', error);
+        this.handleErrors(error.message);
+      });
   }
 
   renderSegueToSignIn() {
@@ -155,10 +180,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <TouchableOpacity
           style={styles.imageSelectionContainer}
           onPress={this.selectProfileImage}
-          disabled
         >
           <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
-          <Text style={[styles.editPhotoText, { color: 'grey' }]}>
+          <Text style={[styles.editPhotoText, { color: '#6A0070' }]}>
             Edit Photo
           </Text>
         </TouchableOpacity>
@@ -186,10 +210,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
           avatar: this.state.avatar.uri,
         }}
       >
-        {(signUp, { loading, error, data }) => {
-          if (data) {
-            this.props.navigation.navigate('Confirmation');
-          }
+        {(signUp, { loading }) => {
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(signUp)}
@@ -205,10 +226,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
         }}
       </SignUpMutation>
     );
-  }
-
-  renderError() {
-    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
@@ -257,9 +274,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
               value={this.state.confirmPassword}
             />
             {this.termsOfServiceLink()}
-            {this.renderError()}
           </View>
           {this.renderSignupButton()}
+          {this.renderErrorModal(this.state.error)}
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

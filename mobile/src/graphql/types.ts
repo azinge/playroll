@@ -291,3 +291,40 @@ export const RecommendationFragments = {
     ${UserFragments.default}
   `,
 };
+
+// Relationship Types / Fragments
+
+export type Relationship = {
+  createdAt: string;
+  deletedAt: string;
+  id: number;
+  isBlocking: boolean;
+  otherUser: User;
+  otherUserID: number;
+  status: string;
+  updatedAt: string;
+  user: User;
+  userID: number;
+};
+
+export const RelationshipFragments = {
+  default: gql`
+    fragment DefaultRelationship on Relationship {
+      createdAt
+      deletedAt
+      id
+      isBlocking
+      otherUser {
+        ...DefaultUser
+      }
+      otherUserID
+      status
+      updatedAt
+      user {
+        ...DefaultUser
+      }
+      userID
+    }
+    ${UserFragments.default}
+  `,
+};

@@ -1,51 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
-export default StyleSheet.create({
+import libraryStyles from '../library.styles';
 
-  // General Container
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+interface Style {
+  screenContainer: ViewStyle;
+}
 
-  // Title Bar for Playroll
-  titleBarContainer: {
-    flexDirection: 'row',
-    height: 100,
-    alignItems: 'center',
-  },
-  titleBarName: {
-    fontSize: 20,
-  },
-  horizontalRule: {
-    width: '90%',
-    marginVertical: 5,
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: 'gray'
-  },
-
-  // Bottom View for Button
-  footerView: {
-    backgroundColor: '#fff',
-    flex: 1,
-    position: 'absolute',
-    bottom: 0, // stick to bottom
-    left: 0, // stretch to left
-    right: 0, // stretch to right
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1, // float on top
-  },
-
+const styles = StyleSheet.create({
   // Bottom Button
   newRollButton: {
     width: '90%',
-    backgroundColor: '#af00bc',  // brighter purple
+    backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,
     height: 40,
 
@@ -58,7 +23,7 @@ export default StyleSheet.create({
     fontFamily: 'Avenir',
     fontSize: 18,
     fontWeight: 'bold',
-  }
+  },
 });
 
 // TODO: this is required, but explanation needed here...
@@ -72,3 +37,5 @@ export const rawStyles = {
     borderColor: 'lightgrey',
   },
 };
+
+export default Object.assign(libraryStyles, styles);

@@ -2,17 +2,17 @@
  * LandingScreen
  */
 
-import * as React from "react";
+import * as React from 'react';
 import {
   Image,
   Text,
   View,
   SafeAreaView,
   TouchableOpacity,
-} from "react-native";
-import { NavigationScreenProp } from "react-navigation";
+} from 'react-native';
+import { NavigationScreenProp } from 'react-navigation';
 
-import styles from "./LandingScreen.styles";
+import styles from './LandingScreen.styles';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -25,17 +25,16 @@ export default class LandingScreen extends React.Component<Props, State> {
     return (
       <SafeAreaView style={styles.screenContainer}>
         <View style={styles.optionsContainer}>
-
           <Image
             // @ts-ignore
-            style={styles.image}  // legit prop: https://facebook.github.io/react-native/docs/image
-            source={require("../../../assets/new_playroll.png")}
+            style={styles.image} // legit prop: https://facebook.github.io/react-native/docs/image
+            source={require('../../../assets/new_playroll.png')}
           />
 
           <TouchableOpacity
             style={styles.buttonContainer}
             onPress={() => {
-              this.props.navigation && this.props.navigation.navigate("SignIn");
+              this.props.navigation && this.props.navigation.navigate('SignIn');
             }}
           >
             <View style={styles.buttonView}>
@@ -45,15 +44,20 @@ export default class LandingScreen extends React.Component<Props, State> {
           <Text
             style={styles.signUpText}
             onPress={() => {
-              this.props.navigation && this.props.navigation.navigate("SignUp");
+              this.props.navigation && this.props.navigation.navigate('SignUp');
             }}
-          >Sign Up</Text>
+          >
+            Sign Up
+          </Text>
           <Text
             style={styles.signUpText}
             onPress={() => {
-              this.props.navigation && this.props.navigation.navigate("Confirmation");
+              this.props.navigation &&
+                this.props.navigation.navigate('Confirmation');
             }}
-          >Confirm User (TEMP)</Text>
+          >
+            Confirm User (TEMP)
+          </Text>
         </View>
       </SafeAreaView>
     );

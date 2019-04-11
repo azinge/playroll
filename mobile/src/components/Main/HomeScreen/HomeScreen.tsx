@@ -32,11 +32,11 @@ export default class HomeScreen extends React.Component<Props, State> {
             overlayText={'Coming Soon...'}
           />
 
-          <HorizontalPlaceholderList
+          {/* <HorizontalPlaceholderList
             title={'Discovery Queues'}
             numItems={5}
             overlayText={'Coming Soon...'}
-          />
+          /> */}
 
           <PlaceholderList
             title={'Recommendations'}

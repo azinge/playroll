@@ -1,15 +1,25 @@
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import ViewSpotifyPlaylistScreen from './MusicServices/Playlists/ViewSpotifyPlaylistScreen';
+import { StyleSheet, TextStyle, ViewStyle, TextStyleIOS } from 'react-native';
 
 interface Style {
   screenContainer: ViewStyle;
   titleBarContainer: ViewStyle;
+  titleBarNameContainer: ViewStyle;
   titleBarName: TextStyle;
   horizontalRule: ViewStyle;
   subtitle: TextStyle;
   spacing: ViewStyle;
+
+  text: TextStyle;
+  rollType: TextStyle;
+  artistName: TextStyle;
+  noArtist: TextStyle;
+  creator: TextStyle;
+  provider: TextStyle;
+
+  editIcon: ViewStyle;
+
   footerView: ViewStyle;
-  newRollButton: ViewStyle;
+  newButton: ViewStyle;
   buttonText: TextStyle;
 }
 
@@ -17,27 +27,30 @@ export default StyleSheet.create<Style>({
   // General Container
   screenContainer: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
-
   // Title Bar for Playroll
   titleBarContainer: {
     flexDirection: 'row',
     height: 100,
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  titleBarNameContainer: {
+    flex: 1,
   },
   titleBarName: {
-    fontSize: 20
+    fontSize: 20,
+    // color: 'black',
   },
   horizontalRule: {
     width: '90%',
     marginVertical: 5,
     borderBottomColor: 'lightgray',
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   subtitle: {
     fontSize: 15,
-    color: 'gray'
+    color: 'gray',
   },
 
   // Horizontal Spacer between rows
@@ -45,7 +58,40 @@ export default StyleSheet.create<Style>({
     width: '90%',
     marginVertical: 10,
     borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+
+  // Text for Rows (Search and RollList)
+  text: {
+    fontFamily: 'Avenir',
+  },
+  rollType: {
+    fontSize: 14,
+    // color: 'purple',
+  },
+  artistName: {
+    fontSize: 17,
+    color: 'purple',
+    fontWeight: 'bold',
+  },
+  noArtist: {
+    fontFamily: 'Avenir',
+    fontSize: 15,
+    color: 'lightgrey',
+  },
+  // Creator (of the Album/Playlist/Track)
+  creator: {
+    fontWeight: 'bold',
+  },
+  // Providers: Spotify, etc.
+  provider: {
+    fontSize: 14,
+    color: 'lightgray',
+  },
+
+  // Right side icons
+  editIcon: {
+    marginRight: 20,
   },
 
   // Bottom View for Button
@@ -59,11 +105,11 @@ export default StyleSheet.create<Style>({
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1 // float on top
+    zIndex: 1, // float on top
   },
 
   // Bottom Button
-  newRollButton: {
+  newButton: {
     width: '90%',
     backgroundColor: '#af00bc', // brighter purple
     borderRadius: 3,
@@ -71,12 +117,12 @@ export default StyleSheet.create<Style>({
 
     // Center text contents
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
     fontFamily: 'Avenir',
     fontSize: 18,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });

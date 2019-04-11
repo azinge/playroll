@@ -6,12 +6,12 @@ import { CoreNavigator } from './Core/router';
 
 const AppNavigator = createStackNavigator(
   {
-    Auth: AuthNavigator,
-    Core: CoreNavigator,
-    Main: MainNavigator,
+    Auth: AuthNavigator, // Sign up screens
+    Core: CoreNavigator, // Loading screen
+    Main: MainNavigator, // Home screen
   },
   {
-    initialRouteName: 'Core',
+    initialRouteName: 'Main',
     headerMode: 'none',
   }
 );

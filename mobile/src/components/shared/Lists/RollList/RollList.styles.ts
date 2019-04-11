@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+import parentStyles from '../list.styles';
 
+const styles = StyleSheet.create({
   // Container for each Roll Row
   outerContainer: {
     width: '100%',
@@ -19,15 +20,22 @@ export default StyleSheet.create({
 
   // Thumbnail image
   cover: {
-    width: 65,
-    height: 65,
+    width: 85,
+    height: 85,
     marginHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'lightgrey',
   },
 
-  // Text
+  // Row icons
+  itemTextView: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  // Row text
   text: {
     fontFamily: 'Avenir',
   },
@@ -63,3 +71,5 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
+
+export default Object.assign(parentStyles, styles);

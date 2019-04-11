@@ -15,7 +15,7 @@ type SignInVariables = {
 };
 
 type SignInData = {
-  signIn?: boolean;
+  signIn?: any;
 };
 
 export class SignInMutation extends Mutation<SignInData, SignInVariables> {

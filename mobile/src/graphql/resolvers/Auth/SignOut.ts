@@ -1,21 +1,11 @@
 import { Auth } from 'aws-amplify';
-import { GET_AUTHENTICATION_STATUS } from '../../requests/Auth/GetAuthenticationStatus';
-
 export const signOut = async (_1, _2, { cache }) => {
   try {
-    await Auth.signOut();
-    console.log('signed out');
-    cache.writeQuery({
-      query: GET_AUTHENTICATION_STATUS,
-      data: {
-        coreData: { isAuthenticated: false, __typename: 'CoreData' },
-      },
-    });
+    const signOutData = await Auth.signOut();
     cache.reset();
-    console.log('deauthenticated');
-
-    return null;
+    return signOutData;
   } catch (e) {
+    console.log(e);
     throw e;
   }
 };

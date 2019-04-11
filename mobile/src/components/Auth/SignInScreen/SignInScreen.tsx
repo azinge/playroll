@@ -20,6 +20,7 @@ import {
   StackActions,
   NavigationActions,
 } from 'react-navigation';
+import DropdownAlert from 'react-native-dropdownalert';
 
 import { SignInMutation } from '../../../graphql/requests/Auth';
 
@@ -38,9 +39,12 @@ interface State {
   password: string;
   showPassword: boolean;
   signedUp: boolean;
+  triggerSignIn: boolean;
 }
 
 export default class SignInScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -48,9 +52,20 @@ export default class SignInScreen extends React.Component<Props, State> {
       password: '',
       showPassword: true,
       signedUp: true,
+      triggerSignIn: false,
     };
     this.revealPassword = this.revealPassword.bind(this);
     this.toggleSignUp = this.toggleSignUp.bind(this);
+  }
+
+  componentDidMount() {
+    const username =
+      this.props.navigation && this.props.navigation.getParam('username');
+    const password =
+      this.props.navigation && this.props.navigation.getParam('password');
+    if (username) {
+      this.setState({ username, password, triggerSignIn: true });
+    }
   }
 
   revealPassword() {
@@ -90,18 +105,35 @@ export default class SignInScreen extends React.Component<Props, State> {
     );
   }
 
-  toggleSignIn(signIn) {
-    signIn().then(
-      () =>
-        this.props.navigation &&
-        this.props.navigation.dispatch(
-          StackActions.reset({
-            key: null,
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Main' })],
-          })
-        )
-    );
+  async toggleSignIn(signIn) {
+    try {
+      await signIn();
+      NavigationService.dispatch(
+        StackActions.reset({
+          key: null,
+          index: 0,
+          actions: [NavigationActions.navigate({ routeName: 'Main' })],
+        })
+      );
+    } catch (err) {
+      console.log(err);
+      if (err.code === 'UserNotConfirmedException') {
+        NavigationService.navigate('Confirmation', {
+          username: this.state.username,
+        });
+      } else if (err.code === 'NotAuthorizedException') {
+        this.dropdown.alertWithType('error', 'Error', 'Incorrect Password.');
+      } else if (err.code === 'UserNotFoundException') {
+        this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
+      } else {
+        console.log(err);
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're sorry, Please try again."
+        );
+      }
+    }
   }
 
   renderSigninButton() {
@@ -112,8 +144,12 @@ export default class SignInScreen extends React.Component<Props, State> {
           password: this.state.password,
         }}
       >
-        {/* What does error mean down here  */}
-        {(signIn, { loading, error, data }) => {
+        {(signIn, { loading }) => {
+          if (this.state.triggerSignIn) {
+            this.setState({ triggerSignIn: false }, () => {
+              this.toggleSignIn(signIn);
+            });
+          }
           return (
             <TouchableOpacity
               onPress={() => this.toggleSignIn(signIn)}
@@ -167,6 +203,7 @@ export default class SignInScreen extends React.Component<Props, State> {
             </View>
           </View>
           {this.renderSigninButton()}
+          <DropdownAlert ref={ref => (this.dropdown = ref)} />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

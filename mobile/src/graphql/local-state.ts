@@ -1,4 +1,10 @@
-import { signIn, signOut, signUp, confirmSignUp } from './resolvers/Auth';
+import {
+  signIn,
+  signOut,
+  signUp,
+  confirmSignUp,
+  resendSignUp,
+} from './resolvers/Auth';
 import { coreData } from './resolvers/Core';
 import gql from 'graphql-tag';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
@@ -19,6 +25,7 @@ export const resolvers = {
     signIn,
     signUp,
     confirmSignUp,
+    resendSignUp,
   },
 };
 
@@ -44,6 +51,7 @@ export const typeDefs = gql`
       avatar: String
     ): Boolean
     confirmSignUp(username: String, code: String): Boolean
+    resendSignUp(username: String): Boolean
   }
 
   type CoreData {

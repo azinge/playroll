@@ -24,13 +24,19 @@ var getCurrentUser = gqltag.Method{
 var searchUsers = gqltag.Method{
 	Description: `[Search Users Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		_, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println("error authorizing user: ", err.Error())
+			return nil, err
+		}
+
 		type listSpotifyPlaylistsParams struct {
 			Query  string
 			Offset uint
 			Count  uint
 		}
 		params := &listSpotifyPlaylistsParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err

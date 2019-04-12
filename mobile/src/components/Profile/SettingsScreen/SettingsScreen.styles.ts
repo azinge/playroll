@@ -22,6 +22,12 @@ export default StyleSheet.create({
     fontSize: 20,
     color: "#999594"
   },
+  enabledText: {
+    marginLeft: 15,
+    marginBottom: 5,
+    fontSize: 20,
+    color: "#993399"
+  },
   darkModeSwitch: {
     marginLeft: 10,
     marginBottom: 5

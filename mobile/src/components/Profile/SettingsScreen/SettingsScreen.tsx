@@ -61,7 +61,7 @@ export default class SettingsScreen extends React.Component {
             }}
           >
             <View style={styles.textContainer}>
-              <Text style={styles.disabledText}>Music Service Settings</Text>
+              <Text style={styles.enabledText}>Music Service Settings</Text>
             </View>
           </TouchableOpacity>
 

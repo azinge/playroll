@@ -191,7 +191,13 @@ var listCurrentUserPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		return models.GetPlayrollsByUserID(user.ID, mctx.DB)
+		// Example for offset and count
+		// if offset, count are not given, default to 0, 20 respectively
+		// test via graphiql
+		db := mctx.DB.Offset(0).Count(20)
+
+		// using db over mctx.DB
+		return models.GetPlayrollsByUserID(user.ID, db)
 	},
 }
 

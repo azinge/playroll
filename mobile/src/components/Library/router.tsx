@@ -24,8 +24,7 @@ export const LibraryNavigator = createStackNavigator(
     ...MusicServicePlaylistsRoutes,
   },
   {
-    // initialRouteName: 'LibraryMenu',
-    initialRouteName: 'BrowsePlayrolls',
+    initialRouteName: 'LibraryMenu',
     headerMode: 'none',
   }
 );

@@ -45,12 +45,6 @@ func recommendRollToFriend(db *gorm.DB, recommenderID uint, userID uint, playrol
 	// for _, rec := range *recommendations {
 	// 	fmt.Println(rec)
 	// }
-	query := "t"
-	userModels := &[]models.User{}
-	if err := db.Preload("Relationships", "other_user_id = ?", 2).Where("name LIKE ?", "%"+query+"%").Find(userModels).Error; err != nil {
-		fmt.Printf("error searching users: %s", err.Error())
-	}
-	fmt.Printf("%#v\n", userModels)
 
 	users := &[]models.User{}
 	// err = db.Find(users).Error

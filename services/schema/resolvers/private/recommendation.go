@@ -5,6 +5,7 @@ import (
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/models/jsonmodels"
 	"github.com/cazinge/playroll/services/schema/resolvers/admin"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
@@ -16,6 +17,7 @@ type RecommendationMethods struct {
 	ListCurrentUserRecommendations *gqltag.Query    `gql:"listCurrentUserRecommendations(offset: Int, count: Int): [Recommendation]"`
 	CreateRecommendation           *gqltag.Mutation `gql:"createRecommendation(input: RecommendationInput): Recommendation"`
 	DismissRecommendation          *gqltag.Mutation `gql:"dismissRecommendation(recommendationID: ID): Recommendation"`
+	RecommendToAUser               *gqltag.Mutation `gql:"recommendToAUser(receiverID: Int, playrollID: Int, rollData: RollDataInput): Recommendation"`
 }
 
 var listCurrentUserRecommendations = gqltag.Method{
@@ -95,9 +97,53 @@ var dismissRecommendation = gqltag.Method{
 	},
 }
 
+var recommendToAUser = gqltag.Method{
+	Description: `Recommends the selected Playroll to a user.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type recommendToAUserParams struct {
+			ReceiverID    uint
+			PlayrollID    uint
+			RollDataInput jsonmodels.RollDataInput
+		}
+
+		params := &recommendToAUserParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		relationship := &models.Relationship{}
+		db := mctx.DB
+		err = db.Where(&models.Relationship{UserID: params.ReceiverID, OtherUserID: user.ID, IsBlocking: false}).First(relationship).Error
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		rollData, err := params.RollDataInput.ToModel()
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		recommendation := models.Recommendation{Data: *rollData, UserID: params.ReceiverID, RecommenderID: user.ID, PlayrollID: params.PlayrollID}
+		db.Create(&recommendation)
+
+		return recommendation, nil
+	},
+}
+
 // LinkedRecommendationMethods exports the methods for the Recommendations entity.
 var LinkedRecommendationMethods = RecommendationMethods{
 	ListCurrentUserRecommendations: gqltag.LinkQuery(listCurrentUserRecommendations),
 	CreateRecommendation:           gqltag.LinkMutation(createRecommendation),
 	DismissRecommendation:          gqltag.LinkMutation(dismissRecommendation),
+	RecommendToAUser:               gqltag.LinkMutation(recommendToAUser),
 }

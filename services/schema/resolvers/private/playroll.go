@@ -13,6 +13,7 @@ import (
 type PlayrollMethods struct {
 	GetCurrentUserPlayroll    *gqltag.Query    `gql:"currentUserPlayroll(id: ID): Playroll"`
 	ListCurrentUserPlayrolls  *gqltag.Query    `gql:"listCurrentUserPlayrolls(offset: Int, count: Int): [Playroll]"`
+	ListUserPlayrolls         *gqltag.Query    `gql:"listUserPlayrolls(userID: ID, offset: Int, count: Int): [Playroll]"`
 	CreateCurrentUserPlayroll *gqltag.Mutation `gql:"createCurrentUserPlayroll(input: PlayrollInput): Playroll"`
 	UpdateCurrentUserPlayroll *gqltag.Mutation `gql:"updateCurrentUserPlayroll(id: ID, input: PlayrollInput): Playroll"`
 	DeleteCurrentUserPlayroll *gqltag.Mutation `gql:"deleteCurrentUserPlayroll(id: ID): Playroll"`
@@ -194,9 +195,36 @@ var listCurrentUserPlayrolls = gqltag.Method{
 	},
 }
 
+var listUserPlayrolls = gqltag.Method{
+	Description: `[List User's Playrolls Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		_, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listCurrentUserPlayrollsParams struct {
+			UserID string
+			Offset uint
+			Count  uint
+		}
+		params := &listCurrentUserPlayrollsParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		id := utils.StringIDToNumber(params.UserID)
+		return models.GetPlayrollsByUserID(id, mctx.DB)
+	},
+}
+
 var LinkedPlayrollMethods = PlayrollMethods{
 	GetCurrentUserPlayroll:    gqltag.LinkQuery(getCurrentUserPlayroll),
 	ListCurrentUserPlayrolls:  gqltag.LinkQuery(listCurrentUserPlayrolls),
+	ListUserPlayrolls:         gqltag.LinkQuery(listUserPlayrolls),
 	CreateCurrentUserPlayroll: gqltag.LinkMutation(createCurrentUserPlayroll),
 	UpdateCurrentUserPlayroll: gqltag.LinkMutation(updateCurrentUserPlayroll),
 	DeleteCurrentUserPlayroll: gqltag.LinkMutation(deleteCurrentUserPlayroll),

@@ -24,9 +24,9 @@ var getCurrentUser = gqltag.Method{
 var searchUsers = gqltag.Method{
 	Description: `[Search Users Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
-		_, err := models.AuthorizeUser(mctx)
+		user, err := models.AuthorizeUser(mctx)
 		if err != nil {
-			fmt.Println("error authorizing user: ", err.Error())
+			fmt.Println(err)
 			return nil, err
 		}
 
@@ -43,7 +43,7 @@ var searchUsers = gqltag.Method{
 		}
 
 		userModels := &[]models.User{}
-		if err := mctx.DB.Where("name LIKE ?", "%"+params.Query+"%").Find(userModels).Error; err != nil {
+		if err := mctx.DB.Preload("Relationships", "other_user_id = ?", user.ID).Where("name LIKE ?", "%"+params.Query+"%").Find(userModels).Error; err != nil {
 			fmt.Printf("error searching users: %s", err.Error())
 			return nil, err
 		}

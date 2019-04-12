@@ -216,7 +216,7 @@ export const TracklistFragments = {
 
 export type Playroll = {
   id?: number;
-  userID: number;
+  userID?: number;
   name?: string;
   rolls?: [Roll];
   tracklists?: [Tracklist];

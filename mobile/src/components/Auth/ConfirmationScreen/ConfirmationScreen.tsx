@@ -187,7 +187,8 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
         this.props.navigation && this.props.navigation.getParam('password');
       NavigationService.navigate('Landing', {
         username: this.state.username,
-        password: password || undefined,
+        password,
+        triggerSignIn: !!password,
       });
     } catch (err) {
       if (err.code === 'CodeMismatchException') {

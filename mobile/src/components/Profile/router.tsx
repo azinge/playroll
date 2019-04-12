@@ -7,6 +7,7 @@ import SettingsScreen from './SettingsScreen';
 import FriendsMenuScreen from './FriendsMenuScreen';
 import ViewProfileScreen from './ViewProfileScreen';
 import { MusicServiceSettingsRoutes } from '../MusicServices/Settings/router';
+import ViewPlayrollScreen from '../Profile/ViewProfileScreen';
 
 export const ProfileRoutes = {
   AddFriend: AddFriendScreen,
@@ -15,8 +16,9 @@ export const ProfileRoutes = {
   FriendsMenu: FriendsMenuScreen,
   ViewProfile: ViewProfileScreen,
   ...MusicServiceSettingsRoutes,
+  Account: AccountScreen,
+  ViewPlayroll: ViewPlayrollScreen,
 };
 
 export const ProfileModalRoutes = {
-  Account: AccountScreen,
 };

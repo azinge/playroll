@@ -3,7 +3,6 @@
  */
 
 import * as React from "react";
-import SubScreenContainer from "../../shared/Containers/SubScreenContainer";
 import ProfileScreenContainer from "../../shared/Containers/ProfileScreenContainer";
 import {
   Text,
@@ -32,7 +31,9 @@ export default class ViewProfileScreen extends React.Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
-      onPress={() => NavigationService.navigate("ViewPlayroll", {})}
+      onPress={() =>
+        NavigationService.navigate("ViewPlayroll", { playroll: item })
+      }
     >
       <ListItem
         title={item.name}
@@ -72,69 +73,16 @@ export default class ViewProfileScreen extends React.Component {
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
             if (loading || error || Object.keys(data).length === 0) {
-              return <SubScreenContainer title="My Public Profile" modal />;
+              return <ProfileScreenContainer title="My Public Profile" />;
             }
             const currentUser = (data && data.private.currentUser) || {};
             return (
-              <ProfileScreenContainer title="My Public Profile" modal>
-                <View style={{ alignItems: "center" }}>
-                  <View style={{ alignItems: "center", marginVertical: 20 }}>
-                    <Image
-                      source={{
-                        uri: currentUser.avatar
-                      }}
-                      style={{ height: 100, width: 100, borderRadius: 5 }}
-                    />
-                    <Text
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: 20,
-                        color: "#993399"
-                      }}
-                    >
-                      {currentUser.name}
-                    </Text>
-                  </View>
-                </View>
-                <ListCurrentUserPlayrollsQuery>
-                  {({ loading, error, data }) => {
-                    const playrolls = extractPlayrolls(data);
-                    const success = !loading && !error;
-                    return (
-                      <View
-                        style={{
-                          flex: 1
-                          // TODO(ianlizzo): Fix this pls
-                          // marginBottom: 30,
-                        }}
-                      >
-                        <View style={{ flex: 1 }}>
-                          <FlatList
-                            data={playrolls}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={this._renderItem}
-                          />
-                          {loading && (
-                            <ActivityIndicator
-                              color={"gray"}
-                              style={{ paddingTop: 50 }}
-                            />
-                          )}
-                          {error && (
-                            <Text style={{ paddingTop: 50 }}>
-                              Error Loading Playrolls
-                            </Text>
-                          )}
-                          {/* <View style={{ margin: 10 }} /> */}
-                          {playrolls.length === 0 && (
-                            <Text> No Playrolls added</Text>
-                          )}
-                        </View>
-                      </View>
-                    );
-                  }}
-                </ListCurrentUserPlayrollsQuery>
-              </ProfileScreenContainer>
+              <ProfileScreenContainer
+                title="My Public Profile"
+                image={{ uri: currentUser.avatar }}
+                local
+                name={currentUser.name}
+              />
             );
           }}
         </GetCurrentUserQuery>

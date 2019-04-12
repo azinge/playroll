@@ -55,9 +55,7 @@ export default class AccountScreen extends React.Component<Props, State> {
               >
                 <Image
                   source={{
-                    // uri: currentUser.avatar
-                    uri:
-                      "https://media.pitchfork.com/photos/5b64cdcd0b743703a4982025/2:1/w_790/Travis-Scott.jpg"
+                    uri: currentUser.avatar
                   }}
                   style={{ height: 60, width: 60, borderRadius: 30 }}
                 />
@@ -71,8 +69,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                     color: "#993399"
                   }}
                 >
-                  {/* {currentUser.name} */}
-                  {"Nicolas Raymundo"}
+                  {currentUser.name}
                 </Text>
               </View>
 
@@ -88,7 +85,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   }}
                 >
                   <View style={styles.textContainer}>
-                    <Text style={styles.enabledText}>View Profile</Text>
+                    <Text style={styles.disabledText}>View Profile</Text>
                   </View>
                 </TouchableOpacity>
 
@@ -99,7 +96,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   }}
                 >
                   <View style={styles.textContainer}>
-                    <Text style={styles.enabledText}>View Friends</Text>
+                    <Text style={styles.disabledText}>View Friends</Text>
                   </View>
                 </TouchableOpacity>
 
@@ -110,7 +107,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   }}
                 >
                   <View style={styles.textContainer}>
-                    <Text style={styles.enabledText}>Edit Profile</Text>
+                    <Text style={styles.disabledText}>Edit Profile</Text>
                   </View>
                 </TouchableOpacity>
 
@@ -126,7 +123,6 @@ export default class AccountScreen extends React.Component<Props, State> {
                 </TouchableOpacity>
 
                 {/* Sign Out */}
-
                 <SignOutMutation>
                   {signOut => {
                     return (

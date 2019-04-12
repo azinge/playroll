@@ -56,7 +56,7 @@ export default StyleSheet.create({
     marginLeft: 15,
     marginBottom: 5,
     fontSize: 20,
-    color: "grey"
+    color: "#999594"
   },
   text: {
     // fontWeight: 'bold',

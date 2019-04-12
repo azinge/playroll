@@ -62,11 +62,14 @@ export default class LandingScreen extends React.Component<Props, State> {
       this.props.navigation && this.props.navigation.getParam('username');
     const password =
       this.props.navigation && this.props.navigation.getParam('password');
+    const triggerSignIn =
+      this.props.navigation && this.props.navigation.getParam('triggerSignIn');
+
     if (username) {
       this.setState({
         username,
-        password: password,
-        triggerSignIn: !!password,
+        password,
+        triggerSignIn,
       });
     }
   }
@@ -156,6 +159,7 @@ export default class LandingScreen extends React.Component<Props, State> {
       if (err.code === 'UserNotConfirmedException') {
         NavigationService.navigate('Confirmation', {
           username: this.state.username,
+          triggerResendSignUp: true,
         });
       } else if (err.code === 'NotAuthorizedException') {
         this.dropdown.alertWithType('error', 'Error', 'Incorrect Password.');

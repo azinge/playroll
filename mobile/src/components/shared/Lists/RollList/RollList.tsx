@@ -53,14 +53,12 @@ export default class RollList extends React.Component<Props, State> {
             size={25}
             name='edit'
             color='lightgrey'
-            // tslint:disable-next-line:no-shadowed-variable
             onPress={() => NavigationService.navigate('EditRoll', roll)}
             iconStyle={styles.editIcon}
           />
         </View>
         <View style={styles.spacing} />
       </View>
-      // </TouchableOpacity>
     );
   }
 

@@ -119,7 +119,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
             ...Icons.exportIcon,
-            onPress: () => generateTracklist(),
+            onPress: () => NavigationService.navigate('GenerateTracklist'),
+            // onPress: () => generateTracklist(),
           };
           return (
             <SubScreenHeader

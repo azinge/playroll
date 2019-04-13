@@ -59,6 +59,11 @@ const exportIcon: IconType = {
   type: 'material-community',
 };
 
+const editIcon: IconType = {
+  name: 'pencil',
+  type: 'material-community',
+};
+
 export default {
   menuIcon,
   closeIcon,
@@ -71,4 +76,5 @@ export default {
   dropDownIcon,
   dropUpIcon,
   exportIcon,
+  editIcon,
 };

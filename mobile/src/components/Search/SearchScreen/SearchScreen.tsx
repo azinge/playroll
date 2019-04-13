@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { Icon, Overlay } from 'react-native-elements';
+import { Icon, Overlay, ButtonGroup } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -36,6 +36,7 @@ interface State {
   modalVisible: boolean;
   currentSource: MusicSource;
   isVisible: boolean;
+  selectedIndex: number;
 }
 export default class SearchScreen extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -46,15 +47,22 @@ export default class SearchScreen extends React.Component<Props, State> {
       modalVisible: false,
       currentSource: {},
       isVisible: false,
+      selectedIndex: 0,
     };
+    this.updateIndex = this.updateIndex.bind(this);
   }
+
+  updateIndex(selectedIndex) {
+    const types = { 0: 'Artist', 1: 'Album', 2: 'Track', 3: 'Playlist' };
+    this.setState({ selectedIndex, searchType: types[selectedIndex] });
+  }
+
   render() {
     return (
       <SearchScreenContainer
         title={'Search'}
         onSubmitEditing={query => this.setState({ query })}
       >
-        {this.renderHeader()}
         {this.renderOptionsBar()}
         {this.renderModal()}
         {this.renderSearch()}
@@ -62,82 +70,48 @@ export default class SearchScreen extends React.Component<Props, State> {
     );
   }
 
-  renderHeader() {
-    return (
-      <View style={styles.main}>
-        <Icon
-          name={'search'}
-          size={35}
-          color='lightgrey'
-          underlayColor='lightgrey'
-          containerStyle={{ paddingHorizontal: 5 }}
-        />
-        <TextInput
-          style={{ flex: 1, fontSize: 16 }}
-          selectionColor={'purple'}
-          placeholder='What are you looking for?'
-          // onChangeText={(text: string) => this.setState({ text })}
-          // onSubmitEditing={() => {
-          //   this.setState({ query: this.state.text });
-          // }}
-          value={this.state.query}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingTop: 7,
-            height: '100%',
-            margin: 0,
-            paddingLeft: 20,
-            borderLeftWidth: 1,
-            borderLeftColor: 'lightgray',
-            width: 100,
-            // height: 100%,
-          }}
-        >
-          <RNPickerSelect
-            placeholder={{}}
-            // hideIcon={true}
-            items={[
-              { label: 'Artist', value: 'Artist' },
-              { label: 'Album', value: 'Album' },
-              { label: 'Track', value: 'Track' },
-              { label: 'Playlist', value: 'Playlist' },
-            ]}
-            onValueChange={value => {
-              this.setState({
-                searchType: value,
-              });
-            }}
-            style={pickerStyle}
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
-              <Icon name='arrow-drop-down' />
-            </View>
-          </RNPickerSelect>
-        </View>
-      </View>
-    );
-  }
-
   renderOptionsBar() {
+    const buttons = ['Artist', 'Album', 'Track', 'Playlist'];
+    const { selectedIndex } = this.state;
     return (
-      <View style={{ margin: 10, flexDirection: 'row' }}>
-        <View style={{ paddingHorizontal: 7 }}>
-          <Text
-            style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
-          >
-            Popular
-          </Text>
-        </View>
-        <View style={styles.nullOptions}>
-          <Text style={[styles.options, { color: 'grey' }]}>New</Text>
-        </View>
-        <View style={styles.nullOptions}>
-          <Text style={[styles.options, { color: 'grey' }]}>ABC</Text>
-        </View>
+      <View style={{ marginVertical: 10 }}>
+        <ButtonGroup
+          onPress={this.updateIndex}
+          selectedIndex={selectedIndex}
+          buttons={buttons}
+          containerStyle={{ height: 30 }}
+          selectedButtonStyle={{ backgroundColor: 'purple' }}
+
+          // onPress={() => {}}
+        />
       </View>
+
+      //   <View style={{ margin: 10, flexDirection: 'row' }}>
+      //     <View style={{ paddingHorizontal: 7 }}>
+      //       <Text
+      //         onPress={() => this.setState({ searchType: 'Artist' })}
+      //         style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
+      //       >
+      //         Artist
+      //       </Text>
+      //     </View>
+      //     <View style={styles.nullOptions}>
+      //       <Text
+      //         onPress={() => this.setState({ searchType: 'Album' })}
+      //         style={[styles.options, { color: 'grey' }]}
+      //       >
+      //         Album
+      //       </Text>
+      //     </View>
+      //     <View style={styles.nullOptions}>
+      //       <Text
+      //         onPress={() => this.setState({ searchType: 'Playlist' })}
+      //         style={[styles.options, { color: 'grey' }]}
+      //       >
+      //         Playlist
+      //       </Text>
+      //     </View>
+      //   </View>
     );
   }
 
@@ -166,9 +140,12 @@ export default class SearchScreen extends React.Component<Props, State> {
           {({ loading, error, data }) => {
             console.log(error);
             return (
-              <View style={{ marginBottom: 145 }}>
+              <View style={{ marginBottom: 15 }}>
                 {loading ? (
-                  <ActivityIndicator color={'gray'} />
+                  <ActivityIndicator
+                    color={'gray'}
+                    style={{ marginTop: '5%' }}
+                  />
                 ) : (
                   <FlatList
                     data={data && data.private.searchSpotify}

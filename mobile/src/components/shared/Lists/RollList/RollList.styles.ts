@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rowIcon: {
-    color: 'purple',
     marginRight: 8,
   },
   subIcon: {
@@ -62,8 +61,8 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 17,
-    color: 'purple',
     fontWeight: 'bold',
+    color: 'purple',
   },
   noArtist: {
     fontFamily: 'Avenir',

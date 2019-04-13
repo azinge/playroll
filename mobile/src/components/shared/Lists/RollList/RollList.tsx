@@ -84,7 +84,7 @@ export default class RollList extends React.Component<Props, State> {
                   size={25}
                   name='sort'
                   type='material'
-                  color='lightgrey'
+                  color='purple'
                   iconStyle={styles.rowIcon}
                 />
                 <Text style={[styles.text, styles.artistName]}>
@@ -109,7 +109,7 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='av-timer'
                 type='material'
-                color='lightgrey'
+                color='purple'
                 iconStyle={styles.rowIcon}
               />
               <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
@@ -135,14 +135,13 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='music-note'
                 type='material'
-                color='lightgrey'
+                color='purple'
                 iconStyle={styles.rowIcon}
               />
               <Text style={[styles.text, styles.artistName]}>
                 {mainSource.name}
               </Text>
             </View>
-
             {/* Filter info per row, see loop above */}
             {filterViews}
           </View>

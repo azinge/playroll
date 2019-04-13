@@ -83,10 +83,11 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
   componentDidMount() {
     const username =
       this.props.navigation && this.props.navigation.getParam('username');
-    const password =
-      this.props.navigation && this.props.navigation.getParam('password');
+    const triggerResendSignUp =
+      this.props.navigation &&
+      this.props.navigation.getParam('triggerResendSignUp');
     if (username) {
-      this.setState({ username, triggerResendSignUp: !password });
+      this.setState({ username, triggerResendSignUp });
     }
   }
 
@@ -184,11 +185,10 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
       });
       const password =
         this.props.navigation && this.props.navigation.getParam('password');
-      NavigationService.goBack();
-      NavigationService.goBack();
       NavigationService.navigate('Landing', {
         username: this.state.username,
-        password: password || undefined,
+        password,
+        triggerSignIn: !!password,
       });
     } catch (err) {
       if (err.code === 'CodeMismatchException') {

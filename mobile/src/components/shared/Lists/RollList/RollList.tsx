@@ -24,39 +24,18 @@ export default class RollList extends React.Component<Props, State> {
   }
 
   renderItem({ item: roll }: { item: Roll }) {
-    console.log('ROLL LIST > renderItem > roll:');
-    console.log(roll);
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
-    console.log('ROLL LIST > renderItem > mainSource:');
-    console.log(mainSource);
-    const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
-    console.log('ROLL LIST > renderItem > filters:');
-    console.log(filters);
-    console.log(Array.isArray(filters));
 
-    // TODO: undo router dev hacks before submitting PR
+    const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
 
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
     for (let i = 0; i < filters.length; i++) {
-      console.log('==== i: ' + i);
       const filter = filters[i];
-      console.log(filter);
-
-      console.log('FILTER');
-      console.log(filter);
-
       const mods = filter.modifications;
-      console.log('MODS');
-      console.log(mods);
-
       const numMods = mods.length;
-      console.log('NUM MODS' + numMods);
-
       const firstMod = roll.data.sources[mods[0]];
-      console.log('FIRST MOD:');
-      console.log(firstMod);
 
       let key = i;
       switch (filter.type) {
@@ -65,6 +44,7 @@ export default class RollList extends React.Component<Props, State> {
           switch (filter.name) {
             case 'ExcludeSources':
               subIcon = 'block';
+              break;
             default:
           }
           filterViews.push(
@@ -85,15 +65,17 @@ export default class RollList extends React.Component<Props, State> {
                   iconStyle={styles.subIcon}
                 />
               )}
-              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+              <Text
+                style={[styles.text, styles.artistName]}
+                numberOfLines={1}
+                ellipsizeMode='tail' // TODO: this does not work at the moment
+              >
                 {firstMod.name}
               </Text>
             </View>
           );
           break;
         case 'Order':
-          console.log('ORDER');
-          console.log(filter);
           if (filter.name !== 'Default') {
             filterViews.push(
               <View style={styles.itemTextView} key={key}>
@@ -104,10 +86,7 @@ export default class RollList extends React.Component<Props, State> {
                   color='lightgrey'
                   iconStyle={styles.rowIcon}
                 />
-                <Text
-                  style={[styles.text, styles.artistName]}
-                  numberOfLines={2}
-                >
+                <Text style={[styles.text, styles.artistName]}>
                   {filter.name}
                 </Text>
               </View>
@@ -157,7 +136,7 @@ export default class RollList extends React.Component<Props, State> {
                 color='lightgrey'
                 iconStyle={styles.rowIcon}
               />
-              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+              <Text style={[styles.text, styles.artistName]}>
                 {mainSource.name}
               </Text>
             </View>

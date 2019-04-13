@@ -30,9 +30,11 @@ const styles = StyleSheet.create({
 
   // Rows View
   rowsView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'flex-start',
+    flex: 1, // required
+    justifyContent: 'center', // causes row to fill width
+    // alignItems: 'flex-start',
+    // alignContent: 'flex-start',
+    // color: 'red',
   },
 
   // Row icons

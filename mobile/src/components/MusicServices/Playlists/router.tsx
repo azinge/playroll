@@ -1,15 +1,17 @@
 import { createStackNavigator } from 'react-navigation';
 
 import MusicServicePlaylistsMenuScreen from './MusicServicePlaylistsMenuScreen';
-import ViewAppleMusicPlaylistsScreen from './ViewAppleMusicPlaylistsScreen';
-import ViewSpotifyPlaylistsScreen from './ViewSpotifyPlaylistsScreen';
-import ViewTidalPlaylistsScreen from './ViewTidalPlaylistsScreen';
-import ViewPlaylistScreen from './ViewPlaylistScreen';
+import BrowseAppleMusicPlaylistsScreen from './BrowseAppleMusicPlaylistsScreen';
+import BrowseSpotifyPlaylistsScreen from './BrowseSpotifyPlaylistsScreen';
+import BrowseTidalPlaylistsScreen from './BrowseTidalPlaylistsScreen';
+import ViewSpotifyPlaylistScreen from './ViewSpotifyPlaylistScreen';
+import BrowseSpotifySavedTracksScreen from './BrowseSpotifySavedTracksScreen';
 
 export const MusicServicePlaylistsRoutes = {
   MusicServicePlaylistsMenu: MusicServicePlaylistsMenuScreen,
-  ViewAppleMusicPlaylists: ViewAppleMusicPlaylistsScreen,
-  ViewSpotifyPlaylists: ViewSpotifyPlaylistsScreen,
-  ViewTidalPlaylists: ViewTidalPlaylistsScreen,
-  ViewPlaylist: ViewPlaylistScreen,
+  BrowseAppleMusicPlaylists: BrowseAppleMusicPlaylistsScreen,
+  BrowseSpotifyPlaylists: BrowseSpotifyPlaylistsScreen,
+  BrowseTidalPlaylists: BrowseTidalPlaylistsScreen,
+  ViewSpotifyPlaylist: ViewSpotifyPlaylistScreen,
+  BrowseSpotifySavedTracks: BrowseSpotifySavedTracksScreen,
 };

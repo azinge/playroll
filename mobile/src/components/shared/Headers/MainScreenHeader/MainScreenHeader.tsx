@@ -9,6 +9,7 @@ import styles from './MainScreenHeader.styles';
 import { ifIphoneX } from 'react-native-iphone-x-helper';
 import { Header, Icon } from 'react-native-elements';
 import NavigationService from '../../../../services/NavigationService';
+import { GetCurrentUserQuery } from '../../../../graphql/requests/User';
 
 export interface Props {
   hideBottomBar?: boolean;
@@ -53,7 +54,6 @@ export default class MainScreenHeader extends React.Component<Props, State> {
                 name='play-circle'
                 type='font-awesome'
                 color='white'
-                onPress={() => console.log('hello')}
                 containerStyle={{ marginTop: 5, marginRight: 4 }}
               />
               <Text style={styles.headerTitle}>Playroll</Text>
@@ -68,19 +68,37 @@ export default class MainScreenHeader extends React.Component<Props, State> {
   }
 
   renderIcons() {
+    const extractUser = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return {};
+      }
+      return data.private.currentUser;
+    };
     const profileIcon: HeaderIcon = {
       name: 'profile',
       render: () => (
-        <TouchableHighlight
-          onPress={() => NavigationService.navigate('Account')}
-          style={styles.profileAvatarContainer}
-          key='profile'
-        >
-          <Image
-            style={styles.profileAvatar}
-            source={require('../../../../assets/wack.jpg')}
-          />
-        </TouchableHighlight>
+        <GetCurrentUserQuery key='user'>
+          {({ loading, error, data }) => {
+            const user = extractUser(data);
+            return (
+              <TouchableHighlight
+                onPress={() => NavigationService.navigate('Account')}
+                style={styles.profileAvatarContainer}
+                key='profile'
+              >
+                {
+                  <Image
+                    style={styles.profileAvatar}
+                    source={{ uri: user.avatar }}
+                  />
+                }
+              </TouchableHighlight>
+            );
+          }}
+        </GetCurrentUserQuery>
       ),
     };
     const searchIcon: HeaderIcon = {

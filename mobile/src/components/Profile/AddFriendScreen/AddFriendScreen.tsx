@@ -3,21 +3,24 @@
  */
 
 import * as React from 'react';
-import { 
+import {
+  ActivityIndicator,
   FlatList,
   Image,
-  Keyboard,
-  SafeAreaView,
   ScrollView,
+  RefreshControl,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
-  View
- } from 'react-native';
-import { Icon, Button } from 'react-native-elements';
+  View,
+} from 'react-native';
+import { ApolloConsumer } from 'react-apollo';
+import Errors from '../../shared/Modals/Errors';
+import { SEARCH_USERS_QUERY } from '../../../graphql/requests/User/';
+import { SendFriendRequestMutation } from '../../../graphql/requests/Relationships';
+import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { User } from '../../../graphql/types';
-import styles from './AddFriendScreen.styles'; 
+import styles from './AddFriendScreen.styles';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -25,151 +28,339 @@ export interface Props {
 
 interface State {
   error?: string;
-  renderUsers: boolean;
+  displayErrorModal: boolean;
+  refreshing: boolean;
   username: string;
-  users?: [User],
+  fetchingUsers: boolean;
+  dogAvatar: string;
+  users?: [User];
 }
 
 export default class AddFriendScreen extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = {
       error: undefined,
-      renderUsers: false,
-      username: "",
-      users: [
-        {id: "0", name: "username0", avatar: ""},
-        {id: "1", name: "username1", avatar: ""},
-        {id: "2", name: "username2", avatar: ""},
-        {id: "3", name: "username3", avatar: ""},
-        {id: "4", name: "username0", avatar: ""},
-        {id: "5", name: "username1", avatar: ""},
-        {id: "6", name: "username2", avatar: ""},
-        {id: "7", name: "username3", avatar: ""},
-        {id: "8", name: "username0", avatar: ""},
-        {id: "9", name: "username1", avatar: ""},
-        {id: "10", name: "username2", avatar: ""},
-        {id: "11", name: "username3", avatar: ""},
-        {id: "12", name: "username1", avatar: ""},
-        {id: "13", name: "username2", avatar: ""},
-        {id: "14", name: "username3", avatar: ""},
-        {id: "15", name: "username0", avatar: ""},
-        {id: "16", name: "username1", avatar: ""},
-        {id: "17", name: "username2", avatar: ""},
-        {id: "18", name: "username3", avatar: ""},
-      ]
+      displayErrorModal: false,
+      refreshing: false,
+      username: '',
+      fetchingUsers: false,
+      dogAvatar:
+        'https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg',
+      users: [],
     };
 
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
+    this.renderRefreshControl = this.renderRefreshControl.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleSearchQueryData = this.handleSearchQueryData.bind(this);
     this.renderUserRow = this.renderUserRow.bind(this);
+    this.handleAddFriendButtonStyle = this.handleAddFriendButtonStyle.bind(
+      this,
+    );
+    this.handleAddFriendButtonTitle = this.handleAddFriendButtonTitle.bind(
+      this,
+    );
+    this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
+    this.handleFriendRequest = this.handleFriendRequest.bind(this);
+    this.handleFriendRequestMutationData = this.handleFriendRequestMutationData.bind(
+      this,
+    );
   }
 
-  renderHeader() {
+  shouldComponentUpdate() {
+    return true;
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
     return (
-      <View style={styles.header}>
-       <View style={styles.segueToBrowseContainer}>
-        <Icon
-          name="arrow-left"
-          type="font-awesome"
-          color="#6A0070"
-          onPress={() => {
-            this.props.navigation && this.props.navigation.goBack(null);
-          }}
-        />
-        <Text style={styles.browseTitle}>Browse</Text>
-       </View>
-       <Text style={styles.headerTitle}>Add Friend</Text>
-      </View>
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
     );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      displayErrorModal: false,
+      error: null,
+    });
+  }
+
+  handleUpdateUsers(users) {
+    return this.setState({
+      users,
+    });
+  }
+
+  handleSearchQueryData(data) {
+    if (!(data && data.private)) return;
+    const { searchUsers } = data.private;
+    if (searchUsers) {
+      this.setState({ fetchingUsers: false, refreshing: false }, () => {
+        return this.handleUpdateUsers(searchUsers);
+      });
+    }
+  }
+
+  renderSegueIcon() {
+    return (
+      <Icon
+        name='arrow-back'
+        type='material'
+        color='white'
+        onPress={() => {
+          this.props.navigation && this.props.navigation.goBack(null);
+        }}
+      />
+    );
+  }
+
+  handleSearch(client) {
+    if (this.state.username.length === 0) {
+      return;
+    }
+    client
+      .query({
+        query: SEARCH_USERS_QUERY,
+        variables: {
+          query: this.state.username,
+          offset: 0,
+          count: 10,
+        },
+      })
+      .then(({ error, data, loading }) => {
+        console.log(
+          'validateSearchInput() client.query promise resolved(data):',
+          data,
+        );
+        if (error) {
+          throw error;
+        }
+        if (loading) {
+          this.setState({ fetchingUsers: true });
+        }
+        if (data) {
+          this.handleSearchQueryData(data);
+        }
+      })
+      .catch(error => {
+        console.log(
+          'validateSearchInput() client.query promise rejected:',
+          error,
+        );
+        if (this.state.fetchingUsers) {
+          this.setState({ fetchingUsers: false });
+        }
+        if (this.state.refreshing) {
+          this.setState({ refreshing: false });
+        }
+        this.handleErrors(error.message);
+      });
   }
 
   renderSearchBar() {
     return (
-      <View style={styles.searchBarContainer}>
+      <ApolloConsumer>
+        {client => (
           <TextInput
-            placeholder="@playroll"
+            placeholder='@playroll'
+            placeholderTextColor='#bdbdbd'
             style={styles.searchInputContainer}
             onChangeText={username => this.setState({ username })}
             autoCapitalize={'none'}
             value={this.state.username}
+            onSubmitEditing={() => this.handleSearch(client)}
           />
-        </View>
+        )}
+      </ApolloConsumer>
     );
   }
 
-  renderSearchButton() {
+  renderClearTextIcon() {
+    if (this.state.fetchingUsers) {
+      return <ActivityIndicator color={'white'} />;
+    }
     return (
-      <Button 
-        buttonStyle={styles.searchButton} 
-        title={"Search"}
-        onPress={() => {
-          this.setState({ renderUsers: !this.state.renderUsers });
-        }}
+      <Icon
+        name='clear'
+        type='material'
+        color='white'
+        onPress={() => this.setState({ username: '' })}
       />
     );
   }
 
   renderSearchContainer() {
     return (
-      <View style={styles.searchContainer}>
+      <View style={styles.searchBarContainer}>
         {this.renderSearchBar()}
-        {this.state.username.length > 0 && this.renderSearchButton()}
+        {this.state.username.length > 0 && this.renderClearTextIcon()}
       </View>
     );
   }
-  
-  sendFriendRequest() {
-    console.log('sendFriendRequest()');
+
+  openOptions() {
+    // TODO: Action to open options.
   }
 
-  renderAvatar(item) {
+  renderOptionIcon() {
+    return (
+      <Icon
+        name='more-vert'
+        type='material'
+        color='white'
+        onPress={this.openOptions}
+      />
+    );
+  }
+
+  renderHeader() {
+    return (
+      <Header
+        backgroundColor='#6A0070'
+        leftComponent={this.renderSegueIcon()}
+        centerComponent={this.renderSearchContainer()}
+        rightComponent={this.renderOptionIcon()}
+      />
+    );
+  }
+
+  renderAvatar(user) {
     return (
       <View style={styles.userAvatarContainer}>
         <Image
           style={styles.userAvatar}
-          source={{uri: "https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg"}}
+          source={{
+            uri: user.avatar.length > 0 ? user.avatar : this.state.dogAvatar,
+          }}
         />
       </View>
     );
   }
 
-  renderUsername(item) {
+  renderUsername(user) {
     return (
       <View style={styles.usernameContainer}>
-        <Text style={styles.username}>{item.name}</Text>
+        <Text style={styles.username}>{user.name}</Text>
       </View>
     );
   }
 
-  renderAddUserButton() {
+  handleFriendRequestMutationData(selectedUser, response) {
+    const { data } = response;
+    if (!(data && data.private)) return;
+    const { sendFriendRequest } = data.private;
+    if (sendFriendRequest) {
+      // NOTE: display modal? [friend request sent]
+    }
+  }
+
+  handleFriendRequest(user, sendFriendRequest) {
+    console.log('handleFriendRequest()');
+    sendFriendRequest()
+      .then(response => {
+        console.log('sendFriendRequest() promise resolved', response);
+        return this.handleFriendRequestMutationData(user, response);
+      })
+      .catch(error => {
+        console.log('sendFriendRequest() promise rejected', error);
+        this.handleErrors(error.message);
+      });
+  }
+
+  handleAddFriendButtonStyle(user) {
+    // NOTE: Handle if friend request is pending
+    // styles.addUserButtonPending
+    return styles.addUserButtonStatic;
+  }
+
+  handleAddFriendButtonTitle(user) {
+    // NOTE: Handle if friend request is pending
+    // return '...' || {symbol for pending}
+    return '+';
+  }
+
+  renderAddUserButton(user) {
     return (
-      <View style={styles.addUserButtonContainer}>
-        <Button 
-          buttonStyle={styles.addUserButton} 
-          title={"+"} 
-          onPress={() => this.sendFriendRequest()}
-        />
-      </View>
+      <SendFriendRequestMutation
+        variables={{
+          userID: user.id,
+        }}
+      >
+        {(sendFriendRequest, { loading }) => {
+          return (
+            <View style={styles.addUserButtonContainer}>
+              {loading ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Button
+                  buttonStyle={this.handleAddFriendButtonStyle(user)}
+                  title={this.handleAddFriendButtonTitle(user)}
+                  onPress={() =>
+                    this.handleFriendRequest(user, sendFriendRequest)
+                  }
+                />
+              )}
+            </View>
+          );
+        }}
+      </SendFriendRequestMutation>
     );
   }
 
-  renderUserRow({item}) {
+  renderUserRow({ item }) {
     return (
       <View style={styles.userRow}>
         {this.renderAvatar(item)}
         {this.renderUsername(item)}
-        {this.renderAddUserButton()}
+        {this.renderAddUserButton(item)}
       </View>
-    )
+    );
+  }
+
+  handleRefresh(client) {
+    console.log('handleRefresh()');
+    this.setState({ refreshing: true }, () => {
+      this.handleSearch(client);
+    });
+  }
+
+  renderRefreshControl() {
+    return (
+      <ApolloConsumer>
+        {client => (
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => this.handleRefresh(client)}
+          />
+        )}
+      </ApolloConsumer>
+    );
   }
 
   renderUsers() {
-    if (this.state.renderUsers) {
+    if (this.state.users.length > 0) {
       return (
-        <ScrollView style={styles.usersContainer}>
-          <FlatList 
+        <ScrollView
+          style={styles.usersContainer}
+          refreshControl={this.renderRefreshControl()}
+        >
+          <FlatList
             data={this.state.users}
-            keyExtractor={(user, i) => user.id}
+            keyExtractor={user => user.id}
             renderItem={this.renderUserRow}
           />
         </ScrollView>
@@ -179,19 +370,11 @@ export default class AddFriendScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <SafeAreaView style={styles.mainContainer}>
-          <View style={styles.container}>
-            {this.renderHeader()}
-            {this.renderSearchContainer()}
-            {this.renderUsers()}
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+      <View style={styles.mainContainer}>
+        {this.renderHeader()}
+        {this.renderUsers()}
+        {this.renderErrorModal(this.state.error)}
+      </View>
     );
   }
 }

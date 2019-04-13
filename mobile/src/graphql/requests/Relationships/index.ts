@@ -1,0 +1,1 @@
+export { SendFriendRequestMutation } from './SendFriendRequestMutation';

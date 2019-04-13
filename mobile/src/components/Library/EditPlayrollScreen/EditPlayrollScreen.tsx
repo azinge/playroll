@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { View, TextInput, ScrollView, Image } from 'react-native';
+import { View, ScrollView, Text, TextInput, Image } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './EditPlayrollScreen.styles';
@@ -36,7 +36,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     this.state = {
       editPlayrollName: '',
     };
-    this.renderHeader = this.renderHeader.bind(this);
+    // this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
@@ -51,22 +51,29 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
           return (
-            <SubScreenContainer
-              title='Edit Playroll'
-              renderHeader={this.renderHeader}
-            >
-              <View style={styles.screenContainer}>
-                {/* {this.renderHeader(playroll)} */}
-                {this.renderEditingBar(playroll)}
-                {this.renderSearchMusic(playroll)}
-                {/* {this.renderBottomBar(playroll)} */}
-              </View>
-            </SubScreenContainer>
+            <View style={{ flex: 1 }}>
+              <SubScreenContainer
+                title='Edit Playroll'
+                renderHeader={this.renderHeader}
+              >
+                <View style={styles.screenContainer}>
+                  {/* Playroll Icon, Name and Subtitle */}
+                  {this.renderPlayrollHeader(playroll)}
+
+                  {/* Search Bar and Results */}
+                  {/* TODO: This should be a list of current Rolls, not search results */}
+                  {this.renderSearch(playroll)}
+                </View>
+              </SubScreenContainer>
+              {this.renderBottomBar(playroll)}
+            </View>
           );
         }}
       </GetCurrentUserPlayrollQuery>
     );
   }
+
+  // Header of the screen
   renderHeader() {
     const playroll: Playroll =
       (this.props &&
@@ -89,20 +96,23 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       >
         {(generateTracklist, { data }) => {
           const generateTracklistIcon = {
-            ...Icons.saveIcon,
-            onPress: () => generateTracklist(),
+            ...Icons.exportIcon,
+            // onPress: () => generateTracklist(),
+            onPress: () => NavigationService.navigate('GenerateTracklist'),
           };
           return (
             <SubScreenHeader
-              title={playroll.name}
-              icons={[generateTracklistIcon, Icons.menuIcon]}
+              title='Edit Playroll'
+              icons={[generateTracklistIcon]}
             />
           );
         }}
       </GenerateTracklistMutation>
     );
   }
-  renderEditingBar(playroll: Playroll) {
+
+  // Thumbnail, Name, and Subtitle
+  renderPlayrollHeader(playroll: Playroll) {
     return (
       <View style={styles.editingBarContainer}>
         <Image
@@ -120,7 +130,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
-            <View style={styles.editingBarNameContainer}>
+            <View style={styles.titleBarName}>
               <TextInput
                 selectionColor={'purple'}
                 placeholder='Name Your Playroll'
@@ -132,12 +142,11 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                 {playroll.name}
               </TextInput>
               <View style={styles.horizontalRule} />
-              <TextInput
-                selectionColor={'purple'}
-                placeholder='#Existential #Chill #Help'
-                placeholderTextColor='lightgrey'
-                style={styles.editingBarTagInput}
-              />
+              {playroll && playroll.rolls && (
+                <Text style={styles.subtitle}>
+                  Select a roll below to add to this playroll.
+                </Text>
+              )}
             </View>
           )}
         </UpdatePlayrollMutation>
@@ -145,7 +154,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
-  renderSearchMusic(playroll: Playroll) {
+  // Search Bar and Results
+  renderSearch(playroll: Playroll) {
     return (
       <View style={styles.searchMusicContainer}>
         <Search playrollID={playroll.id} />
@@ -153,6 +163,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
+  // Bottom Bar of Icons to display current list of Rolls
   renderBottomBar(playroll: Playroll) {
     const iconMap: { [index: string]: string } = {
       Track: 'audiotrack',
@@ -170,6 +181,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             playroll.rolls.map((roll, idx) => {
               const val: MusicSource =
                 (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+              // console.log(val);
               return (
                 <View style={styles.bottomBarItemContainer} key={idx}>
                   <Image
@@ -187,7 +199,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                             this.props.navigation &&
                             this.props.navigation.goBack(null)
                           }
-                          underlayColor='purple'
+                          underlayColor='rgba(255,255,255,0)'
                         />
                       }
                     </View>

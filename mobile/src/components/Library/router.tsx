@@ -3,12 +3,14 @@ import { createStackNavigator } from 'react-navigation';
 import EditPlayrollScreen from './EditPlayrollScreen';
 import EditRollScreen from './EditRollScreen';
 import ViewTracklistScreen from './ViewTracklistScreen';
-import ViewRecommendationsScreen from './ViewRecommendationsScreen';
+import BrowseRecommendationsScreen from './BrowseRecommendationsScreen';
 import ViewDiscoveryQueueScreen from './ViewDiscoveryQueueScreen';
 import ViewPlayrollScreen from './ViewPlayrollScreen';
-import ViewPlayrollsScreen from './ViewPlayrollsScreen';
+import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import LibraryMenuScreen from './LibraryMenuScreen';
 import { MusicServicePlaylistsRoutes } from '../MusicServices/Playlists/router';
+import GenerateTracklistScreen from './GenerateTracklistScreen';
+import AddToPlayrollScreen from './AddToPlayrollScreen';
 
 export const LibraryNavigator = createStackNavigator(
   {
@@ -16,8 +18,8 @@ export const LibraryNavigator = createStackNavigator(
     EditPlayroll: EditPlayrollScreen,
     ViewDiscoveryQueue: ViewDiscoveryQueueScreen,
     ViewPlayroll: ViewPlayrollScreen,
-    ViewPlayrolls: ViewPlayrollsScreen,
-    ViewRecommendations: ViewRecommendationsScreen,
+    BrowsePlayrolls: BrowsePlayrollsScreen,
+    BrowseRecommendations: BrowseRecommendationsScreen,
     ViewTracklist: ViewTracklistScreen,
     ...MusicServicePlaylistsRoutes,
   },
@@ -28,5 +30,7 @@ export const LibraryNavigator = createStackNavigator(
 );
 
 export const LibraryModalRoutes = {
+  AddToPlayroll: AddToPlayrollScreen,
   EditRoll: EditRollScreen,
+  GenerateTracklist: GenerateTracklistScreen,
 };

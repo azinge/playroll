@@ -11,6 +11,7 @@ export default StyleSheet.create({
     fontSize: 40,
     color: 'white',
     fontWeight: 'bold',
+    marginHorizontal: 25,
   },
   sourceSubtitle: {
     fontSize: 24,

@@ -9,8 +9,18 @@ import HomeScreen from './HomeScreen';
 import DiscoverScreen from './DiscoverScreen';
 import { LibraryNavigator, LibraryModalRoutes } from '../Library/router';
 import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
-import { SearchRoutes, SearchModalRoutes } from '../Search/router';
+import {
+  SearchRoutes,
+  SearchModalRoutes,
+  //   SearchNavigator,
+} from '../Search/router';
 import { MusicServiceSettingsModalRoutes } from '../MusicServices/Settings/router';
+
+// Add Avenir to all screens (for Android)
+import { Font } from 'expo';
+Font.loadAsync({
+  Avenir: require('../../assets/fonts/AvenirLTStd-Black.otf'),
+});
 
 export const MainTabsNavigator = createBottomTabNavigator(
   {
@@ -92,5 +102,6 @@ export const MainNavigator = createStackNavigator(
     initialRouteName: 'MainWithoutModals',
     mode: 'modal',
     headerMode: 'none',
+    // transparentCard: true,
   }
 );

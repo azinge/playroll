@@ -24,13 +24,16 @@ import styles from './ManageRollScreen.styles';
 
 import { ListCurrentUserPlayrollsQuery } from '../../../graphql/requests/Playroll/';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
-import PlayrollCard from '../../Playrolls/BrowsePlayrollsScreen/PlayrollCard';
+import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import { CreateRollMutation } from '../../../graphql/requests/Roll';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import NavigationService from '../../../services/NavigationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  source?: any;
 }
 
 interface State {
@@ -46,8 +49,18 @@ export default class ManageRollScreen extends React.Component<Props, State> {
   }
 
   render() {
+    // return (
+    //   <SubScreenContainer
+    //     title={'Manage Roll'}
+    //     contentContainerStyle={{ marginTop: 10 }}
+    //     modal
+    //   >
+    //     <PlaceholderList numItems={20} overlayText={'Coming Soon...'} />
+    //   </SubScreenContainer>
+    // );
     const currentSource =
       this.props.navigation && this.props.navigation.getParam('currentSource');
+    delete currentSource.__typename;
     return (
       <SubScreenContainer title='Manage Roll' modal>
         <View style={{ flex: 2, backgroundColor: 'white' }}>
@@ -70,17 +83,39 @@ export default class ManageRollScreen extends React.Component<Props, State> {
                 containerStyle={{ margin: 10 }}
                 buttonStyle={styles.button}
                 titleStyle={{ color: 'purple', fontSize: 16 }}
-                onPress={() => this.setState({ isVisible: true })}
+                onPress={() =>
+                  NavigationService.navigate('AddToPlayroll', {
+                    rollData: {
+                      sources: [currentSource],
+                      filters: [
+                        {
+                          type: 'Source',
+                          name: 'Union',
+                          modifications: ['0'],
+                        },
+                        {
+                          type: 'Order',
+                          name: 'Random',
+                        },
+                        {
+                          type: 'Length',
+                          name: 'NumberOfSongs',
+                          modifications: ['0', '10'],
+                        },
+                      ],
+                    },
+                  })
+                }
                 raised
               />
-              <Button
+              {/* <Button
                 title='Add To Discovery Queue'
                 containerStyle={{ margin: 10 }}
                 buttonStyle={styles.button}
                 titleStyle={{ color: 'purple', fontSize: 16 }}
                 onPress={() => {}}
                 raised
-              />
+              /> */}
               <Button
                 title='Recommend'
                 containerStyle={{ margin: 10 }}

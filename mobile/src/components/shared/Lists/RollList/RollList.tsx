@@ -12,39 +12,53 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   rolls: Roll[];
+  // onPress?: () => void;  // TODO: is this required?
 }
 
 interface State {}
 
 export default class RollList extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.renderItem = this.renderItem.bind(this);
+  }
+
   renderItem({ item: roll }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
+    // console.log(mainSource)
     return (
-      <TouchableOpacity onPress={() => {}} key={roll.id}>
-        <View style={{ width: '100%', alignItems: 'center' }} key={roll.id}>
-          <View style={{ flexDirection: 'row', width: '100%' }}>
-            <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={styles.artist} numberOfLines={2}>
-                {mainSource.name}
+      // Removing TouchableOpacity because the Edit Icon is enough
+      // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
+      <View style={styles.outerContainer} key={roll.id}>
+        <View style={styles.innerContainer}>
+          <Image style={styles.cover} source={{ uri: mainSource.cover }} />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
+              {mainSource.type}
+            </Text>
+            <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+              {mainSource.name}
+            </Text>
+            <Text style={[styles.text, styles.source]} numberOfLines={2}>
+              {mainSource.provider}
+            </Text>
+            {mainSource.creator ? (
+              <Text style={styles.noArtist} numberOfLines={2}>
+                {mainSource.creator}
               </Text>
-              {mainSource.creator ? (
-                <Text style={styles.noArtist} numberOfLines={2}>
-                  {mainSource.creator}
-                </Text>
-              ) : null}
-            </View>
-            <Icon
-              size={35}
-              name='more-vert'
-              color='lightgrey'
-              onPress={() => NavigationService.goBack()}
-            />
+            ) : null}
           </View>
-          <View style={styles.spacing} />
+          <Icon
+            size={25}
+            name='edit'
+            color='lightgrey'
+            onPress={() => NavigationService.navigate('EditRoll', roll)}
+            iconStyle={styles.editIcon}
+          />
         </View>
-      </TouchableOpacity>
+        <View style={styles.spacing} />
+      </View>
     );
   }
 

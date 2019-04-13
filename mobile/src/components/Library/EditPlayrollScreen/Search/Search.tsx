@@ -2,42 +2,29 @@ import React, { Component } from 'react';
 import {
   TextInput,
   View,
-  ScrollView,
   Text,
   Image,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
-  Picker,
   FlatList,
-  ListRenderItem,
   ActivityIndicator,
 } from 'react-native';
-import { Header, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles from './Search.styles';
 
 import RNPickerSelect from 'react-native-picker-select';
-import { MusicSource } from '../../../../graphql/types';
+import { MusicSource, Roll } from '../../../../graphql/types';
 import { SearchSpotifyQuery } from '../../../../graphql/requests/Spotify/';
 import CreateModal from './CreateModal';
-import { render } from 'react-dom';
 import NavigationService from '../../../../services/NavigationService';
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {
     width: 110,
     height: 40,
-    // margin: 10,
     fontSize: 16,
-    // padding: 10,
-    // paddingTop: 13,
-    // paddingHorizontal: 10,
-    // paddingBottom: 12,
-    // borderWidth: 1,
-    // borderLeftWidth: 1,
     borderColor: '#6A0070',
-    // borderRadius: 4,
     borderLeftColor: 'lightgray',
     textAlign: 'center',
     backgroundColor: '#f5eeed',
@@ -50,6 +37,7 @@ export interface Props {
   query?: string;
   navigation?: NavigationScreenProp<{}>;
   playrollID?: any;
+  onPress?: (roll: Roll) => void;
 }
 
 interface State {
@@ -93,17 +81,24 @@ export default class Search extends Component<Props, State> {
   render() {
     return (
       <View>
-        {this.renderHeader()}
-        {this.renderOptionsBar()}
+        {this.renderSearchBar()}
+
+        {/* Options Bar (Popular, New, ABC, etc) */}
+        {/* TODO: do we need this? */}
+        {/* {this.renderOptionsBar()} */}
+
+        {/* Modal to add selected roll */}
         {this.renderModal()}
-        {this.renderSearch()}
+
+        {/* Search Results */}
+        {this.renderSearchResults()}
       </View>
     );
   }
 
-  renderHeader() {
+  renderSearchBar() {
     return (
-      <View style={styles.main}>
+      <View style={styles.searchBar}>
         <Icon
           name={'search'}
           size={35}
@@ -152,7 +147,10 @@ export default class Search extends Component<Props, State> {
           >
             <View style={{ flexDirection: 'row' }}>
               <Text style={{ fontSize: 16 }}>{this.state.searchType}</Text>
-              <Icon name='arrow-drop-down' />
+              <Icon
+                name='arrow-drop-down'
+                underlayColor='rgba(255,255,255,0)'
+              />
             </View>
           </RNPickerSelect>
         </View>
@@ -162,7 +160,7 @@ export default class Search extends Component<Props, State> {
 
   renderOptionsBar() {
     return (
-      <View style={{ margin: 10, flexDirection: 'row' }}>
+      <View style={{ marginTop: 10, flexDirection: 'row' }}>
         <View style={{ paddingHorizontal: 7 }}>
           <Text
             style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
@@ -191,7 +189,7 @@ export default class Search extends Component<Props, State> {
     );
   }
 
-  renderSearch() {
+  renderSearchResults() {
     return (
       <SearchSpotifyQuery
         variables={{
@@ -200,9 +198,11 @@ export default class Search extends Component<Props, State> {
         }}
       >
         {({ loading, error, data }) => {
-          console.log(error);
+          // console.log(error);
+          console.log('DATA');
+          console.log(data.private);
           return (
-            <View style={{ marginBottom: 145 }}>
+            <View style={styles.resultsContainer}>
               {loading ? (
                 <ActivityIndicator color={'gray'} />
               ) : (
@@ -211,48 +211,90 @@ export default class Search extends Component<Props, State> {
                   showsVerticalScrollIndicator={false}
                   keyExtractor={(item, index) => item.providerID}
                   extraData={this.state}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.props.playrollID
-                          ? this.setModal(item)
-                          : this.manageRoll(item);
-                      }}
-                      key={item.providerID}
-                    >
-                      <View
-                        style={{ width: '100%', alignItems: 'center' }}
+                  renderItem={({ item }) => {
+                    console.log(item);
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.props.playrollID
+                            ? this.setModal(item)
+                            : this.manageRoll(item);
+                        }}
                         key={item.providerID}
                       >
-                        <View style={{ flexDirection: 'row', width: '100%' }}>
-                          <Image
-                            style={styles.cover}
-                            source={{ uri: item.cover }}
-                          />
-                          <View style={{ flex: 1, justifyContent: 'center' }}>
-                            <Text style={styles.artist} numberOfLines={2}>
-                              {item.name}
-                            </Text>
-                            {item.creator ? (
-                              <Text style={styles.noArtist} numberOfLines={2}>
-                                {item.creator}
+                        <View style={styles.rowOuter} key={item.providerID}>
+                          <View style={styles.rowInner}>
+                            {/* Row thumbnail image */}
+                            <Image
+                              style={styles.cover}
+                              source={{ uri: item.cover }}
+                            />
+
+                            {/* Row text */}
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                              <Text
+                                style={[styles.text, styles.rollType]}
+                                numberOfLines={2}
+                              >
+                                {item.type}
                               </Text>
-                            ) : null}
+                              <Text
+                                style={[styles.text, styles.artistName]}
+                                numberOfLines={2}
+                              >
+                                {item.name}
+                              </Text>
+                              {item.creator ? (
+                                <View style={{ flexDirection: 'row' }}>
+                                  <Text style={[styles.text, styles.creator]}>
+                                    {item.creator}
+                                  </Text>
+                                  <Text style={[styles.text, styles.provider]}>
+                                    &nbsp;&middot; {item.provider}
+                                  </Text>
+                                </View>
+                              ) : (
+                                <Text
+                                  style={[styles.text, styles.provider]}
+                                  numberOfLines={2}
+                                >
+                                  {item.provider}
+                                </Text>
+                              )}
+                            </View>
+
+                            <View style={styles.rowIcons}>
+                              <Icon
+                                size={25}
+                                name='settings'
+                                type='material'
+                                color='lightgrey'
+                                onPress={() => {
+                                  NavigationService.navigate('EditRoll', {
+                                    item,
+                                  });
+                                }}
+                                iconStyle={styles.editIcon}
+                              />
+                              <Icon
+                                size={25}
+                                name='delete'
+                                type='material'
+                                color='lightgrey'
+                                onPress={() => {
+                                  NavigationService.navigate('EditRoll', {
+                                    item,
+                                  });
+                                }}
+                                iconStyle={styles.editIcon}
+                              />
+                            </View>
                           </View>
-                          <Icon
-                            size={35}
-                            name='more-vert'
-                            color='lightgrey'
-                            onPress={() =>
-                              this.props.navigation &&
-                              this.props.navigation.goBack(null)
-                            }
-                          />
+                          <View style={styles.spacing} />
                         </View>
-                        <View style={styles.spacing} />
-                      </View>
-                    </TouchableOpacity>
-                  )}
+                      </TouchableOpacity>
+                    );
+                  }}
                 />
               )}
             </View>

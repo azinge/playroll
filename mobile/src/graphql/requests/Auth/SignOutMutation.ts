@@ -12,7 +12,7 @@ export const SIGN_OUT_MUTATION = gql`
 type SignOutVariables = {};
 
 type SignOutData = {
-  signOut?: boolean;
+  signOut?: any;
 };
 
 export class SignOutMutation extends Mutation<SignOutData, SignOutVariables> {

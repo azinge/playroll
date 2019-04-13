@@ -15,7 +15,7 @@ type ConfirmSignUpVariables = {
 };
 
 type ConfirmSignUpData = {
-  confirmSignUp?: boolean;
+  confirmSignUp?: any;
 };
 
 export class ConfirmSignUpMutation extends Mutation<

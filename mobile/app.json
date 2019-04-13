@@ -2,16 +2,16 @@
   "expo": {
     "name": "Playroll",
     "slug": "playroll",
-    "privacy": "public",
+    "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "scheme": "playroll",
     "platforms": ["ios", "android"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/playroll_icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/loading.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -19,7 +19,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
-    }
+      "bundleIdentifier": "com.playroll.playroll"
+    },
+    "android": {
+      "versionCode": 2,
+      "package": "com.playroll.playroll"
+    },
+    "primaryColor": "#ffffff"
   }
 }

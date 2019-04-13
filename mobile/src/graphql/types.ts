@@ -73,6 +73,48 @@ export const RollDataFragments = {
   `,
 };
 
+// DiscoveryQueueEntry Types / Fragments
+
+export type DiscoveryQueueEntry = {
+  id?: number;
+  discoveryQueueID?: number;
+  data?: RollData;
+};
+
+export const DiscoveryQueueEntryFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueueEntry on DiscoveryQueueEntry {
+      id
+      discoveryQueueID
+      data {
+        ...DefaultRollData
+      }
+    }
+    ${RollDataFragments.default}
+  `,
+};
+
+// DiscoveryQueue Types / Fragments
+
+export type DiscoveryQueue = {
+  id?: number;
+  userID?: number;
+  entries?: DiscoveryQueueEntry[];
+};
+
+export const DiscoveryQueueFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueue on DiscoveryQueue {
+      id
+      userID
+      entries {
+        ...DefaultDiscoveryQueueEntry
+      }
+    }
+    ${DiscoveryQueueEntryFragments.default}
+  `,
+};
+
 // User Types / Fragments
 
 export type User = {
@@ -174,7 +216,7 @@ export const TracklistFragments = {
 
 export type Playroll = {
   id?: number;
-  userID: number;
+  userID?: number;
   name?: string;
   rolls?: [Roll];
   tracklists?: [Tracklist];
@@ -211,5 +253,78 @@ export const PlayrollFragments = {
     }
     ${RollFragments.default}
     ${TracklistFragments.default}
+  `,
+};
+
+// Recommendation Types / Fragments
+
+export type Recommendation = {
+  id?: number;
+  userID?: number;
+  recommenderID?: number;
+  recommender?: User;
+  isActive?: boolean;
+  data?: RollData;
+  playroll?: Playroll;
+};
+
+export const RecommendationFragments = {
+  default: gql`
+    fragment DefaultRecommendation on Recommendation {
+      id
+      isActive
+      data {
+        ...DefaultRollData
+      }
+      playroll {
+        ...DefaultPlayroll
+      }
+      recommender {
+        ...DefaultUser
+      }
+      user {
+        ...DefaultUser
+      }
+    }
+    ${RollDataFragments.default}
+    ${PlayrollFragments.default}
+    ${UserFragments.default}
+  `,
+};
+
+// Relationship Types / Fragments
+
+export type Relationship = {
+  createdAt: string;
+  deletedAt: string;
+  id: number;
+  isBlocking: boolean;
+  otherUser: User;
+  otherUserID: number;
+  status: string;
+  updatedAt: string;
+  user: User;
+  userID: number;
+};
+
+export const RelationshipFragments = {
+  default: gql`
+    fragment DefaultRelationship on Relationship {
+      createdAt
+      deletedAt
+      id
+      isBlocking
+      otherUser {
+        ...DefaultUser
+      }
+      otherUserID
+      status
+      updatedAt
+      user {
+        ...DefaultUser
+      }
+      userID
+    }
+    ${UserFragments.default}
   `,
 };

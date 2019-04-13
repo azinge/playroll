@@ -243,7 +243,9 @@ func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db 
 }
 
 func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
-	savedTracksPage, err := client.CurrentUsersTracks()
+	offset := 0
+	limit := 20
+	savedTracksPage, err := client.CurrentUsersTracksOpt(&spotify.Options{Offset: &offset, Limit: &limit})
 	if err != nil {
 		fmt.Println("error fetching savedTracks: ", err.Error())
 		return nil, err

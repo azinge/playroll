@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import libraryStyles from '../library.styles';
 
-export default StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+interface Style {
+  headerCenterComponent: ViewStyle;
+}
+
+const styles = StyleSheet.create({
   headerCenterComponent: {
     color: '#fff',
     fontSize: 20,
@@ -17,26 +18,26 @@ export default StyleSheet.create({
   editingBarNameContainer: {
     flex: 1,
   },
+
   editingBarNameInput: {
     fontSize: 20,
   },
-  horizontalRule: {
-    width: '75%',
-    marginVertical: 5,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+
   editingBarTagInput: {
     fontSize: 15,
   },
+
   searchMusicContainer: {
     flex: 1,
   },
+
   bottomBarContainer: {
     height: 83,
     borderTopColor: 'lightgrey',
     borderTopWidth: 1,
     width: '100%',
+    position: 'absolute',
+    bottom: 0,
     backgroundColor: '#f5eeed',
     paddingBottom: 5,
     paddingHorizontal: 5,
@@ -74,3 +75,5 @@ export const rawStyles = {
     borderColor: 'lightgrey',
   },
 };
+
+export default Object.assign(libraryStyles, styles);

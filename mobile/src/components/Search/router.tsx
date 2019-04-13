@@ -8,5 +8,6 @@ export const SearchRoutes = {
 };
 
 export const SearchModalRoutes = {
+  SearchMusicSource: SearchScreen,
   ManageRoll: ManageRollScreen,
 };

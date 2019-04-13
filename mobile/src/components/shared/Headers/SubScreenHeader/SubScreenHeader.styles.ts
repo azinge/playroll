@@ -5,7 +5,7 @@ export default StyleSheet.create({
     paddingTop: 1,
     paddingLeft: 3,
     fontSize: 23,
-    color: 'white',
+    color: 'purple',
   },
   profileAvatar: {
     width: 30,

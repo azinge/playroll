@@ -37,11 +37,39 @@ func (op *OrderPolicy) Load(rf *jsonmodels.RollFilter) error {
 
 func NewOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) (GeneratePolicy, error) {
 	switch filter.Name {
+	case "Default":
+		return NewDefaultOrderPolicy(filter, sources, db, client)
 	case "Random":
 		return NewRandomOrderPolicy(filter, sources, db, client)
 	default:
 		return nil, fmt.Errorf("error, invalid filter")
 	}
+}
+
+type DefaultOrderPolicy struct {
+	OrderPolicy
+}
+
+func NewDefaultOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*DefaultOrderPolicy, error) {
+	dop := &DefaultOrderPolicy{}
+	dop.Init(sources, cleanDB, client)
+	if ok := dop.Validate(filter); !ok {
+		return nil, fmt.Errorf("random order policy error, could not validate filter: %v", filter)
+	}
+	if err := dop.Load(filter); err != nil {
+		return nil, fmt.Errorf("random order policy error, could not load filter: %v", filter)
+	}
+	return dop, nil
+}
+
+func (dop *DefaultOrderPolicy) Name() string { return "Default" }
+
+func (dop *DefaultOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return dop.OrderPolicy.Validate(rf) && rf.Name == dop.Name()
+}
+
+func (dop *DefaultOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+	return db, nil
 }
 
 type RandomOrderPolicy struct {
@@ -63,7 +91,7 @@ func NewRandomOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.M
 func (rop *RandomOrderPolicy) Name() string { return "Random" }
 
 func (rop *RandomOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
-	return rf.Type == rop.Type() && rf.Name == rop.Name()
+	return rop.OrderPolicy.Validate(rf) && rf.Name == rop.Name()
 }
 
 func (rop *RandomOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {

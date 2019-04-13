@@ -6,11 +6,14 @@ import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
-import DiscoverCarousel from './DiscoverCarousel';
+import HomeCarousel from './HomeCarousel';
 import { musicSources } from '../../../static/mockData';
 import styles from './HomeScreen.styles';
 import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
+import HorizontalComingSoonList from '../../shared/Lists/HorizontalComingSoonList';
+import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -33,7 +36,7 @@ export default class HomeScreen extends React.Component<Props, State> {
           </View>
 
           <TouchableOpacity onPress={() => {}}>
-              <DiscoverCarousel />
+            <DiscoverCarousel />
           </TouchableOpacity>
 
           <HorizontalMusicSourceList
@@ -41,17 +44,17 @@ export default class HomeScreen extends React.Component<Props, State> {
             musicSources={musicSources}
           />
 
-          <HorizontalMusicSourceList
+          {/* <HorizontalPlaceholderList
+            title={'Discovery Queues'}
+            numItems={5}
+            overlayText={'Coming Soon...'}
+          /> */}
+
+          <PlaceholderList
             title={'Recommendations'}
-            musicSources={musicSources}
+            numItems={5}
+            overlayText={'Coming Soon...'}
           />
-
-          <HorizontalMusicSourceList
-            title={'Friends'}
-            musicSources={musicSources}
-          />
-
-          <View style={{ marginVertical: 10 }} />
         </View>
       </MainScreenContainer>
     );

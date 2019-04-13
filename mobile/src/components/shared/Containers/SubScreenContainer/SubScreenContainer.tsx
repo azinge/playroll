@@ -23,6 +23,8 @@ interface ContainerProps extends HeaderProps {
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderItem?: (obj: any) => any;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 
 interface Props extends ContainerProps {}
@@ -44,7 +46,29 @@ export default class SubScreenContainer extends React.Component<Props, State> {
       this.setState({ key });
     }
   }
+  getRefreshProps() {
+    const { flatList, refreshing, onRefresh } = this.props;
+    if (!onRefresh) {
+      return {};
+    }
+    if (flatList) {
+      return { refreshing, onRefresh };
+    } else {
+      return {
+        refreshControl: (
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        ),
+      };
+    }
+  }
   render() {
+    const {
+      renderHeader,
+      flatList,
+      data,
+      keyExtractor,
+      renderItem,
+    } = this.props;
     return (
       <Collapsible
         key={this.state.key}

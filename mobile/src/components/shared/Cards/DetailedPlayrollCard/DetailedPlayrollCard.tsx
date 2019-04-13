@@ -57,7 +57,6 @@ export default class DetailedPlayrollCard extends React.Component<
 
   render() {
     const { editPlayroll = () => {} } = this.props;
-    console.log(this.props.playroll.id);
     return (
       <GetCurrentUserPlayrollQuery
         variables={{ id: this.props.playroll.id }}

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import HomeCarousel from './HomeCarousel';
@@ -26,10 +26,22 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       <MainScreenContainer>
         <View style={{ marginTop: 5, flex: 1 }}>
-          <HomeCarousel
-            title={'Your Featured Playrolls'}
-            numItems={5}
-            overlayText={'Coming Soon...'}
+          <View
+            style={{
+              marginVertical: 10,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Text style={styles.title}>Suggested Playrolls</Text>
+          </View>
+
+          <TouchableOpacity onPress={() => {}}>
+            <DiscoverCarousel />
+          </TouchableOpacity>
+
+          <HorizontalMusicSourceList
+            title={'Discovery Queue'}
+            musicSources={musicSources}
           />
 
           {/* <HorizontalPlaceholderList

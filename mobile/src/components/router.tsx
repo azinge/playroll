@@ -11,7 +11,7 @@ const AppNavigator = createStackNavigator(
     Main: MainNavigator, // Home screen
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: 'Core', // Switch to 'Main' for faster reload in dev
     headerMode: 'none',
   }
 );

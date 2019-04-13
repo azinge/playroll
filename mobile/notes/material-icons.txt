@@ -1,4 +1,5 @@
-// Text file list of all possible Material Icons
+// Text list of all Material Icons currently available in this app
+// Copy/pasted from an error message
 // Also listed here: https://material.io/tools/icons/
 
 Warning: Failed prop type: Invalid prop `name` of value `music_note` supplied to `Icon`,

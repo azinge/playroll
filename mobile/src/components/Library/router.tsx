@@ -24,7 +24,7 @@ export const LibraryNavigator = createStackNavigator(
     ...MusicServicePlaylistsRoutes,
   },
   {
-    initialRouteName: 'LibraryMenu',
+    initialRouteName: 'LibraryMenu', // Switch this to any route above for faster reload in dev
     headerMode: 'none',
   }
 );

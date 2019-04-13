@@ -71,7 +71,7 @@ export const MainTabsNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Home', // Switch this to any route above for faster reload in dev
     tabBarOptions: {
       activeTintColor: 'purple',
     },

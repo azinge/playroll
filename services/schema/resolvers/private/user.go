@@ -43,7 +43,16 @@ var searchUsers = gqltag.Method{
 		}
 
 		userModels := &[]models.User{}
-		if err := mctx.DB.Preload("Relationships", "other_user_id = ?", user.ID).Where("name LIKE ?", "%"+params.Query+"%").Find(userModels).Error; err != nil {
+
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+
+		if err := mctx.DB.Preload("Relationships", "other_user_id = ?", user.ID).Where("name LIKE ?", "%"+params.Query+"%").Offset(params.Offset).Limit(params.Count).Find(userModels).Error; err != nil {
 			fmt.Printf("error searching users: %s", err.Error())
 			return nil, err
 		}

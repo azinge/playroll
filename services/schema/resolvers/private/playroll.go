@@ -191,12 +191,18 @@ var listCurrentUserPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		// Example for offset and count
-		// if offset, count are not given, default to 0, 20 respectively
-		// test via graphiql
-		db := mctx.DB.Offset(0).Count(20)
+		// TODO (dmoini):
+		// 		test count, offset
+		// 		decided how
+		// Assigning default values if given 0 for either count, offset
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
 
-		// using db over mctx.DB
 		return models.GetPlayrollsByUserID(user.ID, db)
 	},
 }
@@ -223,7 +229,16 @@ var listUserPlayrolls = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.UserID)
-		return models.GetPlayrollsByUserID(id, mctx.DB)
+
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Count(params.Count)
+
+		return models.GetPlayrollsByUserID(id, db)
 	},
 }
 

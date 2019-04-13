@@ -41,8 +41,16 @@ var listCurrentUserRecommendations = gqltag.Method{
 		}
 
 		recommendationsModels := &[]models.Recommendation{}
-		db := mctx.DB
-		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
+
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+
+		if err := mctx.DB.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(params.Offset).Limit(params.Count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}

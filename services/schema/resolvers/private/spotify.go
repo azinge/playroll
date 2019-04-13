@@ -68,7 +68,16 @@ var listSpotifyPlaylists = gqltag.Method{
 			return nil, err
 		}
 
-		mss, err := spotifyhelpers.ListPlaylistsFromClient(client, mctx.DB)
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+
+		mss, err := spotifyhelpers.ListPlaylistsFromClient(client, db)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
 			return nil, err
@@ -104,7 +113,16 @@ var listSpotifyPlaylistTracks = gqltag.Method{
 			return nil, err
 		}
 
-		output, err := spotifyhelpers.ListPlaylistTracksFromClient(params.PlaylistID, client, mctx.DB)
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+
+		output, err := spotifyhelpers.ListPlaylistTracksFromClient(params.PlaylistID, client, db)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
 			return nil, err
@@ -139,7 +157,16 @@ var listSpotifySavedTracks = gqltag.Method{
 			return nil, err
 		}
 
-		output, err := spotifyhelpers.ListSavedTracksFromClient(client, mctx.DB)
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+
+		output, err := spotifyhelpers.ListSavedTracksFromClient(client, db)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
 			return nil, err

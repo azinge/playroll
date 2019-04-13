@@ -43,7 +43,16 @@ var listFriends = gqltag.Method{
 			return nil, err
 		}
 
-		users, err := models.GetFriendsByUserID(user.ID, mctx.DB)
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+
+		users, err := models.GetFriendsByUserID(user.ID, db)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -74,7 +83,15 @@ var listFriendRequests = gqltag.Method{
 		}
 
 		rs := &[]models.Relationship{}
-		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Find(&rs).Error; err != nil {
+
+		// TODO (dmoini): double check offset, count
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Offset(params.Offset).Limit(params.Count).Find(&rs).Error; err != nil {
 			fmt.Println(err)
 			return nil, err
 		}

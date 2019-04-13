@@ -29,6 +29,7 @@ export default class RollList extends React.Component<Props, State> {
 
     const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
 
+    // Loop through all filters and generate icon/text per row
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
     for (let i = 0; i < filters.length; i++) {
@@ -128,6 +129,7 @@ export default class RollList extends React.Component<Props, State> {
         <View style={styles.innerContainer}>
           <Image style={styles.cover} source={{ uri: mainSource.cover }} />
           <View style={styles.rowsView}>
+            {/* Main source icon/text row */}
             <View style={styles.itemTextView}>
               <Icon
                 size={25}
@@ -141,8 +143,10 @@ export default class RollList extends React.Component<Props, State> {
               </Text>
             </View>
 
+            {/* Filter info per row, see loop above */}
             {filterViews}
           </View>
+          {/* Right side menu icons */}
           <Icon
             size={25}
             name='edit'

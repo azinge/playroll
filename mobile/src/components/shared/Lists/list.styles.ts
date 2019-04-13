@@ -1,19 +1,9 @@
-import {
-  StyleSheet,
-  StyleProp,
-  RegisteredStyle,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 
 import parentStyles from '../shared.styles';
 
 interface Style {
-  // screenContainer: ViewStyle;
-  // titleBarContainer: ViewStyle;
-  // titleBarName: TextStyle;
-  // horizontalRule: ViewStyle;
-  // subtitle: TextStyle;
+  screenContainer: ViewStyle;
 }
 
 const styles = StyleSheet.create<Style>({

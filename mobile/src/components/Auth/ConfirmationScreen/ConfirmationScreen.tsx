@@ -14,10 +14,15 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { ConfirmSignUpMutation } from '../../../graphql/requests/Auth';
+import {
+  ConfirmSignUpMutation,
+  ResendSignUpMutation,
+} from '../../../graphql/requests/Auth';
+import Errors from '../../shared/Modals/Errors';
 import styles from './ConfirmationScreen.styles';
 import { NavigationScreenProp } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
+import DropdownAlert from 'react-native-dropdownalert';
 
 export interface Props {
   toggleSignUp: () => void;
@@ -27,39 +32,63 @@ export interface Props {
 interface State {
   authCode: string;
   username: string;
+  triggerResendSignUp: boolean;
+  displayErrorModal: boolean;
   error?: string;
 }
 
 export default class ConfirmationScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
 
     this.state = {
       authCode: '',
       username: '',
+      displayErrorModal: false,
       error: undefined,
+      triggerResendSignUp: false,
     };
 
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
   }
 
-  validateInput(confirmSignUp) {
-    if (this.state.username === '' || this.state.authCode === '') {
-      return this.setState(
-        {
-          error: 'All fields must have a value.',
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
-      );
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      error: undefined,
+      displayErrorModal: false,
+    });
+  }
+
+  componentDidMount() {
+    const username =
+      this.props.navigation && this.props.navigation.getParam('username');
+    const triggerResendSignUp =
+      this.props.navigation &&
+      this.props.navigation.getParam('triggerResendSignUp');
+    if (username) {
+      this.setState({ username, triggerResendSignUp });
     }
-    confirmSignUp();
-    NavigationService.goBack();
-    NavigationService.goBack();
-    NavigationService.navigate('SignIn');
   }
 
   renderSegueToSignIn() {
@@ -85,26 +114,60 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     );
   }
 
-  resendConfirmationCode() {
-    // TODO: Waiting on endpoint
+  async resendSignUpWrapper(resendSignUp) {
+    try {
+      await resendSignUp({ variables: { username: this.state.username } });
+      this.dropdown.alertWithType(
+        'info',
+        'Confirmation Code Sent!',
+        'We have sent a confirmation code to the email associated with this account.'
+      );
+    } catch (err) {
+      if (err.code === 'UserNotFoundException') {
+        this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
+      } else if (err.code === 'InvalidParameterException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'User is already confirmed.'
+        );
+      } else {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're sorry, Please try again."
+        );
+      }
+    }
   }
 
   renderInfoContainer() {
     return (
-      <View style={styles.informationContainer}>
-        <View style={styles.infoTextContainer}>
-          <Text style={styles.infoText}>
-            We have just sent an email to your account, please enter the
-            confirmation code provided.
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.resendContainer}
-          onPress={this.resendConfirmationCode}
-        >
-          <Text style={styles.infoText}>Resend Code</Text>
-        </TouchableOpacity>
-      </View>
+      <ResendSignUpMutation>
+        {(resendSignUp, { loading }) => {
+          if (this.state.triggerResendSignUp) {
+            this.setState({ triggerResendSignUp: false }, () => {
+              this.resendSignUpWrapper(resendSignUp);
+            });
+          }
+          return (
+            <View style={styles.informationContainer}>
+              <View style={styles.infoTextContainer}>
+                <Text style={styles.infoText}>
+                  We have just sent an email to your account, please enter the
+                  confirmation code provided.
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.resendContainer}
+                onPress={() => this.resendSignUpWrapper(resendSignUp)}
+              >
+                <Text style={styles.infoText}>Resend Code</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </ResendSignUpMutation>
     );
   }
 
@@ -112,15 +175,73 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
     return <Text style={styles.formText}>{label}</Text>;
   }
 
-  renderConfirmButton() {
-    return (
-      <ConfirmSignUpMutation
-        variables={{
+  async confirmSignUpWrapper(confirmSignUp) {
+    try {
+      await confirmSignUp({
+        variables: {
           username: this.state.username,
           code: this.state.authCode,
-        }}
-      >
-        {(confirmSignUp, { loading, error, data }) => {
+        },
+      });
+      const password =
+        this.props.navigation && this.props.navigation.getParam('password');
+      NavigationService.navigate('Landing', {
+        username: this.state.username,
+        password,
+        triggerSignIn: !!password,
+      });
+    } catch (err) {
+      if (err.code === 'CodeMismatchException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'Incorrect Confirmation Code.'
+        );
+      } else if (err.code === 'ExpiredCodeException') {
+        this.dropdown.alertWithType('error', 'Error', 'Code has Expired.');
+      } else if (
+        err.code === 'TooManyFailedAttemptsException' ||
+        err.code === 'TooManyRequestsException'
+      ) {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're having trouble confirming your account. Please contact us at help@playroll.io."
+        );
+      } else if (err.code === 'UserNotFoundException') {
+        this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
+      } else if (err.code === 'NotAuthorizedException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'User is already confirmed.'
+        );
+      } else {
+        console.log(err);
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're sorry, Please try again."
+        );
+      }
+    }
+  }
+
+  validateInput(confirmSignUp) {
+    if (this.state.username === '' || this.state.authCode === '') {
+      return this.dropdown.alertWithType(
+        'error',
+        'Error',
+        'All fields must have a value.'
+      );
+    }
+    this.confirmSignUpWrapper(confirmSignUp);
+  }
+
+  renderConfirmButton() {
+    return (
+      <ConfirmSignUpMutation>
+        {(confirmSignUp, { loading }) => {
           return (
             <TouchableOpacity
               onPress={() => this.validateInput(confirmSignUp)}
@@ -170,9 +291,9 @@ export default class ConfirmationScreen extends React.Component<Props, State> {
               autoCapitalize={'none'}
               value={this.state.authCode}
             />
-            {this.renderError()}
           </View>
           {this.renderConfirmButton()}
+          <DropdownAlert ref={ref => (this.dropdown = ref)} />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

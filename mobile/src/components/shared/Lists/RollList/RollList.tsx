@@ -35,113 +35,145 @@ export default class RollList extends React.Component<Props, State> {
     console.log(filters);
     console.log(Array.isArray(filters));
 
-    // TODO: this mapping is broken
     // TODO: undo router dev hacks before submitting PR
-    let stuff = '';
-    let key = 0;
-    const filterViews = filters.map(filter => {
+
+    // TODO: this mapping should be done functionally, not with a for loop
+    let filterViews = [];
+    for (let i = 0; i < filters.length; i++) {
+      console.log('==== i: ' + i);
+      const filter = filters[i];
       console.log(filter);
-      console.log('FILTER TYPE: ' + filter.type);
-      console.log('KEY: ' + key);
+
+      console.log('FILTER');
+      console.log(filter);
+
+      const mods = filter.modifications;
+      console.log('MODS');
+      console.log(mods);
+
+      const numMods = mods.length;
+      console.log('NUM MODS' + numMods);
+
+      const firstMod = roll.data.sources[mods[0]];
+      console.log('FIRST MOD:');
+      console.log(firstMod);
+
+      let key = i;
       switch (filter.type) {
-        case 'Order':
-          console.log('ORDER');
-          console.log(filter);
-          return (
+        case 'Filter':
+          let subIcon;
+          switch (filter.name) {
+            case 'ExcludeSources':
+              subIcon = 'block';
+            default:
+          }
+          filterViews.push(
             <View style={styles.itemTextView} key={key}>
               <Icon
                 size={25}
-                name='sort'
+                name='filter-list'
                 type='material'
                 color='lightgrey'
-                iconStyle={styles.editIcon}
+                iconStyle={styles.rowIcon}
               />
+              {subIcon && (
+                <Icon
+                  size={15}
+                  name={subIcon}
+                  type='material'
+                  color='lightgrey'
+                  iconStyle={styles.subIcon}
+                />
+              )}
               <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-                {filter.name}
+                {firstMod.name}
               </Text>
             </View>
           );
           break;
+        case 'Order':
+          console.log('ORDER');
+          console.log(filter);
+          if (filter.name !== 'Default') {
+            filterViews.push(
+              <View style={styles.itemTextView} key={key}>
+                <Icon
+                  size={25}
+                  name='sort'
+                  type='material'
+                  color='lightgrey'
+                  iconStyle={styles.rowIcon}
+                />
+                <Text
+                  style={[styles.text, styles.artistName]}
+                  numberOfLines={2}
+                >
+                  {filter.name}
+                </Text>
+              </View>
+            );
+          }
+          break;
         case 'Length':
-          return (
+          let text = '';
+          switch (filter.name) {
+            case 'NumberOfSongs':
+              text = numMods === 1 ? '1 Song' : numMods + ' Songs';
+              break;
+            default:
+          }
+
+          filterViews.push(
             <View style={styles.itemTextView} key={key}>
               <Icon
                 size={25}
                 name='av-timer'
                 type='material'
                 color='lightgrey'
-                iconStyle={styles.editIcon}
+                iconStyle={styles.rowIcon}
               />
               <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-                {filter.name}
+                {text}
               </Text>
             </View>
           );
           break;
         default:
       }
-      key += 1;
+    }
 
-      stuff += '*';
-    });
     return (
       // Removing TouchableOpacity because the Edit Icon is enough
       // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
       <View style={styles.outerContainer} key={roll.id}>
         <View style={styles.innerContainer}>
           <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={styles.rowsView}>
             <View style={styles.itemTextView}>
               <Icon
                 size={25}
                 name='music-note'
                 type='material'
                 color='lightgrey'
-                iconStyle={styles.editIcon}
+                iconStyle={styles.rowIcon}
               />
               <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
                 {mainSource.name}
               </Text>
             </View>
 
-            <View style={styles.itemTextView}>
-              <Icon
-                size={25}
-                name='filter-list'
-                type='material'
-                color='lightgrey'
-                iconStyle={styles.editIcon}
-              />
-              <Text style={[styles.text, styles.source]} numberOfLines={2}>
-                {mainSource.provider}
-              </Text>
-            </View>
-
-            {/* <Text>TEST--{stuff}--TEST</Text> */}
-
             {filterViews}
-
-            {/* TODO: sort icon */}
-            {/* TODO: av-timer icon */}
-
-            {mainSource.creator ? (
-              <Text style={styles.noArtist} numberOfLines={2}>
-                {mainSource.creator}
-              </Text>
-            ) : null}
           </View>
           <Icon
             size={25}
             name='edit'
             color='lightgrey'
-            // tslint:disable-next-line:no-shadowed-variable
-            onPress={() => NavigationService.navigate('EditRoll', { roll })}
+            onPress={() => NavigationService.navigate('EditRoll', roll)}
             iconStyle={styles.editIcon}
           />
         </View>
         <View style={styles.spacing} />
       </View>
-      // </TouchableOpacity>
     );
   }
 

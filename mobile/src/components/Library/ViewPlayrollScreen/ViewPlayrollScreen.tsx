@@ -103,33 +103,19 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           playroll,
         }),
     };
+    const generateTracklistIcon = {
+      ...Icons.exportIcon,
+      onPress: () =>
+        NavigationService.navigate('GenerateTracklist', {
+          playroll,
+          triggerGenerateTracklist: true,
+        }),
+    };
     return (
-      <GenerateTracklistMutation
-        variables={{ playrollID: playroll.id }}
-        onCompleted={data =>
-          this.props.navigation &&
-          this.props.navigation.navigate('ViewTracklist', {
-            playrollName: playroll.name,
-            tracklistID:
-              data &&
-              data.private.generateTracklist &&
-              data.private.generateTracklist.id,
-          })
-        }
-      >
-        {(generateTracklist, { data }) => {
-          const generateTracklistIcon = {
-            ...Icons.exportIcon,
-            onPress: () => generateTracklist(),
-          };
-          return (
-            <SubScreenHeader
-              title={'View Playroll'} // visible screen title
-              icons={[editPlayrollIcon, generateTracklistIcon]} // top right buttons
-            />
-          );
-        }}
-      </GenerateTracklistMutation>
+      <SubScreenHeader
+        title={'View Playroll'} // visible screen title
+        icons={[editPlayrollIcon, generateTracklistIcon]} // top right buttons
+      />
     );
   }
   renderTitleBar(playroll: Playroll) {
@@ -170,11 +156,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }}
       >
         <Button
-          linearGradientProps={{
-            colors: ['#DA22FF', '#00c6ff'],
-            start: { x: 0, y: 0.5 },
-            end: { x: 1, y: 0.5 },
-          }}
+          // linearGradientProps={{
+          //   colors: ['#DA22FF', '#00c6ff'],
+          //   start: { x: 0, y: 0.5 },
+          //   end: { x: 1, y: 0.5 },
+          // }}
           containerStyle={{ borderRadius: 80, width: '75%' }}
           buttonStyle={{ borderRadius: 80, height: 50 }}
           raised

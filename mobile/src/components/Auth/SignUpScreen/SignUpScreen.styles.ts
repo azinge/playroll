@@ -79,7 +79,7 @@ export default StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#6A0070',
-    padding: 20,
+    padding: 25,
   },
   submitButtonText: {
     color: 'white',

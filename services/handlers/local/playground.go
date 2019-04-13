@@ -29,7 +29,6 @@ func main() {
 		fmt.Println("error migrating db: " + err.Error())
 	}
 
-	// db.LogMode(true)
 
 	// msts := &[]models.MusicServiceTrack{}
 	// if err := db.Or(models.MusicServiceTrack{AlbumID: "6WrsTb0LameTn7Q4bTzhiW"}).Or(models.MusicServiceTrack{ArtistID: "6U3ybJ9UHNKEdsH7ktGBZ7"}).Find(msts).Error; err != nil {
@@ -72,5 +71,10 @@ func main() {
 	// for _, mst := range *msts {
 	// 	fmt.Println(mst.Name, "-", mst.ArtistName)
 	// }
-
+	query := "t"
+	userModels := &[]models.User{}
+	if err := db.Preload("Relationships", "other_user_id = ?", 2).Where("name LIKE ?", "%"+query+"%").Find(userModels).Error; err != nil {
+		fmt.Printf("error searching users: %s", err.Error())
+	}
+	fmt.Printf("%#v\n", userModels)
 }

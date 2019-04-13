@@ -9,6 +9,8 @@ import ViewPlayrollScreen from './ViewPlayrollScreen';
 import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import LibraryMenuScreen from './LibraryMenuScreen';
 import { MusicServicePlaylistsRoutes } from '../MusicServices/Playlists/router';
+import GenerateTracklistScreen from './GenerateTracklistScreen';
+import AddToPlayrollScreen from './AddToPlayrollScreen';
 
 export const LibraryNavigator = createStackNavigator(
   {
@@ -28,5 +30,7 @@ export const LibraryNavigator = createStackNavigator(
 );
 
 export const LibraryModalRoutes = {
+  AddToPlayroll: AddToPlayrollScreen,
   EditRoll: EditRollScreen,
+  GenerateTracklist: GenerateTracklistScreen,
 };

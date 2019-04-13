@@ -15,7 +15,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '22%', //TODO: handle spacing
+    width: '22%', // TODO: handle spacing
     opacity: 0.5,
   },
   signInTitle: {
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: '#6A0070',
-    padding: 20,
+    padding: 25,
   },
   submitButtonText: {
     color: 'white',

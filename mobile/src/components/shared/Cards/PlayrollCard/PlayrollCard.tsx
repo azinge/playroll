@@ -11,10 +11,9 @@ import {
   ActivityIndicator,
   Text,
   FlatList,
+  TouchableHighlight,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { Card, Icon } from 'react-native-elements';
-import { NavigationScreenProp } from 'react-navigation';
 
 import {
   DeletePlayrollMutation,
@@ -25,11 +24,12 @@ import { LIST_CURRENT_USER_PLAYROLLS } from '../../../../graphql/requests/Playro
 
 import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
 import styles from './PlayrollCard.styles';
+import Heading from '../../Text/Heading';
+import HorizontalRule from '../../Text/HorizontalRule';
 
 export interface Props {
   playroll?: Playroll;
-  editPlayroll?: () => void;
-  navigation?: NavigationScreenProp<{}>;
+  onPress?: (playroll) => void;
 }
 
 interface State {}
@@ -53,127 +53,50 @@ export default class PlayrollCard extends React.Component<Props, State> {
   }
 
   render() {
-    const { editPlayroll = () => {} } = this.props;
+    const { onPress = () => {} } = this.props;
     console.log(this.props.playroll.id);
     return (
-      <GetCurrentUserPlayrollQuery
-        variables={{ id: this.props.playroll.id }}
-        // fetchPolicy='cache-only'
-      >
+      <GetCurrentUserPlayrollQuery variables={{ id: this.props.playroll.id }}>
         {({ loading, error, data }) => {
-          // if (loading || error) {
-          //   return (
-          //     <Card
-          //       title={'Loading'}
-          //       // image={require("../../assets/wack.jpg")}
-          //       key={''}
-          //       containerStyle={{
-          //         borderRadius: 12,
-          //         borderColor: 'white',
-          //         shadowColor: 'gray',
-          //         shadowOffset: {
-          //           width: 2,
-          //           height: 3,
-          //         },
-          //         shadowRadius: 5,
-          //         shadowOpacity: 0.2,
-          //       }}
-          //     />
-          //   );
-          // }
           const playroll: any =
             (data && data.private.currentUserPlayroll) || {};
           return (
-            <Card
-              title={playroll.name}
-              // image={require("../../assets/wack.jpg")}
-              titleStyle={{
-                textAlign: 'left',
-                fontWeight: 'bold',
-                fontSize: 28,
-                margin: 0,
-              }}
-              key={playroll.id}
-              containerStyle={{
-                borderRadius: 12,
-                borderColor: 'white',
-                shadowColor: 'gray',
-                shadowOffset: {
-                  width: 2,
-                  height: 3,
-                },
-                shadowRadius: 5,
-                shadowOpacity: 0.2,
-              }}
+            <TouchableHighlight
+              style={{ marginHorizontal: 15 }}
+              onPress={() => onPress(playroll)}
             >
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ height: 110 }}>
-                  {playroll.rolls && playroll.rolls.length > 0 ? (
-                    <FlatList
-                      data={playroll.rolls}
-                      renderItem={this._renderItem}
-                      keyExtractor={item => item.id.toString()}
-                      horizontal={true}
-                      style={{ height: 80, width: 329 }}
-                    />
-                  ) : (
-                    <Image
-                      source={{
-                        uri:
-                          'https://www.unesale.com/ProductImages/Large/notfound.png',
-                      }}
-                      style={{ height: 75, width: 75, borderRadius: 5 }}
-                    />
-                  )}
+              <View>
+                <View style={{ flexDirection: 'row' }}>
+                  <View>
+                    {playroll.rolls && playroll.rolls.length > 0 ? (
+                      <Carousel
+                        data={playroll.rolls}
+                        renderItem={this._renderItem}
+                        hasParallaxImages={false}
+                        sliderWidth={100}
+                        itemWidth={75}
+                        itemHeight={75}
+                        loop={true}
+                      />
+                    ) : (
+                      <Image
+                        source={{
+                          uri:
+                            'https://www.unesale.com/ProductImages/Large/notfound.png',
+                        }}
+                        style={{ height: 75, width: 75, borderRadius: 5 }}
+                      />
+                    )}
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'center' }}>
+                    <Heading type={'h6'} alignment={'left'}>
+                      {playroll.name}
+                    </Heading>
+                  </View>
                 </View>
-                <View />
+                <HorizontalRule />
               </View>
-              <View style={{ margin: -16, flexDirection: 'row' }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    editPlayroll();
-                  }}
-                  style={styles.submitButtonLeft}
-                >
-                  {loading ? (
-                    <ActivityIndicator color={'white'} />
-                  ) : (
-                    // <Text style={styles.submitButtonText}>Sign In</Text>
-                    <Icon
-                      type='material-community'
-                      name='playlist-edit'
-                      color='white'
-                      size={30}
-                    />
-                  )}
-                </TouchableOpacity>
-                <DeletePlayrollMutation
-                  variables={{
-                    id: playroll.id,
-                  }}
-                  refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
-                >
-                  {(deletePlayroll, { loading }) => (
-                    <TouchableOpacity
-                      onPress={() => deletePlayroll()}
-                      style={styles.submitButtonRight}
-                    >
-                      {loading ? (
-                        <ActivityIndicator color={'white'} />
-                      ) : (
-                        <Icon
-                          type='material-community'
-                          name='delete'
-                          color='white'
-                          containerStyle={{ top: 3 }}
-                          size={25}
-                        />
-                      )}
-                    </TouchableOpacity>
-                  )}
-                </DeletePlayrollMutation>
-              </View>
-            </Card>
+            </TouchableHighlight>
           );
         }}
       </GetCurrentUserPlayrollQuery>

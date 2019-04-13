@@ -18,9 +18,11 @@ import {
 import { Icon } from 'react-native-elements';
 import { WebBrowser, ImagePicker, Permissions } from 'expo';
 import { NavigationScreenProp } from 'react-navigation';
+import Errors from '../../shared/Modals/Errors';
 import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
 import NavigationService from '../../../services/NavigationService';
+import DropdownAlert from 'react-native-dropdownalert';
 
 export interface Props {
   toggleSignUp?: () => void;
@@ -36,10 +38,13 @@ interface State {
     uri: string;
     source: string;
   };
+  displayErrorModal: boolean;
   error?: string;
 }
 
 export default class SignUpScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -52,10 +57,38 @@ export default class SignUpScreen extends React.Component<Props, State> {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/440px-User_icon_2.svg.png',
         source: '',
       },
+      displayErrorModal: false,
       error: undefined,
     };
-    this.renderError = this.renderError.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
+    this.renderErrorModal = this.renderErrorModal.bind(this);
+    this.handleCloseErrorModal = this.handleCloseErrorModal.bind(this);
     this.selectProfileImage = this.selectProfileImage.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+  }
+
+  handleErrors(error) {
+    this.setState({
+      error,
+      displayErrorModal: true,
+    });
+  }
+
+  renderErrorModal(error) {
+    return (
+      <Errors
+        displayErrorModal={this.state.displayErrorModal}
+        error={error}
+        onPress={this.handleCloseErrorModal}
+      />
+    );
+  }
+
+  handleCloseErrorModal() {
+    this.setState({
+      displayErrorModal: false,
+      error: null,
+    });
   }
 
   handleOpenTOSURL() {
@@ -63,42 +96,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
       'https://www.freeprivacypolicy.com/privacy/view/919ec0f8123830156075504b5da568d3';
 
     WebBrowser.openBrowserAsync(url);
-  }
-
-  validateInput(signUp) {
-    if (
-      this.state.username === '' ||
-      this.state.email === '' ||
-      this.state.password === '' ||
-      this.state.confirmPassword === '' ||
-      this.state.avatar.uri === ''
-    ) {
-      return this.setState(
-        {
-          error: 'All fields must have a value',
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
-      );
-    }
-    if (this.state.password !== this.state.confirmPassword) {
-      return this.setState(
-        {
-          password: '',
-          confirmPassword: '',
-          error: 'Passwords do not match!',
-        },
-        () => {
-          setTimeout(() => {
-            this.setState({ error: null });
-          }, 3000);
-        }
-      );
-    }
-    signUp();
   }
 
   renderSegueToSignIn() {
@@ -155,10 +152,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <TouchableOpacity
           style={styles.imageSelectionContainer}
           onPress={this.selectProfileImage}
-          disabled
         >
           <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
-          <Text style={[styles.editPhotoText, { color: 'grey' }]}>
+          <Text style={[styles.editPhotoText, { color: '#6A0070' }]}>
             Edit Photo
           </Text>
         </TouchableOpacity>
@@ -176,19 +172,89 @@ export default class SignUpScreen extends React.Component<Props, State> {
     );
   }
 
-  renderSignupButton() {
-    return (
-      <SignUpMutation
-        variables={{
+  async signUpWrapper(signUp) {
+    try {
+      await signUp({
+        variables: {
           username: this.state.username,
           password: this.state.password,
           email: this.state.email,
           avatar: this.state.avatar.uri,
-        }}
-      >
+        },
+      });
+      NavigationService.navigate('Confirmation', {
+        username: this.state.username,
+        password: this.state.password,
+      });
+    } catch (err) {
+      if (err.code === 'InvalidPasswordException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Invalid Password.',
+          'Your Password must contain: a capital letter, a lowercase letter, ' +
+            'a number, a special character (*!^, etc.), and 8 characters or more'
+        );
+      } else if (err.code === 'UsernameExistsException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'Username has already been taken. Please choose a different username.'
+        );
+      } else if (err.code === 'TooManyRequestsException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're having trouble signing up your account. Please contact us at help@playroll.io."
+        );
+      } else if (err.code === 'CodeDeliveryFailureException') {
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'Could not send confirmation code to email.'
+        );
+      } else if (err.code === 'InvalidParameterException') {
+        this.dropdown.alertWithType('error', 'Error', err.message);
+      } else {
+        console.log(err);
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          "We're sorry, Please try again."
+        );
+      }
+    }
+  }
+
+  validateInput(signUp) {
+    const { username, email, password, confirmPassword, avatar } = this.state;
+    if (
+      username === '' ||
+      email === '' ||
+      password === '' ||
+      confirmPassword === '' ||
+      avatar.uri === ''
+    ) {
+      return this.dropdown.alertWithType(
+        'error',
+        'Error',
+        'All fields must have a value.'
+      );
+    }
+    if (password !== confirmPassword) {
+      return this.dropdown.alertWithType(
+        'error',
+        'Error',
+        'Passwords do not match.'
+      );
+    }
+    this.signUpWrapper(signUp);
+  }
+
+  renderSignupButton() {
+    return (
+      <SignUpMutation>
         {(signUp, { loading, error, data }) => {
           if (data) {
-            this.props.navigation.navigate('Confirmation');
           }
           return (
             <TouchableOpacity
@@ -205,10 +271,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
         }}
       </SignUpMutation>
     );
-  }
-
-  renderError() {
-    return <Text style={styles.errorMessage}>{this.state.error}</Text>;
   }
 
   render() {
@@ -257,9 +319,9 @@ export default class SignUpScreen extends React.Component<Props, State> {
               value={this.state.confirmPassword}
             />
             {this.termsOfServiceLink()}
-            {this.renderError()}
           </View>
           {this.renderSignupButton()}
+          <DropdownAlert ref={ref => (this.dropdown = ref)} />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

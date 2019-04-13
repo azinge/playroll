@@ -20,12 +20,19 @@ const styles = StyleSheet.create({
 
   // Thumbnail image
   cover: {
-    width: 85,
-    height: 85,
-    marginHorizontal: 20,
+    width: 75,
+    height: 75,
+    marginHorizontal: 15,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'lightgrey',
+  },
+
+  // Rows View
+  rowsView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'flex-start',
   },
 
   // Row icons
@@ -33,6 +40,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  rowIcon: {
+    color: 'purple',
+    marginRight: 8,
+  },
+  subIcon: {
+    color: 'red',
+    marginRight: 5,
   },
 
   // Row text

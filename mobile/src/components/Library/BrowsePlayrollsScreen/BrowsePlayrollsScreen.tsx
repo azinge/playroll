@@ -14,6 +14,7 @@ import {
   CreatePlayrollMutation,
 } from '../../../graphql/requests/Playroll/';
 
+import DetailedPlayrollCard from '../../shared/Cards/DetailedPlayrollCard';
 import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
@@ -76,7 +77,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
                     return (
-                      <PlayrollCard
+                      <DetailedPlayrollCard
                         playroll={playroll}
                         editPlayroll={() =>
                           this.props.navigation &&
@@ -103,7 +104,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   )}
                   {/* <View style={{ margin: 10 }} /> */}
                 </SubScreenContainer>
-                {playrolls.length === 0 && <Text> No Playrolls added</Text>}
+                {/* {playrolls.length === 0 && <Text> No Playrolls added</Text>} */}
               </View>
               {this.renderNewPlayrollButton()}
             </View>
@@ -193,11 +194,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
               }}
             >
               <Button
-                linearGradientProps={{
-                  colors: ['#DA22FF', '#00c6ff'],
-                  start: { x: 0, y: 0 },
-                  end: { x: 1, y: 0 },
-                }}
+                // linearGradientProps={{
+                //   colors: ['#DA22FF', '#00c6ff'],
+                //   start: { x: 0 },
+                //   end: { x: 1 },
+                // }}
                 containerStyle={{
                   borderRadius: 80,
                   width: '75%',

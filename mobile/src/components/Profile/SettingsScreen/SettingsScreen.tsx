@@ -2,18 +2,80 @@
  * SettingsScreen
  */
 
-import * as React from 'react';
-import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import * as React from "react";
+import {
+  Text,
+  View,
+  Switch,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TouchableOpacity
+} from "react-native";
+import styles from "./SettingsScreen.styles";
+import SubScreenContainer from "../../shared/Containers/SubScreenContainer";
+import PlaceholderList from "../../shared/Lists/PlaceholderList";
+import NavigationService from "../../../services/NavigationService";
 
 export default class SettingsScreen extends React.Component {
+  state = { switchValue: false };
+  toggleSwitch = value => {
+    //onValueChange of the switch this function will be called
+    this.setState({ switchValue: value });
+    //state changes according to switch
+    //which will result in re-render the text
+  };
   render() {
     return (
       <SubScreenContainer
-        title={'Settings'}
+        title={"Settings"}
         contentContainerStyle={{ marginTop: 10 }}
       >
-        <PlaceholderList numItems={20} overlayText={'Coming Soon...'} />
+        {/* <PlaceholderList numItems={20} overlayText={'Coming Soon...'} /> */}
+        <View
+          style={{
+            marginTop: 10
+          }}
+        >
+          {/* Dark Mode */}
+          <TouchableOpacity
+            onPress={() => {
+              NavigationService.navigate("");
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.disabledText}>Dark Mode</Text>
+              <Switch
+                disabled
+                style={styles.darkModeSwitch}
+                onValueChange={this.toggleSwitch}
+                value={this.state.switchValue}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {/* Music Service Settings */}
+          <TouchableOpacity
+            onPress={() => {
+              NavigationService.navigate("MusicServiceSettingsMenu");
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.enabledText}>Music Service Settings</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Delete Account */}
+          <TouchableOpacity
+            onPress={() => {
+              NavigationService.navigate("");
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.disabledText}>Delete Account</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </SubScreenContainer>
     );
     // return (

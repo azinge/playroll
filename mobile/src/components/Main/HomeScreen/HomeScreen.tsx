@@ -36,7 +36,7 @@ export default class HomeScreen extends React.Component<Props, State> {
           </View>
 
           <TouchableOpacity onPress={() => {}}>
-            <DiscoverCarousel />
+            <HomeCarousel />
           </TouchableOpacity>
 
           <HorizontalMusicSourceList

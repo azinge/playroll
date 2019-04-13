@@ -8,13 +8,13 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { ListItem, Icon, Button } from 'react-native-elements';
 import SubScreenContainer from '../../../shared/Containers/SubScreenContainer';
 import {
   CurrentUserSpotifyStatusQuery,
-  ListSpotifyPlaylistsQuery
+  ListSpotifyPlaylistsQuery,
 } from '../../../../graphql/requests/Spotify/';
 import NavigationService from '../../../../services/NavigationService';
 import LinearGradient from 'expo'; // Only if no expo
@@ -26,7 +26,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
-          playlistID: item.providerID
+          playlistID: item.providerID,
         })
       }
     >
@@ -35,7 +35,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
         titleStyle={{ color: 'purple' }}
         subtitle={item.type}
         leftAvatar={{
-          source: { uri: item.cover }
+          source: { uri: item.cover },
         }}
         containerStyle={{
           borderColor: 'white',
@@ -43,15 +43,15 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
           shadowColor: 'gray',
           shadowOffset: {
             width: 2,
-            height: 1
+            height: 1,
           },
           shadowRadius: 3,
           shadowOpacity: 0.2,
-          overflow: 'visible'
+          overflow: 'visible',
         }}
       />
     </TouchableOpacity>
-  );
+  )
 
   _keyExtractor = (item, index) => item.providerID;
 
@@ -61,7 +61,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
         <View
           style={{
             overflow: 'visible',
-            margin: 10
+            margin: 10,
           }}
         >
           <View
@@ -78,7 +78,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                 color: 'black',
                 fontWeight: 'bold',
                 fontSize: 24,
-                left: 3
+                left: 3,
               }}
             >
               Spotify
@@ -89,7 +89,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                   alignSelf: 'flex-end',
                   color: 'black',
                   fontSize: 22,
-                  textAlign: 'right'
+                  textAlign: 'right',
                 }}
                 onPress={() =>
                   NavigationService.navigate('BrowseSpotifyPlaylists')
@@ -115,7 +115,7 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                       style={{
                         // bottom: 20,
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
                         // marginBottom: 20,
                       }}
                     >
@@ -123,11 +123,11 @@ export default class MusicServicePlaylistsMenuScreen extends React.Component {
                         linearGradientProps={{
                           colors: ['#DA22FF', '#00c6ff'],
                           start: { x: 0, y: 0.5 },
-                          end: { x: 1, y: 0.5 }
+                          end: { x: 1, y: 0.5 },
                         }}
                         containerStyle={{
                           borderRadius: 80,
-                          width: '65%'
+                          width: '65%',
                         }}
                         buttonStyle={{ borderRadius: 80, height: 50 }}
                         raised

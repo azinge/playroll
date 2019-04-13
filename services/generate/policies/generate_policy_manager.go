@@ -14,6 +14,7 @@ type GeneratePolicyManager struct {
 	FilterPolicies []GeneratePolicy
 	OrderPolicy    GeneratePolicy
 	LengthPolicy   GeneratePolicy
+	RandomPolicy   GeneratePolicy
 }
 
 func NewGeneratePolicyManager(filters *[]jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client) (*GeneratePolicyManager, error) {

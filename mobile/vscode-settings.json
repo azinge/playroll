@@ -1,0 +1,10 @@
+{
+  "this_is_a_comment": "copy/paste everything below this line into .vscode/settings.json",
+  "editor.formatOnSave": true,
+  "prettier.tslintIntegration": true,
+  "prettier.trailingComma": "all",
+  "tslint.configFile": "tslint.json",
+  "typescript.tsdk": "/usr/local/lib/node_modules/typescript/lib",
+  "typescript.tsserver.log": "verbose",
+  "typescript.tsserver.trace": "verbose"
+}

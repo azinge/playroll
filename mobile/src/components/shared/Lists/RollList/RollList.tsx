@@ -26,29 +26,127 @@ export default class RollList extends React.Component<Props, State> {
   renderItem({ item: roll }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
-    // console.log(mainSource)
+
+    const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
+
+    // Loop through all filters and generate icon/text per row
+    // TODO: this mapping should be done functionally, not with a for loop
+    let filterViews = [];
+    for (let i = 0; i < filters.length; i++) {
+      const filter = filters[i];
+      const mods = filter.modifications;
+      const numMods = mods.length;
+      const firstMod = roll.data.sources[mods[0]];
+
+      let key = i;
+      switch (filter.type) {
+        case 'Filter':
+          let subIcon;
+          switch (filter.name) {
+            case 'ExcludeSources':
+              subIcon = 'block';
+              break;
+            default:
+          }
+          filterViews.push(
+            <View style={styles.itemTextView} key={key}>
+              <Icon
+                size={25}
+                name='filter-list'
+                type='material'
+                color='lightgrey'
+                iconStyle={styles.rowIcon}
+              />
+              {subIcon && (
+                <Icon
+                  size={15}
+                  name={subIcon}
+                  type='material'
+                  color='lightgrey'
+                  iconStyle={styles.subIcon}
+                />
+              )}
+              <Text
+                style={[styles.text, styles.artistName]}
+                numberOfLines={1}
+                ellipsizeMode='tail' // TODO: this does not work at the moment
+              >
+                {firstMod.name}
+              </Text>
+            </View>
+          );
+          break;
+        case 'Order':
+          if (filter.name !== 'Default') {
+            filterViews.push(
+              <View style={styles.itemTextView} key={key}>
+                <Icon
+                  size={25}
+                  name='sort'
+                  type='material'
+                  color='lightgrey'
+                  iconStyle={styles.rowIcon}
+                />
+                <Text style={[styles.text, styles.artistName]}>
+                  {filter.name}
+                </Text>
+              </View>
+            );
+          }
+          break;
+        case 'Length':
+          let text = '';
+          switch (filter.name) {
+            case 'NumberOfSongs':
+              text = numMods === 1 ? '1 Song' : numMods + ' Songs';
+              break;
+            default:
+          }
+
+          filterViews.push(
+            <View style={styles.itemTextView} key={key}>
+              <Icon
+                size={25}
+                name='av-timer'
+                type='material'
+                color='lightgrey'
+                iconStyle={styles.rowIcon}
+              />
+              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
+                {text}
+              </Text>
+            </View>
+          );
+          break;
+        default:
+      }
+    }
+
     return (
       // Removing TouchableOpacity because the Edit Icon is enough
       // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
       <View style={styles.outerContainer} key={roll.id}>
         <View style={styles.innerContainer}>
           <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
-              {mainSource.type}
-            </Text>
-            <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-              {mainSource.name}
-            </Text>
-            <Text style={[styles.text, styles.source]} numberOfLines={2}>
-              {mainSource.provider}
-            </Text>
-            {mainSource.creator ? (
-              <Text style={styles.noArtist} numberOfLines={2}>
-                {mainSource.creator}
+          <View style={styles.rowsView}>
+            {/* Main source icon/text row */}
+            <View style={styles.itemTextView}>
+              <Icon
+                size={25}
+                name='music-note'
+                type='material'
+                color='lightgrey'
+                iconStyle={styles.rowIcon}
+              />
+              <Text style={[styles.text, styles.artistName]}>
+                {mainSource.name}
               </Text>
-            ) : null}
+            </View>
+
+            {/* Filter info per row, see loop above */}
+            {filterViews}
           </View>
+          {/* Right side menu icons */}
           <Icon
             size={25}
             name='edit'

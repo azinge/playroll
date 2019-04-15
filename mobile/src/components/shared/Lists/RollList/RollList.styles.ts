@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     fontFamily: 'Avenir',
+    marginTop: 5,
   },
 
   // Container without horizontal bar spacer
@@ -82,9 +83,10 @@ const styles = StyleSheet.create({
   // Horizontal Spacer
   spacing: {
     width: '90%',
-    marginVertical: 10,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginBottom: 5,
+    // marginVertical: 10,
+    // borderBottomColor: 'lightgrey',
+    // borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
 

@@ -24,6 +24,7 @@ import { SearchSpotifyQuery } from '../../../graphql/requests/Spotify';
 import NavigationService from '../../../services/NavigationService';
 import ManageRollScreen from '../ManageRollScreen';
 import { BlurView } from 'expo';
+import Swipeout from 'react-native-swipeout';
 
 export interface Props {
   playrollID?: any;
@@ -188,13 +189,13 @@ export default class SearchScreen extends React.Component<Props, State> {
                                 </Text>
                               ) : null}
                             </View>
-                            <Icon
+                            {/* <Icon
                               size={35}
                               name='more-vert'
                               color='lightgrey'
                               // onPress={() => NavigationService.goBack()}
                               underlayColor='rgba(255,255,255,0)'
-                            />
+                            /> */}
                           </View>
                           <View style={styles.spacing} />
                         </View>

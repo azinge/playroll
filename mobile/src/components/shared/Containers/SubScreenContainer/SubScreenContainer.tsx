@@ -22,6 +22,7 @@ interface ContainerProps extends HeaderProps {
   contentContainerStyle?: StyleProp<ViewStyle>;
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
+  renderFlatListHeader?: () => JSX.Element;
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -78,6 +79,11 @@ export default class SubScreenContainer extends React.Component<Props, State> {
         flatList={this.props.flatList}
         data={this.props.data}
         keyExtractor={this.props.keyExtractor}
+        ListHeaderComponent={
+          this.props.renderFlatListHeader
+            ? this.props.renderFlatListHeader()
+            : undefined
+        }
         renderItem={this.props.renderItem}
       />
     );

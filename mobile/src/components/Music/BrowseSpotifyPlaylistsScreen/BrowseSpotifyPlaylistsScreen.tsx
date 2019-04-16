@@ -63,6 +63,22 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
               );
               return (
                 <View style={{ marginBottom: 0, flex: 1 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: 'purple',
+                      width: 300,
+                      padding: 5,
+                      borderRadius: 10,
+                      alignItems: 'flex-start',
+                    }}
+                    onPress={() => {}}
+                  >
+                    <Icon
+                      name='search'
+                      color='white'
+                      containerStyle={{ marginLeft: 5 }}
+                    />
+                  </TouchableOpacity>
                   <FlatList
                     data={
                       data && data.private && data.private.listSpotifyPlaylists

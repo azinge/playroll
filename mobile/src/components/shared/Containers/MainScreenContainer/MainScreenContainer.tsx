@@ -20,6 +20,7 @@ interface ContainerProps extends HeaderProps {
   contentContainerStyle?: StyleProp<ViewStyle>;
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
+  renderFlatListHeader?: () => JSX.Element;
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -77,6 +78,11 @@ export default class MainScreenContainer extends React.Component<Props, State> {
         flatList={this.props.flatList}
         data={this.props.data}
         keyExtractor={this.props.keyExtractor}
+        ListHeaderComponent={
+          this.props.renderFlatListHeader
+            ? this.props.renderFlatListHeader()
+            : undefined
+        }
         renderItem={this.props.renderItem}
       />
     );
@@ -85,7 +91,7 @@ export default class MainScreenContainer extends React.Component<Props, State> {
     return (
       <MainScreenHeader
         hideBottomBar={this.props.hideBottomBar}
-        hideSearchIcon={this.props.hideSearchIcon}
+        hideSearchIcon={true} // this.props.hideSearchIcon}
       />
     );
   }

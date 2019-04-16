@@ -1,16 +1,16 @@
 /**
- * BrowseRecommendationsScreen
+ * DefaultSocialScreen
  */
 
 import * as React from 'react';
 import { Text, ActivityIndicator, TouchableOpacity } from 'react-native';
-import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
 import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
 
-export default class BrowseRecommendationsScreen extends React.Component {
+export default class DefaultSocialScreen extends React.Component {
   render() {
     const extractRecommendations = data => {
       if (
@@ -26,8 +26,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
         {({ loading, error, data }) => {
           const recommendations = extractRecommendations(data);
           return (
-            <SubScreenContainer
-              title={'My Recommendations'}
+            <MainScreenContainer
               flatList={!loading && !error}
               contentContainerStyle={{ marginTop: 10 }}
               data={recommendations}
@@ -69,7 +68,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
                   Error Loading Recommendation
                 </Text>
               )}
-            </SubScreenContainer>
+            </MainScreenContainer>
           );
         }}
       </ListCurrentUserRecommendationsQuery>

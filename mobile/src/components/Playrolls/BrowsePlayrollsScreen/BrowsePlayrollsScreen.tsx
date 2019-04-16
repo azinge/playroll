@@ -5,7 +5,7 @@
 import React from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 
 import NavigationService from '../../../services/NavigationService';
 
@@ -73,6 +73,26 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   flatList={success}
                   data={playrolls}
                   keyExtractor={item => item.id}
+                  renderFlatListHeader={() => {
+                    return (
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: 'purple',
+                          width: 300,
+                          padding: 5,
+                          borderRadius: 10,
+                          alignItems: 'flex-start',
+                        }}
+                        onPress={() => {}}
+                      >
+                        <Icon
+                          name='search'
+                          color='white'
+                          containerStyle={{ marginLeft: 5 }}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }}
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
                     return (

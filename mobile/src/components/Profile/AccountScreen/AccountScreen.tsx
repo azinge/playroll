@@ -91,7 +91,6 @@ export default class AccountScreen extends React.Component<Props, State> {
 
                 {/* View Friends */}
                 <TouchableOpacity
-
                   onPress={() => {
                     NavigationService.navigate("FriendsMenu");
                   }}

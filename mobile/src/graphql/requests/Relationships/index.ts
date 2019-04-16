@@ -1,1 +1,2 @@
-export { SendFriendRequestMutation } from './SendFriendRequestMutation';
+export { SendFriendRequestMutation } from "./SendFriendRequestMutation";
+export { ListFriendsQuery } from "./ListFriendsQuery";

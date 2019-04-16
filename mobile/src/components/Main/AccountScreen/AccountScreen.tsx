@@ -79,7 +79,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                 {/* View Profile */}
                 <TouchableOpacity
                   onPress={() => {
-                    NavigationService.navigate('ViewProfile');
+                    NavigationService.navigate('ViewCurrentUserProfile');
                   }}
                 >
                   <View style={styles.textContainer}>
@@ -90,7 +90,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                 {/* View Friends */}
                 <TouchableOpacity
                   onPress={() => {
-                    NavigationService.navigate('AddFriend');
+                    NavigationService.navigate('BrowseFriends');
                   }}
                 >
                   <View style={styles.textContainer}>

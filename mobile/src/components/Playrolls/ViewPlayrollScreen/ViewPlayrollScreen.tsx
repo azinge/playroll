@@ -153,11 +153,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }}
       >
         <Button
-          linearGradientProps={{
-            colors: ['purple', '#4A00E0'],
-            start: { x: 0 },
-            end: { x: 1 },
-          }}
+          // linearGradientProps={{
+          //   colors: ['purple', '#4A00E0'],
+          //   start: { x: 0 },
+          //   end: { x: 1 },
+          // }}
           containerStyle={{ borderRadius: 80, width: '75%' }}
           buttonStyle={{ borderRadius: 80, height: 50 }}
           raised

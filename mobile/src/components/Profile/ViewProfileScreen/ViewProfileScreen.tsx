@@ -73,14 +73,13 @@ export default class ViewProfileScreen extends React.Component {
         <GetCurrentUserQuery>
           {({ loading, error, data }) => {
             if (loading || error || Object.keys(data).length === 0) {
-              return <ProfileScreenContainer title='My Public Profile' />;
+              return <ProfileScreenContainer title='ViewProfile' />;
             }
             const currentUser = (data && data.private.currentUser) || {};
             return (
               <ProfileScreenContainer
-                title='My Public Profile'
+                title={'ViewProfile'}
                 image={{ uri: currentUser.avatar }}
-                local
                 name={currentUser.name}
               />
             );

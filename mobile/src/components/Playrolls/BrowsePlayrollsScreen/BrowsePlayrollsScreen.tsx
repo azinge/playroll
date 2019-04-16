@@ -193,11 +193,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
               }}
             >
               <Button
-                // linearGradientProps={{
-                //   colors: ['#DA22FF', '#00c6ff'],
-                //   start: { x: 0 },
-                //   end: { x: 1 },
-                // }}
+                linearGradientProps={{
+                  colors: ['purple', '#4A00E0'],
+                  start: { x: 0 },
+                  end: { x: 1 },
+                }}
                 containerStyle={{
                   borderRadius: 80,
                   width: '75%',

@@ -93,7 +93,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       onPress: () => NavigationService.navigate('EditRoll'),
     };
     const editPlayrollIcon = {
-      ...Icons.settingsIcon,
+      ...Icons.editIcon,
       onPress: () =>
         NavigationService.navigate('EditPlayroll', {
           managePlayroll: 'View Playroll',
@@ -153,11 +153,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         }}
       >
         <Button
-          // linearGradientProps={{
-          //   colors: ['#DA22FF', '#00c6ff'],
-          //   start: { x: 0, y: 0.5 },
-          //   end: { x: 1, y: 0.5 },
-          // }}
+          linearGradientProps={{
+            colors: ['purple', '#4A00E0'],
+            start: { x: 0 },
+            end: { x: 1 },
+          }}
           containerStyle={{ borderRadius: 80, width: '75%' }}
           buttonStyle={{ borderRadius: 80, height: 50 }}
           raised

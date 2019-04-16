@@ -1,5 +1,5 @@
 /**
- * TidalSettingsScreen
+ * YouTubeSettingsScreen
  */
 
 import * as React from 'react';
@@ -8,15 +8,15 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import NavigationService from '../../../services/NavigationService';
 import { Button } from 'react-native-elements';
 
-export default class TidalSettingsScreen extends React.Component {
+export default class YouTubeSettingsScreen extends React.Component {
   render() {
     return (
-      <SubScreenContainer title='Tidal Settings'>
-        <Text>TidalSettingsScreen</Text>
+      <SubScreenContainer title='YouTube Settings'>
+        <Text>YouTubeSettingsScreen</Text>
         <Button
-          title='Connect To Tidal'
+          title='Connect To YouTube'
           onPress={() => {
-            NavigationService.navigate('ConnectTidal');
+            NavigationService.navigate('ConnectYouTube');
           }}
         />
       </SubScreenContainer>

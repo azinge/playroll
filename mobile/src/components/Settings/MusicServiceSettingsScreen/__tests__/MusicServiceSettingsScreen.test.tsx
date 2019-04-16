@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import BrowseTidalPlaylistsScreen from "../BrowseTidalPlaylistsScreen";
+import MusicServiceSettingsScreen from "../MusicServiceSettingsScreen";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<BrowseTidalPlaylistsScreen />).toJSON();
+  const tree = renderer.create(<MusicServiceSettingsScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

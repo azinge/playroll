@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import ConnectTidalScreen from "../ConnectTidalScreen";
+import ConnectYouTubeScreen from "../ConnectYouTubeScreen";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<ConnectTidalScreen />).toJSON();
+  const tree = renderer.create(<ConnectYouTubeScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

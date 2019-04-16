@@ -1,15 +1,15 @@
 /**
- * MusicServiceSettingsMenuScreen
+ * MusicServiceSettingsScreen
  */
 
 import * as React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import styles from './MusicServiceSettingsMenuScreen.styles';
+import styles from './MusicServiceSettingsScreen.styles';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import NavigationService from '../../../services/NavigationService';
 import { Button } from 'react-native-elements';
 
-export default class MusicServiceSettingsMenuScreen extends React.Component {
+export default class MusicServiceSettingsScreen extends React.Component {
   render() {
     return (
       <SubScreenContainer
@@ -58,7 +58,7 @@ export default class MusicServiceSettingsMenuScreen extends React.Component {
           {/* YouTube Settings */}
           <TouchableOpacity
             onPress={() => {
-              NavigationService.navigate('TidalSettings');
+              NavigationService.navigate('YouTubeSettings');
             }}
           >
             <View style={styles.textContainer}>
@@ -79,9 +79,9 @@ export default class MusicServiceSettingsMenuScreen extends React.Component {
           }}
         />
         <Button
-          title="Tidal Settings"
+          title="YouTube Settings"
           onPress={() => {
-            NavigationService.navigate("TidalSettings");
+            NavigationService.navigate("YouTubeSettings");
           }}
         /> */}
       </SubScreenContainer>

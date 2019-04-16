@@ -1,30 +1,24 @@
 import { createStackNavigator } from 'react-navigation';
 
-import MusicServiceSettingsMenuScreen from './MusicServiceSettingsMenuScreen';
+import MusicServiceSettingsScreen from './MusicServiceSettingsScreen';
 import ConnectAppleMusicScreen from './ConnectAppleMusicScreen';
 import ConnectSpotifyScreen from './ConnectSpotifyScreen';
-import ConnectTidalScreen from './ConnectTidalScreen';
+import ConnectYouTubeScreen from './ConnectYouTubeScreen';
 import AppleMusicSettingsScreen from './AppleMusicSettingsScreen';
 import SpotifySettingsScreen from './SpotifySettingsScreen';
-import TidalSettingsScreen from './TidalSettingsScreen';
-import SettingsMenuScreen from './SettingsMenuScreen';
+import YouTubeSettingsScreen from './YouTubeSettingsScreen';
+import SettingsScreen from './SettingsScreen';
 
-export const SettingsNavigator = createStackNavigator(
-  {
-    SettingsMenu: SettingsMenuScreen,
-    MusicServiceSettingsMenu: MusicServiceSettingsMenuScreen,
-    AppleMusicSettings: AppleMusicSettingsScreen,
-    SpotifySettings: SpotifySettingsScreen,
-    TidalSettings: TidalSettingsScreen,
-  },
-  {
-    initialRouteName: 'SettingsMenu',
-    headerMode: 'none',
-  }
-);
+export const SettingsRoutes = {
+  Settings: SettingsScreen,
+  MusicServiceSettings: MusicServiceSettingsScreen,
+  AppleMusicSettings: AppleMusicSettingsScreen,
+  SpotifySettings: SpotifySettingsScreen,
+  YouTubeSettings: YouTubeSettingsScreen,
+};
 
 export const SettingsModalRoutes = {
   ConnectAppleMusic: ConnectAppleMusicScreen,
   ConnectSpotify: ConnectSpotifyScreen,
-  ConnectTidal: ConnectTidalScreen,
+  ConnectYouTube: ConnectYouTubeScreen,
 };

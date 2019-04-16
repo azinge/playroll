@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import MusicMenuScreen from './MusicMenuScreen';
 import BrowseAppleMusicPlaylistsScreen from './BrowseAppleMusicPlaylistsScreen';
 import BrowseSpotifyPlaylistsScreen from './BrowseSpotifyPlaylistsScreen';
-import BrowseTidalPlaylistsScreen from './BrowseTidalPlaylistsScreen';
+import BrowseYouTubePlaylistsScreen from './BrowseYouTubePlaylistsScreen';
 import ViewSpotifyPlaylistScreen from './ViewSpotifyPlaylistScreen';
 import BrowseSpotifySavedTracksScreen from './BrowseSpotifySavedTracksScreen';
 
@@ -13,7 +13,7 @@ export const MusicNavigator = createStackNavigator(
     BrowseAppleMusicPlaylists: BrowseAppleMusicPlaylistsScreen,
     BrowseSpotifyPlaylists: BrowseSpotifyPlaylistsScreen,
     BrowseSpotifySavedTracks: BrowseSpotifySavedTracksScreen,
-    BrowseTidalPlaylists: BrowseTidalPlaylistsScreen,
+    BrowseYouTubePlaylists: BrowseYouTubePlaylistsScreen,
     ViewSpotifyPlaylist: ViewSpotifyPlaylistScreen,
   },
   {

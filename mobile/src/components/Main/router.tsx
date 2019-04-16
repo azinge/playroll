@@ -14,12 +14,13 @@ import {
   SearchModalRoutes,
   //   SearchNavigator,
 } from '../Search/router';
-import { SettingsModalRoutes } from '../Settings/router';
+import { SettingsModalRoutes, SettingsRoutes } from '../Settings/router';
 
 // Add Avenir to all screens (for Android)
 import { Font } from 'expo';
 import { MusicNavigator } from '../Music/router';
 import { SocialNavigator } from '../Social/router';
+import AccountScreen from './AccountScreen';
 Font.loadAsync({
   Avenir: require('../../assets/fonts/AvenirLTStd-Black.otf'),
 });
@@ -108,9 +109,15 @@ export const MainTabsNavigator = createBottomTabNavigator(
   }
 );
 
+export const MainRoutes = {
+  Account: AccountScreen,
+};
+
 export const MainWithoutModalsNavigator = createStackNavigator(
   {
     MainTabs: MainTabsNavigator,
+    ...MainRoutes,
+    ...SettingsRoutes,
     ...ProfileRoutes,
     ...SearchRoutes,
   },

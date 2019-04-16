@@ -1,5 +1,5 @@
 /**
- * SettingsMenuScreen
+ * SettingsScreen
  */
 
 import * as React from 'react';
@@ -12,12 +12,12 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import styles from './SettingsMenuScreen.styles';
+import styles from './SettingsScreen.styles';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import NavigationService from '../../../services/NavigationService';
 
-export default class SettingsMenuScreen extends React.Component {
+export default class SettingsScreen extends React.Component {
   state = { switchValue: false };
   toggleSwitch = value => {
     // onValueChange of the switch this function will be called
@@ -57,7 +57,7 @@ export default class SettingsMenuScreen extends React.Component {
           {/* Music Service Settings */}
           <TouchableOpacity
             onPress={() => {
-              NavigationService.navigate('MusicServiceSettingsMenu');
+              NavigationService.navigate('MusicServiceSettings');
             }}
           >
             <View style={styles.textContainer}>
@@ -80,11 +80,11 @@ export default class SettingsMenuScreen extends React.Component {
     );
     // return (
     //   <SubScreenContainer title='Settings'>
-    //     <Text>SettingsMenuScreen</Text>
+    //     <Text>SettingsScreen</Text>
     //     <Button
     //       title='Music Services'
     //       onPress={() => {
-    //         NavigationService.navigate('MusicServiceSettingsMenu');
+    //         NavigationService.navigate('MusicServiceSettings');
     //       }}
     //     />
     //   </SubScreenContainer>

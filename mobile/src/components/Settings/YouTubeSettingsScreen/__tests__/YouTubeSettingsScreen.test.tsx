@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import TidalSettingsScreen from "../TidalSettingsScreen";
+import YouTubeSettingsScreen from "../YouTubeSettingsScreen";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<TidalSettingsScreen />).toJSON();
+  const tree = renderer.create(<YouTubeSettingsScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

@@ -3,7 +3,14 @@
  */
 
 import * as React from 'react';
-import { View, ScrollView, Text, TextInput, Image } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './EditPlayrollScreen.styles';
@@ -65,7 +72,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                   {this.renderSearch(playroll)}
                 </View>
               </SubScreenContainer>
-              {this.renderBottomBar(playroll)}
+              {this.renderNewRollButton(playroll)}
             </View>
           );
         }}
@@ -208,6 +215,24 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               );
             })}
         </ScrollView>
+      </View>
+    );
+  }
+
+  renderNewRollButton(playroll) {
+    return (
+      <View style={styles.footerView}>
+        <TouchableOpacity
+          style={styles.newButton}
+          onPress={() => {
+            NavigationService.navigate('AddRoll', {
+              managePlayroll: 'View Playroll',
+              playroll,
+            });
+          }}
+        >
+          <Text style={styles.buttonText}>Add a Roll</Text>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -7,9 +7,11 @@ import ViewPlayrollScreen from './ViewPlayrollScreen';
 import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import GenerateTracklistScreen from './GenerateTracklistScreen';
 import AddToPlayrollScreen from './AddToPlayrollScreen';
+import AddRollScreen from './AddRollScreen';
 
 export const PlayrollsNavigator = createStackNavigator(
   {
+    AddRoll: AddRollScreen,
     EditPlayroll: EditPlayrollScreen,
     ViewPlayroll: ViewPlayrollScreen,
     BrowsePlayrolls: BrowsePlayrollsScreen,

@@ -163,7 +163,7 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='edit'
                 color='lightgrey'
-                onPress={() => NavigationService.navigate('EditRoll', roll)}
+                onPress={() => NavigationService.navigate('EditRoll', { roll })}
                 iconStyle={styles.editIcon}
               />
             </View>

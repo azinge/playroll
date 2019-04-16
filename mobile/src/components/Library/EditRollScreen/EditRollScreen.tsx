@@ -503,7 +503,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
           </View>
         )}
         {this.state.filterTypes.map((filter, i) => {
-          console.log(filter);
+          // console.log(filter);
           return (
             <View key={`${i}`}>
               <View

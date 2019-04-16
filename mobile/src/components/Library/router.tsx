@@ -1,6 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 
 import EditPlayrollScreen from './EditPlayrollScreen';
+import AddRollScreen from './AddRollScreen';
 import EditRollScreen from './EditRollScreen';
 import ViewTracklistScreen from './ViewTracklistScreen';
 import BrowseRecommendationsScreen from './BrowseRecommendationsScreen';
@@ -14,6 +15,7 @@ import AddToPlayrollScreen from './AddToPlayrollScreen';
 
 export const LibraryNavigator = createStackNavigator(
   {
+    AddRoll: AddRollScreen,
     LibraryMenu: LibraryMenuScreen,
     EditPlayroll: EditPlayrollScreen,
     ViewDiscoveryQueue: ViewDiscoveryQueueScreen,

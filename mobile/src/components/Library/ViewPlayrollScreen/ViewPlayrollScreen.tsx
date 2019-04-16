@@ -75,7 +75,6 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
                 {/* List the Rolls */}
                 {this.renderRolls(playroll)}
               </SubScreenContainer>
-              {this.renderNewRollButton(playroll)}
             </View>
           );
         }}

@@ -105,7 +105,7 @@ export default class DetailedPlayrollCard extends React.Component<
                   height: 3,
                 },
                 shadowRadius: 5,
-                shadowOpacity: 0.2,
+                shadowOpacity: 0.5,
               }}
             >
               <View style={{ flexDirection: 'row' }}>

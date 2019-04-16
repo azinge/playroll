@@ -86,6 +86,8 @@ var generateTracklist = gqltag.Method{
 			return nil, err
 		}
 
+		// mctx.Context.Deadline()
+
 		compiledRolls, err := generate.CompileRolls(&playroll.Rolls, mctx.DB, client)
 		if err != nil {
 			fmt.Println("Error compiling rolls: ", err.Error())

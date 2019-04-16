@@ -9,6 +9,7 @@ import { Roll } from '../../../../graphql/types';
 import styles from './RollList.styles';
 import NavigationService from '../../../../services/NavigationService';
 import { Icon } from 'react-native-elements';
+import Swipeout from 'react-native-swipeout';
 
 export interface Props {
   rolls: Roll[];
@@ -84,7 +85,7 @@ export default class RollList extends React.Component<Props, State> {
                   size={25}
                   name='sort'
                   type='material'
-                  color='lightgrey'
+                  color='purple'
                   iconStyle={styles.rowIcon}
                 />
                 <Text style={[styles.text, styles.artistName]}>
@@ -109,7 +110,7 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='av-timer'
                 type='material'
-                color='lightgrey'
+                color='purple'
                 iconStyle={styles.rowIcon}
               />
               <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
@@ -125,37 +126,50 @@ export default class RollList extends React.Component<Props, State> {
     return (
       // Removing TouchableOpacity because the Edit Icon is enough
       // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
-      <View style={styles.outerContainer} key={roll.id}>
-        <View style={styles.innerContainer}>
-          <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-          <View style={styles.rowsView}>
-            {/* Main source icon/text row */}
-            <View style={styles.itemTextView}>
+      <View
+        style={{
+          borderBottomWidth: 0.5,
+          borderBottomColor: 'lightgrey',
+          //   marginTop: 5,
+        }}
+      >
+        <Swipeout
+          right={[{ text: 'Delete', backgroundColor: 'red' }]}
+          backgroundColor={'transparent'}
+          autoClose={true}
+        >
+          <View style={styles.outerContainer} key={roll.id}>
+            <View style={styles.innerContainer}>
+              <Image style={styles.cover} source={{ uri: mainSource.cover }} />
+              <View style={styles.rowsView}>
+                {/* Main source icon/text row */}
+                <View style={styles.itemTextView}>
+                  <Icon
+                    size={25}
+                    name='music-note'
+                    type='material'
+                    color='purple'
+                    iconStyle={styles.rowIcon}
+                  />
+                  <Text style={[styles.text, styles.artistName]}>
+                    {mainSource.name}
+                  </Text>
+                </View>
+                {/* Filter info per row, see loop above */}
+                {filterViews}
+              </View>
+              {/* Right side menu icons */}
               <Icon
                 size={25}
-                name='music-note'
-                type='material'
+                name='edit'
                 color='lightgrey'
-                iconStyle={styles.rowIcon}
+                onPress={() => NavigationService.navigate('EditRoll', { roll })}
+                iconStyle={styles.editIcon}
               />
-              <Text style={[styles.text, styles.artistName]}>
-                {mainSource.name}
-              </Text>
             </View>
-
-            {/* Filter info per row, see loop above */}
-            {filterViews}
+            <View style={styles.spacing} />
           </View>
-          {/* Right side menu icons */}
-          <Icon
-            size={25}
-            name='edit'
-            color='lightgrey'
-            onPress={() => NavigationService.navigate('EditRoll', roll)}
-            iconStyle={styles.editIcon}
-          />
-        </View>
-        <View style={styles.spacing} />
+        </Swipeout>
       </View>
     );
   }

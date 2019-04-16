@@ -56,13 +56,13 @@ export default class DiscoverScreen extends React.Component<Props, State> {
           </LinearGradient>
 
           <HorizontalPlaceholderList
-            title={'Suggested Playrolls'}
+            title={'Featured Playrolls'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />
 
           <HorizontalPlaceholderList
-            title={'Suggested Rolls'}
+            title={'Featured Rolls'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />

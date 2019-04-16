@@ -33,7 +33,7 @@ interface State {
   username: string;
   fetchingUsers: boolean;
   dogAvatar: string;
-  users?: [User];
+  users?: User[];
 }
 
 export default class AddFriendScreen extends React.Component<Props, State> {
@@ -59,15 +59,15 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     this.handleSearchQueryData = this.handleSearchQueryData.bind(this);
     this.renderUserRow = this.renderUserRow.bind(this);
     this.handleAddFriendButtonStyle = this.handleAddFriendButtonStyle.bind(
-      this,
+      this
     );
     this.handleAddFriendButtonTitle = this.handleAddFriendButtonTitle.bind(
-      this,
+      this
     );
     this.handleUpdateUsers = this.handleUpdateUsers.bind(this);
     this.handleFriendRequest = this.handleFriendRequest.bind(this);
     this.handleFriendRequestMutationData = this.handleFriendRequestMutationData.bind(
-      this,
+      this
     );
   }
 
@@ -122,7 +122,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
         type='material'
         color='white'
         onPress={() => {
-          this.props.navigation && this.props.navigation.goBack(null);
+          return this.props.navigation && this.props.navigation.goBack(null);
         }}
       />
     );
@@ -144,7 +144,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       .then(({ error, data, loading }) => {
         console.log(
           'validateSearchInput() client.query promise resolved(data):',
-          data,
+          data
         );
         if (error) {
           throw error;
@@ -159,7 +159,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       .catch(error => {
         console.log(
           'validateSearchInput() client.query promise rejected:',
-          error,
+          error
         );
         if (this.state.fetchingUsers) {
           this.setState({ fetchingUsers: false });

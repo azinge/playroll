@@ -2,11 +2,11 @@
  * ProfileScreenContainer
  */
 
-import * as React from "react";
-import Collapsible from "react-native-collapsible-header";
-import { isIphoneX } from "react-native-iphone-x-helper";
-import { HeaderIconType } from "../../../../themes/Icons";
-import { SafeAreaView } from "react-navigation";
+import * as React from 'react';
+import Collapsible from 'react-native-collapsible-header';
+import { isIphoneX } from 'react-native-iphone-x-helper';
+import { HeaderIconType } from '../../../../themes/Icons';
+import { SafeAreaView } from 'react-navigation';
 import {
   ViewStyle,
   StyleProp,
@@ -16,12 +16,12 @@ import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
-  ScrollView
-} from "react-native";
-import ProfileScreenHeader from "../../Headers/ProfileScreenHeader";
-import { ListCurrentUserPlayrollsQuery } from "../../../../graphql/requests/Playroll";
-import NavigationService from "../../../../services/NavigationService";
-import { ListItem, Button } from "react-native-elements";
+  ScrollView,
+} from 'react-native';
+import ProfileScreenHeader from '../../Headers/ProfileScreenHeader';
+import { ListCurrentUserPlayrollsQuery } from '../../../../graphql/requests/Playroll';
+import NavigationService from '../../../../services/NavigationService';
+import { ListItem, Button } from 'react-native-elements';
 
 interface HeaderProps {
   title?: string;
@@ -54,7 +54,7 @@ export default class ProfileScreenContainer extends React.Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      key: `${this.props.title},${this.props.flatList}`
+      key: `${this.props.title},${this.props.flatList}`,
     };
   }
   componentWillReceiveProps(nextProps, prevState) {
@@ -67,31 +67,31 @@ export default class ProfileScreenContainer extends React.Component<
     <TouchableOpacity
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
       onPress={() =>
-        NavigationService.navigate("ViewPlayroll", { playroll: item })
+        NavigationService.navigate('ViewPlayroll', { playroll: item })
       }
     >
       <ListItem
         title={item.name}
-        titleStyle={{ color: "purple" }}
+        titleStyle={{ color: 'purple' }}
         subtitle={item.type}
         leftAvatar={{
-          source: { uri: item.cover }
+          source: { uri: item.cover },
         }}
         containerStyle={{
-          borderColor: "white",
+          borderColor: 'white',
           borderRadius: 10,
-          shadowColor: "gray",
+          shadowColor: 'gray',
           shadowOffset: {
             width: 2,
-            height: 1
+            height: 1,
           },
           shadowRadius: 3,
           shadowOpacity: 0.2,
-          overflow: "visible"
+          overflow: 'visible',
         }}
       />
     </TouchableOpacity>
-  );
+  )
 
   render() {
     return (
@@ -100,7 +100,7 @@ export default class ProfileScreenContainer extends React.Component<
           key={this.state.key}
           max={45}
           min={isIphoneX() ? 48 : 20}
-          backgroundColor={"white"}
+          backgroundColor={'white'}
           renderHeader={
             this.props.renderHeader
               ? this.props.renderHeader()
@@ -139,26 +139,32 @@ export default class ProfileScreenContainer extends React.Component<
       return data.private.listCurrentUserPlayrolls;
     };
     return (
-      <View style={{width: '100%', top: 200, marginBottom: "35%", height: "80%", }}>
-        <View style={{ alignItems: "center" }}>
-          <View style={{ alignItems: "center", marginVertical: 10 }}>
+      <View
+        style={{ width: '100%', top: 200, marginBottom: '35%', height: '80%' }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: 'center', marginVertical: 10 }}>
             <Text
               style={{
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 fontSize: 20,
-                color: "#993399",
-                top: 5
+                color: '#993399',
+                top: 5,
               }}
             >
               {this.props.name}
             </Text>
           </View>
           {
-            <Button 
-              raised 
-              containerStyle = {{ width: '50%' }}
-              buttonStyle={{ borderRadius: 80, height: 40, backgroundColor: this.props.local ? 'grey' : 'purple' }}
-              title = { this.props.local ? 'Find Friends' : 'Add Friend' }
+            <Button
+              raised
+              containerStyle={{ width: '50%' }}
+              buttonStyle={{
+                borderRadius: 80,
+                height: 40,
+                backgroundColor: this.props.local ? 'grey' : 'purple',
+              }}
+              title={this.props.local ? 'Find Friends' : 'Add Friend'}
               titleStyle={{ fontSize: 16 }}
             />
             /* <Button
@@ -182,9 +188,10 @@ export default class ProfileScreenContainer extends React.Component<
                 onPress={() => {
                   // createPlayroll();
                 }}
-              /> */}
+              /> */
+          }
         </View>
-       
+
         <ListCurrentUserPlayrollsQuery>
           {({ loading, error, data }) => {
             const playrolls = extractPlayrolls(data);
@@ -199,17 +206,17 @@ export default class ProfileScreenContainer extends React.Component<
                   }
                 }
               >
-                <View style={{paddingTop: 20}}>
+                <View style={{ paddingTop: 20 }}>
                   <FlatList
                     data={playrolls}
                     keyExtractor={(item, index) => item.id}
                     renderItem={this._renderItem}
-                    contentContainerStyle={{paddingBottom: 50}}
+                    contentContainerStyle={{ paddingBottom: 50 }}
                     // style={{height: '100%'}}
                   />
                   {loading && (
                     <ActivityIndicator
-                      color={"gray"}
+                      color={'gray'}
                       style={{ paddingTop: 50 }}
                     />
                   )}

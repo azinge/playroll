@@ -1,2 +1,0 @@
-import MusicServicePlaylistsMenuScreen from "./MusicServicePlaylistsMenuScreen";
-export default MusicServicePlaylistsMenuScreen;

@@ -8,7 +8,7 @@ import { isIphoneX } from 'react-native-iphone-x-helper';
 import SubScreenHeader from '../../Headers/SubScreenHeader';
 import { HeaderIconType } from '../../../../themes/Icons';
 import { SafeAreaView } from 'react-navigation';
-import { ViewStyle, StyleProp } from 'react-native';
+import { ViewStyle, StyleProp, RefreshControl } from 'react-native';
 
 interface HeaderProps {
   title?: string;
@@ -62,13 +62,6 @@ export default class SubScreenContainer extends React.Component<Props, State> {
     }
   }
   render() {
-    const {
-      renderHeader,
-      flatList,
-      data,
-      keyExtractor,
-      renderItem,
-    } = this.props;
     return (
       <Collapsible
         key={this.state.key}

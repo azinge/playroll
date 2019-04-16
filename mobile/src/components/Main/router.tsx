@@ -7,17 +7,19 @@ import { Icon } from 'react-native-elements';
 
 import HomeScreen from './HomeScreen';
 import DiscoverScreen from './DiscoverScreen';
-import { LibraryNavigator, LibraryModalRoutes } from '../Library/router';
+import { PlayrollsNavigator, PlayrollsModalRoutes } from '../Playrolls/router';
 import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
 import {
   SearchRoutes,
   SearchModalRoutes,
   //   SearchNavigator,
 } from '../Search/router';
-import { MusicServiceSettingsModalRoutes } from '../MusicServices/Settings/router';
+import { SettingsModalRoutes } from '../Settings/router';
 
 // Add Avenir to all screens (for Android)
 import { Font } from 'expo';
+import { MusicNavigator } from '../Music/router';
+import { SocialNavigator } from '../Social/router';
 Font.loadAsync({
   Avenir: require('../../assets/fonts/AvenirLTStd-Black.otf'),
 });
@@ -40,6 +42,33 @@ export const MainTabsNavigator = createBottomTabNavigator(
       },
     },
 
+    Social: {
+      screen: SocialNavigator,
+      navigationOptions: {
+        title: `Social`,
+        tabBarLabel: 'Social',
+        tabBarIcon: ({ tintColor = '' }) => (
+          <Icon type='material' name='chat' size={35} color={tintColor} />
+        ),
+      },
+    },
+
+    Playrolls: {
+      screen: PlayrollsNavigator,
+      navigationOptions: {
+        title: `Playrolls`,
+        tabBarLabel: 'Playrolls',
+        tabBarIcon: ({ tintColor = '' }) => (
+          <Icon
+            type='material'
+            name='playlist-add'
+            size={35}
+            color={tintColor}
+          />
+        ),
+      },
+    },
+
     Discover: {
       screen: DiscoverScreen,
       navigationOptions: {
@@ -54,15 +83,16 @@ export const MainTabsNavigator = createBottomTabNavigator(
         ),
       },
     },
-    Library: {
-      screen: LibraryNavigator,
+
+    Music: {
+      screen: MusicNavigator,
       navigationOptions: {
-        title: `Library`,
-        tabBarLabel: 'Your Library',
+        title: `Music`,
+        tabBarLabel: 'Music',
         tabBarIcon: ({ tintColor = '' }) => (
           <Icon
             type='material-community'
-            name='folder'
+            name='music'
             size={35}
             color={tintColor}
           />
@@ -93,10 +123,10 @@ export const MainWithoutModalsNavigator = createStackNavigator(
 export const MainNavigator = createStackNavigator(
   {
     MainWithoutModals: MainWithoutModalsNavigator,
-    ...LibraryModalRoutes,
+    ...PlayrollsModalRoutes,
     ...SearchModalRoutes,
     ...ProfileModalRoutes,
-    ...MusicServiceSettingsModalRoutes,
+    ...SettingsModalRoutes,
   },
   {
     initialRouteName: 'MainWithoutModals',

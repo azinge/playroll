@@ -26,23 +26,23 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       <MainScreenContainer>
         <View style={{ marginTop: 5, flex: 1 }}>
-          <View
+          {/* <View
             style={{
               marginVertical: 10,
               paddingHorizontal: 10,
             }}
           >
             <Text style={styles.title}>Suggested Playrolls</Text>
-          </View>
+          </View> */}
 
-          <TouchableOpacity onPress={() => {}}>
-            <HomeCarousel />
-          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => {}}> */}
+          <HomeCarousel numItems={5} />
+          {/* </TouchableOpacity> */}
 
-          <HorizontalMusicSourceList
+          {/* <HorizontalMusicSourceList
             title={'Discovery Queue'}
             musicSources={musicSources}
-          />
+          /> */}
 
           {/* <HorizontalPlaceholderList
             title={'Discovery Queues'}

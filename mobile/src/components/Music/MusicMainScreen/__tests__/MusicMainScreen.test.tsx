@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import MusicMenuScreen from "../MusicMenuScreen";
+import MusicMainScreen from "../MusicMainScreen";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<MusicMenuScreen />).toJSON();
+  const tree = renderer.create(<MusicMainScreen />).toJSON();
   expect(tree).toMatchSnapshot();
 });

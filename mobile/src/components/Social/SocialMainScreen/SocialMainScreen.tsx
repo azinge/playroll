@@ -1,5 +1,5 @@
 /**
- * SocialMenuScreen
+ * SocialMainScreen
  */
 
 import * as React from 'react';
@@ -9,7 +9,7 @@ import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 
-export default class SocialMenuScreen extends React.Component {
+export default class SocialMainScreen extends React.Component {
   render() {
     return (
       <MainScreenContainer>

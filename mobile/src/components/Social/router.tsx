@@ -1,15 +1,15 @@
 import { createStackNavigator } from 'react-navigation';
 
 import BrowseRecommendationsScreen from './BrowseRecommendationsScreen';
-import SocialMenuScreen from './SocialMenuScreen';
+import SocialMainScreen from './SocialMainScreen';
 
 export const SocialNavigator = createStackNavigator(
   {
     BrowseRecommendations: BrowseRecommendationsScreen,
-    SocialMenu: SocialMenuScreen,
+    SocialMain: SocialMainScreen,
   },
   {
-    initialRouteName: 'SocialMenu',
+    initialRouteName: 'BrowseRecommendations',
     headerMode: 'none',
   }
 );

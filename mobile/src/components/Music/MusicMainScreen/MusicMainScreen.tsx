@@ -1,5 +1,5 @@
 /**
- * MusicMenuScreen
+ * MusicMainScreen
  */
 
 import * as React from 'react';
@@ -20,7 +20,7 @@ import NavigationService from '../../../services/NavigationService';
 import LinearGradient from 'expo'; // Only if no expo
 import TouchableScale from 'expo';
 
-export default class MusicMenuScreen extends React.Component {
+export default class MusicMainScreen extends React.Component {
   _renderItem = ({ item }) => (
     <TouchableOpacity
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}

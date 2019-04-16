@@ -1,6 +1,6 @@
 import { createStackNavigator } from 'react-navigation';
 
-import MusicMenuScreen from './MusicMenuScreen';
+import MusicMainScreen from './MusicMainScreen';
 import BrowseAppleMusicPlaylistsScreen from './BrowseAppleMusicPlaylistsScreen';
 import BrowseSpotifyPlaylistsScreen from './BrowseSpotifyPlaylistsScreen';
 import BrowseYouTubePlaylistsScreen from './BrowseYouTubePlaylistsScreen';
@@ -9,7 +9,7 @@ import BrowseSpotifySavedTracksScreen from './BrowseSpotifySavedTracksScreen';
 
 export const MusicNavigator = createStackNavigator(
   {
-    MusicMenu: MusicMenuScreen,
+    MusicMain: MusicMainScreen,
     BrowseAppleMusicPlaylists: BrowseAppleMusicPlaylistsScreen,
     BrowseSpotifyPlaylists: BrowseSpotifyPlaylistsScreen,
     BrowseSpotifySavedTracks: BrowseSpotifySavedTracksScreen,
@@ -17,7 +17,7 @@ export const MusicNavigator = createStackNavigator(
     ViewSpotifyPlaylist: ViewSpotifyPlaylistScreen,
   },
   {
-    initialRouteName: 'MusicMenu',
+    initialRouteName: 'MusicMain',
     headerMode: 'none',
   }
 );

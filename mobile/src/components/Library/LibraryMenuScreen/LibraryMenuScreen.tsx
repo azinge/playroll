@@ -2,24 +2,24 @@
  * LibraryMenuScreen
  */
 
-import * as React from 'react';
+import * as React from "react";
 import {
   Text,
   View,
   Image,
   TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native';
+  TouchableOpacity
+} from "react-native";
 
-import { NavigationScreenProp } from 'react-navigation';
-import { isIphoneX } from 'react-native-iphone-x-helper';
+import { NavigationScreenProp } from "react-navigation";
+import { isIphoneX } from "react-native-iphone-x-helper";
 
-import Collapsible from 'react-native-collapsible-header';
-import styles from './LibraryMenuScreen.styles';
-import NavigationService from '../../../services/NavigationService';
-import MainScreenHeader from '../../shared/Headers/MainScreenHeader';
-import PlaceholderList from '../../shared/Lists/PlaceholderList';
-import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
+import Collapsible from "react-native-collapsible-header";
+import styles from "./LibraryMenuScreen.styles";
+import NavigationService from "../../../services/NavigationService";
+import MainScreenHeader from "../../shared/Headers/MainScreenHeader";
+import PlaceholderList from "../../shared/Lists/PlaceholderList";
+import MainScreenContainer from "../../shared/Containers/MainScreenContainer";
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -38,7 +38,7 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         {/* Your Playrolls */}
         <TouchableOpacity
           onPress={() => {
-            NavigationService.navigate('BrowsePlayrolls');
+            NavigationService.navigate("BrowsePlayrolls");
           }}
         >
           <View style={styles.textContainer}>
@@ -58,18 +58,18 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
         {/* Your Reommendations */}
         <TouchableOpacity
           onPress={() => {
-            NavigationService.navigate('BrowseRecommendations');
+            NavigationService.navigate("BrowseRecommendations");
           }}
         >
           <View style={styles.textContainer}>
-            <Text style={styles.disabledText}>Your Recommendations</Text>
+            <Text style={styles.enabledText}>Your Recommendations</Text>
             {/* {this.renderRecommendationsNotification()} */}
           </View>
         </TouchableOpacity>
         {/* Your Playlists */}
         <TouchableOpacity
           onPress={() => {
-            NavigationService.navigate('MusicServicePlaylistsMenu');
+            NavigationService.navigate("MusicServicePlaylistsMenu");
           }}
         >
           <View style={styles.textContainer}>
@@ -94,9 +94,9 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
           </Text>
         </View> */}
         <PlaceholderList
-          title={'Recently Viewed'}
+          title={"Recently Viewed"}
           numItems={10}
-          overlayText={'Coming Soon...'}
+          overlayText={"Coming Soon..."}
         />
         {/* <ScrollView
           style={{ marginLeft: 15, marginVertical: 10, paddingBottom: 10 }}
@@ -154,28 +154,28 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
   renderMusicServiceIcons() {
     const musicServiceIcons = [
       {
-        name: 'tidal',
-        source: require('../../../assets/tidalIcon.png'),
+        name: "tidal",
+        source: require("../../../assets/tidalIcon.png"),
         authenticated: false,
-        playlistsNav: () => NavigationService.navigate('BrowseTidalPlaylists'),
-        connectNav: () => NavigationService.navigate('ConnectTidal'),
+        playlistsNav: () => NavigationService.navigate("BrowseTidalPlaylists"),
+        connectNav: () => NavigationService.navigate("ConnectTidal")
       },
       {
-        name: 'appleMusic',
-        source: require('../../../assets/appleMusicIcon.png'),
+        name: "appleMusic",
+        source: require("../../../assets/appleMusicIcon.png"),
         authenticated: false,
         playlistsNav: () =>
-          NavigationService.navigate('BrowseAppleMusicPlaylists'),
-        connectNav: () => NavigationService.navigate('ConnectAppleMusic'),
+          NavigationService.navigate("BrowseAppleMusicPlaylists"),
+        connectNav: () => NavigationService.navigate("ConnectAppleMusic")
       },
       {
-        name: 'spotify',
-        source: require('../../../assets/spotifyIconBlack.png'),
+        name: "spotify",
+        source: require("../../../assets/spotifyIconBlack.png"),
         authenticated: true,
         playlistsNav: () =>
-          NavigationService.navigate('BrowseSpotifyPlaylists'),
-        connectNav: () => NavigationService.navigate('ConnectSpotify'),
-      },
+          NavigationService.navigate("BrowseSpotifyPlaylists"),
+        connectNav: () => NavigationService.navigate("ConnectSpotify")
+      }
     ];
     const unauthenticatedMusicServiceIcons = musicServiceIcons.filter(
       msi => !msi.authenticated
@@ -185,9 +185,9 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
     );
     return (
       <View
-        style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1 }}
+        style={{ flexDirection: "row", justifyContent: "flex-end", flex: 1 }}
       >
-        <View style={{ flexDirection: 'row', opacity: 0.2 }}>
+        <View style={{ flexDirection: "row", opacity: 0.2 }}>
           {unauthenticatedMusicServiceIcons.map(msi => (
             <TouchableHighlight
               //   onPress={msi.connectNav}
@@ -197,37 +197,37 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
               <View>
                 <Image
                   style={styles.musicServiceButton}
-                  resizeMode={'contain'}
+                  resizeMode={"contain"}
                   source={msi.source}
                 />
                 <View
                   style={[
                     styles.musicServiceButtonActivityIcon,
-                    { backgroundColor: 'grey' },
+                    { backgroundColor: "grey" }
                   ]}
                 />
               </View>
             </TouchableHighlight>
           ))}
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: "row" }}>
           {authenticatedMusicServiceIcons.map(msi => (
             <TouchableHighlight
               onPress={msi.playlistsNav}
               style={styles.musicServiceButtonContainer}
               key={msi.name}
-              underlayColor='rgba(255,255,255,0)'
+              underlayColor="rgba(255,255,255,0)"
             >
               <View>
                 <Image
                   style={styles.musicServiceButton}
-                  resizeMode={'contain'}
+                  resizeMode={"contain"}
                   source={msi.source}
                 />
                 <View
                   style={[
                     styles.musicServiceButtonActivityIcon,
-                    { backgroundColor: 'green' },
+                    { backgroundColor: "green" }
                   ]}
                 />
               </View>
@@ -240,21 +240,21 @@ export default class LibraryMenuScreen extends React.Component<Props, State> {
   renderRecommendationsNotification() {
     return (
       <View
-        style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1 }}
+        style={{ flexDirection: "row", justifyContent: "flex-end", flex: 1 }}
       >
         <View
           style={{
-            backgroundColor: 'darkred',
+            backgroundColor: "darkred",
             paddingHorizontal: 5,
             marginRight: 16,
             borderRadius: 5,
             minWidth: 24,
             height: 24,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>5</Text>
+          <Text style={{ color: "white", fontWeight: "bold" }}>5</Text>
         </View>
       </View>
     );

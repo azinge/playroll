@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   cover: {
@@ -7,22 +7,28 @@ export default StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'lightgrey',
+    borderColor: "lightgrey"
   },
   artist: {
-    fontFamily: 'Avenir',
+    fontFamily: "Avenir",
     fontSize: 17,
-    color: 'purple',
+    color: "purple",
+    fontWeight: "bold"
   },
   noArtist: {
-    fontFamily: 'Avenir',
+    fontFamily: "Avenir",
     fontSize: 15,
-    color: 'lightgrey',
+    color: "lightgrey"
+  },
+  manageRoll: {
+    fontFamily: "Avenir",
+    fontSize: 13,
+    color: "gray"
   },
   spacing: {
-    width: '75%',
+    width: "75%",
     marginVertical: 10,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+    borderBottomColor: "lightgrey",
+    borderBottomWidth: StyleSheet.hairlineWidth
+  }
 });

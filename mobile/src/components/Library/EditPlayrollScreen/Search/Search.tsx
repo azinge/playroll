@@ -239,7 +239,7 @@ export default class Search extends Component<Props, State> {
                                 {item.type}
                               </Text>
                               <Text
-                                style={[styles.text, styles.artistName]}
+                                style={[styles.text, styles.artist]}
                                 numberOfLines={2}
                               >
                                 {item.name}

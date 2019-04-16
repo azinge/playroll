@@ -86,7 +86,7 @@ export default StyleSheet.create<Style>({
   // Providers: Spotify, etc.
   provider: {
     fontSize: 14,
-    color: 'lightgray',
+    color: 'gray',
   },
 
   // Right side icons

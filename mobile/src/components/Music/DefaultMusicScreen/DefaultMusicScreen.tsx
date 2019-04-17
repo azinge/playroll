@@ -65,7 +65,13 @@ export default class DefaultMusicScreen extends React.Component {
           }}
         >
           <View
-            style={{ flex: 1, flexDirection: 'row', marginBottom: 5, left: 2 }}
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginBottom: 5,
+              left: 2,
+              alignItems: 'center',
+            }}
           >
             <Icon
               type='material-community'
@@ -83,21 +89,24 @@ export default class DefaultMusicScreen extends React.Component {
             >
               Spotify
             </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  color: 'darkgray',
+                  // fontWeight: 'bold',
+                  fontSize: 18,
+                  textAlignVertical: 'center',
+                  textAlign: 'right',
 
-            <Text
-              style={{
-                color: 'black',
-                // fontWeight: 'bold',
-                fontSize: 24,
-                // TODO: figure out a better way to position this
-                left: 150,
-              }}
-              onPress={() =>
-                NavigationService.navigate('BrowseSpotifyPlaylists')
-              }
-            >
-              See all...
-            </Text>
+                  // TODO: figure out a better way to position this
+                }}
+                onPress={() =>
+                  NavigationService.navigate('BrowseSpotifyPlaylists')
+                }
+              >
+                See all...
+              </Text>
+            </View>
           </View>
           <CurrentUserSpotifyStatusQuery>
             {({ loading, error, data }) => {

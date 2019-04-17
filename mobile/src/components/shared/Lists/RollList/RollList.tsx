@@ -39,12 +39,18 @@ export default class RollList extends React.Component<Props, State> {
       const numMods = mods.length;
       const firstMod = roll.data.sources[mods[0]];
 
+      console.log('FILTER:');
+      console.log(filter);
+
       let key = i;
       switch (filter.type) {
         case 'Filter':
           let subIcon;
           switch (filter.name) {
             case 'ExcludeSources':
+              subIcon = 'block';
+              break;
+            case 'IncludeSources':
               subIcon = 'block';
               break;
             default:
@@ -55,7 +61,7 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='filter-list'
                 type='material'
-                color='lightgrey'
+                color='purple'
                 iconStyle={styles.rowIcon}
               />
               {subIcon && (
@@ -63,7 +69,6 @@ export default class RollList extends React.Component<Props, State> {
                   size={15}
                   name={subIcon}
                   type='material'
-                  color='lightgrey'
                   iconStyle={styles.subIcon}
                 />
               )}

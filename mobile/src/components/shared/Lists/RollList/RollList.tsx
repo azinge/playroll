@@ -10,6 +10,8 @@ import styles from './RollList.styles';
 import NavigationService from '../../../../services/NavigationService';
 import { Icon } from 'react-native-elements';
 import Swipeout from 'react-native-swipeout';
+import { DeleteRollMutation } from '../../../../graphql/requests/Roll';
+import { GET_CURRENT_USER_PLAYROLL } from '../../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 
 export interface Props {
   rolls: Roll[];
@@ -29,6 +31,12 @@ export default class RollList extends React.Component<Props, State> {
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
 
     const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
+
+    console.log('MAIN SOURCE');
+    console.log(mainSource);
+
+    console.log('SOURCES');
+    console.log(roll.data.sources);
 
     // Loop through all filters and generate icon/text per row
     // TODO: this mapping should be done functionally, not with a for loop
@@ -138,43 +146,65 @@ export default class RollList extends React.Component<Props, State> {
           //   marginTop: 5,
         }}
       >
-        <Swipeout
-          right={[{ text: 'Delete', backgroundColor: 'red' }]}
-          backgroundColor={'transparent'}
-          autoClose={true}
+        <DeleteRollMutation
+          variables={{
+            id: roll.id,
+          }}
+          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]} // Anon function required for subsequent delete calls
         >
-          <View style={styles.outerContainer} key={roll.id}>
-            <View style={styles.innerContainer}>
-              <Image style={styles.cover} source={{ uri: mainSource.cover }} />
-              <View style={styles.rowsView}>
-                {/* Main source icon/text row */}
-                <View style={styles.itemTextView}>
-                  <Icon
-                    size={25}
-                    name='music-note'
-                    type='material'
-                    color='purple'
-                    iconStyle={styles.rowIcon}
-                  />
-                  <Text style={[styles.text, styles.artistName]}>
-                    {mainSource.name}
-                  </Text>
+          {(deleteRoll, { loading, error }) => {
+            return (
+              <Swipeout
+                right={[
+                  {
+                    text: 'Delete',
+                    backgroundColor: 'red',
+                    onPress: () => deleteRoll(),
+                  },
+                ]}
+                backgroundColor={'transparent'}
+                autoClose={true}
+              >
+                <View style={styles.outerContainer} key={roll.id}>
+                  <View style={styles.innerContainer}>
+                    <Image
+                      style={styles.cover}
+                      source={{ uri: mainSource.cover }}
+                    />
+                    <View style={styles.rowsView}>
+                      {/* Main source icon/text row */}
+                      <View style={styles.itemTextView}>
+                        <Icon
+                          size={25}
+                          name='music-note'
+                          type='material'
+                          color='purple'
+                          iconStyle={styles.rowIcon}
+                        />
+                        <Text style={[styles.text, styles.artistName]}>
+                          {mainSource.name}
+                        </Text>
+                      </View>
+                      {/* Filter info per row, see loop above */}
+                      {filterViews}
+                    </View>
+                    {/* Right side menu icons */}
+                    <Icon
+                      size={25}
+                      name='edit'
+                      color='lightgrey'
+                      onPress={() =>
+                        NavigationService.navigate('EditRoll', { roll })
+                      }
+                      iconStyle={styles.editIcon}
+                    />
+                  </View>
+                  <View style={styles.spacing} />
                 </View>
-                {/* Filter info per row, see loop above */}
-                {filterViews}
-              </View>
-              {/* Right side menu icons */}
-              <Icon
-                size={25}
-                name='edit'
-                color='lightgrey'
-                onPress={() => NavigationService.navigate('EditRoll', { roll })}
-                iconStyle={styles.editIcon}
-              />
-            </View>
-            <View style={styles.spacing} />
-          </View>
-        </Swipeout>
+              </Swipeout>
+            );
+          }}
+        </DeleteRollMutation>
       </View>
     );
   }

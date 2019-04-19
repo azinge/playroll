@@ -48,7 +48,8 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 
 	mctx := &gqltag.MethodContext{
 		DB: db,
-		// Request: request,
+		// Request: request
+		Debug: true,
 	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedAdminTypes,

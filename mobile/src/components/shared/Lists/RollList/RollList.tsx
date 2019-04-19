@@ -35,10 +35,42 @@ export default class RollList extends React.Component<Props, State> {
     // console.log('MAIN SOURCE');
     // console.log(mainSource);
 
+    // Main Source is the first row in the informational part of each Roll in the RollList
+    let mainSourceIcon;
+    switch (mainSource.type) {
+      case 'Artist':
+        mainSourceIcon = 'mic';
+        break;
+      case 'Album':
+        mainSourceIcon = 'album';
+        break;
+      case 'Track':
+        mainSourceIcon = 'audiotrack';
+        break;
+      case 'Playlist':
+        mainSourceIcon = 'playlist-play';
+        break;
+      default:
+        mainSourceIcon = 'music-note';
+    }
+
+    const mainSourceView = (
+      <View style={styles.itemTextView}>
+        <Icon
+          size={25}
+          name={mainSourceIcon}
+          type='material'
+          color='purple'
+          iconStyle={styles.rowIcon}
+        />
+        <Text style={[styles.text, styles.artistName]}>{mainSource.name}</Text>
+      </View>
+    );
+
     // console.log('SOURCES');
     // console.log(roll.data.sources);
 
-    // Loop through all filters and generate icon/text per row
+    // Loop through all filters and generate icon/text per Roll in the RollList
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
     for (let i = 0; i < filters.length; i++) {
@@ -184,18 +216,7 @@ export default class RollList extends React.Component<Props, State> {
                     />
                     <View style={styles.rowsView}>
                       {/* Main source icon/text row */}
-                      <View style={styles.itemTextView}>
-                        <Icon
-                          size={25}
-                          name='music-note'
-                          type='material'
-                          color='purple'
-                          iconStyle={styles.rowIcon}
-                        />
-                        <Text style={[styles.text, styles.artistName]}>
-                          {mainSource.name}
-                        </Text>
-                      </View>
+                      {mainSourceView}
                       {/* Filter info per row, see loop above */}
                       {filterViews}
                     </View>

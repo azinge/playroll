@@ -5,6 +5,7 @@ import (
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
 )
@@ -32,8 +33,8 @@ var searchUsers = gqltag.Method{
 
 		type listSpotifyPlaylistsParams struct {
 			Query  string
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listSpotifyPlaylistsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -43,16 +44,8 @@ var searchUsers = gqltag.Method{
 		}
 
 		userModels := &[]models.User{}
-
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-
-		if err := mctx.DB.Preload("Relationships", "other_user_id = ?", user.ID).Where("name LIKE ?", "%"+params.Query+"%").Offset(params.Offset).Limit(params.Count).Find(userModels).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := mctx.DB.Preload("Relationships", "other_user_id = ?", user.ID).Where("name LIKE ?", "%"+params.Query+"%").Offset(offset).Limit(count).Find(userModels).Error; err != nil {
 			fmt.Printf("error searching users: %s", err.Error())
 			return nil, err
 		}

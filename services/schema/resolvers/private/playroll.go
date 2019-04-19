@@ -181,8 +181,8 @@ var listCurrentUserPlayrolls = gqltag.Method{
 		}
 
 		type listCurrentUserPlayrollsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listCurrentUserPlayrollsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -191,17 +191,8 @@ var listCurrentUserPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		// TODO (dmoini):
-		// 		test count, offset
-		// 		decided how
-		// Assigning default values if given 0 for either count, offset
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 
 		return models.GetPlayrollsByUserID(user.ID, db)
 	},

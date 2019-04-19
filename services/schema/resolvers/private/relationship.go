@@ -33,8 +33,8 @@ var listFriends = gqltag.Method{
 		}
 
 		type listFriendsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listFriendsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -43,15 +43,8 @@ var listFriends = gqltag.Method{
 			return nil, err
 		}
 
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
-
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 		users, err := models.GetFriendsByUserID(user.ID, db)
 		if err != nil {
 			fmt.Println(err)
@@ -72,8 +65,8 @@ var listFriendRequests = gqltag.Method{
 		}
 
 		type listFriendRequestsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listFriendRequestsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -83,15 +76,8 @@ var listFriendRequests = gqltag.Method{
 		}
 
 		rs := &[]models.Relationship{}
-
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Offset(params.Offset).Limit(params.Count).Find(&rs).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Offset(offset).Limit(count).Find(&rs).Error; err != nil {
 			fmt.Println(err)
 			return nil, err
 		}

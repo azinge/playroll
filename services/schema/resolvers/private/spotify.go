@@ -52,8 +52,8 @@ var listSpotifyPlaylists = gqltag.Method{
 		}
 
 		type listSpotifyPlaylistsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listSpotifyPlaylistsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -68,15 +68,8 @@ var listSpotifyPlaylists = gqltag.Method{
 			return nil, err
 		}
 
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
-
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 		mss, err := spotifyhelpers.ListPlaylistsFromClient(client, db)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
@@ -97,8 +90,8 @@ var listSpotifyPlaylistTracks = gqltag.Method{
 
 		type listSpotifyPlaylistTracksParams struct {
 			PlaylistID string
-			Offset     uint
-			Count      uint
+			Offset     *uint
+			Count      *uint
 		}
 		params := &listSpotifyPlaylistTracksParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -113,15 +106,8 @@ var listSpotifyPlaylistTracks = gqltag.Method{
 			return nil, err
 		}
 
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
-
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 		output, err := spotifyhelpers.ListPlaylistTracksFromClient(params.PlaylistID, client, db)
 		if err != nil {
 			fmt.Println("Error searching spotify: ", err.Error())
@@ -141,8 +127,8 @@ var listSpotifySavedTracks = gqltag.Method{
 		}
 
 		type listSpotifySavedTracksParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listSpotifySavedTracksParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -157,14 +143,8 @@ var listSpotifySavedTracks = gqltag.Method{
 			return nil, err
 		}
 
-		// TODO (dmoini): double check offset, count
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Limit(params.Count)
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 
 		output, err := spotifyhelpers.ListSavedTracksFromClient(client, db)
 		if err != nil {

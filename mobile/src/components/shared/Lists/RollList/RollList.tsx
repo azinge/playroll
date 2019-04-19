@@ -59,7 +59,7 @@ export default class RollList extends React.Component<Props, State> {
               subIcon = 'block';
               break;
             case 'IncludeSources':
-              subIcon = 'block';
+              subIcon = 'add-circle-outline';
               break;
             default:
           }
@@ -77,7 +77,11 @@ export default class RollList extends React.Component<Props, State> {
                   size={15}
                   name={subIcon}
                   type='material'
-                  iconStyle={styles.subIcon}
+                  iconStyle={
+                    filter.name === 'ExcludeSources'
+                      ? styles.subIcon
+                      : styles.subIconInclude
+                  }
                 />
               )}
               <Text
@@ -112,7 +116,8 @@ export default class RollList extends React.Component<Props, State> {
           let text = '';
           switch (filter.name) {
             case 'NumberOfSongs':
-              text = numMods === 1 ? '1 Song' : numMods + ' Songs';
+              const numSongs = parseInt(mods[1], 10);
+              text = numSongs === 1 ? '1 Song' : numSongs + ' Songs';
               break;
             default:
           }

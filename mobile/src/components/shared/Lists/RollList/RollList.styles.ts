@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
     color: 'red',
     marginRight: 5,
   },
+  subIconInclude: {
+    color: 'green',
+    marginRight: 5,
+  },
 
   // Row text
   text: {

@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   rowIcon: {
     marginRight: 8,
   },
-  subIcon: {
+  subIconExclude: {
     color: 'red',
     marginRight: 5,
   },

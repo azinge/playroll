@@ -32,23 +32,13 @@ export default class RollList extends React.Component<Props, State> {
 
     const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
 
-    console.log('MAIN SOURCE');
-    console.log(mainSource);
-
-    console.log('SOURCES');
-    console.log(roll.data.sources);
-
     // Loop through all filters and generate icon/text per row
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
       const mods = filter.modifications;
-      const numMods = mods.length;
       const firstMod = roll.data.sources[mods[0]];
-
-      console.log('FILTER:');
-      console.log(filter);
 
       let key = i;
       switch (filter.type) {
@@ -79,7 +69,7 @@ export default class RollList extends React.Component<Props, State> {
                   type='material'
                   iconStyle={
                     filter.name === 'ExcludeSources'
-                      ? styles.subIcon
+                      ? styles.subIconExclude
                       : styles.subIconInclude
                   }
                 />

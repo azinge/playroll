@@ -32,6 +32,12 @@ export default class RollList extends React.Component<Props, State> {
 
     const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
 
+    // console.log('MAIN SOURCE');
+    // console.log(mainSource);
+
+    // console.log('SOURCES');
+    // console.log(roll.data.sources);
+
     // Loop through all filters and generate icon/text per row
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
@@ -39,6 +45,9 @@ export default class RollList extends React.Component<Props, State> {
       const filter = filters[i];
       const mods = filter.modifications;
       const firstMod = roll.data.sources[mods[0]];
+
+      // console.log('FILTER:');
+      // console.log(filter);
 
       let key = i;
       switch (filter.type) {
@@ -84,6 +93,7 @@ export default class RollList extends React.Component<Props, State> {
             </View>
           );
           break;
+
         case 'Order':
           if (filter.name !== 'Default') {
             filterViews.push(
@@ -102,6 +112,7 @@ export default class RollList extends React.Component<Props, State> {
             );
           }
           break;
+
         case 'Length':
           let text = '';
           switch (filter.name) {
@@ -111,21 +122,26 @@ export default class RollList extends React.Component<Props, State> {
               break;
             default:
           }
-
-          filterViews.push(
-            <View style={styles.itemTextView} key={key}>
-              <Icon
-                size={25}
-                name='av-timer'
-                type='material'
-                color='purple'
-                iconStyle={styles.rowIcon}
-              />
-              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-                {text}
-              </Text>
-            </View>
-          );
+          console.log('FILTER NAME: ' + filter.name);
+          if (filter.name !== 'Default') {
+            filterViews.push(
+              <View style={styles.itemTextView} key={key}>
+                <Icon
+                  size={25}
+                  name='av-timer'
+                  type='material'
+                  color='purple'
+                  iconStyle={styles.rowIcon}
+                />
+                <Text
+                  style={[styles.text, styles.artistName]}
+                  numberOfLines={2}
+                >
+                  {text}
+                </Text>
+              </View>
+            );
+          }
           break;
         default:
       }

@@ -246,7 +246,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
         onCompleted={() => {
           NavigationService.goBack();
         }}
-        refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+        refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
       >
         {deleteRoll => {
           return (
@@ -254,7 +254,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
               onCompleted={() => {
                 NavigationService.goBack();
               }}
-              refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+              refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
             >
               {updateRoll => {
                 return (

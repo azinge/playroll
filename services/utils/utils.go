@@ -281,3 +281,22 @@ func HandleGetSingularModel(params graphql.ResolveParams, db *gorm.DB, model int
 	}
 	return nil
 }
+
+// InitializePaginationVariables initializes offset and count variables for pagination
+func InitializePaginationVariables(o, c *uint) (uint, uint) {
+	var offset, count uint
+
+	if o == nil {
+		offset = 0
+	} else {
+		offset = *o
+	}
+
+	if c == nil {
+		count = 20
+	} else {
+		count = *c
+	}
+
+	return offset, count
+}

@@ -168,14 +168,17 @@ export default class EditRollScreen extends React.Component<Props, State> {
     this.setState(stateOverride);
   }
   exportRoll(): Roll {
-    const formatSource = ms => ({
-      cover: ms.cover,
-      creator: ms.creator,
-      name: ms.name,
-      provider: ms.provider,
-      providerID: ms.providerID,
-      type: ms.type,
-    });
+    const formatSource = ms =>
+      ms
+        ? {
+            cover: ms.cover,
+            creator: ms.creator,
+            name: ms.name,
+            provider: ms.provider,
+            providerID: ms.providerID,
+            type: ms.type,
+          }
+        : {};
     const compileEditRollFilter = (erf, type, rollSources, rollFilters) => {
       let i = sources.length;
       const modifications = [];
@@ -243,7 +246,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
         onCompleted={() => {
           NavigationService.goBack();
         }}
-        refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+        refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
       >
         {deleteRoll => {
           return (
@@ -251,7 +254,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
               onCompleted={() => {
                 NavigationService.goBack();
               }}
-              refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+              refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
             >
               {updateRoll => {
                 return (

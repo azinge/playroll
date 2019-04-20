@@ -33,14 +33,54 @@ export default class RollList extends React.Component<Props, State> {
 
     const filters = (roll.data && roll.data.filters) || []; // [] is required for TS to recognize 'filters' as an array
 
-    // Loop through all filters and generate icon/text per row
+    // console.log('MAIN SOURCE');
+    // console.log(mainSource);
+
+    // Main Source is the first row in the informational part of each Roll in the RollList
+    let mainSourceIcon;
+    switch (mainSource.type) {
+      case 'Artist':
+        mainSourceIcon = 'mic';
+        break;
+      case 'Album':
+        mainSourceIcon = 'album';
+        break;
+      case 'Track':
+        mainSourceIcon = 'audiotrack';
+        break;
+      case 'Playlist':
+        mainSourceIcon = 'playlist-play';
+        break;
+      default:
+        mainSourceIcon = 'music-note';
+    }
+
+    const mainSourceView = (
+      <View style={styles.itemTextView}>
+        <Icon
+          size={25}
+          name={mainSourceIcon}
+          type='material'
+          color='purple'
+          iconStyle={styles.rowIcon}
+        />
+        <Text style={[styles.text, styles.artistName]}>{mainSource.name}</Text>
+      </View>
+    );
+
+    // console.log('SOURCES');
+    // console.log(roll.data.sources);
+
+    // Loop through all filters and generate icon/text per Roll in the RollList
     // TODO: this mapping should be done functionally, not with a for loop
     let filterViews = [];
     for (let i = 0; i < filters.length; i++) {
       const filter = filters[i];
       const mods = filter.modifications;
-      const numMods = mods.length;
       const firstMod = roll.data.sources[mods[0]];
+
+      // console.log('FILTER:');
+      // console.log(filter);
 
       let key = i;
       switch (filter.type) {
@@ -50,6 +90,9 @@ export default class RollList extends React.Component<Props, State> {
             case 'ExcludeSources':
               subIcon = 'block';
               break;
+            case 'IncludeSources':
+              subIcon = 'add-circle-outline';
+              break;
             default:
           }
           filterViews.push(
@@ -58,7 +101,7 @@ export default class RollList extends React.Component<Props, State> {
                 size={25}
                 name='filter-list'
                 type='material'
-                color='lightgrey'
+                color='purple'
                 iconStyle={styles.rowIcon}
               />
               {subIcon && (
@@ -66,8 +109,11 @@ export default class RollList extends React.Component<Props, State> {
                   size={15}
                   name={subIcon}
                   type='material'
-                  color='lightgrey'
-                  iconStyle={styles.subIcon}
+                  iconStyle={
+                    filter.name === 'ExcludeSources'
+                      ? styles.subIconExclude
+                      : styles.subIconInclude
+                  }
                 />
               )}
               <Text
@@ -80,6 +126,7 @@ export default class RollList extends React.Component<Props, State> {
             </View>
           );
           break;
+
         case 'Order':
           if (filter.name !== 'Default') {
             filterViews.push(
@@ -98,29 +145,36 @@ export default class RollList extends React.Component<Props, State> {
             );
           }
           break;
+
         case 'Length':
           let text = '';
           switch (filter.name) {
             case 'NumberOfSongs':
-              text = numMods === 1 ? '1 Song' : numMods + ' Songs';
+              const numSongs = parseInt(mods[1], 10);
+              text = numSongs === 1 ? '1 Song' : numSongs + ' Songs';
               break;
             default:
           }
-
-          filterViews.push(
-            <View style={styles.itemTextView} key={key}>
-              <Icon
-                size={25}
-                name='av-timer'
-                type='material'
-                color='purple'
-                iconStyle={styles.rowIcon}
-              />
-              <Text style={[styles.text, styles.artistName]} numberOfLines={2}>
-                {text}
-              </Text>
-            </View>
-          );
+          console.log('FILTER NAME: ' + filter.name);
+          if (filter.name !== 'Default') {
+            filterViews.push(
+              <View style={styles.itemTextView} key={key}>
+                <Icon
+                  size={25}
+                  name='av-timer'
+                  type='material'
+                  color='purple'
+                  iconStyle={styles.rowIcon}
+                />
+                <Text
+                  style={[styles.text, styles.artistName]}
+                  numberOfLines={2}
+                >
+                  {text}
+                </Text>
+              </View>
+            );
+          }
           break;
         default:
       }
@@ -143,6 +197,7 @@ export default class RollList extends React.Component<Props, State> {
                   {
                     text: 'Delete',
                     backgroundColor: 'red',
+
                     onPress: () => deleteRoll({ variables: { id: roll.id } }),
                   },
                 ]}
@@ -157,18 +212,7 @@ export default class RollList extends React.Component<Props, State> {
                     />
                     <View style={styles.rowsView}>
                       {/* Main source icon/text row */}
-                      <View style={styles.itemTextView}>
-                        <Icon
-                          size={25}
-                          name='music-note'
-                          type='material'
-                          color='purple'
-                          iconStyle={styles.rowIcon}
-                        />
-                        <Text style={[styles.text, styles.artistName]}>
-                          {mainSource.name}
-                        </Text>
-                      </View>
+                      {mainSourceView}
                       {/* Filter info per row, see loop above */}
                       {filterViews}
                     </View>

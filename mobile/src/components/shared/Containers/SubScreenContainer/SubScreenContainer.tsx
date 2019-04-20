@@ -23,6 +23,7 @@ interface ContainerProps extends HeaderProps {
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderFlatListHeader?: () => JSX.Element;
+  renderFlatListFooter?: () => JSX.Element;
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -84,7 +85,13 @@ export default class SubScreenContainer extends React.Component<Props, State> {
             ? this.props.renderFlatListHeader()
             : undefined
         }
+        ListFooterComponent={
+          this.props.renderFlatListFooter
+            ? this.props.renderFlatListFooter()
+            : undefined
+        }
         renderItem={this.props.renderItem}
+        {...this.getRefreshProps()}
       />
     );
   }

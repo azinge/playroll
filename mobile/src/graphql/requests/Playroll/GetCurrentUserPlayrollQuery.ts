@@ -8,11 +8,11 @@ export const GET_CURRENT_USER_PLAYROLL_QUERY = gql`
   query GET_CURRENT_USER_PLAYROLL($id: ID!) {
     private {
       currentUserPlayroll(id: $id) {
-        ...PlayrollWithTracklist
+        ...DefaultPlayroll
       }
     }
   }
-  ${PlayrollFragments.withTracklist}
+  ${PlayrollFragments.default}
 `;
 
 type GetCurrentUserPlayrollVariables = {

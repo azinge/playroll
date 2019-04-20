@@ -28,6 +28,7 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
+import FooterButton from '../../shared/Buttons/FooterButton';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -221,19 +222,15 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
 
   renderNewRollButton(playroll) {
     return (
-      <View style={styles.footerView}>
-        <TouchableOpacity
-          style={styles.newButton}
-          onPress={() => {
-            NavigationService.navigate('AddRoll', {
-              managePlayroll: 'View Playroll',
-              playroll,
-            });
-          }}
-        >
-          <Text style={styles.buttonText}>Add a Roll</Text>
-        </TouchableOpacity>
-      </View>
+      <FooterButton
+        title={'Add a Roll'}
+        onPress={() => {
+          NavigationService.navigate('AddRoll', {
+            managePlayroll: 'View Playroll',
+            playroll,
+          });
+        }}
+      />
     );
   }
 }

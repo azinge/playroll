@@ -44,14 +44,14 @@ export default class HomeScreen extends React.Component<Props, State> {
             musicSources={musicSources}
           /> */}
 
-          {/* <HorizontalPlaceholderList
-            title={'Discovery Queues'}
+          <HorizontalPlaceholderList
+            title={'Made For You'}
             numItems={5}
             overlayText={'Coming Soon...'}
-          /> */}
+          />
 
           <PlaceholderList
-            title={'Your Recommendations'}
+            title={'Suggested Items'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />

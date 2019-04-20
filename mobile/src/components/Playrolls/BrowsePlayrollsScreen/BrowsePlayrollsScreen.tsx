@@ -23,6 +23,7 @@ import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
 import styles from './BrowsePlayrollsScreen.styles';
+import FooterButton from '../../shared/Buttons/FooterButton';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -204,36 +205,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
             //     <Text style={styles.buttonText}>Create a Playroll</Text>
             //   </TouchableOpacity>
             // </View>
-            <View
-              style={{
-                bottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                // marginBottom: 20,
+            <FooterButton
+              title={'Create New Playroll'}
+              onPress={() => {
+                createPlayroll();
               }}
-            >
-              <Button
-                // linearGradientProps={{
-                //   colors: ['purple', '#4A00E0'],
-                //   start: { x: 0 },
-                //   end: { x: 1 },
-                // }}
-                containerStyle={{
-                  borderRadius: 80,
-                  width: '75%',
-                  position: 'absolute',
-                  bottom: 5,
-                  height: 50,
-                }}
-                buttonStyle={{ borderRadius: 80, height: 50 }}
-                raised
-                title={'Create New Playroll'}
-                titleStyle={{ fontWeight: 'bold' }}
-                onPress={() => {
-                  createPlayroll();
-                }}
-              />
-            </View>
+            />
           );
         }}
       </CreatePlayrollMutation>

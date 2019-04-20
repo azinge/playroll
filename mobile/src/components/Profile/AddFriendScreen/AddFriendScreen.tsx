@@ -12,6 +12,7 @@ import {
   Text,
   TextInput,
   View,
+  TouchableHighlight,
 } from 'react-native';
 import { ApolloConsumer } from 'react-apollo';
 import Errors from '../../shared/Modals/Errors';
@@ -21,6 +22,16 @@ import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { User } from '../../../graphql/types';
 import styles from './AddFriendScreen.styles';
+import NavigationService from '../../../services/NavigationService';
+import UserCard from '../../shared/Cards/UserCard';
+import Icons, { HeaderIconType } from '../../../themes/Icons';
+import SearchScreenContainer from '../../shared/Containers/SearchScreenContainer';
+import { SearchUsersQuery } from '../../../graphql/requests/User/SearchUsersQuery';
+import {
+  GetRelationshipQuery,
+  GET_RELATIONSHIP,
+} from '../../../graphql/requests/Relationships/GetRelationship';
+import ManageRelationshipRow from './ManageRelationshipRow';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -34,6 +45,7 @@ interface State {
   fetchingUsers: boolean;
   dogAvatar: string;
   users?: User[];
+  query: string;
 }
 
 export default class AddFriendScreen extends React.Component<Props, State> {
@@ -48,6 +60,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       dogAvatar:
         'https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg',
       users: [],
+      query: 'test6',
     };
 
     this.handleErrors = this.handleErrors.bind(this);
@@ -176,7 +189,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       <ApolloConsumer>
         {client => (
           <TextInput
-            placeholder='@playroll'
+            placeholder='Search Users'
             placeholderTextColor='#bdbdbd'
             style={styles.searchInputContainer}
             onChangeText={username => this.setState({ username })}
@@ -321,13 +334,13 @@ export default class AddFriendScreen extends React.Component<Props, State> {
     );
   }
 
-  renderUserRow({ item }) {
+  renderUserRow({ item: user }) {
+    const relationshipID =
+      user && user.relationships && user.relationships.length > 0
+        ? user.relationships[0].id
+        : undefined;
     return (
-      <View style={styles.userRow}>
-        {this.renderAvatar(item)}
-        {this.renderUsername(item)}
-        {this.renderAddUserButton(item)}
-      </View>
+      <ManageRelationshipRow user={user} relationshipID={relationshipID} />
     );
   }
 
@@ -369,12 +382,41 @@ export default class AddFriendScreen extends React.Component<Props, State> {
   }
 
   render() {
+    const extractUsers = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.searchUsers;
+    };
     return (
-      <View style={styles.mainContainer}>
-        {this.renderHeader()}
-        {this.renderUsers()}
-        {this.renderErrorModal(this.state.error)}
-      </View>
+      <SearchUsersQuery variables={{ query: this.state.query }}>
+        {({ data, loading, error }) => {
+          const users = extractUsers(data);
+          return (
+            <SearchScreenContainer
+              contentContainerStyle={{ marginTop: 10 }}
+              title={'Search Users'}
+              onSubmitEditing={query => this.setState({ query })}
+              flatList={!loading && !error}
+              data={users}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => {
+                return this.renderUserRow({ item });
+              }}
+            >
+              {loading && (
+                <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
+              )}
+              {error && (
+                <Text style={{ paddingTop: 50 }}>Error Loading Users</Text>
+              )}
+            </SearchScreenContainer>
+          );
+        }}
+      </SearchUsersQuery>
     );
   }
 }

@@ -12,6 +12,7 @@ import (
 
 // RelationshipMethods defines the types for all relationship methods.
 type RelationshipMethods struct {
+	GetRelationship     *gqltag.Query    `gql:"relationship(id: ID): Relationship"`
 	ListFriends         *gqltag.Query    `gql:"listFriends(offset: Int, count: Int): [User]"`
 	ListFriendRequests  *gqltag.Query    `gql:"listFriendRequests(offset: Int, count: Int): [Relationship]"`
 	SearchFriends       *gqltag.Query    `gql:"searchFriends(query:String, offset: Int, count: Int): [User]"`
@@ -21,6 +22,38 @@ type RelationshipMethods struct {
 	UnfriendUser        *gqltag.Mutation `gql:"unfriendUser(userID: ID): Relationship"`
 	BlockUser           *gqltag.Mutation `gql:"blockUser(userID: ID): Relationship"`
 	UnblockUser         *gqltag.Mutation `gql:"unblockUser(userID: ID): Relationship"`
+}
+
+var getRelationship = gqltag.Method{
+	Description: `Gets the current user's relationship.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type getRelationshipParams struct {
+			UserID string
+		}
+
+		params := &getRelationshipParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		id := utils.StringIDToNumber(params.UserID)
+
+		relationship := &models.Relationship{}
+		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID}).First(relationship, id).Error; err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		return models.FormatRelationship(relationship)
+	},
 }
 
 var listFriends = gqltag.Method{
@@ -116,7 +149,9 @@ var searchFriends = gqltag.Method{
 
 		otherUsers := []models.User{}
 		for _, r := range *rs {
-			otherUsers = append(otherUsers, r.OtherUser)
+			otherUser := r.OtherUser
+			otherUser.Relationships = append(otherUser.Relationships, r)
+			otherUsers = append(otherUsers, otherUser)
 		}
 
 		friends, err := models.FormatUserSlice(&otherUsers)
@@ -166,6 +201,10 @@ var sendFriendRequest = gqltag.Method{
 
 		if r1.Status == "Friend" || r2.Status == "Friend" {
 			return nil, fmt.Errorf("Already Friends")
+		}
+
+		if r1.Status == "Friend Request Sent" || r2.Status == "Friend Request Recieved" || r2.Status == "Friend Request Ignored" {
+			return nil, fmt.Errorf("Friend Request Already Sent")
 		}
 
 		r1.Status = "Friend Request Sent"
@@ -218,7 +257,7 @@ var acceptFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
-		if r2.Status != "Friend Request Sent" {
+		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Recieved" {
 			return nil, fmt.Errorf("No Friend Request Recieved")
 		}
 
@@ -280,7 +319,7 @@ var ignoreFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
-		if r2.Status != "Friend Request Sent" {
+		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Recieved" {
 			return nil, fmt.Errorf("No Friend Request Recieved")
 		}
 
@@ -435,6 +474,7 @@ var unblockUser = gqltag.Method{
 
 // LinkedRelationshipMethods links and makes available all methods stemming from the relationship entity.
 var LinkedRelationshipMethods = RelationshipMethods{
+	GetRelationship:     gqltag.LinkQuery(getRelationship),
 	ListFriends:         gqltag.LinkQuery(listFriends),
 	ListFriendRequests:  gqltag.LinkQuery(listFriendRequests),
 	SearchFriends:       gqltag.LinkQuery(searchFriends),

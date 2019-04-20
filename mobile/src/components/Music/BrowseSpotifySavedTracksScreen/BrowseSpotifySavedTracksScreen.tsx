@@ -9,6 +9,7 @@ import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { ListSpotifySavedTracksQuery } from '../../../graphql/requests/Spotify';
 import { ListItem, Icon } from 'react-native-elements';
 import MusicSourceList from '../../shared/Lists/MusicSourceList';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -63,22 +64,7 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
                   renderItem={this._renderItem}
                   style={{ marginBottom: 35 }}
                 /> */}
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: 'purple',
-                    width: 300,
-                    padding: 5,
-                    borderRadius: 10,
-                    alignItems: 'flex-start',
-                  }}
-                  onPress={() => {}}
-                >
-                  <Icon
-                    name='search'
-                    color='white'
-                    containerStyle={{ marginLeft: 5 }}
-                  />
-                </TouchableOpacity>
+                <SearchSubHeader />
                 <MusicSourceList
                   sources={
                     data && data.private && data.private.listSpotifySavedTracks

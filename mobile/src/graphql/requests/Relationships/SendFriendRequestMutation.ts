@@ -20,7 +20,9 @@ type SendFriendRequestVariables = {
 };
 
 type SendFriendRequestData = {
-  sendFriendRequest: Relationship;
+  private: {
+    sendFriendRequest: Relationship;
+  };
 };
 
 export class SendFriendRequestMutation extends Mutation<

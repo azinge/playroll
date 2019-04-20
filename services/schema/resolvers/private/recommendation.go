@@ -42,7 +42,7 @@ var listCurrentUserRecommendations = gqltag.Method{
 
 		recommendationsModels := &[]models.Recommendation{}
 		db := mctx.DB
-		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
+		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}
@@ -121,7 +121,7 @@ var recommendToAUser = gqltag.Method{
 
 		relationship := &models.Relationship{}
 		db := mctx.DB
-		err = db.Where(&models.Relationship{UserID: params.ReceiverID, OtherUserID: user.ID, IsBlocking: false}).First(relationship).Error
+		err = db.Where(&models.Relationship{UserID: params.ReceiverID, OtherUserID: user.ID, IsBlocking: false, Status: "Friend"}).First(relationship).Error
 		if err != nil {
 			fmt.Println(err)
 			return nil, err

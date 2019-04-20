@@ -45,7 +45,9 @@ func GetFriendsByUserID(id uint, db *gorm.DB) (*[]User, error) {
 
 	otherUsers := []User{}
 	for _, r := range *rs {
-		otherUsers = append(otherUsers, r.OtherUser)
+		otherUser := r.OtherUser
+		otherUser.Relationships = append(otherUser.Relationships, r)
+		otherUsers = append(otherUsers, otherUser)
 	}
 
 	return &otherUsers, nil

@@ -9,11 +9,6 @@ import HomeScreen from './HomeScreen';
 import DiscoverScreen from './DiscoverScreen';
 import { PlayrollsNavigator, PlayrollsModalRoutes } from '../Playrolls/router';
 import { ProfileRoutes, ProfileModalRoutes } from '../Profile/router';
-import {
-  SearchRoutes,
-  SearchModalRoutes,
-  //   SearchNavigator,
-} from '../Search/router';
 import { SettingsModalRoutes, SettingsRoutes } from '../Settings/router';
 
 // Add Avenir to all screens (for Android)
@@ -21,14 +16,27 @@ import { Font } from 'expo';
 import { MusicNavigator } from '../Music/router';
 import { SocialNavigator } from '../Social/router';
 import AccountScreen from './AccountScreen';
+import SearchScreen from './SearchScreen';
+import ManageRollScreen from './ManageRollScreen';
 Font.loadAsync({
   Avenir: require('../../assets/fonts/AvenirLTStd-Black.otf'),
 });
 
+export const HomeNavigator = createStackNavigator(
+  {
+    DefaultHome: HomeScreen,
+    ...SettingsRoutes,
+  },
+  {
+    initialRouteName: 'DefaultHome',
+    headerMode: 'none',
+  }
+);
+
 export const MainTabsNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeNavigator,
       navigationOptions: {
         title: `Home`,
         tabBarLabel: 'Home',
@@ -109,7 +117,20 @@ export const MainTabsNavigator = createBottomTabNavigator(
   }
 );
 
+export const SearchRoutes = {
+  Search: SearchScreen,
+};
+
+export const SearchModalRoutes = {
+  SearchMusicSource: SearchScreen,
+  ManageRoll: ManageRollScreen,
+};
+
 export const MainRoutes = {
+  // Account: AccountScreen,
+};
+
+export const MainModalRoutes = {
   Account: AccountScreen,
 };
 
@@ -117,8 +138,8 @@ export const MainWithoutModalsNavigator = createStackNavigator(
   {
     MainTabs: MainTabsNavigator,
     ...MainRoutes,
-    ...SettingsRoutes,
-    ...ProfileRoutes,
+    // ...SettingsRoutes,
+    // ...ProfileRoutes,
     ...SearchRoutes,
   },
   {
@@ -130,6 +151,7 @@ export const MainWithoutModalsNavigator = createStackNavigator(
 export const MainNavigator = createStackNavigator(
   {
     MainWithoutModals: MainWithoutModalsNavigator,
+    ...MainModalRoutes,
     ...PlayrollsModalRoutes,
     ...SearchModalRoutes,
     ...ProfileModalRoutes,

@@ -1,7 +1,7 @@
 import { StyleProp, ViewStyle } from 'react-native';
 
 export type IconType = {
-  name: string;
+  name?: string;
   type?: string;
 };
 
@@ -12,8 +12,7 @@ export type HeaderIconType = IconType & {
 };
 
 const menuIcon: IconType = {
-  name: 'dots-vertical',
-  type: 'material-community',
+  name: 'more-vert',
 };
 
 const closeIcon: IconType = {

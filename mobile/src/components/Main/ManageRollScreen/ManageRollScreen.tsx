@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo';
 
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenProp, NavigationActions } from 'react-navigation';
 import { MusicSource } from '../../../graphql/types';
 import { Button, Overlay, Header, Icon } from 'react-native-elements';
 import styles from './ManageRollScreen.styles';
@@ -51,6 +51,29 @@ export default class ManageRollScreen extends React.Component<Props, State> {
   render() {
     const currentSource =
       this.props.navigation && this.props.navigation.getParam('currentSource');
+    let rollData =
+      this.props.navigation && this.props.navigation.getParam('rollData');
+    if (!rollData) {
+      rollData = {
+        sources: [currentSource],
+        filters: [
+          {
+            type: 'Source',
+            name: 'Union',
+            modifications: ['0'],
+          },
+          {
+            type: 'Order',
+            name: 'Random',
+          },
+          {
+            type: 'Length',
+            name: 'NumberOfSongs',
+            modifications: ['0', '10'],
+          },
+        ],
+      };
+    }
     delete currentSource.__typename;
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -84,25 +107,7 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               titleStyle={{ color: 'purple', fontSize: 16 }}
               onPress={() =>
                 NavigationService.navigate('AddToPlayroll', {
-                  rollData: {
-                    sources: [currentSource],
-                    filters: [
-                      {
-                        type: 'Source',
-                        name: 'Union',
-                        modifications: ['0'],
-                      },
-                      {
-                        type: 'Order',
-                        name: 'Random',
-                      },
-                      {
-                        type: 'Length',
-                        name: 'NumberOfSongs',
-                        modifications: ['0', '10'],
-                      },
-                    ],
-                  },
+                  rollData,
                 })
               }
               raised
@@ -120,7 +125,11 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               containerStyle={{ margin: 10 }}
               buttonStyle={styles.button}
               titleStyle={{ color: 'purple', fontSize: 16 }}
-              onPress={() => {}}
+              onPress={() => {
+                NavigationService.navigate('RecommendToFriend', {
+                  rollData,
+                });
+              }}
               raised
             />
           </View>

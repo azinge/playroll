@@ -8,11 +8,11 @@ export const SEARCH_USERS_QUERY = gql`
   query SEARCH_USERS($query: String, $offset: Int, $count: Int) {
     private {
       searchUsers(query: $query, offset: $offset, count: $count) {
-        ...DefaultUser
+        ...UserWithRelationships
       }
     }
   }
-  ${UserFragments.default}
+  ${UserFragments.withRelationships}
 `;
 
 type SearchUsersVariables = {

@@ -32,6 +32,7 @@ type MethodContext struct {
 	DB      *gorm.DB
 	Request events.APIGatewayProxyRequest
 	Context context.Context
+	Debug   bool
 }
 type Method struct {
 	Request     func(params graphql.ResolveParams, mctx *MethodContext) (interface{}, error)

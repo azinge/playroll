@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
@@ -45,10 +47,16 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// db.LogMode(true)
+	context, _ := context.WithDeadline(context.Background(), time.Now().Add(6000*time.Millisecond))
+
+	deadline, _ := context.Deadline()
+	fmt.Println(deadline.String())
 
 	mctx := &gqltag.MethodContext{
 		DB: db,
 		// Request: request,
+		Context: context,
+		Debug:   true,
 	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedAdminTypes,

@@ -9,8 +9,9 @@ import (
 
 type Playroll struct {
 	Model
-	Name       string
-	UserID     uint
+	Name   string
+	UserID uint
+	//TODO(cazinge): ExportedPlaylist
 	User       User
 	Rolls      []Roll
 	Tracklists []Tracklist
@@ -34,7 +35,7 @@ type PlayrollOutput struct {
 
 func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	playrollModels := &[]Playroll{}
-	db = db.Preload("Rolls").Preload("Tracklists")
+	db = db.Preload("Rolls")
 	if err := db.Where(Playroll{UserID: id}).Find(playrollModels).Error; err != nil {
 		fmt.Printf("error getting playrolls: %s", err.Error())
 		return nil, err
@@ -82,7 +83,7 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 func InitPlayrollDAO(db *gorm.DB) Entity {
 	dao := &Playroll{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("Rolls").Preload("Tracklists"))
+	dao.SetDB(db.Preload("Rolls"))
 	return dao
 }
 

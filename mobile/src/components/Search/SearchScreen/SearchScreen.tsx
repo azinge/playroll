@@ -82,37 +82,8 @@ export default class SearchScreen extends React.Component<Props, State> {
           buttons={buttons}
           containerStyle={{ height: 30 }}
           selectedButtonStyle={{ backgroundColor: 'purple' }}
-
-          // onPress={() => {}}
         />
       </View>
-
-      //   <View style={{ margin: 10, flexDirection: 'row' }}>
-      //     <View style={{ paddingHorizontal: 7 }}>
-      //       <Text
-      //         onPress={() => this.setState({ searchType: 'Artist' })}
-      //         style={[styles.options, { fontWeight: 'bold', color: '#993399' }]}
-      //       >
-      //         Artist
-      //       </Text>
-      //     </View>
-      //     <View style={styles.nullOptions}>
-      //       <Text
-      //         onPress={() => this.setState({ searchType: 'Album' })}
-      //         style={[styles.options, { color: 'grey' }]}
-      //       >
-      //         Album
-      //       </Text>
-      //     </View>
-      //     <View style={styles.nullOptions}>
-      //       <Text
-      //         onPress={() => this.setState({ searchType: 'Playlist' })}
-      //         style={[styles.options, { color: 'grey' }]}
-      //       >
-      //         Playlist
-      //       </Text>
-      //     </View>
-      //   </View>
     );
   }
 
@@ -124,6 +95,14 @@ export default class SearchScreen extends React.Component<Props, State> {
         closeModal={this.closeModal}
         playrollID={this.props.playrollID}
       />
+    );
+  }
+
+  renderEmptySearch() {
+    return (
+      <View style={{ alignSelf: 'center' }}>
+        <Text style={{ fontSize: 20 }}>No results found!</Text>
+      </View>
     );
   }
 
@@ -139,7 +118,6 @@ export default class SearchScreen extends React.Component<Props, State> {
           }}
         >
           {({ loading, error, data }) => {
-            console.log(error);
             return (
               <View style={{ marginBottom: 15 }}>
                 {loading ? (
@@ -153,6 +131,7 @@ export default class SearchScreen extends React.Component<Props, State> {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => item.providerID}
                     extraData={this.state}
+                    ListEmptyComponent={this.renderEmptySearch}
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() => {
@@ -161,11 +140,7 @@ export default class SearchScreen extends React.Component<Props, State> {
                           } else {
                             this.props.playrollID
                               ? this.setModal(item)
-                              : // : this.setState({
-                                //     isVisible: true,
-                                //     currentSource: item,
-                                //   });
-                                this.manageRoll(item);
+                              : this.manageRoll(item);
                           }
                         }}
                         key={item.providerID}
@@ -189,13 +164,6 @@ export default class SearchScreen extends React.Component<Props, State> {
                                 </Text>
                               ) : null}
                             </View>
-                            {/* <Icon
-                              size={35}
-                              name='more-vert'
-                              color='lightgrey'
-                              // onPress={() => NavigationService.goBack()}
-                              underlayColor='rgba(255,255,255,0)'
-                            /> */}
                           </View>
                           <View style={styles.spacing} />
                         </View>
@@ -208,12 +176,8 @@ export default class SearchScreen extends React.Component<Props, State> {
                   fullScreen={true}
                   animationType={'slide'}
                   onBackdropPress={() => this.setState({ isVisible: false })}
-                  // transparent={true}
-                  // overlayStyle={{ margin: -20 }}
-                  // containerStyle={{ opacity: 0.5 }}
                   windowBackgroundColor='rgba(255, 255, 255, .5)'
                   overlayStyle={{ opacity: 0.9 }}
-                  // windowBackgroundColor='rgba(012, 012, 123, .1)'
                 >
                   <ManageRollScreen source={this.state.currentSource} />
                 </Overlay>

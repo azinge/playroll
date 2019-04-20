@@ -11,11 +11,16 @@ import (
 
 type Tracklist struct {
 	Model
-	IsStarred     bool
-	IsPrimary     bool
-	CompiledRolls []CompiledRoll
-	Playroll      Playroll
-	PlayrollID    uint
+	IsStarred          bool
+	IsPrimary          bool
+	IsComplete         bool
+	CurrentRollIndex   uint
+	CurrentSourceIndex uint
+	OwnerID            uint
+	Owner              User
+	PlayrollID         uint
+	Playroll           Playroll
+	CompiledRolls      []CompiledRoll
 }
 
 type TracklistInput struct {
@@ -25,11 +30,17 @@ type TracklistInput struct {
 }
 
 type TracklistOutput struct {
-	Model         `gql:"MODEL"`
-	IsStarred     bool                 `gql:"isStarred: Boolean"`
-	IsPrimary     bool                 `gql:"isPrimary: Boolean"`
-	CompiledRolls []CompiledRollOutput `gql:"compiledRolls: [CompiledRoll]"`
-	PlayrollID    uint                 `gql:"playrollID: ID"`
+	Model              `gql:"MODEL"`
+	IsStarred          bool                 `gql:"isStarred: Boolean"`
+	IsPrimary          bool                 `gql:"isPrimary: Boolean"`
+	IsComplete         bool                 `gql:"isComplete: Boolean"`
+	CurrentRollIndex   uint                 `gql:"currentRollIndex: Int"`
+	CurrentSourceIndex uint                 `gql:"currentSourceIndex: Int"`
+	CompiledRolls      []CompiledRollOutput `gql:"compiledRolls: [CompiledRoll]"`
+	PlayrollID         uint                 `gql:"playrollID: ID"`
+	Playroll           PlayrollOutput       `gql:"playroll: Playroll"`
+	OwnerID            uint                 `gql:"ownerID: ID"`
+	Owner              UserOutput           `gql:"owner: User"`
 }
 
 // Utility Functions
@@ -49,7 +60,7 @@ func GetTracksByTracklistID(id uint, db *gorm.DB) (*[]jsonmodels.MusicSource, er
 	return tracks, nil
 }
 
-func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playrollID uint, db *gorm.DB) (*TracklistOutput, error) {
+func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playrollID uint, ownerID uint, db *gorm.DB) (*TracklistOutput, error) {
 	tx := db.Begin()
 	tracklistInput := TracklistInput{IsStarred: false, IsPrimary: true}
 	tracklist, err := TracklistInputToModel(&tracklistInput)
@@ -58,6 +69,8 @@ func CreateTracklistWithCompiledRolls(compiledRolls *[]CompiledRollOutput, playr
 		return nil, err
 	}
 	tracklist.PlayrollID = playrollID
+	tracklist.OwnerID = ownerID
+	tracklist.IsComplete = true
 	tDAO := InitTracklistDAO(tx)
 
 	rawTracklist, err := tDAO.Create(tracklist)
@@ -114,12 +127,26 @@ func TracklistModelToOutput(t *Tracklist) (*TracklistOutput, error) {
 	to.Model = t.Model
 	to.IsStarred = t.IsStarred
 	to.IsPrimary = t.IsPrimary
+	to.IsComplete = t.IsComplete
+	to.CurrentRollIndex = t.CurrentRollIndex
+	to.CurrentSourceIndex = t.CurrentSourceIndex
 	compiledRolls, err := FormatCompiledRollSlice(&t.CompiledRolls)
 	if err != nil {
 		return nil, err
 	}
 	to.CompiledRolls = compiledRolls
 	to.PlayrollID = t.PlayrollID
+	playroll, err := FormatPlayroll(&t.Playroll)
+	if err != nil {
+		return nil, err
+	}
+	to.Playroll = *playroll
+	to.OwnerID = t.OwnerID
+	owner, err := FormatUser(&t.Owner)
+	if err != nil {
+		return nil, err
+	}
+	to.Owner = *owner
 	return to, nil
 }
 

@@ -10,7 +10,7 @@ import (
 
 type CompiledRoll struct {
 	Model
-	Order       string
+	Order       uint
 	Data        jsonmodels.CompiledRollData `gorm:"type: jsonb"`
 	RollID      uint
 	Roll        Roll
@@ -18,7 +18,7 @@ type CompiledRoll struct {
 }
 
 type CompiledRollInput struct {
-	Order       string                           `gql:"order: String"`
+	Order       uint                             `gql:"order: Int"`
 	Data        jsonmodels.CompiledRollDataInput `gql:"data: CompiledRollDataInput"`
 	RollID      string                           `gql:"rollID: ID"`
 	TracklistID string                           `gql:"tracklistID: ID"`
@@ -26,7 +26,7 @@ type CompiledRollInput struct {
 
 type CompiledRollOutput struct {
 	Model       `gql:"MODEL"`
-	Order       string                            `gql:"order: String"`
+	Order       uint                              `gql:"order: Int"`
 	Data        jsonmodels.CompiledRollDataOutput `gql:"data: CompiledRollData"`
 	RollID      uint                              `gql:"rollID: ID"`
 	Roll        RollOutput                        `gql:"roll: Roll"`

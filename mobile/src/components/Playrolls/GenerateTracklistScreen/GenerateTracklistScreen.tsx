@@ -13,8 +13,10 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import Heading from '../../shared/Text/Heading';
 import { Playroll } from '../../../graphql/types';
-import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
+import { ProgressiveGenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
 import NavigationService from '../../../services/NavigationService';
+import { GetCurrentUserPlayrollQuery } from '../../../graphql/requests/Playroll';
+import RollList from '../../shared/Lists/RollList';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -23,6 +25,10 @@ export interface Props {
 interface State {
   playroll: Playroll;
   triggerGenerateTracklist: boolean;
+  isComplete: boolean;
+  currentRollIndex: number;
+  currentSourceIndex: number;
+  tracklistID?: number;
 }
 
 export default class GenerateTracklistScreen extends React.Component<
@@ -37,6 +43,10 @@ export default class GenerateTracklistScreen extends React.Component<
     this.state = {
       playroll: {},
       triggerGenerateTracklist: false,
+      isComplete: false,
+      currentRollIndex: 0,
+      currentSourceIndex: 0,
+      tracklistID: undefined,
     };
   }
 
@@ -51,33 +61,66 @@ export default class GenerateTracklistScreen extends React.Component<
     }
   }
 
-  async generateTracklistWrapper(generateTracklist) {
+  async progressiveGenerateTracklistWrapper(progressiveGenerateTracklist) {
     const { playroll } = this.state;
     try {
-      const result = await generateTracklist({
-        variables: { playrollID: playroll.id },
+      const result = await progressiveGenerateTracklist({
+        variables: {
+          playrollID: playroll.id,
+          tracklistID: this.state.tracklistID,
+          batchSize: 1,
+        },
       });
-      NavigationService.navigate('ViewTracklist', {
-        playrollName: playroll.name,
-        tracklistID: result.data!.private.generateTracklist!.id,
-      });
+      const {
+        isComplete,
+        currentRollIndex,
+        currentSourceIndex,
+        tracklistID,
+      } = result.data!.private.progressiveGenerateTracklist!;
+      this.setState(
+        {
+          isComplete,
+          currentRollIndex,
+          currentSourceIndex,
+          tracklistID,
+        },
+        () => {
+          setTimeout(() => {
+            console.log(isComplete, tracklistID);
+            if (!isComplete) {
+              this.progressiveGenerateTracklistWrapper(
+                progressiveGenerateTracklist
+              );
+            } else {
+              NavigationService.navigate('ViewTracklist', {
+                playrollName: playroll.name,
+                tracklistID,
+              });
+            }
+          }, 500);
+        }
+      );
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(
         'error',
         'Error',
-        "We're sorry, Please try again."
+        "We're sorry, Please close this screen and try again."
       );
     }
   }
 
   render() {
     return (
-      <GenerateTracklistMutation>
-        {(generateTracklist, { error }) => {
+      <ProgressiveGenerateTracklistMutation>
+        {(progressiveGenerateTracklist, { error }) => {
           if (this.state.triggerGenerateTracklist) {
             this.setState({ triggerGenerateTracklist: false }, () => {
-              this.generateTracklistWrapper(generateTracklist);
+              setTimeout(() => {
+                this.progressiveGenerateTracklistWrapper(
+                  progressiveGenerateTracklist
+                );
+              }, 1000);
             });
           }
           return (
@@ -99,7 +142,7 @@ export default class GenerateTracklistScreen extends React.Component<
             </View>
           );
         }}
-      </GenerateTracklistMutation>
+      </ProgressiveGenerateTracklistMutation>
     );
   }
 
@@ -130,9 +173,24 @@ export default class GenerateTracklistScreen extends React.Component<
   }
 
   renderCurrentlyGeneratingDisplay() {
+    const { playroll } = this.state;
+    const remainingRolls = (playroll.rolls || []).slice(
+      this.state.currentRollIndex
+    );
     return (
       <View style={{ width: 325 }}>
-        <PlaceholderList numItems={6} overlayText={'Coming Soon...'} />
+        {!this.state.isComplete && remainingRolls.length >= 0 ? (
+          <View>
+            <Heading type={'h9'} alignment={'left'} opacity={0.7}>
+              Now Generating:
+            </Heading>
+            <RollList rolls={remainingRolls || []} readOnly />
+          </View>
+        ) : (
+          <Heading type={'h9'} alignment={'left'} opacity={0.7}>
+            Tracklist Generated!
+          </Heading>
+        )}
       </View>
     );
   }

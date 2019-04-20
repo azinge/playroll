@@ -16,7 +16,7 @@ import (
 type GenerateMethods struct {
 	GetTracklistSongs            *gqltag.Query    `gql:"tracklistSongs(tracklistID: ID): [MusicSource]"`
 	GenerateTracklist            *gqltag.Mutation `gql:"generateTracklist(playrollID: ID): Tracklist"`
-	ProgressiveGenerateTracklist *gqltag.Mutation `gql:"progressiveGenerateTracklist(playrollID: ID, tracklistID: ID): ProgressiveGenerateTracklistOutput"`
+	ProgressiveGenerateTracklist *gqltag.Mutation `gql:"progressiveGenerateTracklist(playrollID: ID, tracklistID: ID, batchSize: Int): ProgressiveGenerateTracklistOutput"`
 }
 
 var getTracklistSongs = gqltag.Method{
@@ -103,6 +103,7 @@ var progressiveGenerateTracklist = gqltag.Method{
 		type progressiveGenerateTracklistParams struct {
 			PlayrollID  string
 			TracklistID *string
+			BatchSize   *uint
 		}
 		params := &progressiveGenerateTracklistParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -137,8 +138,6 @@ var progressiveGenerateTracklist = gqltag.Method{
 			}
 			tracklist.PlayrollID = playrollID
 			tracklist.OwnerID = user.ID
-			tracklist.IsComplete = true
-
 			_, err := tDAO.Create(tracklist)
 			if err != nil {
 				return nil, err
@@ -151,13 +150,18 @@ var progressiveGenerateTracklist = gqltag.Method{
 			}
 		}
 
+		batchSize := uint(len(playroll.Rolls))
+		if params.BatchSize != nil {
+			batchSize = *params.BatchSize
+		}
+
 		client, err := spotifyhelpers.GetSpotifyClientForUser(1, mctx.DB)
 		if err != nil {
 			fmt.Println("Error fetching token: ", err.Error())
 			return nil, err
 		}
 
-		output, err := generate.ProgressiveGenerateTracklist(playroll, tracklist, mctx, client)
+		output, err := generate.ProgressiveGenerateTracklist(playroll, tracklist, batchSize, mctx, client)
 		if err != nil {
 			fmt.Println("Error compiling rolls: ", err.Error())
 			return nil, err

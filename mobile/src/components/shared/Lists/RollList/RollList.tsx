@@ -13,6 +13,7 @@ import Swipeout from 'react-native-swipeout';
 
 export interface Props {
   rolls: Roll[];
+  readOnly?: boolean;
   // onPress?: () => void;  // TODO: is this required?
 }
 
@@ -137,6 +138,7 @@ export default class RollList extends React.Component<Props, State> {
           right={[{ text: 'Delete', backgroundColor: 'red' }]}
           backgroundColor={'transparent'}
           autoClose={true}
+          disabled={this.props.readOnly}
         >
           <View style={styles.outerContainer} key={roll.id}>
             <View style={styles.innerContainer}>
@@ -159,13 +161,17 @@ export default class RollList extends React.Component<Props, State> {
                 {filterViews}
               </View>
               {/* Right side menu icons */}
-              <Icon
-                size={25}
-                name='edit'
-                color='lightgrey'
-                onPress={() => NavigationService.navigate('EditRoll', { roll })}
-                iconStyle={styles.editIcon}
-              />
+              {!this.props.readOnly && (
+                <Icon
+                  size={25}
+                  name='edit'
+                  color='lightgrey'
+                  onPress={() =>
+                    NavigationService.navigate('EditRoll', { roll })
+                  }
+                  iconStyle={styles.editIcon}
+                />
+              )}
             </View>
             <View style={styles.spacing} />
           </View>

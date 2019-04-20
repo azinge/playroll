@@ -15,6 +15,7 @@ import { GET_CURRENT_USER_PLAYROLL } from '../../../../graphql/requests/Playroll
 
 export interface Props {
   rolls: Roll[];
+  readOnly?: boolean;
   // onPress?: () => void;  // TODO: is this required?
 }
 
@@ -180,29 +181,24 @@ export default class RollList extends React.Component<Props, State> {
     }
 
     return (
-      // Removing TouchableOpacity because the Edit Icon is enough
-      // <TouchableOpacity onPress={() => this.props.onPress(roll)} key={roll.id}>
-      <View
-        style={{
-          borderBottomWidth: 0.5,
-          borderBottomColor: 'lightgrey',
-          //   marginTop: 5,
-        }}
-      >
-        <DeleteRollMutation
-          variables={{
-            id: roll.id,
-          }}
-          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]} // Anon function required for subsequent delete calls
-        >
-          {(deleteRoll, { loading, error }) => {
-            return (
+      // Does not refetch after multiple deletions
+      <DeleteRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
+        {deleteRoll => {
+          return (
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: 'lightgrey',
+                //   marginTop: 5,
+              }}
+            >
               <Swipeout
                 right={[
                   {
                     text: 'Delete',
                     backgroundColor: 'red',
-                    onPress: () => deleteRoll(),
+
+                    onPress: () => deleteRoll({ variables: { id: roll.id } }),
                   },
                 ]}
                 backgroundColor={'transparent'}
@@ -234,10 +230,10 @@ export default class RollList extends React.Component<Props, State> {
                   <View style={styles.spacing} />
                 </View>
               </Swipeout>
-            );
-          }}
-        </DeleteRollMutation>
-      </View>
+            </View>
+          );
+        }}
+      </DeleteRollMutation>
     );
   }
 

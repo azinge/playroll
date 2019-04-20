@@ -27,7 +27,7 @@ export default class HomeCarousel extends React.Component<Props, State> {
           }}
         >
           <Text style={[styles.title, { color: 'grey' }]}>
-            Your Featured Playrolls
+            Featured Playrolls
           </Text>
         </View>
         <View style={{ height: 250 }}>

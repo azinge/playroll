@@ -135,7 +135,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               userID: playroll.userID,
             },
           }}
-          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
             <View style={styles.titleBarName}>

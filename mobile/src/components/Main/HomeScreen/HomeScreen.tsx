@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component<Props, State> {
           /> */}
 
           <PlaceholderList
-            title={'Recommendations'}
+            title={'Your Recommendations'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />

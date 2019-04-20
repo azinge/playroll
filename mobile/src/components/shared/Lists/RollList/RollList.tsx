@@ -15,6 +15,7 @@ import { GET_CURRENT_USER_PLAYROLL } from '../../../../graphql/requests/Playroll
 
 export interface Props {
   rolls: Roll[];
+  readOnly?: boolean;
   // onPress?: () => void;  // TODO: is this required?
 }
 

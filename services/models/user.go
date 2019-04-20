@@ -103,7 +103,25 @@ func FindUserByIdentityCredential(provider, identifier string, db *gorm.DB) (*Us
 	return user, nil
 }
 
+func FindUserByID(id uint, db *gorm.DB) (*UserOutput, error) {
+	userModel := &User{}
+	if err := db.First(userModel, id).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	user, err := UserModelToOutput(userModel)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func AuthorizeUser(mctx *gqltag.MethodContext) (*UserOutput, error) {
+	// Debug user
+	if mctx.Debug {
+		return FindUserByID(1, mctx.DB)
+	}
+
 	// Unauthenticated
 	authenticated := mctx.Request.RequestContext.Identity.CognitoAuthenticationType == "authenticated"
 	if !authenticated {

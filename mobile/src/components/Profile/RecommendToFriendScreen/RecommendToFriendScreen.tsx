@@ -19,6 +19,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import { CreateRecommendationMutation } from '../../../graphql/requests/Recommendation/CreateRecommendationMutation';
 import { RollData } from '../../../graphql/types';
 import { GetCurrentUserQuery } from '../../../graphql/requests/User';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -122,6 +123,9 @@ export default class RecommendToFriendScreen extends React.Component<
                       contentContainerStyle={{ marginTop: 10 }}
                       data={friends}
                       keyExtractor={item => item.id}
+                      renderFlatListHeader={() => {
+                        return <SearchSubHeader />;
+                      }}
                       renderItem={({ item }) => {
                         return (
                           <GetCurrentUserQuery>

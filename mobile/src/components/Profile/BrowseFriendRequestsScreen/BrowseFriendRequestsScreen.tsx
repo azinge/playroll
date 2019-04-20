@@ -17,6 +17,7 @@ import UserCard from '../../shared/Cards/UserCard';
 import NavigationService from '../../../services/NavigationService';
 import { LIST_FRIEND_REQUESTS } from '../../../graphql/requests/Relationships/ListFriendRequestsQuery';
 import { LIST_FRIENDS } from '../../../graphql/requests/Relationships/ListFriendsQuery';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -50,6 +51,9 @@ export default class BrowseFriendRequestsScreen extends React.Component<
                 contentContainerStyle={{ marginTop: 10 }}
                 data={friendRequests}
                 keyExtractor={item => item.id}
+                renderFlatListHeader={() => {
+                  return <SearchSubHeader />;
+                }}
                 renderItem={({ item }) => {
                   return (
                     <UserCard

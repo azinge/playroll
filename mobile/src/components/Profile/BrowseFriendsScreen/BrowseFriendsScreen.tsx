@@ -12,6 +12,7 @@ import { ListFriendsQuery } from '../../../graphql/requests/Relationships';
 import FriendCard from '../../shared/Cards/FriendCard';
 import NavigationService from '../../../services/NavigationService';
 import FooterButton from '../../shared/Buttons/FooterButton';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -51,24 +52,7 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
                   },
                 ]}
                 renderFlatListHeader={() => {
-                  return (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: 'purple',
-                        width: 300,
-                        padding: 5,
-                        borderRadius: 10,
-                        alignItems: 'flex-start',
-                      }}
-                      onPress={() => {}}
-                    >
-                      <Icon
-                        name='search'
-                        color='white'
-                        containerStyle={{ marginLeft: 5 }}
-                      />
-                    </TouchableOpacity>
-                  );
+                  return <SearchSubHeader />;
                 }}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => {

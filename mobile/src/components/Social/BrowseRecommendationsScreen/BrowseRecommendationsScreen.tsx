@@ -9,6 +9,7 @@ import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/R
 import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export default class BrowseRecommendationsScreen extends React.Component {
   render() {
@@ -33,24 +34,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
               data={recommendations}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
-                return (
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: 'purple',
-                      width: 300,
-                      padding: 5,
-                      borderRadius: 10,
-                      alignItems: 'flex-start',
-                    }}
-                    onPress={() => {}}
-                  >
-                    <Icon
-                      name='search'
-                      color='white'
-                      containerStyle={{ marginLeft: 5 }}
-                    />
-                  </TouchableOpacity>
-                );
+                return <SearchSubHeader />;
               }}
               renderItem={({ item }) => {
                 return (

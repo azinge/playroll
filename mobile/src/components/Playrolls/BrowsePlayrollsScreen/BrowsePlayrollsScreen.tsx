@@ -24,6 +24,7 @@ import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/
 
 import styles from './BrowsePlayrollsScreen.styles';
 import FooterButton from '../../shared/Buttons/FooterButton';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -31,7 +32,6 @@ export interface Props {
 
 interface State {
   addPlayrollName: string;
-  search: string;
 }
 
 export default class BrowsePlayrollsScreen extends React.Component<
@@ -42,13 +42,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
     super(props);
     this.state = {
       addPlayrollName: '',
-      search: '',
     };
     this.renderHeader = this.renderHeader.bind(this);
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
   }
 
   render() {
@@ -61,7 +56,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
       }
       return data.private.listCurrentUserPlayrolls;
     };
-    const { search } = this.state;
     return (
       <ListCurrentUserPlayrollsQuery>
         {({ loading, error, data }) => {
@@ -83,20 +77,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   hideBottomBar
                   keyExtractor={item => item.id}
                   renderFlatListHeader={() => {
-                    return (
-                      <SearchBar
-                        placeholder='Search playrolls'
-                        lightTheme
-                        onChangeText={this.updateSearch}
-                        value={search}
-                        containerStyle={{
-                          //   backgroundColor: 'purple',
-                          borderBottomWidth: 0,
-                          borderTopWidth: 0,
-                        }}
-                        // inputContainerStyle={{ backgroundColor: 'white' }}
-                      />
-                    );
+                    return <SearchSubHeader />;
                   }}
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;

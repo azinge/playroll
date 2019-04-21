@@ -8,11 +8,11 @@ export const LIST_CURRENT_USER_PLAYROLLS_QUERY = gql`
   query LIST_CURRENT_USER_PLAYROLLS {
     private {
       listCurrentUserPlayrolls {
-        ...PlayrollWithTracklist
+        ...DefaultPlayroll
       }
     }
   }
-  ${PlayrollFragments.withTracklist}
+  ${PlayrollFragments.default}
 `;
 
 type ListCurrentUserPlayrollsVariables = {};

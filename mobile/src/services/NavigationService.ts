@@ -6,6 +6,7 @@ import {
   NavigationParams,
   NavigationAction,
   NavigationScreenProp,
+  StackActions,
 } from 'react-navigation';
 
 let navigator: NavigationContainerComponent;
@@ -31,11 +32,16 @@ function dispatch(action: NavigationAction) {
   return navigator.dispatch(action);
 }
 
+function push(routeName: string, params?: NavigationParams) {
+  return navigator.dispatch(StackActions.push({ routeName, params }));
+}
+
 // add other navigation functions that you need and export them
 
 export default {
   dispatch,
   navigate,
   goBack,
+  push,
   setTopLevelNavigator,
 };

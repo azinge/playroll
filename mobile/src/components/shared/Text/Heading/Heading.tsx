@@ -3,7 +3,13 @@
  */
 
 import * as React from 'react';
-import { Text, View, StyleProp, ViewStyle } from 'react-native';
+import {
+  Text,
+  View,
+  StyleProp,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native';
 
 import Scaled from '../../../../themes/Scaled';
 import styles from './Heading.styles';
@@ -17,6 +23,8 @@ export interface Props {
   opacity?: number;
   numLines?: number;
   style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
+  disabled?: boolean;
 }
 
 interface State {}
@@ -31,12 +39,13 @@ export default class Heading extends React.Component<Props, State> {
       bold,
       opacity,
       numLines,
+      onPress,
+      disabled,
       style,
     } = this.props;
-    return (
+    const text = (
       <Text
         style={[
-          style,
           {
             fontSize: Scaled.fontSize[type],
             fontFamily: family || 'Avenir',
@@ -45,11 +54,21 @@ export default class Heading extends React.Component<Props, State> {
             fontWeight: bold ? 'bold' : 'normal',
             opacity,
           },
+          disabled ? { color: 'grey', opacity: 0.7 } : {},
         ]}
         numberOfLines={numLines || 1}
       >
         {this.props.children}
       </Text>
+    );
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={disabled || !onPress}
+        style={style}
+      >
+        {text}
+      </TouchableOpacity>
     );
   }
 }

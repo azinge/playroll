@@ -28,6 +28,10 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
+import FooterButton from '../../shared/Buttons/FooterButton';
+import RollList from '../../shared/Lists/RollList';
+import { CreateRollMutation } from '../../../graphql/requests/Roll';
+import DropdownAlert from 'react-native-dropdownalert';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -38,6 +42,8 @@ interface State {
 }
 
 export default class EditPlayrollScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -57,22 +63,26 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
         {({ loading, error, data, client: { cache } }) => {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
+
+          // console.log(playroll)
+          // console.log(playroll.rolls.length)
+
+          // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
           return (
-            <View style={{ flex: 1 }}>
+            <View style={styles.screenContainer}>
               <SubScreenContainer
-                title='Edit Playroll'
+                contentContainerStyle={{ paddingBottom: 80 }}
+                title='View Playroll'
                 renderHeader={this.renderHeader}
               >
-                <View style={styles.screenContainer}>
-                  {/* Playroll Icon, Name and Subtitle */}
-                  {this.renderPlayrollHeader(playroll)}
+                {/* Icon, Title, and Hashtags */}
+                {this.renderPlayrollHeader(playroll)}
 
-                  {/* Search Bar and Results */}
-                  {/* TODO: This should be a list of current Rolls, not search results */}
-                  {this.renderSearch(playroll)}
-                </View>
+                {/* List the Rolls */}
+                {this.renderRolls(playroll)}
               </SubScreenContainer>
               {this.renderNewRollButton(playroll)}
+              <DropdownAlert ref={ref => (this.dropdown = ref)} />
             </View>
           );
         }}
@@ -110,7 +120,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           return (
             <SubScreenHeader
               title='Edit Playroll'
-              icons={[generateTracklistIcon]}
+              // icons={[generateTracklistIcon]}
             />
           );
         }}
@@ -134,7 +144,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               userID: playroll.userID,
             },
           }}
-          refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
             <View style={styles.titleBarName}>
@@ -151,7 +161,8 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
               <View style={styles.horizontalRule} />
               {playroll && playroll.rolls && (
                 <Text style={styles.subtitle}>
-                  Select a roll below to add to this playroll.
+                  This playroll contains {playroll.rolls.length}{' '}
+                  {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.
                 </Text>
               )}
             </View>
@@ -219,21 +230,96 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
+  renderTitleBar(playroll: Playroll) {
+    return (
+      <View style={styles.titleBarContainer}>
+        <Image
+          style={rawStyles.titleBarImage}
+          source={require('../../../assets/new_playroll.png')}
+        />
+        <View style={styles.titleBarNameContainer}>
+          <Text style={styles.titleBarName}>{playroll.name}</Text>
+          <View style={styles.horizontalRule} />
+          {playroll && playroll.rolls && (
+            <Text selectionColor={'purple'} style={styles.subtitle}>
+              This playroll contains {playroll.rolls.length}{' '}
+              {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.
+            </Text>
+          )}
+        </View>
+      </View>
+    );
+  }
+  renderRolls(playroll) {
+    return (
+      <RollList
+        rolls={playroll.rolls || []}
+        disableManage
+        // onPress={() => {}}
+      />
+    );
+  }
+
+  async createRollWrapper(createRoll, playroll, musicSource) {
+    try {
+      NavigationService.goBack();
+      delete musicSource.__typename;
+      await createRoll({
+        variables: {
+          input: {
+            playrollID: playroll.id,
+            data: {
+              sources: [musicSource],
+              filters: [
+                {
+                  type: 'Source',
+                  name: 'Union',
+                  modifications: ['0'],
+                },
+                {
+                  type: 'Order',
+                  name: 'Default',
+                },
+                {
+                  type: 'Length',
+                  name: 'Default',
+                },
+              ],
+            },
+          },
+        },
+      });
+      this.dropdown.alertWithType(
+        'info',
+        'Added to Playroll',
+        'Roll successfully added to playroll.'
+      );
+    } catch (err) {
+      console.log(err);
+      this.dropdown.alertWithType(
+        'error',
+        'Error',
+        "We're sorry, Please try again."
+      );
+    }
+  }
+
   renderNewRollButton(playroll) {
     return (
-      <View style={styles.footerView}>
-        <TouchableOpacity
-          style={styles.newButton}
-          onPress={() => {
-            NavigationService.navigate('AddRoll', {
-              managePlayroll: 'View Playroll',
-              playroll,
-            });
-          }}
-        >
-          <Text style={styles.buttonText}>Add a Roll</Text>
-        </TouchableOpacity>
-      </View>
+      <CreateRollMutation refetchQueries={[GET_CURRENT_USER_PLAYROLL]}>
+        {(createRoll, { data }) => (
+          <FooterButton
+            title={'Add a Roll'}
+            onPress={() => {
+              NavigationService.navigate('Search', {
+                onPress: musicSource => {
+                  this.createRollWrapper(createRoll, playroll, musicSource);
+                },
+              });
+            }}
+          />
+        )}
+      </CreateRollMutation>
     );
   }
 }

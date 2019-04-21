@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-// MusicSource Types / Fragments
+// MusicSource Types
 
 export type MusicSource = {
   cover?: string;
@@ -13,20 +13,15 @@ export type MusicSource = {
 
 export type MusicSourceInput = MusicSource;
 
-export const MusicSourceFragments = {
-  default: gql`
-    fragment DefaultMusicSource on MusicSource {
-      cover
-      creator
-      name
-      provider
-      providerID
-      type
-    }
-  `,
+// DiscoveryQueueEntry Types
+
+type DiscoveryQueueEntry = {
+  id?: number;
+  discoveryQueueID?: number;
+  data?: RollData;
 };
 
-// RollFilter Types / Fragments
+// RollFilter Types
 
 export type RollFilter = {
   type?: string;
@@ -36,17 +31,7 @@ export type RollFilter = {
 
 export type RollFilterInput = RollFilter;
 
-export const RollFilterFragments = {
-  default: gql`
-    fragment DefaultRollFilter on RollFilter {
-      type
-      name
-      modifications
-    }
-  `,
-};
-
-// RollData Types / Fragments
+// RollData Types
 
 export type RollData = {
   filters?: RollFilter[];
@@ -58,43 +43,7 @@ export type RollDataInput = {
   sources?: MusicSourceInput[];
 };
 
-export const RollDataFragments = {
-  default: gql`
-    fragment DefaultRollData on RollData {
-      sources {
-        ...DefaultMusicSource
-      }
-      filters {
-        ...DefaultRollFilter
-      }
-    }
-    ${MusicSourceFragments.default}
-    ${RollFilterFragments.default}
-  `,
-};
-
-// DiscoveryQueueEntry Types / Fragments
-
-export type DiscoveryQueueEntry = {
-  id?: number;
-  discoveryQueueID?: number;
-  data?: RollData;
-};
-
-export const DiscoveryQueueEntryFragments = {
-  default: gql`
-    fragment DefaultDiscoveryQueueEntry on DiscoveryQueueEntry {
-      id
-      discoveryQueueID
-      data {
-        ...DefaultRollData
-      }
-    }
-    ${RollDataFragments.default}
-  `,
-};
-
-// DiscoveryQueue Types / Fragments
+// DiscoveryQueue Types
 
 export type DiscoveryQueue = {
   id?: number;
@@ -102,42 +51,7 @@ export type DiscoveryQueue = {
   entries?: DiscoveryQueueEntry[];
 };
 
-export const DiscoveryQueueFragments = {
-  default: gql`
-    fragment DefaultDiscoveryQueue on DiscoveryQueue {
-      id
-      userID
-      entries {
-        ...DefaultDiscoveryQueueEntry
-      }
-    }
-    ${DiscoveryQueueEntryFragments.default}
-  `,
-};
-
-// User Types / Fragments
-
-export type User = {
-  id?: number;
-  name?: string;
-  avatar?: string;
-  email?: string;
-  accountType?: string;
-};
-
-export const UserFragments = {
-  default: gql`
-    fragment DefaultUser on User {
-      id
-      name
-      avatar
-      email
-      accountType
-    }
-  `,
-};
-
-// Roll Types / Fragments
+// Roll Types
 
 export type Roll = {
   id?: number;
@@ -152,7 +66,151 @@ export type RollInput = {
   order?: number;
 };
 
-export const RollFragments = {
+// CompiledRoll Types
+
+export type CompiledRoll = {
+  id?: number;
+  data?: { tracks?: MusicSource[] };
+};
+
+// Tracklist Types
+
+export type Tracklist = {
+  id?: number;
+  playrollID?: number;
+  isPrimary?: boolean;
+  isStarred?: boolean;
+  compiledRolls?: CompiledRoll[];
+};
+
+// User Types
+
+export type User = {
+  id?: number;
+  name?: string;
+  avatar?: string;
+  email?: string;
+  accountType?: string;
+  relationships?: Relationship[];
+};
+
+// Playroll Types
+
+export type Playroll = {
+  id?: number;
+  userID?: number;
+  name?: string;
+  rolls?: Roll[];
+  tracklists?: Tracklist[];
+};
+
+export type PlayrollInput = {
+  name?: string;
+  userID?: number;
+};
+
+// Recommendation Types
+
+export type Recommendation = {
+  id?: number;
+  userID?: number;
+  recommenderID?: number;
+  recommender?: User;
+  isActive?: boolean;
+  data?: RollData;
+  playroll?: Playroll;
+};
+
+export type RecommendationInput = {
+  userID?: number;
+  recommenderID?: number;
+  isActive?: boolean;
+  data?: RollData;
+  playrollID?: Playroll;
+};
+
+// Relationship Types
+
+export type Relationship = {
+  createdAt?: string;
+  deletedAt?: string;
+  id?: number;
+  isBlocking?: boolean;
+  otherUser?: User;
+  otherUserID?: number;
+  status?: string;
+  updatedAt?: string;
+  user?: User;
+  userID?: number;
+};
+
+// Default Fragments
+
+const MusicSourceFragments = {
+  default: gql`
+    fragment DefaultMusicSource on MusicSource {
+      cover
+      creator
+      name
+      provider
+      providerID
+      type
+    }
+  `,
+};
+
+const RollFilterFragments = {
+  default: gql`
+    fragment DefaultRollFilter on RollFilter {
+      type
+      name
+      modifications
+    }
+  `,
+};
+
+const RollDataFragments = {
+  default: gql`
+    fragment DefaultRollData on RollData {
+      sources {
+        ...DefaultMusicSource
+      }
+      filters {
+        ...DefaultRollFilter
+      }
+    }
+    ${MusicSourceFragments.default}
+    ${RollFilterFragments.default}
+  `,
+};
+
+const DiscoveryQueueEntryFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueueEntry on DiscoveryQueueEntry {
+      id
+      discoveryQueueID
+      data {
+        ...DefaultRollData
+      }
+    }
+    ${RollDataFragments.default}
+  `,
+};
+
+const DiscoveryQueueFragments = {
+  default: gql`
+    fragment DefaultDiscoveryQueue on DiscoveryQueue {
+      id
+      userID
+      entries {
+        ...DefaultDiscoveryQueueEntry
+      }
+    }
+    ${DiscoveryQueueEntryFragments.default}
+  `,
+};
+
+const RollFragments = {
   default: gql`
     fragment DefaultRoll on Roll {
       id
@@ -166,14 +224,7 @@ export const RollFragments = {
   `,
 };
 
-// CompiledRoll Types / Fragments
-
-export type CompiledRoll = {
-  id?: number;
-  data?: { tracks?: MusicSource[] };
-};
-
-export const CompiledRollFragments = {
+const CompiledRollFragments = {
   default: gql`
     fragment DefaultCompiledRoll on CompiledRoll {
       id
@@ -187,17 +238,7 @@ export const CompiledRollFragments = {
   `,
 };
 
-// Tracklist Types / Fragments
-
-export type Tracklist = {
-  id?: number;
-  playrollID?: number;
-  isPrimary?: boolean;
-  isStarred?: boolean;
-  compiledRolls?: CompiledRoll[];
-};
-
-export const TracklistFragments = {
+const TracklistFragments = {
   default: gql`
     fragment DefaultTracklist on Tracklist {
       id
@@ -212,22 +253,36 @@ export const TracklistFragments = {
   `,
 };
 
-// Playroll Types / Fragments
-
-export type Playroll = {
-  id?: number;
-  userID?: number;
-  name?: string;
-  rolls?: [Roll];
-  tracklists?: [Tracklist];
+const RelationshipFragments = {
+  default: gql`
+    fragment DefaultRelationship on Relationship {
+      createdAt
+      deletedAt
+      id
+      isBlocking
+      otherUserID
+      status
+      updatedAt
+      userID
+    }
+  `,
+  withOtherUser: undefined,
 };
 
-export type PlayrollInput = {
-  name?: string;
-  userID?: number;
+const UserFragments = {
+  default: gql`
+    fragment DefaultUser on User {
+      id
+      name
+      avatar
+      email
+      accountType
+    }
+  `,
+  withRelationships: undefined,
 };
 
-export const PlayrollFragments = {
+const PlayrollFragments = {
   default: gql`
     fragment DefaultPlayroll on Playroll {
       id
@@ -239,36 +294,10 @@ export const PlayrollFragments = {
     }
     ${RollFragments.default}
   `,
-  withTracklist: gql`
-    fragment PlayrollWithTracklist on Playroll {
-      id
-      userID
-      name
-      rolls {
-        ...DefaultRoll
-      }
-      tracklists {
-        ...DefaultTracklist
-      }
-    }
-    ${RollFragments.default}
-    ${TracklistFragments.default}
-  `,
+  withTracklists: undefined,
 };
 
-// Recommendation Types / Fragments
-
-export type Recommendation = {
-  id?: number;
-  userID?: number;
-  recommenderID?: number;
-  recommender?: User;
-  isActive?: boolean;
-  data?: RollData;
-  playroll?: Playroll;
-};
-
-export const RecommendationFragments = {
+const RecommendationFragments = {
   default: gql`
     fragment DefaultRecommendation on Recommendation {
       id
@@ -292,39 +321,65 @@ export const RecommendationFragments = {
   `,
 };
 
-// Relationship Types / Fragments
+// Extra Fragments
 
-export type Relationship = {
-  createdAt: string;
-  deletedAt: string;
-  id: number;
-  isBlocking: boolean;
-  otherUser: User;
-  otherUserID: number;
-  status: string;
-  updatedAt: string;
-  user: User;
-  userID: number;
-};
-
-export const RelationshipFragments = {
-  default: gql`
-    fragment DefaultRelationship on Relationship {
-      createdAt
-      deletedAt
-      id
-      isBlocking
-      otherUser {
-        ...DefaultUser
-      }
-      otherUserID
-      status
-      updatedAt
-      user {
-        ...DefaultUser
-      }
-      userID
+UserFragments.withRelationships = gql`
+  fragment UserWithRelationships on User {
+    id
+    name
+    avatar
+    email
+    accountType
+    relationships {
+      ...DefaultRelationship
     }
-    ${UserFragments.default}
-  `,
+  }
+  ${RelationshipFragments.default}
+`;
+
+RelationshipFragments.withOtherUser = gql`
+  fragment RelationshipWithOtherUser on Relationship {
+    createdAt
+    deletedAt
+    id
+    isBlocking
+    otherUser {
+      ...DefaultUser
+    }
+    otherUserID
+    status
+    updatedAt
+    userID
+  }
+  ${UserFragments.default}
+`;
+
+PlayrollFragments.withTracklists = gql`
+  fragment PlayrollWithTracklists on Playroll {
+    id
+    userID
+    name
+    rolls {
+      ...DefaultRoll
+    }
+    tracklists {
+      ...DefaultTracklist
+    }
+  }
+  ${RollFragments.default}
+  ${TracklistFragments.default}
+`;
+
+export {
+  MusicSourceFragments,
+  RollDataFragments,
+  RollFragments,
+  DiscoveryQueueEntryFragments,
+  DiscoveryQueueFragments,
+  CompiledRollFragments,
+  TracklistFragments,
+  RelationshipFragments,
+  UserFragments,
+  PlayrollFragments,
+  RecommendationFragments,
 };

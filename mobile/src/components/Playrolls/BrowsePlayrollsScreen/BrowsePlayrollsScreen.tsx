@@ -5,7 +5,7 @@
 import React from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
-import { Button, Icon } from 'react-native-elements';
+import { Button, Icon, SearchBar } from 'react-native-elements';
 
 import NavigationService from '../../../services/NavigationService';
 
@@ -23,6 +23,8 @@ import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
 import styles from './BrowsePlayrollsScreen.styles';
+import FooterButton from '../../shared/Buttons/FooterButton';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -72,26 +74,10 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   contentContainerStyle={{ paddingBottom: 120 }}
                   flatList={success}
                   data={playrolls}
+                  hideBottomBar
                   keyExtractor={item => item.id}
                   renderFlatListHeader={() => {
-                    return (
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: 'purple',
-                          width: 300,
-                          padding: 5,
-                          borderRadius: 10,
-                          alignItems: 'flex-start',
-                        }}
-                        onPress={() => {}}
-                      >
-                        <Icon
-                          name='search'
-                          color='white'
-                          containerStyle={{ marginLeft: 5 }}
-                        />
-                      </TouchableOpacity>
-                    );
+                    return <SearchSubHeader />;
                   }}
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
@@ -194,46 +180,12 @@ export default class BrowsePlayrollsScreen extends React.Component<
       >
         {createPlayroll => {
           return (
-            // <View style={styles.footerView}>
-            //   <TouchableOpacity
-            //     style={styles.newButton}
-            //     onPress={() => {
-            //       createPlayroll();
-            //     }}
-            //   >
-            //     <Text style={styles.buttonText}>Create a Playroll</Text>
-            //   </TouchableOpacity>
-            // </View>
-            <View
-              style={{
-                bottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                // marginBottom: 20,
+            <FooterButton
+              title={'Create New Playroll'}
+              onPress={() => {
+                createPlayroll();
               }}
-            >
-              <Button
-                // linearGradientProps={{
-                //   colors: ['purple', '#4A00E0'],
-                //   start: { x: 0 },
-                //   end: { x: 1 },
-                // }}
-                containerStyle={{
-                  borderRadius: 80,
-                  width: '75%',
-                  position: 'absolute',
-                  bottom: 5,
-                  height: 50,
-                }}
-                buttonStyle={{ borderRadius: 80, height: 50 }}
-                raised
-                title={'Create New Playroll'}
-                titleStyle={{ fontWeight: 'bold' }}
-                onPress={() => {
-                  createPlayroll();
-                }}
-              />
-            </View>
+            />
           );
         }}
       </CreatePlayrollMutation>

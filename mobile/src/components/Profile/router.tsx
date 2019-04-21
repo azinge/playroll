@@ -6,14 +6,17 @@ import ViewCurrentUserProfileScreen from './ViewCurrentUserProfileScreen';
 import AddFriendScreen from './AddFriendScreen';
 import BrowseFriendsScreen from './BrowseFriendsScreen';
 import RecommendToFriendScreen from './RecommendToFriendScreen';
+import BrowseFriendRequestsScreen from './BrowseFriendRequestsScreen';
 
 export const ProfileRoutes = {
   AddFriend: AddFriendScreen,
   BrowseFriends: BrowseFriendsScreen,
-  RecommendToFriend: RecommendToFriendScreen,
+  BrowseFriendRequests: BrowseFriendRequestsScreen,
   EditProfile: EditProfileScreen,
   ViewProfile: ViewProfileScreen,
   ViewCurrentUserProfile: ViewCurrentUserProfileScreen,
 };
 
-export const ProfileModalRoutes = {};
+export const ProfileModalRoutes = {
+  RecommendToFriend: RecommendToFriendScreen,
+};

@@ -17,7 +17,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 5 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
-          playlistID: item.providerID,
+          playlist: item,
         })
       }
     >

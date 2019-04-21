@@ -87,16 +87,49 @@ export default class AccountScreen extends React.Component<Props, State> {
                   </View>
                 </TouchableOpacity>
 
-                {/* View Friends */}
-                {/* <TouchableOpacity
+                {/* Playrolls */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('BrowsePlayrolls');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Playrolls</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Friends */}
+                <TouchableOpacity
                   onPress={() => {
                     NavigationService.navigate('BrowseFriends');
                   }}
                 >
                   <View style={styles.textContainer}>
-                    <Text style={styles.disabledText}>View Friends</Text>
+                    <Text style={styles.enabledText}>Friends</Text>
                   </View>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
+
+                {/* Recommendations */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('BrowseRecommendations');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Recommendations</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Music */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('Music');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>My Music</Text>
+                  </View>
+                </TouchableOpacity>
 
                 {/* Settings */}
                 <TouchableOpacity

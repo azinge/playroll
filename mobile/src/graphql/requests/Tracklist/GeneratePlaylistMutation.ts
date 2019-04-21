@@ -18,7 +18,7 @@ type GeneratePlaylistVariables = {
 
 type GeneratePlaylistData = {
   private: {
-    generatePlaylist: string[];
+    generatePlaylist: string;
   };
 };
 

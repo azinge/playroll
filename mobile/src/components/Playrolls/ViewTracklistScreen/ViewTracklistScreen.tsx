@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { Card, Button, Header, Icon } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -15,6 +15,9 @@ import {
 import styles from './ViewTracklistScreen.styles';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import NavigationService from '../../../services/NavigationService';
+import FooterButton from '../../shared/Buttons/FooterButton';
+import { CurrentUserSpotifyStatusQuery } from '../../../graphql/requests/Spotify';
+import { Linking } from 'expo';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -85,34 +88,59 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
                   </ScrollView>
                 </View>
               </SubScreenContainer>
-              <View style={styles.footer2View}>
-                <Button
-                  title='Connect Spotify'
-                  containerStyle={styles.genPlaylistButton}
-                  onPress={() => {
-                    NavigationService.navigate('ConnectSpotify');
-                  }}
-                />
-              </View>
-              {/* "Generate Playlist" Button */}
-              <View style={styles.footerView}>
-                <GeneratePlaylistMutation
-                  variables={{
-                    tracklistID,
-                    playlistName,
-                  }}
-                >
-                  {generatePlaylist => (
-                    <Button
-                      title='Generate Playlist'
-                      containerStyle={styles.genPlaylistButton}
-                      onPress={() => {
-                        generatePlaylist();
-                      }}
-                    />
-                  )}
-                </GeneratePlaylistMutation>
-              </View>
+              <CurrentUserSpotifyStatusQuery>
+                {({ loading, error, data }) => {
+                  const authenticated =
+                    data &&
+                    data.private &&
+                    data.private.currentUserSpotifyStatus;
+                  if (loading) {
+                    return <ActivityIndicator style={{ marginTop: 20 }} />;
+                  }
+                  if (authenticated !== 'authenticated') {
+                    return (
+                      <FooterButton
+                        title={'Connect Spotify'}
+                        onPress={() => {
+                          NavigationService.navigate('ConnectSpotify');
+                        }}
+                      />
+                    );
+                  } else {
+                    return (
+                      <GeneratePlaylistMutation
+                        variables={{
+                          tracklistID,
+                          playlistName,
+                        }}
+                        onCompleted={data => {
+                          if (
+                            data &&
+                            data.private &&
+                            data.private.generatePlaylist
+                          ) {
+                            Linking.openURL(
+                              `https://open.spotify.com/playlist/${
+                                data.private.generatePlaylist
+                              }`
+                            );
+                          }
+                        }}
+                      >
+                        {(generatePlaylist, { loading }) => (
+                          <FooterButton
+                            title={'Generate Playlist'}
+                            onPress={() => {
+                              generatePlaylist();
+                            }}
+                            loading={loading}
+                          />
+                        )}
+                      </GeneratePlaylistMutation>
+                    );
+                  }
+                }}
+              </CurrentUserSpotifyStatusQuery>
             </View>
           );
         }}

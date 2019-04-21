@@ -265,7 +265,7 @@ func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmode
 	return &savedTracks, nil
 }
 
-func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistName string, client *spotify.Client, db *gorm.DB) (*[]spotify.ID, error) {
+func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistName string, client *spotify.Client, db *gorm.DB) (string, error) {
 	trackIDs := []spotify.ID{}
 	for _, track := range *tracks {
 		trackIDs = append(trackIDs, spotify.ID(track.ProviderID))
@@ -274,19 +274,19 @@ func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistN
 	user, err := client.CurrentUser()
 	if err != nil {
 		fmt.Println("error fetching user: ", err.Error())
-		return nil, err
+		return "", err
 	}
 	playlist, err := client.CreatePlaylistForUser(user.ID, "Playroll: "+playlistName, "", true)
 	if err != nil {
 		fmt.Println("error creating playlist for user: ", err.Error())
-		return nil, err
+		return "", err
 	}
 	_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs...)
 	if err != nil {
 		fmt.Println("error adding songs for user: ", err.Error())
-		return nil, err
+		return "", err
 	}
-	return &trackIDs, nil
+	return string(playlist.ID), nil
 }
 
 func GetSpotifyTrack(id spotify.ID, client *spotify.Client) (*models.MusicServiceTrack, error) {

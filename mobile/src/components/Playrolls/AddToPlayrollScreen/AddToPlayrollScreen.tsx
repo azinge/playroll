@@ -105,7 +105,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
 
   renderPlayrolls(playrolls) {
     return (
-      <CreateRollMutation refetchQueries={[GET_CURRENT_USER_PLAYROLL]}>
+      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
         {(createRoll, { loading, error, data }) => {
           return (
             <PlayrollList

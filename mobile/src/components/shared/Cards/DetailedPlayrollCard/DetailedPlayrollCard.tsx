@@ -153,7 +153,7 @@ export default class DetailedPlayrollCard extends React.Component<
                   variables={{
                     id: playroll.id,
                   }}
-                  refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+                  refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
                 >
                   {deletePlayroll => (
                     <TouchableOpacity

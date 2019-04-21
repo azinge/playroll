@@ -22,15 +22,8 @@ import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { User } from '../../../graphql/types';
 import styles from './AddFriendScreen.styles';
-import NavigationService from '../../../services/NavigationService';
-import UserCard from '../../shared/Cards/UserCard';
-import Icons, { HeaderIconType } from '../../../themes/Icons';
 import SearchScreenContainer from '../../shared/Containers/SearchScreenContainer';
 import { SearchUsersQuery } from '../../../graphql/requests/User/SearchUsersQuery';
-import {
-  GetRelationshipQuery,
-  GET_RELATIONSHIP,
-} from '../../../graphql/requests/Relationships/GetRelationship';
 import ManageRelationshipRow from './ManageRelationshipRow';
 
 export interface Props {
@@ -60,7 +53,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       dogAvatar:
         'https://i.pinimg.com/736x/45/b4/b2/45b4b229908ade31fb9fb53942fd3971--chow-chow-puppies-chien-chow-chow.jpg',
       users: [],
-      query: 'test6',
+      query: '',
     };
 
     this.handleErrors = this.handleErrors.bind(this);

@@ -8,7 +8,7 @@ export default StyleSheet.create({
   },
   tracklistView: {
     flex: 1,
-    marginBottom: 40, // instead of SafeAreaView
+    // marginBottom: 40, // instead of SafeAreaView
   },
 
   // Header

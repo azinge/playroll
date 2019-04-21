@@ -12,7 +12,7 @@ import { Icon } from 'react-native-elements';
 
 export interface Props {
   sources: MusicSource[];
-  // onPress?: (roll: Roll) => void;  // removing, edit icon is enough
+  onPress?: (musicSource: MusicSource) => void;
 }
 
 interface State {}
@@ -26,7 +26,7 @@ export default class MusicSourceList extends React.Component<Props, State> {
   renderItem({ item: source }: { item: MusicSource }) {
     // console.log(mainSource)
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => this.props.onPress(source)}>
         <View style={styles.outerContainer} key={source.providerID}>
           <View style={styles.innerContainer}>
             <Image style={styles.cover} source={{ uri: source.cover }} />

@@ -74,6 +74,14 @@ export const rawStyles = {
     borderWidth: 1,
     borderColor: 'lightgrey',
   },
+  titleBarImage: {
+    width: 65,
+    height: 65,
+    marginHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+  },
 };
 
 export default Object.assign(playrollsStyles, styles);

@@ -231,7 +231,7 @@ func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db 
 		track := playlistTrack.Track
 		_, artistName := extractArtist(track.Artists)
 		playlistTracks[i] = jsonmodels.MusicSource{
-			Type:       "Playlist",
+			Type:       "Track",
 			Provider:   "Spotify",
 			ProviderID: string(track.ID),
 			Name:       track.Name,
@@ -254,7 +254,7 @@ func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmode
 	for i, savedTrack := range savedTracksPage.Tracks {
 		_, artistName := extractArtist(savedTrack.Artists)
 		savedTracks[i] = jsonmodels.MusicSource{
-			Type:       "Playlist",
+			Type:       "Track",
 			Provider:   "Spotify",
 			ProviderID: string(savedTrack.ID),
 			Name:       savedTrack.Name,

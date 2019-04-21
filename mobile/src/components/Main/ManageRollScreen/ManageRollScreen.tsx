@@ -64,12 +64,11 @@ export default class ManageRollScreen extends React.Component<Props, State> {
           },
           {
             type: 'Order',
-            name: 'Random',
+            name: 'Default',
           },
           {
             type: 'Length',
-            name: 'NumberOfSongs',
-            modifications: ['0', '10'],
+            name: 'Default',
           },
         ],
       };

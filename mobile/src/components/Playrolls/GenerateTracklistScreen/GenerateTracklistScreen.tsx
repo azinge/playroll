@@ -184,7 +184,7 @@ export default class GenerateTracklistScreen extends React.Component<
             <Heading type={'h9'} alignment={'left'} opacity={0.7}>
               Now Generating:
             </Heading>
-            <RollList rolls={remainingRolls || []} readOnly />
+            <RollList rolls={remainingRolls || []} readOnly disableManage />
           </View>
         ) : (
           <Heading type={'h9'} alignment={'left'} opacity={0.7}>

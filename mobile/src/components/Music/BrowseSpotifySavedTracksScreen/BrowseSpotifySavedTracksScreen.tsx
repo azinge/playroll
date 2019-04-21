@@ -10,6 +10,7 @@ import { ListSpotifySavedTracksQuery } from '../../../graphql/requests/Spotify';
 import { ListItem, Icon } from 'react-native-elements';
 import MusicSourceList from '../../shared/Lists/MusicSourceList';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import NavigationService from '../../../services/NavigationService';
 
 export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -69,6 +70,11 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
                   sources={
                     data && data.private && data.private.listSpotifySavedTracks
                   }
+                  onPress={musicSource => {
+                    NavigationService.navigate('ManageRoll', {
+                      currentSource: musicSource,
+                    });
+                  }}
                 />
               </View>
             );

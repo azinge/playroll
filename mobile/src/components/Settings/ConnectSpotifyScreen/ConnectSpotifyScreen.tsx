@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { Text, SafeAreaView, Image, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { WebBrowser } from 'expo';
+import { Linking, WebBrowser } from 'expo';
 import url from 'url';
 
 import styles from './ConnectSpotifyScreen.styles';
@@ -13,23 +13,55 @@ import { RegisterSpotifyAuthCodeMutation } from '../../../graphql/requests/Spoti
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import DropdownAlert from 'react-native-dropdownalert';
 
-export default class ConnectSpotifyScreen extends React.Component {
+export type Props = {};
+
+type State = {
+  code: string;
+};
+
+export default class ConnectSpotifyScreen extends React.Component<
+  Props,
+  State
+> {
   dropdown: DropdownAlert;
 
-  async handleOpenSpotifyAuthView(): Promise<string> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      code: '',
+    };
+
+    this.handleRedirect = this.handleRedirect.bind(this);
+  }
+
+  handleOpenSpotifyAuthView() {
     const scope =
       'user-read-private+user-library-read+user-read-email+playlist-modify-public+playlist-modify-private';
     const responseType = 'code';
     const clientID = 'e5149b4616b84918911f9419a279d23b';
-    const redirectURI = 'http://app.playroll.io';
+    const redirectURI = `http://app.playroll.io`;
     const authParams = `client_id=${clientID}&redirect_uri=${redirectURI}&response_type=${responseType}&scope=${scope}`;
     const uri = `https://accounts.spotify.com/authorize?${authParams}`;
-    let result = await WebBrowser.openAuthSessionAsync(uri);
-    if (result.type === 'success') {
+    WebBrowser.openBrowserAsync(uri);
+  }
+
+  handleRedirect(result) {
+    console.log(result);
+    if (result.url) {
+      WebBrowser.dismissBrowser();
       const obj = url.parse(result.url, true);
-      return obj.query.code;
+      this.setState({ code: obj.query.code });
+    } else {
+      throw 'Error connecting to spotify';
     }
-    throw 'Error connecting to spotify';
+  }
+
+  componentDidMount() {
+    Linking.addEventListener('url', this.handleRedirect);
+  }
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleRedirect);
   }
 
   render() {
@@ -43,27 +75,34 @@ export default class ConnectSpotifyScreen extends React.Component {
             />
             <RegisterSpotifyAuthCodeMutation>
               {registerSpotifyAuthCode => {
+                const { code: stateCode } = this.state;
+                if (stateCode !== '') {
+                  this.setState({ code: '' }, async () => {
+                    try {
+                      await registerSpotifyAuthCode({
+                        variables: { code: stateCode },
+                      });
+                      this.dropdown.alertWithType(
+                        'info',
+                        'Success',
+                        'Successfully Connected Your Spotify Account!'
+                      );
+                    } catch (err) {
+                      console.log(err);
+                      this.dropdown.alertWithType(
+                        'error',
+                        'Error',
+                        "We're sorry, Please try again."
+                      );
+                    }
+                  });
+                }
                 return (
                   <Button
                     title='Connect to Spotify'
                     containerStyle={styles.connectButton}
-                    onPress={async () => {
-                      try {
-                        const code = await this.handleOpenSpotifyAuthView();
-                        registerSpotifyAuthCode({ variables: { code } });
-                        return this.dropdown.alertWithType(
-                          'info',
-                          'Success',
-                          'Successfully Connected Your Spotify Account!'
-                        );
-                      } catch (err) {
-                        console.log(err);
-                        return this.dropdown.alertWithType(
-                          'error',
-                          'Error',
-                          "We're sorry, Please try again." + err
-                        );
-                      }
+                    onPress={() => {
+                      this.handleOpenSpotifyAuthView();
                     }}
                   />
                 );

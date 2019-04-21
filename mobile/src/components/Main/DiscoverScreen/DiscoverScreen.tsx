@@ -62,19 +62,13 @@ export default class DiscoverScreen extends React.Component<Props, State> {
           />
 
           <HorizontalPlaceholderList
-            title={'Featured Rolls'}
+            title={'New Releases'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />
 
           <HorizontalPlaceholderList
             title={'Popular Playrolls'}
-            numItems={5}
-            overlayText={'Coming Soon...'}
-          />
-
-          <HorizontalPlaceholderList
-            title={'New Releases'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />

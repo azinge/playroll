@@ -45,14 +45,14 @@ export default class HomeScreen extends React.Component<Props, State> {
           /> */}
 
           <HorizontalPlaceholderList
-            title={'Made For You'}
+            title={'New Releases'}
             numItems={5}
             overlayText={'Coming Soon...'}
           />
 
           <PlaceholderList
-            title={'Suggested Items'}
-            numItems={5}
+            title={'Popular Playrolls'}
+            numItems={3}
             overlayText={'Coming Soon...'}
           />
         </View>

@@ -22,7 +22,7 @@ export default class MusicServiceSettingsScreen extends React.Component {
           }}
         >
           {/* Default Music Service */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('');
             }}
@@ -31,7 +31,7 @@ export default class MusicServiceSettingsScreen extends React.Component {
               <Text style={styles.enabledText}>Default Music Service</Text>
               <Text style={styles.defaultServiceText}>Spotify</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Spotify Settings */}
           <TouchableOpacity
@@ -45,7 +45,7 @@ export default class MusicServiceSettingsScreen extends React.Component {
           </TouchableOpacity>
 
           {/* Apple Music Settings */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('AppleMusicSettings');
             }}
@@ -53,10 +53,10 @@ export default class MusicServiceSettingsScreen extends React.Component {
             <View style={styles.textContainer}>
               <Text style={styles.enabledText}>Apple Music</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* YouTube Settings */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('YouTubeSettings');
             }}
@@ -64,7 +64,7 @@ export default class MusicServiceSettingsScreen extends React.Component {
             <View style={styles.textContainer}>
               <Text style={styles.enabledText}>YouTube</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {/* <Button
           title="Spotify Settings"

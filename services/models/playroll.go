@@ -48,6 +48,45 @@ func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	return playrolls, nil
 }
 
+func ClonePlayroll(oldPlayroll *Playroll, userID uint, db *gorm.DB) (*PlayrollOutput, error) {
+	tx := db.Begin()
+	playrollInput := PlayrollInput{Name: oldPlayroll.Name}
+	playrollModel, err := PlayrollInputToModel(&playrollInput)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	playrollModel.UserID = userID
+
+	tDAO := InitPlayrollDAO(tx)
+	rawPlayroll, err := tDAO.Create(playrollModel)
+	if err != nil {
+		return nil, err
+	}
+	playrollOutput, err := FormatPlayroll(rawPlayroll)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	rDAO := InitRollDAO(tx)
+	for _, oldRoll := range oldPlayroll.Rolls {
+		roll := &Roll{}
+		roll.PlayrollID = playrollOutput.ID
+		roll.Order = oldRoll.Order
+		roll.Data = oldRoll.Data
+		_, err = rDAO.Create(roll)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, err
+	}
+	return playrollOutput, nil
+}
+
 // Entity Specific Methods
 
 func PlayrollInputToModel(pi *PlayrollInput) (*Playroll, error) {

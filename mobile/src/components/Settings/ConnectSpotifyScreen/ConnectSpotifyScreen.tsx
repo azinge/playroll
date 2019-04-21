@@ -11,8 +11,11 @@ import url from 'url';
 import styles from './ConnectSpotifyScreen.styles';
 import { RegisterSpotifyAuthCodeMutation } from '../../../graphql/requests/Spotify/RegisterSpotifyAuthCodeMutation';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import DropdownAlert from 'react-native-dropdownalert';
 
 export default class ConnectSpotifyScreen extends React.Component {
+  dropdown: DropdownAlert;
+
   async handleOpenSpotifyAuthView(): Promise<string> {
     const scope =
       'user-read-private+user-library-read+user-read-email+playlist-modify-public+playlist-modify-private';
@@ -31,32 +34,45 @@ export default class ConnectSpotifyScreen extends React.Component {
 
   render() {
     return (
-      <SubScreenContainer title='Connect to Spotify' modal>
-        <View style={{ alignItems: 'center' }}>
-          <Image
-            style={styles.spotifyIcon}
-            source={require('../../../assets/spotifyIcon.png')}
-          />
-          <RegisterSpotifyAuthCodeMutation>
-            {registerSpotifyAuthCode => {
-              return (
-                <Button
-                  title='Connect to Spotify'
-                  containerStyle={styles.connectButton}
-                  onPress={async () => {
-                    try {
-                      const code = await this.handleOpenSpotifyAuthView();
-                      registerSpotifyAuthCode({ variables: { code } });
-                    } catch (err) {
-                      console.log(err);
-                    }
-                  }}
-                />
-              );
-            }}
-          </RegisterSpotifyAuthCodeMutation>
-        </View>
-      </SubScreenContainer>
+      <View style={{ flex: 1 }}>
+        <SubScreenContainer title='Connect to Spotify' modal>
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              style={styles.spotifyIcon}
+              source={require('../../../assets/spotifyIcon.png')}
+            />
+            <RegisterSpotifyAuthCodeMutation>
+              {registerSpotifyAuthCode => {
+                return (
+                  <Button
+                    title='Connect to Spotify'
+                    containerStyle={styles.connectButton}
+                    onPress={async () => {
+                      try {
+                        const code = await this.handleOpenSpotifyAuthView();
+                        registerSpotifyAuthCode({ variables: { code } });
+                        return this.dropdown.alertWithType(
+                          'info',
+                          'Success',
+                          'Successfully Connected Your Spotify Account!'
+                        );
+                      } catch (err) {
+                        console.log(err);
+                        return this.dropdown.alertWithType(
+                          'error',
+                          'Error',
+                          "We're sorry, Please try again." + err
+                        );
+                      }
+                    }}
+                  />
+                );
+              }}
+            </RegisterSpotifyAuthCodeMutation>
+          </View>
+        </SubScreenContainer>
+        <DropdownAlert ref={ref => (this.dropdown = ref)} />
+      </View>
     );
   }
 }

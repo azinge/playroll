@@ -29,18 +29,19 @@ export default class SearchSubHeader extends React.Component<Props, State> {
 
   render() {
     return (
-      <SearchBar
-        placeholder='Search'
-        lightTheme
-        onChangeText={this.updateSearch}
-        value={this.state.search}
-        containerStyle={{
-          //   backgroundColor: 'purple',
-          borderBottomWidth: 0,
-          borderTopWidth: 0,
-        }}
-        // inputContainerStyle={{ backgroundColor: 'white' }}
-      />
+      //   <SearchBar
+      //     placeholder='Search'
+      //     lightTheme
+      //     onChangeText={this.updateSearch}
+      //     value={this.state.search}
+      //     containerStyle={{
+      //       //   backgroundColor: 'purple',
+      //       borderBottomWidth: 0,
+      //       borderTopWidth: 0,
+      //     }}
+      //     // inputContainerStyle={{ backgroundColor: 'white' }}
+      //   />
+      <View />
     );
   }
 }

@@ -10,6 +10,15 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
+// type RelationshipStatus string
+
+// const (
+// 	Friend                RelationshipStatus = "Friend"
+// 	FriendRequestSent     RelationshipStatus = "Friend Request Sent"
+// 	FriendRequestReceived RelationshipStatus = "Friend Request Received"
+// 	FriendRequestIgnored  RelationshipStatus = "Friend Request Ignored"
+// )
+
 // RelationshipMethods defines the types for all relationship methods.
 type RelationshipMethods struct {
 	GetRelationship     *gqltag.Query    `gql:"relationship(id: ID): Relationship"`
@@ -186,6 +195,10 @@ var sendFriendRequest = gqltag.Method{
 
 		otherUserID := utils.StringIDToNumber(params.UserID)
 
+		if user.ID == otherUserID {
+			return nil, fmt.Errorf("Same User")
+		}
+
 		r1 := &models.Relationship{}
 		if err := mctx.DB.Where(&models.Relationship{UserID: user.ID, OtherUserID: otherUserID}).FirstOrCreate(r1).Error; err != nil {
 			fmt.Println(err)
@@ -206,7 +219,7 @@ var sendFriendRequest = gqltag.Method{
 			return nil, fmt.Errorf("Already Friends")
 		}
 
-		if r1.Status == "Friend Request Sent" || r2.Status == "Friend Request Recieved" || r2.Status == "Friend Request Ignored" {
+		if r1.Status == "Friend Request Sent" || r2.Status == "Friend Request Received" || r2.Status == "Friend Request Ignored" {
 			return nil, fmt.Errorf("Friend Request Already Sent")
 		}
 
@@ -260,8 +273,8 @@ var acceptFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
-		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Recieved" {
-			return nil, fmt.Errorf("No Friend Request Recieved")
+		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Received" {
+			return nil, fmt.Errorf("No Friend Request Received")
 		}
 
 		if r1.Status == "Friend" || r2.Status == "Friend" {
@@ -322,8 +335,8 @@ var ignoreFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
-		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Recieved" {
-			return nil, fmt.Errorf("No Friend Request Recieved")
+		if r2.Status != "Friend Request Sent" || r1.Status != "Friend Request Received" {
+			return nil, fmt.Errorf("No Friend Request Received")
 		}
 
 		if r1.Status == "Friend" || r2.Status == "Friend" {

@@ -31,7 +31,7 @@ export default class FriendCard extends React.Component<Props, State> {
     return (
       <UnfriendUserMutation
         variables={{ userID: friend.id }}
-        refetchQueries={[LIST_FRIENDS]}
+        refetchQueries={() => [LIST_FRIENDS]}
       >
         {(unfriendUser, { loading }) => {
           return (

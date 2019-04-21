@@ -137,7 +137,7 @@ export default class CreateModal extends React.Component<Props, State> {
                 onCompleted={() => {
                   this.props.closeModal(true);
                 }}
-                refetchQueries={[GET_CURRENT_USER_PLAYROLL]}
+                refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
               >
                 {(createRoll, { data }) => (
                   <TouchableHighlight

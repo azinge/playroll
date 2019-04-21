@@ -65,7 +65,9 @@ export default class RollList extends React.Component<Props, State> {
           color='purple'
           iconStyle={styles.rowIcon}
         />
-        <Text style={[styles.text, styles.artistName]}>{mainSource.name}</Text>
+        <Text style={[styles.text, styles.artistName]} numberOfLines={1}>
+          {mainSource.name}
+        </Text>
       </View>
     );
 

@@ -104,7 +104,7 @@ export default class BrowseFriendRequestsScreen extends React.Component<
     return (
       <AcceptFriendRequestMutation
         variables={{ userID }}
-        refetchQueries={[LIST_FRIEND_REQUESTS, LIST_FRIENDS]}
+        refetchQueries={() => [LIST_FRIEND_REQUESTS, LIST_FRIENDS]}
       >
         {(acceptFriendRequest, { loading }) => {
           return loading ? (
@@ -129,7 +129,7 @@ export default class BrowseFriendRequestsScreen extends React.Component<
     return (
       <IgnoreFriendRequestMutation
         variables={{ userID }}
-        refetchQueries={[LIST_FRIEND_REQUESTS, LIST_FRIENDS]}
+        refetchQueries={() => [LIST_FRIEND_REQUESTS, LIST_FRIENDS]}
       >
         {(ignoreFriendRequest, { loading }) => {
           return loading ? (

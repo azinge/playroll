@@ -10,7 +10,6 @@ import styles from './RecommendationCard.styles';
 import { Recommendation } from '../../../../graphql/types';
 import { Icon } from 'react-native-elements';
 import NavigationService from '../../../../services/NavigationService';
-import ManageRollScreen from '../../../Search/ManageRollScreen';
 import { DismissRecommendationMutation } from '../../../../graphql/requests/Recommendation/DismissRecommendationMutation';
 import { LIST_CURRENT_USER_RECOMMENDATIONS } from '../../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
 
@@ -32,7 +31,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
     return (
       <DismissRecommendationMutation
         variables={{ recommendationID: recommendation.id }}
-        refetchQueries={[LIST_CURRENT_USER_RECOMMENDATIONS]}
+        refetchQueries={() => [LIST_CURRENT_USER_RECOMMENDATIONS]}
       >
         {dismissRecommendation => {
           return (

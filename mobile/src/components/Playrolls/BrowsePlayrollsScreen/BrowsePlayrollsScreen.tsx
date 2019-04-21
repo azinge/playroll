@@ -140,7 +140,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             playroll,
           });
         }}
-        refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+        refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
       >
         {createPlayroll => {
           const addPlayrollIcon = {
@@ -176,7 +176,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             playroll,
           });
         }}
-        refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+        refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
       >
         {createPlayroll => {
           return (

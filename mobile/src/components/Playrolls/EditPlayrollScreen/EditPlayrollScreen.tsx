@@ -306,7 +306,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
 
   renderNewRollButton(playroll) {
     return (
-      <CreateRollMutation refetchQueries={[GET_CURRENT_USER_PLAYROLL]}>
+      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
         {(createRoll, { data }) => (
           <FooterButton
             title={'Add a Roll'}

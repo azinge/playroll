@@ -99,6 +99,7 @@ export default class SearchScreenHeader extends React.Component<Props, State> {
                   }
                 }}
                 placeholderTextColor={'grey'}
+                autoCapitalize={'none'}
                 placeholder={this.props.title}
               />
               <Icon

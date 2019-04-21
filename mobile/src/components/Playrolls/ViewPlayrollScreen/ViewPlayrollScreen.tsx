@@ -140,6 +140,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       <RollList
         rolls={playroll.rolls || []}
         // onPress={() => {}}
+        readOnly
       />
     );
   }

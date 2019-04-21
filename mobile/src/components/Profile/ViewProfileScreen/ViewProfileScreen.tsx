@@ -16,7 +16,7 @@ import {
 import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import { Button, ListItem } from 'react-native-elements';
-import { Playroll } from '../../../graphql/types';
+import { Playroll, User } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
@@ -26,65 +26,208 @@ import {
   CreatePlayrollMutation,
 } from '../../../graphql/requests/Playroll/';
 import NavigationService from '../../../services/NavigationService';
+import { GetUserQuery } from '../../../graphql/requests/User/GetUserQuery';
+import { NavigationScreenProp } from 'react-navigation';
+import ManageRelationshipButton from './ManageRelationshipButton';
 
-export default class ViewProfileScreen extends React.Component {
-  _renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
-      onPress={() =>
-        NavigationService.navigate('ViewPlayroll', { playroll: item })
-      }
-    >
-      <ListItem
-        title={item.name}
-        titleStyle={{ color: 'purple' }}
-        subtitle={item.type}
-        leftAvatar={{
-          source: { uri: item.cover },
-        }}
-        containerStyle={{
-          borderColor: 'white',
-          borderRadius: 10,
-          shadowColor: 'gray',
-          shadowOffset: {
-            width: 2,
-            height: 1,
-          },
-          shadowRadius: 3,
-          shadowOpacity: 0.2,
-          overflow: 'visible',
-        }}
-      />
-    </TouchableOpacity>
-  )
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+
+export default class ViewProfileScreen extends React.Component<Props, State> {
+  _renderItem = ({ item }: { item: Playroll }) => {
+    let image = '';
+
+    if (
+      item.rolls &&
+      item.rolls.length > 0 &&
+      item.rolls[0].data &&
+      item.rolls[0].data.sources &&
+      item.rolls[0].data.sources.length > 0
+    ) {
+      image = item.rolls[0].data.sources[0].cover;
+    }
+
+    return (
+      <TouchableOpacity
+        style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
+        onPress={() =>
+          NavigationService.navigate('ViewPlayroll', { playroll: item })
+        }
+      >
+        <ListItem
+          title={item.name}
+          titleStyle={{ color: 'purple' }}
+          leftAvatar={{
+            source: { uri: image },
+          }}
+          containerStyle={{
+            borderColor: 'white',
+            borderRadius: 10,
+            shadowColor: 'gray',
+            shadowOffset: {
+              width: 2,
+              height: 1,
+            },
+            shadowRadius: 3,
+            shadowOpacity: 0.2,
+            overflow: 'visible',
+          }}
+        />
+      </TouchableOpacity>
+    );
+  }
 
   render() {
-    const extractPlayrolls = data => {
-      if (
-        Object.keys(data).length === 0 ||
-        Object.keys(data.private).length === 0
-      ) {
-        return [];
-      }
-      return data.private.listCurrentUserPlayrolls;
-    };
+    const userID =
+      this.props.navigation && this.props.navigation.getParam('userID');
     return (
       <View style={{ flex: 1 }}>
-        <GetCurrentUserQuery>
+        <GetUserQuery variables={{ id: userID }}>
           {({ loading, error, data }) => {
             if (loading || error || Object.keys(data).length === 0) {
-              return <ProfileScreenContainer title='ViewProfile' />;
+              return (
+                <ProfileScreenContainer
+                  title='View Profile'
+                  image={{ uri: '' }}
+                  refreshing={loading}
+                />
+              );
             }
-            const currentUser = (data && data.private.currentUser) || {};
+            const user = (data && data.private.user) || {};
             return (
               <ProfileScreenContainer
-                title={'ViewProfile'}
-                image={{ uri: currentUser.avatar }}
-                name={currentUser.name}
-              />
+                title={'View Profile'}
+                image={{ uri: '' }}
+                name={user.name}
+                userID={userID}
+                refreshing={true}
+              >
+                {this.renderContent(user)}
+              </ProfileScreenContainer>
             );
           }}
-        </GetCurrentUserQuery>
+        </GetUserQuery>
+      </View>
+    );
+  }
+
+  renderContent(user: User) {
+    // const extractPlayrolls = data => {
+    //   if (
+    //     Object.keys(data).length === 0 ||
+    //     Object.keys(data.private).length === 0
+    //   ) {
+    //     return [];
+    //   }
+    //   return data.private.listCurrentUserPlayrolls;
+    // };
+    const relationshipID =
+      user && user.relationships && user.relationships.length > 0
+        ? user.relationships[0].id
+        : undefined;
+    return (
+      <View
+        style={{ width: '100%', top: 120, marginBottom: '35%', height: '80%' }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: 'center', marginVertical: 10 }}>
+            <Image
+              source={{ uri: user.avatar }}
+              style={{
+                height: 100,
+                width: 100,
+                borderRadius: 50,
+              }}
+            />
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 20,
+                color: '#993399',
+                top: 5,
+              }}
+            >
+              {user.name}
+            </Text>
+          </View>
+          <ManageRelationshipButton
+            user={user}
+            relationshipID={relationshipID}
+          />
+          {/* <Button
+                linearGradientProps={{
+                  colors: ['#DA22FF', '#00c6ff'],
+                  start: { x: 0 },
+                  end: { x: 1 },
+                }}
+                containerStyle={{
+                  borderRadius: 80,
+                  width: '75%',
+                  position: 'absolute',
+                  top: 20,
+                  // bottom: 5,
+                  height: 50,
+                }}
+                buttonStyle={{ borderRadius: 80, height: 50 }}
+                raised
+                title={'Create New Playroll'}
+                titleStyle={{ fontWeight: 'bold' }}
+                onPress={() => {
+                  // createPlayroll();
+                }}
+              /> */}
+        </View>
+        <View style={{ padding: 10 }}>
+          <PlaceholderList
+            title={`${user.name}'s Playrolls`}
+            numItems={10}
+            overlayText={'Coming Soon...'}
+          />
+        </View>
+        {/*
+        <ListCurrentUserPlayrollsQuery>
+          {({ loading, error, data }) => {
+            const playrolls = extractPlayrolls(data);
+            const success = !loading && !error;
+            return (
+              <View
+                style={
+                  {
+                    // flex: 1,
+                    // paddingBottom: 50
+                    // TODO(ianlizzo): Fix this pls
+                  }
+                }
+              >
+                <View style={{ paddingTop: 20 }}>
+                  <FlatList
+                    data={playrolls}
+                    keyExtractor={(item, index) => item.id}
+                    renderItem={this._renderItem}
+                    contentContainerStyle={{ paddingBottom: 50 }}
+                    // style={{height: '100%'}}
+                  />
+                  {loading && (
+                    <ActivityIndicator
+                      color={'gray'}
+                      style={{ paddingTop: 50 }}
+                    />
+                  )}
+                  {error && (
+                    <Text style={{ paddingTop: 50 }}>
+                      Error Loading Playrolls
+                    </Text>
+                  )}
+                  <View style={{ margin: 10 }} />
+                  {playrolls.length === 0 && <Text> No Playrolls added</Text>}
+                </View>
+              </View>
+            );
+          }}
+        </ListCurrentUserPlayrollsQuery> */}
       </View>
     );
   }

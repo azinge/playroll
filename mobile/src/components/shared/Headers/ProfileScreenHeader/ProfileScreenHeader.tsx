@@ -15,7 +15,6 @@ export interface Props {
   title?: string;
   modal?: boolean;
   icons?: HeaderIconType[];
-  image?: any;
   local?: boolean;
 }
 
@@ -42,8 +41,11 @@ export default class ProfileScreenHeader extends React.Component<Props, State> {
         <Header
           backgroundColor='white'
           placement='right'
-          backgroundImage={{ uri: 'https://imgc.artprintimages.com/img/print/scenic-view-of-a-waterfall-on-havasu-creek_u-l-p3lch50.jpg?h=550&w=550'}}
-          containerStyle={{ borderBottomWidth: 0, height: 300}}
+          backgroundImage={{
+            uri:
+              'https://imgc.artprintimages.com/img/print/scenic-view-of-a-waterfall-on-havasu-creek_u-l-p3lch50.jpg?h=550&w=550',
+          }}
+          containerStyle={{ borderBottomWidth: 0, height: 300 }}
           leftComponent={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
@@ -57,19 +59,18 @@ export default class ProfileScreenHeader extends React.Component<Props, State> {
               <Text style={styles.headerTitle}>{this.props.title}</Text>
             </View>
           }
-          centerComponent={<Image source={{uri: this.props.image.uri }} style={{ height: 100, width: 100, position: 'absolute', top: "30%", right: '118%', borderRadius: 50 }}/>}
-
           rightComponent={
             <View style={{ flexDirection: 'row' }}>
-              {this.props.local && 
-              <Icon
-                name='pencil'
-                type='material-community'
-                color='white'
-                underlayColor='rgba(255,255,255,0)'
-                //onPress={() => }
-                containerStyle={{ marginTop: 5, marginRight: 4 }}
-              />}
+              {this.props.local && (
+                <Icon
+                  name='pencil'
+                  type='material-community'
+                  color='white'
+                  underlayColor='rgba(255,255,255,0)'
+                  // onPress={() => }
+                  containerStyle={{ marginTop: 5, marginRight: 4 }}
+                />
+              )}
             </View>
           }
         />

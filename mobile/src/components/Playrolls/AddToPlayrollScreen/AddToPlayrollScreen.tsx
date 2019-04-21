@@ -16,6 +16,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import { NavigationScreenProp } from 'react-navigation';
 import { RollData } from '../../../graphql/types';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -66,6 +67,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
                 contentContainerStyle={{ marginTop: 10 }}
                 modal
               >
+                <SearchSubHeader />
                 {this.renderPlayrolls(playrolls)}
               </SubScreenContainer>
               <DropdownAlert ref={ref => (this.dropdown = ref)} />
@@ -103,7 +105,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
 
   renderPlayrolls(playrolls) {
     return (
-      <CreateRollMutation refetchQueries={[GET_CURRENT_USER_PLAYROLL]}>
+      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
         {(createRoll, { loading, error, data }) => {
           return (
             <PlayrollList

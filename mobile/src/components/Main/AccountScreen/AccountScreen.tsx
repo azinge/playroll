@@ -36,11 +36,11 @@ export default class AccountScreen extends React.Component<Props, State> {
       <GetCurrentUserQuery>
         {({ loading, error, data }) => {
           if (loading || error || Object.keys(data).length === 0) {
-            return <SubScreenContainer title='My Account' />;
+            return <SubScreenContainer title='My Account' modal />;
           }
           const currentUser = (data && data.private.currentUser) || {};
           return (
-            <SubScreenContainer title='My Account'>
+            <SubScreenContainer title='My Account' modal>
               <View
                 style={{
                   marginLeft: 15,
@@ -88,7 +88,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                 </TouchableOpacity>
 
                 {/* View Friends */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
                     NavigationService.navigate('BrowseFriends');
                   }}
@@ -96,7 +96,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                   <View style={styles.textContainer}>
                     <Text style={styles.disabledText}>View Friends</Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 {/* Settings */}
                 <TouchableOpacity

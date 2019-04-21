@@ -47,6 +47,11 @@ export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
                     data.private &&
                     data.private.listSpotifyPlaylistTracks
                   }
+                  onPress={musicSource => {
+                    NavigationService.navigate('ManageRoll', {
+                      currentSource: musicSource,
+                    });
+                  }}
                 />
               </View>
             );

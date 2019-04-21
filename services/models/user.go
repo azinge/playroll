@@ -19,7 +19,7 @@ type User struct {
 	Playrolls               []Playroll
 	IdentityCredentials     []IdentityCredential
 	MusicServiceCredentials []MusicServiceCredential
-	Relationships           []Relationship
+	Relationships           []Relationship `gorm:"foreignkey:OtherUserID"`
 	Recommendations         []Recommendation
 	DiscoveryQueues         []DiscoveryQueue
 }

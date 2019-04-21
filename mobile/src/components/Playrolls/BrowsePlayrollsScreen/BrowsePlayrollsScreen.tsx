@@ -23,6 +23,8 @@ import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 
 import styles from './BrowsePlayrollsScreen.styles';
+import FooterButton from '../../shared/Buttons/FooterButton';
+import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -30,7 +32,6 @@ export interface Props {
 
 interface State {
   addPlayrollName: string;
-  search: string;
 }
 
 export default class BrowsePlayrollsScreen extends React.Component<
@@ -41,13 +42,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
     super(props);
     this.state = {
       addPlayrollName: '',
-      search: '',
     };
     this.renderHeader = this.renderHeader.bind(this);
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
   }
 
   render() {
@@ -60,7 +56,6 @@ export default class BrowsePlayrollsScreen extends React.Component<
       }
       return data.private.listCurrentUserPlayrolls;
     };
-    const { search } = this.state;
     return (
       <ListCurrentUserPlayrollsQuery>
         {({ loading, error, data }) => {
@@ -82,20 +77,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   hideBottomBar
                   keyExtractor={item => item.id}
                   renderFlatListHeader={() => {
-                    return (
-                      <SearchBar
-                        placeholder='Search playrolls'
-                        lightTheme
-                        onChangeText={this.updateSearch}
-                        value={search}
-                        containerStyle={{
-                          //   backgroundColor: 'purple',
-                          borderBottomWidth: 0,
-                          borderTopWidth: 0,
-                        }}
-                        // inputContainerStyle={{ backgroundColor: 'white' }}
-                      />
-                    );
+                    return <SearchSubHeader />;
                   }}
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
@@ -158,7 +140,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             playroll,
           });
         }}
-        refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+        refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
       >
         {createPlayroll => {
           const addPlayrollIcon = {
@@ -194,40 +176,16 @@ export default class BrowsePlayrollsScreen extends React.Component<
             playroll,
           });
         }}
-        refetchQueries={[LIST_CURRENT_USER_PLAYROLLS]}
+        refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
       >
         {createPlayroll => {
           return (
-            <View
-              style={{
-                bottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                // marginBottom: 20,
+            <FooterButton
+              title={'Create New Playroll'}
+              onPress={() => {
+                createPlayroll();
               }}
-            >
-              <Button
-                // linearGradientProps={{
-                //   colors: ['purple', '#4A00E0'],
-                //   start: { x: 0 },
-                //   end: { x: 1 },
-                // }}
-                containerStyle={{
-                  borderRadius: 80,
-                  width: '75%',
-                  position: 'absolute',
-                  bottom: 5,
-                  height: 50,
-                }}
-                buttonStyle={{ borderRadius: 80, height: 50 }}
-                raised
-                title={'Create New Playroll'}
-                titleStyle={{ fontWeight: 'bold' }}
-                onPress={() => {
-                  createPlayroll();
-                }}
-              />
-            </View>
+            />
           );
         }}
       </CreatePlayrollMutation>

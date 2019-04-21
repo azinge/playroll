@@ -19,6 +19,7 @@ import {
 import NavigationService from '../../../services/NavigationService';
 import LinearGradient from 'expo'; // Only if no expo
 import TouchableScale from 'expo';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
 export default class DefaultMusicScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -181,6 +182,110 @@ export default class DefaultMusicScreen extends React.Component {
               }
             }}
           </CurrentUserSpotifyStatusQuery>
+        </View>
+        <View
+          style={{
+            overflow: 'visible',
+            margin: 10,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginBottom: 5,
+              left: 2,
+              alignItems: 'center',
+            }}
+          >
+            <Icon
+              type='material-community'
+              name='apple'
+              color='black'
+              size={30}
+            />
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: 'bold',
+                fontSize: 24,
+                left: 3,
+              }}
+            >
+              Apple Music
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  color: 'darkgray',
+                  // fontWeight: 'bold',
+                  fontSize: 18,
+                  textAlignVertical: 'center',
+                  textAlign: 'right',
+
+                  // TODO: figure out a better way to position this
+                }}
+                onPress={() =>
+                  NavigationService.navigate('BrowseAppleMusicPlaylists')
+                }
+              >
+                See all...
+              </Text>
+            </View>
+          </View>
+          <PlaceholderList numItems={3} overlayText={'Coming Soon...'} />
+        </View>
+        <View
+          style={{
+            overflow: 'visible',
+            margin: 10,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginBottom: 5,
+              left: 2,
+              alignItems: 'center',
+            }}
+          >
+            <Icon
+              type='material-community'
+              name='youtube'
+              color='black'
+              size={30}
+            />
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: 'bold',
+                fontSize: 24,
+                left: 3,
+              }}
+            >
+              YouTube
+            </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  color: 'darkgray',
+                  // fontWeight: 'bold',
+                  fontSize: 18,
+                  textAlignVertical: 'center',
+                  textAlign: 'right',
+
+                  // TODO: figure out a better way to position this
+                }}
+                onPress={() =>
+                  NavigationService.navigate('BrowseYouTubePlaylists')
+                }
+              >
+                See all...
+              </Text>
+            </View>
+          </View>
+          <PlaceholderList numItems={3} overlayText={'Coming Soon...'} />
         </View>
       </MainScreenContainer>
     );

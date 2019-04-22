@@ -30,6 +30,7 @@ import HorizontalRule from '../../Text/HorizontalRule';
 export interface Props {
   playroll?: Playroll;
   onPress?: (playroll) => void;
+  hideCreator?: boolean;
 }
 
 interface State {}
@@ -60,6 +61,14 @@ export default class PlayrollCard extends React.Component<Props, State> {
         {({ loading, error, data }) => {
           const playroll: any =
             (data && data.private.currentUserPlayroll) || {};
+          let creator = '';
+          if (playroll.user && playroll.user.name) {
+            if (playroll.user.accountType === 'Managed') {
+              creator = 'Playroll';
+            } else {
+              creator = playroll.user.name;
+            }
+          }
           return (
             <TouchableHighlight
               style={{ marginHorizontal: 15 }}
@@ -92,6 +101,11 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     <Heading type={'h6'} alignment={'left'}>
                       {playroll.name}
                     </Heading>
+                    {!this.props.hideCreator && (
+                      <Heading type={'h9'} alignment={'left'} color={'grey'}>
+                        By {creator}
+                      </Heading>
+                    )}
                   </View>
                 </View>
                 <HorizontalRule />

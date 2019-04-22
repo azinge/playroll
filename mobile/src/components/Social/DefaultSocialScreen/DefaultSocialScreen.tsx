@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Image,
 } from 'react-native';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
@@ -19,9 +20,23 @@ import RecommendationList from '../../shared/Lists/RecommendationList';
 import Heading from '../../shared/Text/Heading';
 import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
 import NavigationService from '../../../services/NavigationService';
+import { ListFriendsPlayrollsQuery } from '../../../graphql/requests/Playroll/ListFriendsPlayrollsQuery';
+import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
+import { ListFriendsQuery } from '../../../graphql/requests/Relationships';
+import { Playroll, User } from '../../../graphql/types';
 
 export default class DefaultSocialScreen extends React.Component {
   render() {
+    const extractFriends = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listFriends;
+    };
     const extractRecommendations = data => {
       if (
         Object.keys(data).length === 0 ||
@@ -30,6 +45,15 @@ export default class DefaultSocialScreen extends React.Component {
         return [];
       }
       return data.private.listCurrentUserRecommendations;
+    };
+    const extractFriendsPlayrolls = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listFriendsPlayrolls;
     };
     return (
       <ListCurrentUserRecommendationsQuery>
@@ -60,24 +84,46 @@ export default class DefaultSocialScreen extends React.Component {
                   </Heading>
                 </View>
                 <View>
-                  <FlatList
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    data={Array(10).fill('')}
-                    keyExtractor={(_, i) => `${i}`}
-                    renderItem={() => (
-                      <View
-                        style={{
-                          width: 50,
-                          height: 50,
-                          marginHorizontal: 10,
-                          backgroundColor: 'lightgrey',
-                          borderRadius: 25,
-                          opacity: 0.5,
-                        }}
-                      />
-                    )}
-                  />
+                  <ListFriendsQuery>
+                    {({ data, loading, error }) => {
+                      if (loading) {
+                        return <ActivityIndicator />;
+                      }
+                      const friends = extractFriends(data);
+                      return (
+                        <FlatList
+                          horizontal={true}
+                          showsHorizontalScrollIndicator={false}
+                          data={friends.slice(0, 20)}
+                          keyExtractor={(_, i) => `${i}`}
+                          renderItem={({ item: friend }: { item: User }) => (
+                            <TouchableOpacity
+                              onPress={() => {
+                                NavigationService.navigate('ViewProfile', {
+                                  userID: friend.id,
+                                });
+                              }}
+                            >
+                              <View>
+                                <Image
+                                  source={{ uri: friend.avatar }}
+                                  style={{
+                                    width: 50,
+                                    height: 50,
+                                    marginHorizontal: 10,
+                                    borderRadius: 25,
+                                    borderWidth: 1,
+                                    borderColor: '#af00bc99',
+                                  }}
+                                />
+                                <Heading type={'h10'}>{friend.name}</Heading>
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      );
+                    }}
+                  </ListFriendsQuery>
                 </View>
               </View>
               <View style={{ margin: 10, flexDirection: 'row' }}>
@@ -94,18 +140,32 @@ export default class DefaultSocialScreen extends React.Component {
                   alignment={'right'}
                   opacity={0.7}
                   style={{ flex: 1 }}
-                  disabled
+                  onPress={() => {
+                    NavigationService.navigate('BrowseFriendsPlayrolls');
+                  }}
                 >
                   See All..
                 </Heading>
               </View>
 
-              <View style={{ height: 175 }}>
-                <HorizontalPlaceholderList
-                  numItems={10}
-                  overlayText={'Coming Soon...'}
-                />
-              </View>
+              <ListFriendsPlayrollsQuery>
+                {({ data, loading, error }) => {
+                  if (loading) {
+                    return <ActivityIndicator />;
+                  }
+                  const playrolls = extractFriendsPlayrolls(data);
+                  return (
+                    <HorizontalPlayrollList
+                      playrolls={playrolls.slice(0, 5)}
+                      onPress={playroll => {
+                        NavigationService.navigate('ViewExternalPlayroll', {
+                          playroll,
+                        });
+                      }}
+                    />
+                  );
+                }}
+              </ListFriendsPlayrollsQuery>
 
               <View>
                 <View style={{ margin: 10, flexDirection: 'row' }}>
@@ -137,7 +197,7 @@ export default class DefaultSocialScreen extends React.Component {
                 )}
                 {!loading && (
                   <RecommendationList
-                    recommendations={recommendations}
+                    recommendations={recommendations.slice(0, 5)}
                     onPress={() => {}}
                   />
                 )}

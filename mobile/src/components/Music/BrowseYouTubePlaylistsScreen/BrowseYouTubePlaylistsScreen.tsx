@@ -3,20 +3,24 @@
  */
 
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
+import PlaceholderList from '../../shared/Lists/PlaceholderList';
 
-import styles from './BrowseYouTubePlaylistsScreen.styles';
-
-export interface Props {}
-
-interface State {}
-
-export default class BrowseYouTubePlaylistsScreen extends React.Component<Props, State> {
+export default class BrowseYouTubePlaylistsScreen extends React.Component {
   render() {
     return (
-      <View>
-        <Text>BrowseYouTubePlaylistsScreen</Text>
-      </View>
+      <SubScreenContainer
+        title={'My YouTube Playlists'}
+        contentContainerStyle={{ marginTop: 10 }}
+      >
+        <PlaceholderList numItems={20} overlayText={'Coming Soon...'} />
+      </SubScreenContainer>
     );
+    // return (
+    //   <SubScreenContainer title='My YouTube Playlists'>
+    //     <Text>BrowseYouTubePlaylistsScreen</Text>
+    //   </SubScreenContainer>
+    // );
   }
 }

@@ -16,6 +16,9 @@ const cache = new InMemoryCache({
       currentUserPlayroll: (_, args, { getCacheKey }) => {
         return getCacheKey({ __typename: 'Playroll', id: args.id });
       },
+      playroll: (_, args, { getCacheKey }) => {
+        return getCacheKey({ __typename: 'Playroll', id: args.id });
+      },
       relationship: (_, args, { getCacheKey }) => {
         return getCacheKey({ __typename: 'Relationship', id: args.id });
       },

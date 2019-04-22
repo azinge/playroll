@@ -10,6 +10,7 @@ import MusicSourceList from '../../shared/Lists/MusicSourceList';
 import { ListSpotifyPlaylistTracksQuery } from '../../../graphql/requests/Spotify';
 import NavigationService from '../../../services/NavigationService';
 import { NavigationScreenProp } from 'react-navigation';
+import Icons from '../../../themes/Icons';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -17,21 +18,33 @@ export interface Props {
 
 export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
   render() {
-    const playlistID =
-      this.props.navigation && this.props.navigation.getParam('playlistID');
-    console.log('Playlist id ' + playlistID);
+    const playlist =
+      this.props.navigation && this.props.navigation.getParam('playlist');
+    delete playlist.__typename;
     return (
-      <SubScreenContainer
-        title={'View Spotify Playlist'}
-        contentContainerStyle={{ marginTop: 10 }}
+      <ListSpotifyPlaylistTracksQuery
+        variables={{ playlistID: playlist.providerID }}
       >
-        <ListSpotifyPlaylistTracksQuery variables={{ playlistID: playlistID }}>
-          {({ loading, error, data }) => {
-            console.log(error && error.message);
-            console.log(
-              data && data.private && data.private.listSpotifyPlaylistTracks
-            );
-            return (
+        {({ loading, error, data }) => {
+          console.log(error && error.message);
+          console.log(
+            data && data.private && data.private.listSpotifyPlaylistTracks
+          );
+          return (
+            <SubScreenContainer
+              title={'View Spotify Playlist'}
+              contentContainerStyle={{ marginTop: 10 }}
+              icons={[
+                {
+                  ...Icons.menuIcon,
+                  onPress: () => {
+                    NavigationService.navigate('ManageRoll', {
+                      currentSource: playlist,
+                    });
+                  },
+                },
+              ]}
+            >
               <View style={{ marginBottom: 45, flex: 1 }}>
                 {/* <FlatList
                   data={
@@ -54,10 +67,10 @@ export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
                   }}
                 />
               </View>
-            );
-          }}
-        </ListSpotifyPlaylistTracksQuery>
-      </SubScreenContainer>
+            </SubScreenContainer>
+          );
+        }}
+      </ListSpotifyPlaylistTracksQuery>
     );
     // return (
     //   <SubScreenContainer title={'<Playlist Name Here>'}>

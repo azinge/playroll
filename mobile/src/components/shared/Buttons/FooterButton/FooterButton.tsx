@@ -11,6 +11,7 @@ import { Button } from 'react-native-elements';
 export interface Props {
   title: string;
   onPress: () => void;
+  loading?: boolean;
 }
 
 interface State {}
@@ -48,6 +49,7 @@ export default class FooterButton extends React.Component<Props, State> {
           title={this.props.title}
           titleStyle={{ fontWeight: 'bold' }}
           onPress={this.props.onPress}
+          loading={this.props.loading}
         />
       </View>
     );

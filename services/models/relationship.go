@@ -11,9 +11,9 @@ type Relationship struct {
 	Model
 	Status      string
 	IsBlocking  bool
-	UserID      uint `gorm:"primary_key"`
+	UserID      uint
 	User        User
-	OtherUserID uint `gorm:"primary_key"`
+	OtherUserID uint
 	OtherUser   User
 }
 

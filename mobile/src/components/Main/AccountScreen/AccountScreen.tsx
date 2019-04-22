@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { Linking } from 'expo';
 
 import styles from './AccountScreen.styles';
 import { SignOutMutation } from '../../../graphql/requests/Auth';
@@ -87,16 +88,49 @@ export default class AccountScreen extends React.Component<Props, State> {
                   </View>
                 </TouchableOpacity>
 
-                {/* View Friends */}
-                {/* <TouchableOpacity
+                {/* Playrolls */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('BrowsePlayrolls');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Playrolls</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Friends */}
+                <TouchableOpacity
                   onPress={() => {
                     NavigationService.navigate('BrowseFriends');
                   }}
                 >
                   <View style={styles.textContainer}>
-                    <Text style={styles.disabledText}>View Friends</Text>
+                    <Text style={styles.enabledText}>Friends</Text>
                   </View>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
+
+                {/* Recommendations */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('BrowseRecommendations');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Recommendations</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Music */}
+                <TouchableOpacity
+                  onPress={() => {
+                    NavigationService.navigate('Music');
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>My Music</Text>
+                  </View>
+                </TouchableOpacity>
 
                 {/* Settings */}
                 <TouchableOpacity
@@ -106,6 +140,17 @@ export default class AccountScreen extends React.Component<Props, State> {
                 >
                   <View style={styles.textContainer}>
                     <Text style={styles.enabledText}>Settings</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Contact Us */}
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(`http://contact.playroll.io`);
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Contact Us</Text>
                   </View>
                 </TouchableOpacity>
 

@@ -229,12 +229,16 @@ const CompiledRollFragments = {
   default: gql`
     fragment DefaultCompiledRoll on CompiledRoll {
       id
+      roll {
+        ...DefaultRoll
+      }
       data {
         tracks {
           ...DefaultMusicSource
         }
       }
     }
+    ${RollFragments.default}
     ${MusicSourceFragments.default}
   `,
 };

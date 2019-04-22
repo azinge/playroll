@@ -3,8 +3,16 @@
  */
 
 import React from 'react';
-import { Text, View, Image, ScrollView, ActivityIndicator } from 'react-native';
-import { Card, Button, Header, Icon, ListItem } from 'react-native-elements';
+import { Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  Card,
+  Button,
+  Header,
+  Icon,
+  ListItem,
+  Image,
+  Divider,
+} from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
 import {
@@ -37,13 +45,13 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
       ) {
         return null;
       }
-      return data.private.currentUserTracklist.compiledRolls;
+      return data.private.currentUserTracklist;
     };
     return (
       <GetTracklistQuery variables={{ id: tracklistID }}>
         {({ loading, error, data }) => {
           const success = !loading && !error;
-          const tracklists = extractTracklist(data);
+          const tracklist = extractTracklist(data);
           if (loading || error) {
             return <SubScreenContainer title='View Tracklist' />;
           }
@@ -54,31 +62,87 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
                 contentContainerStyle={{ paddingTop: 10, paddingBottom: 120 }}
                 title='View Tracklist'
                 flatList={success}
-                data={tracklists}
+                data={tracklist.compiledRolls}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => {
-                  //   console.log(item.data.roll.sources[0].name);
+                  console.log('ROLL NAME: ' + JSON.stringify(item));
+                  const rollSource =
+                    item &&
+                    item.roll &&
+                    item.roll.data &&
+                    item.roll.data.sources &&
+                    item.roll.data.sources.length > 0 &&
+                    item.roll.data.sources[0];
                   return (
-                    <Card key={item.id} containerStyle={{ padding: 0 }}>
-                      {item.data.tracks.map(track => {
-                        return (
-                          track && (
-                            <ListItem
-                              containerStyle={{
-                                height: 50,
-                              }}
-                              bottomDivider
-                              key={track.providerID}
-                              title={track.name}
-                              titleStyle={{ fontSize: 14 }}
-                              leftAvatar={{
-                                source: { uri: track.cover },
-                                // rounded: false,
-                              }}
-                            />
-                          )
-                        );
-                      })}
+                    <Card
+                      key={item.id}
+                      containerStyle={{
+                        borderRadius: 20,
+                        // marginTop: 0,
+                        borderColor: 'white',
+                        shadowColor: 'gray',
+                        shadowOffset: {
+                          width: 2,
+                          height: 3,
+                        },
+                        shadowRadius: 5,
+                        shadowOpacity: 0.5,
+                      }}
+                      //   image={{ uri: rollSource.cover }}
+                      //   title={rollSource.name}
+                    >
+                      <View>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Image
+                            style={{
+                              height: 65,
+                              width: 65,
+                              borderRadius: 65 / 2,
+                            }}
+                            source={{ uri: rollSource.cover }}
+                          />
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              textAlignVertical: 'center',
+                              marginLeft: 15,
+                              fontSize: 28,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {rollSource.name}
+                          </Text>
+                        </View>
+                        <Divider style={{ marginVertical: 10 }} />
+                        {item.data.tracks.map(track => {
+                          return (
+                            track && (
+                              <ListItem
+                                containerStyle={{
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                                key={track.providerID}
+                                title={track.name}
+                                titleStyle={{ fontSize: 14 }}
+                                leftIcon={
+                                  <Icon
+                                    color='purple'
+                                    type='material'
+                                    name='audiotrack'
+                                  />
+                                }
+                              />
+                            )
+                          );
+                        })}
+                      </View>
                     </Card>
                   );
                 }}

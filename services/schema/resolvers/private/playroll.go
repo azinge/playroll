@@ -378,7 +378,7 @@ var listFriendsPlayrolls = gqltag.Method{
 		db := mctx.DB.
 			Joins("JOIN relationships ON CAST(playrolls.user_id AS int) = relationships.user_id").
 			Where("relationships.other_user_id = ? AND relationships.status = ?", user.ID, "Friend")
-		if err := db.Preload("Rolls").Find(playrollModels).Error; err != nil {
+		if err := db.Preload("Rolls").Preload("User").Find(playrollModels).Error; err != nil {
 			fmt.Printf("error getting playrolls: %s", err.Error())
 			return nil, err
 		}

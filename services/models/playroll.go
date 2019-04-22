@@ -35,7 +35,7 @@ type PlayrollOutput struct {
 
 func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	playrollModels := &[]Playroll{}
-	db = db.Preload("Rolls")
+	db = db.Preload("Rolls").Preload("User")
 	if err := db.Where(Playroll{UserID: id}).Find(playrollModels).Error; err != nil {
 		fmt.Printf("error getting playrolls: %s", err.Error())
 		return nil, err
@@ -122,7 +122,7 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 func InitPlayrollDAO(db *gorm.DB) Entity {
 	dao := &Playroll{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("Rolls"))
+	dao.SetDB(db.Preload("Rolls").Preload("User"))
 	return dao
 }
 

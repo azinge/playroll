@@ -128,6 +128,7 @@ export default class SearchScreen extends React.Component<Props, State> {
                 ) : (
                   <FlatList
                     data={data && data.private.searchSpotify}
+                    contentContainerStyle={{ flex: 1 }}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => item.providerID}
                     extraData={this.state}

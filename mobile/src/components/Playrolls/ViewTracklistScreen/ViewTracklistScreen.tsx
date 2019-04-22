@@ -57,11 +57,7 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
                 renderItem={({ item }) => {
                   //   console.log(item.data.roll.sources[0].name);
                   return (
-                    <Card
-                      key={item.id}
-                      title={item.data.roll.sources[0].name}
-                      containerStyle={{ padding: 0 }}
-                    >
+                    <Card key={item.id} containerStyle={{ padding: 0 }}>
                       {item.data.tracks.map(track => {
                         return (
                           track && (

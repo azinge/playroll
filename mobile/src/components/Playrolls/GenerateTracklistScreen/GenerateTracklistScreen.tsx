@@ -85,19 +85,19 @@ export default class GenerateTracklistScreen extends React.Component<
           tracklistID,
         },
         () => {
-          //   setTimeout(() => {
-          console.log(isComplete, tracklistID);
-          if (!isComplete) {
-            this.progressiveGenerateTracklistWrapper(
-              progressiveGenerateTracklist
-            );
-          } else {
-            NavigationService.navigate('ViewTracklist', {
-              playrollName: playroll.name,
-              tracklistID,
-            });
-          }
-          //   }, 500);
+          setTimeout(() => {
+            console.log(isComplete, tracklistID);
+            if (!isComplete) {
+              this.progressiveGenerateTracklistWrapper(
+                progressiveGenerateTracklist
+              );
+            } else {
+              NavigationService.navigate('ViewTracklist', {
+                playrollName: playroll.name,
+                tracklistID,
+              });
+            }
+          }, 500);
         }
       );
     } catch (err) {
@@ -116,11 +116,11 @@ export default class GenerateTracklistScreen extends React.Component<
         {(progressiveGenerateTracklist, { error }) => {
           if (this.state.triggerGenerateTracklist) {
             this.setState({ triggerGenerateTracklist: false }, () => {
-              //   setTimeout(() => {
-              this.progressiveGenerateTracklistWrapper(
-                progressiveGenerateTracklist
-              );
-              //   }, 1000);
+              setTimeout(() => {
+                this.progressiveGenerateTracklistWrapper(
+                  progressiveGenerateTracklist
+                );
+              }, 1000);
             });
           }
           return (

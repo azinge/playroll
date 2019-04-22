@@ -57,10 +57,6 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         {({ loading, error, data, client: { cache } }) => {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
-
-          // console.log(playroll)
-          // console.log(playroll.rolls.length)
-
           // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
           return (
             <View style={styles.screenContainer}>

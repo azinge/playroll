@@ -38,7 +38,7 @@ export default class SettingsScreen extends React.Component {
           }}
         >
           {/* Dark Mode */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('');
             }}
@@ -52,10 +52,10 @@ export default class SettingsScreen extends React.Component {
                 value={this.state.switchValue}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Music Service Settings */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('MusicServiceSettings');
             }}
@@ -63,10 +63,21 @@ export default class SettingsScreen extends React.Component {
             <View style={styles.textContainer}>
               <Text style={styles.enabledText}>Music Service Settings</Text>
             </View>
+          </TouchableOpacity> */}
+
+          {/* Connect To Spotify */}
+          <TouchableOpacity
+            onPress={() => {
+              NavigationService.navigate('ConnectSpotify');
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.enabledText}>Connect To Spotify</Text>
+            </View>
           </TouchableOpacity>
 
           {/* Delete Account */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               NavigationService.navigate('');
             }}
@@ -74,7 +85,7 @@ export default class SettingsScreen extends React.Component {
             <View style={styles.textContainer}>
               <Text style={styles.disabledText}>Delete Account</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SubScreenContainer>
     );

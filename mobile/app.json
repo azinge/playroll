@@ -6,7 +6,7 @@
     "sdkVersion": "32.0.0",
     "scheme": "playroll",
     "platforms": ["ios", "android"],
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/playroll_icon.png",
     "splash": {
@@ -22,7 +22,7 @@
       "bundleIdentifier": "com.playroll.playroll"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "package": "com.playroll.playroll"
     },
     "primaryColor": "#ffffff"

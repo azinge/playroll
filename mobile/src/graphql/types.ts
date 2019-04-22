@@ -99,6 +99,7 @@ export type User = {
 export type Playroll = {
   id?: number;
   userID?: number;
+  user?: User;
   name?: string;
   rolls?: Roll[];
   tracklists?: Tracklist[];
@@ -291,8 +292,12 @@ const PlayrollFragments = {
       rolls {
         ...DefaultRoll
       }
+      user {
+        ...DefaultUser
+      }
     }
     ${RollFragments.default}
+    ${UserFragments.default}
   `,
   withTracklists: undefined,
 };
@@ -365,9 +370,13 @@ PlayrollFragments.withTracklists = gql`
     tracklists {
       ...DefaultTracklist
     }
+    user {
+      ...DefaultUser
+    }
   }
   ${RollFragments.default}
   ${TracklistFragments.default}
+  ${UserFragments.default}
 `;
 
 export {

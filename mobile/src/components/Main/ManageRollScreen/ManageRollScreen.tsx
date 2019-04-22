@@ -64,17 +64,21 @@ export default class ManageRollScreen extends React.Component<Props, State> {
           },
           {
             type: 'Order',
-            name: 'Random',
+            name: 'Default',
           },
           {
             type: 'Length',
-            name: 'NumberOfSongs',
-            modifications: ['0', '10'],
+            name: 'Default',
           },
         ],
       };
     }
     delete currentSource.__typename;
+    delete rollData.__typename;
+    rollData.filters.forEach(filter => {
+      // @ts-ignore
+      delete filter.__typename;
+    });
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <LinearGradient colors={['#9333CC', 'white']} style={{ flex: 1 }}>

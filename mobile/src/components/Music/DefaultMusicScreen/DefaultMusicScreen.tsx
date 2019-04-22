@@ -27,7 +27,7 @@ export default class DefaultMusicScreen extends React.Component {
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 10 }}
       onPress={() =>
         NavigationService.navigate('ViewSpotifyPlaylist', {
-          playlistID: item.providerID,
+          playlist: item,
         })
       }
     >
@@ -178,7 +178,37 @@ export default class DefaultMusicScreen extends React.Component {
                   </View>
                 );
               } else {
-                return <Text>Please connect to Spotify</Text>;
+                return (
+                  <TouchableOpacity
+                    onPress={() => NavigationService.navigate('ConnectSpotify')}
+                    style={{ marginHorizontal: 60, marginBottom: 5 }}
+                  >
+                    <ListItem
+                      title={'Connect To Spotify'}
+                      titleStyle={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: 17,
+                        color: 'white',
+                      }}
+                      containerStyle={{
+                        //   marginHorizontal: 30,
+                        //   marginBottom: 10,
+                        backgroundColor: 'purple',
+                        borderColor: 'white',
+                        borderRadius: 30,
+                        shadowColor: 'gray',
+                        shadowOffset: {
+                          width: 5,
+                          height: 1,
+                        },
+                        shadowRadius: 9,
+                        shadowOpacity: 0.5,
+                        overflow: 'visible',
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
               }
             }}
           </CurrentUserSpotifyStatusQuery>

@@ -113,6 +113,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
               onPress={playroll => {
                 this.createRollWrapper(createRoll, playroll);
               }}
+              hideCreator
             />
           );
         }}

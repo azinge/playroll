@@ -21,7 +21,7 @@ type SpotifyMethods struct {
 	SearchSpotify             *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	SearchSpotifyFull         *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
 	RegisterSpotifyAuthCode   *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String): MusicServiceCredential"`
-	GeneratePlaylist          *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): [String]"`
+	GeneratePlaylist          *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): String"`
 }
 
 var currentUserSpotifyStatus = gqltag.Method{
@@ -292,12 +292,12 @@ var generatePlaylist = gqltag.Method{
 			return nil, err
 		}
 
-		trackIDs, err := spotifyhelpers.CreateSpotifyPlaylistFromTracks(tracks, params.PlaylistName, client, mctx.DB)
+		playlistID, err := spotifyhelpers.CreateSpotifyPlaylistFromTracks(tracks, params.PlaylistName, client, mctx.DB)
 		if err != nil {
 			fmt.Println("Error creating playlist for user: ", err.Error())
 			return nil, err
 		}
-		return *trackIDs, nil
+		return playlistID, nil
 	},
 }
 

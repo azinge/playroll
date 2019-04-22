@@ -3,17 +3,21 @@
  */
 
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
 import HomeCarousel from './HomeCarousel';
-import { musicSources } from '../../../static/mockData';
-import styles from './HomeScreen.styles';
-import HorizontalMusicSourceList from '../../shared/Lists/HorizontalMusicSourceList';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
-import HorizontalComingSoonList from '../../shared/Lists/HorizontalComingSoonList';
 import HorizontalPlaceholderList from '../../shared/Lists/HorizontalPlaceholderList';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import Heading from '../../shared/Text/Heading';
+import NavigationService from '../../../services/NavigationService';
+import { Icon } from 'react-native-elements';
+import DropdownAlert from 'react-native-dropdownalert';
+import PlayrollList from '../../shared/Lists/PlayrollList';
+import { ListPopularPlayrollsQuery } from '../../../graphql/requests/Playroll/ListPopularPlayrollsQuery';
+import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
+import { ListNewReleasePlayrollsQuery } from '../../../graphql/requests/Playroll/ListNewReleasePlayrollsQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -22,41 +26,142 @@ export interface Props {
 interface State {}
 
 export default class HomeScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
   render() {
+    const extractNewReleasePlayrolls = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listNewReleasePlayrolls;
+    };
+    const extractPopularPlayrolls = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listPopularPlayrolls;
+    };
     return (
-      <MainScreenContainer>
-        <View style={{ marginTop: 5, flex: 1 }}>
-          {/* <View
-            style={{
-              marginVertical: 10,
-              paddingHorizontal: 10,
-            }}
-          >
-            <Text style={styles.title}>Suggested Playrolls</Text>
-          </View> */}
+      <View style={{ flex: 1 }}>
+        <MainScreenContainer>
+          <View style={{ marginTop: 5, flex: 1 }}>
+            <View
+              style={{
+                marginHorizontal: 10,
+                marginTop: 15,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Heading type={'h6'} alignment={'left'} style={{ flex: 2 }} bold>
+                Featured Playrolls
+              </Heading>
+              <Icon
+                name={'info-outline'}
+                color={'purple'}
+                onPress={() => {
+                  this.dropdown.alertWithType(
+                    'info',
+                    '',
+                    "The data provided here is currently a curated list. In a future update, you'll have more personalized suggestions!"
+                  );
+                }}
+              />
+            </View>
+            <HomeCarousel numItems={5} />
 
-          {/* <TouchableOpacity onPress={() => {}}> */}
-          <HomeCarousel numItems={5} />
-          {/* </TouchableOpacity> */}
-
-          {/* <HorizontalMusicSourceList
-            title={'Discovery Queue'}
-            musicSources={musicSources}
-          /> */}
-
-          <HorizontalPlaceholderList
-            title={'Made For You'}
-            numItems={5}
-            overlayText={'Coming Soon...'}
-          />
-
-          <PlaceholderList
-            title={'Suggested Items'}
-            numItems={5}
-            overlayText={'Coming Soon...'}
-          />
-        </View>
-      </MainScreenContainer>
+            <View
+              style={{
+                marginHorizontal: 10,
+                marginTop: 5,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Heading type={'h6'} alignment={'left'} style={{ flex: 2 }} bold>
+                New Releases
+              </Heading>
+              <Icon
+                name={'info-outline'}
+                color={'purple'}
+                onPress={() => {
+                  this.dropdown.alertWithType(
+                    'info',
+                    '',
+                    "The data provided here is currently a curated list. In a future update, you'll have more personalized suggestions!"
+                  );
+                }}
+              />
+            </View>
+            <ListNewReleasePlayrollsQuery>
+              {({ data, loading, error }) => {
+                if (loading) {
+                  return <ActivityIndicator />;
+                }
+                const playrolls = extractNewReleasePlayrolls(data);
+                return (
+                  <HorizontalPlayrollList
+                    playrolls={playrolls}
+                    onPress={playroll => {
+                      NavigationService.navigate('ViewExternalPlayroll', {
+                        playroll,
+                      });
+                    }}
+                  />
+                );
+              }}
+            </ListNewReleasePlayrollsQuery>
+            <View
+              style={{
+                marginHorizontal: 10,
+                marginVertical: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Heading type={'h6'} alignment={'left'} style={{ flex: 2 }} bold>
+                Popular Playrolls
+              </Heading>
+              <Icon
+                name={'info-outline'}
+                color={'purple'}
+                onPress={() => {
+                  this.dropdown.alertWithType(
+                    'info',
+                    '',
+                    "The data provided here is currently a curated list. In a future update, you'll have more personalized suggestions!"
+                  );
+                }}
+              />
+            </View>
+            <ListPopularPlayrollsQuery>
+              {({ data, loading, error }) => {
+                if (loading) {
+                  return <ActivityIndicator />;
+                }
+                const playrolls = extractPopularPlayrolls(data);
+                return (
+                  <PlayrollList
+                    playrolls={playrolls}
+                    onPress={playroll => {
+                      NavigationService.navigate('ViewExternalPlayroll', {
+                        playroll,
+                      });
+                    }}
+                  />
+                );
+              }}
+            </ListPopularPlayrollsQuery>
+          </View>
+        </MainScreenContainer>
+        <DropdownAlert ref={ref => (this.dropdown = ref)} />
+      </View>
     );
   }
 }

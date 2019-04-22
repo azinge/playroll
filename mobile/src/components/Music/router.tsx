@@ -17,7 +17,7 @@ export const MusicNavigator = createStackNavigator(
     ViewSpotifyPlaylist: ViewSpotifyPlaylistScreen,
   },
   {
-    initialRouteName: 'DefaultMusic',
+    initialRouteName: 'BrowseSpotifyPlaylists',
     headerMode: 'none',
   }
 );

@@ -81,7 +81,7 @@ var searchUsers = gqltag.Method{
 		}
 
 		userModels := &[]models.User{}
-		if err := mctx.DB.Preload("Relationships", "user_id = ?", authorizedUser.ID).Where("name LIKE ?", "%"+params.Query+"%").Find(userModels).Error; err != nil {
+		if err := mctx.DB.Preload("Relationships", "user_id = ?", authorizedUser.ID).Where("name LIKE ?", "%"+params.Query+"%").Where("id <> ? AND account_type <> ?", authorizedUser.ID, "Managed").Find(userModels).Error; err != nil {
 			fmt.Printf("error searching users: %s", err.Error())
 			return nil, err
 		}

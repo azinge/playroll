@@ -136,7 +136,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
-          NavigationService.navigate('ViewPlayroll', {
+          NavigationService.navigate('EditPlayroll', {
             playroll,
           });
         }}
@@ -172,7 +172,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
-          NavigationService.navigate('ViewPlayroll', {
+          NavigationService.navigate('EditPlayroll', {
             playroll,
           });
         }}

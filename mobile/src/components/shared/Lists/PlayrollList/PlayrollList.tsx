@@ -10,13 +10,14 @@ import { Playroll } from '../../../../graphql/types';
 export interface Props {
   playrolls: Playroll[];
   onPress?: (playroll) => void;
+  hideCreator?: boolean;
 }
 
 interface State {}
 
 export default class PlayrollList extends React.Component<Props, State> {
   render() {
-    const { playrolls, onPress } = this.props;
+    const { playrolls, onPress, hideCreator } = this.props;
     return (
       <FlatList
         data={playrolls}
@@ -24,7 +25,11 @@ export default class PlayrollList extends React.Component<Props, State> {
         keyExtractor={playroll => `${playroll.id}`}
         extraData={this.state}
         renderItem={({ item }) => (
-          <PlayrollCard playroll={item} onPress={onPress} />
+          <PlayrollCard
+            playroll={item}
+            onPress={onPress}
+            hideCreator={hideCreator}
+          />
         )}
       />
     );

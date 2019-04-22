@@ -35,7 +35,7 @@ type PlayrollOutput struct {
 
 func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	playrollModels := &[]Playroll{}
-	db = db.Preload("Rolls")
+	db = db.Preload("Rolls").Preload("User")
 	if err := db.Where(Playroll{UserID: id}).Find(playrollModels).Error; err != nil {
 		fmt.Printf("error getting playrolls: %s", err.Error())
 		return nil, err
@@ -46,6 +46,45 @@ func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 		return nil, err
 	}
 	return playrolls, nil
+}
+
+func ClonePlayroll(oldPlayroll *Playroll, userID uint, db *gorm.DB) (*PlayrollOutput, error) {
+	tx := db.Begin()
+	playrollInput := PlayrollInput{Name: oldPlayroll.Name}
+	playrollModel, err := PlayrollInputToModel(&playrollInput)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	playrollModel.UserID = userID
+
+	tDAO := InitPlayrollDAO(tx)
+	rawPlayroll, err := tDAO.Create(playrollModel)
+	if err != nil {
+		return nil, err
+	}
+	playrollOutput, err := FormatPlayroll(rawPlayroll)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	rDAO := InitRollDAO(tx)
+	for _, oldRoll := range oldPlayroll.Rolls {
+		roll := &Roll{}
+		roll.PlayrollID = playrollOutput.ID
+		roll.Order = oldRoll.Order
+		roll.Data = oldRoll.Data
+		_, err = rDAO.Create(roll)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	err = tx.Commit().Error
+	if err != nil {
+		return nil, err
+	}
+	return playrollOutput, nil
 }
 
 // Entity Specific Methods
@@ -83,7 +122,7 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 func InitPlayrollDAO(db *gorm.DB) Entity {
 	dao := &Playroll{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("Rolls"))
+	dao.SetDB(db.Preload("Rolls").Preload("User"))
 	return dao
 }
 

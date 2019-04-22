@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { Linking } from 'expo';
 
 import styles from './AccountScreen.styles';
 import { SignOutMutation } from '../../../graphql/requests/Auth';
@@ -139,6 +140,17 @@ export default class AccountScreen extends React.Component<Props, State> {
                 >
                   <View style={styles.textContainer}>
                     <Text style={styles.enabledText}>Settings</Text>
+                  </View>
+                </TouchableOpacity>
+
+                {/* Contact Us */}
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(`http://contact.playroll.io`);
+                  }}
+                >
+                  <View style={styles.textContainer}>
+                    <Text style={styles.enabledText}>Contact Us</Text>
                   </View>
                 </TouchableOpacity>
 

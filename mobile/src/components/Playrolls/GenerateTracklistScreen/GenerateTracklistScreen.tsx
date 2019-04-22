@@ -17,6 +17,7 @@ import { ProgressiveGenerateTracklistMutation } from '../../../graphql/requests/
 import NavigationService from '../../../services/NavigationService';
 import { GetCurrentUserPlayrollQuery } from '../../../graphql/requests/Playroll';
 import RollList from '../../shared/Lists/RollList';
+import { GetPlayrollQuery } from '../../../graphql/requests/Playroll/GetPlayrollQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -173,25 +174,44 @@ export default class GenerateTracklistScreen extends React.Component<
   }
 
   renderCurrentlyGeneratingDisplay() {
-    const { playroll } = this.state;
-    const remainingRolls = (playroll.rolls || []).slice(
-      this.state.currentRollIndex
-    );
+    const extractPlayroll = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return {};
+      }
+      return data.private.playroll;
+    };
     return (
-      <View style={{ width: 325 }}>
-        {!this.state.isComplete && remainingRolls.length >= 0 ? (
-          <View>
-            <Heading type={'h9'} alignment={'left'} opacity={0.7}>
-              Now Generating:
-            </Heading>
-            <RollList rolls={remainingRolls || []} readOnly disableManage />
-          </View>
-        ) : (
-          <Heading type={'h9'} alignment={'left'} opacity={0.7}>
-            Tracklist Generated!
-          </Heading>
-        )}
-      </View>
+      <GetPlayrollQuery variables={{ id: this.state.playroll.id }}>
+        {({ data }) => {
+          const playroll = extractPlayroll(data);
+          const remainingRolls = (playroll.rolls || []).slice(
+            this.state.currentRollIndex
+          );
+          return (
+            <View style={{ width: 325 }}>
+              {!this.state.isComplete && remainingRolls.length >= 0 ? (
+                <View>
+                  <Heading type={'h9'} alignment={'left'} opacity={0.7}>
+                    Now Generating:
+                  </Heading>
+                  <RollList
+                    rolls={remainingRolls || []}
+                    readOnly
+                    disableManage
+                  />
+                </View>
+              ) : (
+                <Heading type={'h9'} alignment={'left'} opacity={0.7}>
+                  Tracklist Generated!
+                </Heading>
+              )}
+            </View>
+          );
+        }}
+      </GetPlayrollQuery>
     );
   }
 

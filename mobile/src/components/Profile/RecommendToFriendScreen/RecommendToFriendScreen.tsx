@@ -140,7 +140,7 @@ export default class RecommendToFriendScreen extends React.Component<
                                     this.createRecommendationWrapper(
                                       createRecommendation,
                                       item,
-                                      currentUserData
+                                      currentUser
                                     );
                                   }}
                                 />

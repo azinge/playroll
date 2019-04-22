@@ -8,6 +8,7 @@ import BrowsePlayrollsScreen from './BrowsePlayrollsScreen';
 import GenerateTracklistScreen from './GenerateTracklistScreen';
 import AddToPlayrollScreen from './AddToPlayrollScreen';
 import AddRollScreen from './AddRollScreen';
+import ViewExternalPlayrollScreen from './ViewExternalPlayrollScreen';
 
 export const PlayrollsNavigator = createStackNavigator(
   {
@@ -24,6 +25,7 @@ export const PlayrollsNavigator = createStackNavigator(
 );
 
 export const PlayrollsModalRoutes = {
+  ViewExternalPlayroll: ViewExternalPlayrollScreen,
   AddToPlayroll: AddToPlayrollScreen,
   EditRoll: EditRollScreen,
   GenerateTracklist: GenerateTracklistScreen,

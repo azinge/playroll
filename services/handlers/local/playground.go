@@ -1,11 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"strconv"
+
 	"github.com/cazinge/playroll/services/models"
 	"github.com/jinzhu/gorm"
-	"github.com/oliveroneill/exponent-server-sdk-golang/sdk"
+	expo "github.com/oliveroneill/exponent-server-sdk-golang/sdk"
 )
 
 func main() {
@@ -57,9 +60,6 @@ func main() {
 	if response.ValidateResponse() != nil {
 		fmt.Println(response.PushMessage.To, "failed")
 	}
-
-}
-
 	recommendRollToFriend(db, 1, 2, 123)
 }
 

@@ -5,6 +5,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/lib/pq"
+	expo "github.com/oliveroneill/exponent-server-sdk-golang/sdk"
+
 	"github.com/cazinge/playroll/services/gqltag"
 
 	"github.com/jinzhu/gorm"
@@ -16,6 +19,7 @@ type User struct {
 	Avatar                  string
 	Email                   string
 	AccountType             string
+	DeviceTokens            pq.StringArray `gorm:"type:varchar(100)[]"`
 	Playrolls               []Playroll
 	IdentityCredentials     []IdentityCredential
 	MusicServiceCredentials []MusicServiceCredential
@@ -37,6 +41,7 @@ type UserOutput struct {
 	Avatar                  string                         `gql:"avatar: String"`
 	Email                   string                         `gql:"email: String"`
 	AccountType             string                         `gql:"accountType: String"`
+	DeviceTokens            []string                       `gql:"deviceTokens: [String]"`
 	Playrolls               []PlayrollOutput               `gql:"playrolls: [Playroll]"`
 	IdentityCredentials     []IdentityCredentialOutput     `gql:"identityCredentials: [IdentityCredential]"`
 	MusicServiceCredentials []MusicServiceCredentialOutput `gql:"musicServiceCredentials: [MusicServiceCredential]"`
@@ -103,6 +108,15 @@ func FindUserByIdentityCredential(provider, identifier string, db *gorm.DB) (*Us
 	return user, nil
 }
 
+func FindUserModelByID(id uint, db *gorm.DB) (*User, error) {
+	userModel := &User{}
+	if err := db.First(userModel, id).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return userModel, nil
+}
+
 func FindUserByID(id uint, db *gorm.DB) (*UserOutput, error) {
 	userModel := &User{}
 	if err := db.First(userModel, id).Error; err != nil {
@@ -146,6 +160,91 @@ func AuthorizeUser(mctx *gqltag.MethodContext) (*UserOutput, error) {
 	return nil, fmt.Errorf("could not find matching user in database")
 }
 
+func StoreUserDeviceToken(userID uint, deviceToken string, db *gorm.DB) (*UserOutput, error) {
+	user, err := FindUserModelByID(userID, db)
+	if err != nil {
+		return nil, err
+	}
+	for _, dt := range user.DeviceTokens {
+		if deviceToken == dt {
+			return FormatUser(user)
+		}
+	}
+	_, err = expo.NewExponentPushToken(deviceToken)
+	if err != nil {
+		return nil, err
+	}
+	user.DeviceTokens = append(user.DeviceTokens, deviceToken)
+	if err := db.Save(user).Error; err != nil {
+		fmt.Println("error updating user device token")
+		return nil, err
+	}
+	return FormatUser(user)
+}
+
+func ClearUserDeviceToken(userID uint, deviceToken string, db *gorm.DB) (*UserOutput, error) {
+	user, err := FindUserModelByID(userID, db)
+	if err != nil {
+		return nil, err
+	}
+	for i, dt := range user.DeviceTokens {
+		if deviceToken == dt {
+			user.DeviceTokens = append(user.DeviceTokens[:i], user.DeviceTokens[i+1:]...)
+			if err := db.Save(user).Error; err != nil {
+				fmt.Println("error updating user device token")
+				return nil, err
+			}
+			return FormatUser(user)
+		}
+	}
+	return FormatUser(user)
+}
+
+type PushNotification struct {
+	Title string
+	Body  string
+	Type  string
+}
+
+func SendUserPushNotification(userID uint, message *PushNotification, db *gorm.DB) error {
+	user, err := FindUserByID(userID, db)
+	if err != nil {
+		return err
+	}
+
+	messages := []expo.PushMessage{}
+	for _, dt := range user.DeviceTokens {
+		pushToken, err := expo.NewExponentPushToken(dt)
+		if err != nil {
+			return err
+		}
+		messages = append(messages, expo.PushMessage{
+			To:       pushToken,
+			Title:    message.Title,
+			Body:     message.Body,
+			Sound:    "default",
+			Priority: expo.DefaultPriority,
+			Data: map[string]string{
+				"Title": message.Title,
+				"Body":  message.Body,
+				"Type":  message.Type,
+			},
+		})
+	}
+
+	client := expo.NewPushClient(nil)
+	responses, err := client.PublishMultiple(messages)
+	if err != nil {
+		return err
+	}
+	for _, response := range responses {
+		if response.ValidateResponse() != nil {
+			fmt.Println(response.PushMessage.To, "failed")
+		}
+	}
+	return nil
+}
+
 // Entity Specific Methods
 
 func UserInputToModel(ui *UserInput) (*User, error) {
@@ -168,6 +267,7 @@ func UserModelToOutput(u *User) (*UserOutput, error) {
 	uo.Avatar = u.Avatar
 	uo.Email = u.Email
 	uo.AccountType = u.AccountType
+	uo.DeviceTokens = u.DeviceTokens
 	playrolls, err := FormatPlayrollSlice(&u.Playrolls)
 	if err != nil {
 		return nil, err

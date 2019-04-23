@@ -66,11 +66,12 @@ export default class RecommendToFriendScreen extends React.Component<
           },
         },
       });
-      this.dropdown.alertWithType(
-        'info',
-        'Recommended To Friend',
-        'Successfully Recommended to Friend.'
-      );
+      // this.dropdown.alertWithType(
+      //   'info',
+      //   'Recommended To Friend',
+      //   'Successfully Recommended to Friend.'
+      // );
+      NavigationService.goBack();
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(

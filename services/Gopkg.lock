@@ -75,6 +75,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/oliveroneill/exponent-server-sdk-golang"
+  packages = ["sdk"]
+  revision = "f1eb9ffb6258efcc39141b7fe98d615e8d864b3e"
+
+[[projects]]
+  branch = "master"
   name = "github.com/zmb3/spotify"
   packages = ["."]
   revision = "a4bd83f60e06ab58f3516c61680d0532aabf470e"
@@ -114,6 +120,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fbddfde27dd48ef060537d550decfd3280c5b0992e3f05d95c264cd0115d8d98"
+  inputs-digest = "6a8d09e41a60bd4e7dc4ee9eb51b35c651b888cc97e63ba4511c8d7617a676e6"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -172,7 +172,9 @@ export default class AccountScreen extends React.Component<Props, State> {
                                   try {
                                     const deviceToken = await NotificationService.registerForPushNotificationsAsync();
                                     if (deviceToken !== null) {
-                                      await clearDeviceToken();
+                                      await clearDeviceToken({
+                                        variables: { deviceToken },
+                                      });
                                     }
                                     await signOut();
                                     NavigationService.dispatch(

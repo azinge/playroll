@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
+import { Permissions, Notifications } from 'expo';
 
 import HomeCarousel from './HomeCarousel';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
@@ -27,9 +28,11 @@ interface State {}
 
 export default class HomeScreen extends React.Component<Props, State> {
   dropdown: DropdownAlert;
+
   render() {
     const extractNewReleasePlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -39,6 +42,7 @@ export default class HomeScreen extends React.Component<Props, State> {
     };
     const extractPopularPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {

@@ -63,7 +63,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
           return (
             <View style={{ flex: 1 }}>
               <SubScreenContainer
-                title={'My Recommendations'}
+                title={'Add To Playroll'}
                 contentContainerStyle={{ marginTop: 10 }}
                 modal
               >
@@ -88,11 +88,12 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
           },
         },
       });
-      this.dropdown.alertWithType(
-        'info',
-        'Added to Playroll',
-        'Roll successfully added to playroll.'
-      );
+      // this.dropdown.alertWithType(
+      //   'info',
+      //   'Added to Playroll',
+      //   'Roll successfully added to playroll.'
+      // );
+      NavigationService.goBack();
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(

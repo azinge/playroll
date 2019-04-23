@@ -233,6 +233,16 @@ var sendFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
+		pushNotification := &models.PushNotification{
+			Type:  "RECEIVED_FRIEND_REQUEST",
+			Title: "Received Friend Request",
+			Body:  fmt.Sprintf("%s has just sent you a friend request!", user.Name),
+		}
+
+		if err := models.SendUserPushNotification(otherUserID, pushNotification, mctx.DB); err != nil {
+			return nil, err
+		}
+
 		return models.FormatRelationship(r1)
 	},
 }
@@ -292,6 +302,16 @@ var acceptFriendRequest = gqltag.Method{
 
 		if err := mctx.DB.Save(r2).Error; err != nil {
 			fmt.Println(err)
+			return nil, err
+		}
+
+		pushNotification := &models.PushNotification{
+			Type:  "ACCEPTED_FRIEND_REQUEST",
+			Title: "Accepted Friend Request",
+			Body:  fmt.Sprintf("%s has just accepted your friend request!", user.Name),
+		}
+
+		if err := models.SendUserPushNotification(otherUserID, pushNotification, mctx.DB); err != nil {
 			return nil, err
 		}
 

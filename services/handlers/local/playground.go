@@ -1,33 +1,65 @@
 package main
 
-// import (
-// 	"fmt"
-// 	"os"
+import (
+	"fmt"
+	"os"
 
-// 	"github.com/cazinge/playroll/services/models"
-// 	"github.com/jinzhu/gorm"
-// )
+	"github.com/cazinge/playroll/services/models"
+	"github.com/jinzhu/gorm"
+	"github.com/oliveroneill/exponent-server-sdk-golang/sdk"
+)
 
-// func main() {
-// 	host := fmt.Sprintf(
-// 		"host=%v port=%v user=%v dbname=%v sslmode=disable",
-// 		os.Getenv("DB_HOST"),
-// 		os.Getenv("DB_PORT"),
-// 		os.Getenv("DB_USER"),
-// 		os.Getenv("DB_NAME"),
-// 	)
+func main() {
+	host := fmt.Sprintf(
+		"host=%v port=%v user=%v dbname=%v sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_NAME"),
+	)
 
-// 	db, err := gorm.Open("postgres", host)
-// 	if err != nil {
-// 		fmt.Println("error opening db: " + err.Error())
-// 	}
-// 	fmt.Println("Connected to DB!")
+	db, err := gorm.Open("postgres", host)
+	if err != nil {
+		fmt.Println("error opening db: " + err.Error())
+	}
+	fmt.Println("Connected to DB!")
 
-// 	defer db.Close()
+	defer db.Close()
 
-// 	if db.AutoMigrate(models.ModelList...).Error != nil {
-// 		fmt.Println("error migrating db: " + err.Error())
-// 	}
+	if db.AutoMigrate(models.ModelList...).Error != nil {
+		fmt.Println("error migrating db: " + err.Error())
+	}
+
+	pushToken, err := expo.NewExponentPushToken("ExponentPushToken[xpkIFyHiKF6zKBX8NO3ysQ]")
+	if err != nil {
+		panic(err)
+	}
+
+	// Create a new Expo SDK client
+	client := expo.NewPushClient(nil)
+
+	// Publish message
+	response, err := client.Publish(
+		&expo.PushMessage{
+			To:       pushToken,
+			Body:     "This is a test notification",
+			Data:     map[string]string{"withSome": "data"},
+			Sound:    "default",
+			Title:    "Notification Title",
+			Priority: expo.DefaultPriority,
+		},
+	)
+	// Check errors
+	if err != nil {
+		panic(err)
+		// return
+	}
+	// Validate responses
+	if response.ValidateResponse() != nil {
+		fmt.Println(response.PushMessage.To, "failed")
+	}
+
+}
 
 // 	// msts := &[]models.MusicServiceTrack{}
 // 	// if err := db.Or(models.MusicServiceTrack{AlbumID: "6WrsTb0LameTn7Q4bTzhiW"}).Or(models.MusicServiceTrack{ArtistID: "6U3ybJ9UHNKEdsH7ktGBZ7"}).Find(msts).Error; err != nil {

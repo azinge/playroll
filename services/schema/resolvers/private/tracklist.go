@@ -36,7 +36,7 @@ var getCurrentUserTracklist = gqltag.Method{
 		id := utils.StringIDToNumber(params.ID)
 		tracklistModel := &models.Tracklist{}
 
-		db := mctx.DB.Preload("CompiledRolls")
+		db := mctx.DB.Preload("CompiledRolls").Preload("CompiledRolls.Rolls")
 		if err := db.Where(&models.Tracklist{OwnerID: user.ID}).First(tracklistModel, id).Error; err != nil {
 			return nil, err
 		}

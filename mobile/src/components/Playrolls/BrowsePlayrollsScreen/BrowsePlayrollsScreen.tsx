@@ -8,7 +8,10 @@ import { NavigationScreenProp } from 'react-navigation';
 import { Button, Icon, SearchBar } from 'react-native-elements';
 
 import NavigationService from '../../../services/NavigationService';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {
   ListCurrentUserPlayrollsQuery,
   CreatePlayrollMutation,
@@ -71,7 +74,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             >
               <View style={{ flex: 1 }}>
                 <MainScreenContainer
-                  contentContainerStyle={{ paddingBottom: 120 }}
+                  contentContainerStyle={{ paddingBottom: hp('16%') }}
                   flatList={success}
                   data={playrolls}
                   hideBottomBar

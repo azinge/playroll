@@ -15,19 +15,23 @@ import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
 import { Playroll, MusicSource } from '../../../graphql/types';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {
   UpdatePlayrollMutation,
   GetCurrentUserPlayrollQuery,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
-
+import { SafeAreaView } from 'react-navigation';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
 import RollList from '../../shared/Lists/RollList';
+import { isIphoneX } from 'react-native-iphone-x-helper';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -59,19 +63,19 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
             (data && data.private && data.private.currentUserPlayroll) || {};
           // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
           return (
-            <View style={styles.screenContainer}>
-              <SubScreenContainer
-                contentContainerStyle={{ paddingBottom: 80 }}
-                title='View Playroll'
-                renderHeader={this.renderHeader}
-              >
-                {/* Icon, Title, and Hashtags */}
-                {this.renderTitleBar(playroll)}
+            <SubScreenContainer
+              contentContainerStyle={{
+                paddingBottom: isIphoneX() ? hp('11%') : hp('7%'),
+              }}
+              title='View Playroll'
+              renderHeader={this.renderHeader}
+            >
+              {/* Icon, Title, and Hashtags */}
+              {this.renderTitleBar(playroll)}
 
-                {/* List the Rolls */}
-                {this.renderRolls(playroll)}
-              </SubScreenContainer>
-            </View>
+              {/* List the Rolls */}
+              {this.renderRolls(playroll)}
+            </SubScreenContainer>
           );
         }}
       </GetCurrentUserPlayrollQuery>

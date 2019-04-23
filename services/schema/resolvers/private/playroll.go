@@ -224,8 +224,8 @@ var listCurrentUserPlayrolls = gqltag.Method{
 		}
 
 		type listCurrentUserPlayrollsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listCurrentUserPlayrollsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -234,7 +234,10 @@ var listCurrentUserPlayrolls = gqltag.Method{
 			return nil, err
 		}
 
-		return models.GetPlayrollsByUserID(user.ID, mctx.DB)
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
+
+		return models.GetPlayrollsByUserID(user.ID, db)
 	},
 }
 
@@ -260,7 +263,16 @@ var listUserPlayrolls = gqltag.Method{
 		}
 
 		id := utils.StringIDToNumber(params.UserID)
-		return models.GetPlayrollsByUserID(id, mctx.DB)
+
+		if params.Count == 0 {
+			params.Count = 0
+		}
+		if params.Offset == 0 {
+			params.Offset = 20
+		}
+		db := mctx.DB.Offset(params.Offset).Count(params.Count)
+
+		return models.GetPlayrollsByUserID(id, db)
 	},
 }
 

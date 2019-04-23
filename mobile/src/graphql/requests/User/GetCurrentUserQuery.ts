@@ -5,9 +5,9 @@ import { User, UserFragments } from '../../types';
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
 export const GET_CURRENT_USER_QUERY = gql`
-  query GET_CURRENT_USER {
+  query GET_CURRENT_USER($deviceToken: String) {
     private {
-      currentUser {
+      currentUser(deviceToken: $deviceToken) {
         ...DefaultUser
       }
     }
@@ -16,7 +16,7 @@ export const GET_CURRENT_USER_QUERY = gql`
 `;
 
 type GetCurrentUserVariables = {
-  id?: number;
+  deviceToken?: string;
 };
 
 type GetCurrentUserData = {

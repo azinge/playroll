@@ -22,6 +22,10 @@ import {
   GetCurrentUserPlayrollQuery,
 } from '../../../graphql/requests/Playroll';
 import { GenerateTracklistMutation } from '../../../graphql/requests/Tracklist';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
@@ -71,7 +75,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           return (
             <View style={styles.screenContainer}>
               <SubScreenContainer
-                contentContainerStyle={{ paddingBottom: 80 }}
+                contentContainerStyle={{ paddingBottom: hp('17%') }}
                 title='View Playroll'
                 renderHeader={this.renderHeader}
               >
@@ -255,6 +259,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
       <RollList
         rolls={playroll.rolls || []}
         disableManage
+
         // onPress={() => {}}
       />
     );

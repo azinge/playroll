@@ -59,20 +59,20 @@ export default class ProfileScreenHeader extends React.Component<Props, State> {
               <Text style={styles.headerTitle}>{this.props.title}</Text>
             </View>
           }
-          rightComponent={
-            <View style={{ flexDirection: 'row' }}>
-              {this.props.local && (
-                <Icon
-                  name='pencil'
-                  type='material-community'
-                  color='white'
-                  underlayColor='rgba(255,255,255,0)'
-                  // onPress={() => }
-                  containerStyle={{ marginTop: 5, marginRight: 4 }}
-                />
-              )}
-            </View>
-          }
+          // rightComponent={
+          //   <View style={{ flexDirection: 'row' }}>
+          //     {this.props.local && (
+          //       <Icon
+          //         name='pencil'
+          //         type='material-community'
+          //         color='white'
+          //         underlayColor='rgba(255,255,255,0)'
+          //         // onPress={() => }
+          //         containerStyle={{ marginTop: 5, marginRight: 4 }}
+          //       />
+          //     )}
+          //   </View>
+          // }
         />
       </View>
     );

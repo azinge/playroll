@@ -30,6 +30,7 @@
     "react-native-iphone-x-helper": "^1.2.0",
     "react-native-picker-select": "^6.0.0",
     "react-native-progress": "^3.6.0",
+    "react-native-responsive-screen": "^1.2.2",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-swipeout": "^2.3.6",
     "react-navigation": "^3.2.1"

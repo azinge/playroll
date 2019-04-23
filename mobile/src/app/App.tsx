@@ -8,6 +8,10 @@ import NotificationService from '../services/NotificationService';
 import { Notifications } from 'expo';
 import { View } from 'react-native';
 import DropdownAlert from 'react-native-dropdownalert';
+import { LIST_CURRENT_USER_RECOMMENDATIONS_QUERY } from '../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
+import { LIST_FRIEND_REQUESTS_QUERY } from '../graphql/requests/Relationships/ListFriendRequestsQuery';
+import { LIST_FRIENDS_QUERY } from '../graphql/requests/Relationships/ListFriendsQuery';
+import { LIST_FRIENDS_PLAYROLLS_QUERY } from '../graphql/requests/Playroll/ListFriendsPlayrollsQuery';
 
 export type Props = {};
 
@@ -40,7 +44,28 @@ export default class App extends React.Component<Props, State> {
         notification.data.Title,
         notification.data.Body
       );
-      client.reFetchObservableQueries();
+      if (notification.data.Type === 'RECEIVED_RECOMMENDATION') {
+        client.query({
+          query: LIST_CURRENT_USER_RECOMMENDATIONS_QUERY,
+          fetchPolicy: 'network-only',
+        });
+      }
+      if (notification.data.Type === 'RECEIVED_FRIEND_REQUEST') {
+        client.query({
+          query: LIST_FRIEND_REQUESTS_QUERY,
+          fetchPolicy: 'network-only',
+        });
+      }
+      if (notification.data.Type === 'ACCEPTED_FRIEND_REQUEST') {
+        client.query({
+          query: LIST_FRIENDS_QUERY,
+          fetchPolicy: 'network-only',
+        });
+        client.query({
+          query: LIST_FRIENDS_PLAYROLLS_QUERY,
+          fetchPolicy: 'network-only',
+        });
+      }
     }
   }
 

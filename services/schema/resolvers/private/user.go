@@ -3,8 +3,6 @@ package private
 import (
 	"fmt"
 
-	"github.com/cazinge/playroll/services/utils"
-
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/utils"

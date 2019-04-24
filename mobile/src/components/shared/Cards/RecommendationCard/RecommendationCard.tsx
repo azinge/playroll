@@ -35,7 +35,12 @@ export default class RecommendationCard extends React.Component<Props, State> {
       >
         {dismissRecommendation => {
           return (
-            <View style={styles.spacing}>
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: 'lightgrey',
+              }}
+            >
               <Swipeout
                 right={[
                   {
@@ -56,10 +61,21 @@ export default class RecommendationCard extends React.Component<Props, State> {
                   key={recommendation.id}
                 >
                   <View
-                    style={{ width: '100%', alignItems: 'center' }}
+                    style={{
+                      width: '100%',
+                      alignItems: 'center',
+                      marginTop: 5,
+                    }}
                     key={recommendation.id}
                   >
-                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        width: '100%',
+                      }}
+                    >
                       <Image
                         style={styles.cover}
                         source={{ uri: mainSource.cover }}
@@ -92,6 +108,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
                         // onPress={() => NavigationService.goBack()}
                       />
                     </View>
+                    <View style={styles.spacing} />
                   </View>
                 </TouchableOpacity>
                 {/* <View style={styles.spacing} /> */}

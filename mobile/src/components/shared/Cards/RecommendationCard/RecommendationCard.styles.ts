@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   cover: {
-    width: 65,
-    height: 65,
+    width: 75,
+    height: 75,
     marginHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
@@ -28,7 +28,8 @@ export default StyleSheet.create({
   spacing: {
     // width: '75%',
     // marginVertical: 10,
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginBottom: 5,
+    // borderBottomColor: 'lightgrey',
+    // borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });

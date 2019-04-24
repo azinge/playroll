@@ -11,6 +11,10 @@ import {
   FlatList,
   Image,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
 import RecommendationCard from '../../shared/Cards/RecommendationCard';
@@ -60,7 +64,12 @@ export default class DefaultSocialScreen extends React.Component {
         {({ loading, error, data }) => {
           const recommendations = extractRecommendations(data);
           return (
-            <MainScreenContainer contentContainerStyle={{ marginTop: 10 }}>
+            <MainScreenContainer
+              contentContainerStyle={{
+                marginTop: 10,
+                paddingBottom: hp('12.1%'),
+              }}
+            >
               <View style={{ marginBottom: 10 }}>
                 <View style={{ margin: 10, flexDirection: 'row' }}>
                   <Heading

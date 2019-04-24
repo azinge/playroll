@@ -200,7 +200,6 @@ export default class RollList extends React.Component<Props, State> {
                   {
                     text: 'Delete',
                     backgroundColor: 'red',
-
                     onPress: () => deleteRoll({ variables: { id: roll.id } }),
                   },
                 ]}
@@ -223,34 +222,32 @@ export default class RollList extends React.Component<Props, State> {
                     });
                   }}
                 >
-                  <View>
-                    <View style={styles.outerContainer} key={roll.id}>
-                      <View style={styles.innerContainer}>
-                        <Image
-                          style={styles.cover}
-                          source={{ uri: mainSource.cover }}
-                        />
-                        <View style={styles.rowsView}>
-                          {/* Main source icon/text row */}
-                          {mainSourceView}
-                          {/* Filter info per row, see loop above */}
-                          {filterViews}
-                        </View>
-                        {/* Right side menu icons */}
-                        {!this.props.readOnly && (
-                          <Icon
-                            size={25}
-                            name='edit'
-                            color='lightgrey'
-                            onPress={() =>
-                              NavigationService.navigate('EditRoll', { roll })
-                            }
-                            iconStyle={styles.editIcon}
-                          />
-                        )}
+                  <View style={styles.outerContainer} key={roll.id}>
+                    <View style={styles.innerContainer}>
+                      <Image
+                        style={styles.cover}
+                        source={{ uri: mainSource.cover }}
+                      />
+                      <View style={styles.rowsView}>
+                        {/* Main source icon/text row */}
+                        {mainSourceView}
+                        {/* Filter info per row, see loop above */}
+                        {filterViews}
                       </View>
-                      <View style={styles.spacing} />
+                      {/* Right side menu icons */}
+                      {!this.props.readOnly && (
+                        <Icon
+                          size={25}
+                          name='edit'
+                          color='lightgrey'
+                          onPress={() =>
+                            NavigationService.navigate('EditRoll', { roll })
+                          }
+                          iconStyle={styles.editIcon}
+                        />
+                      )}
                     </View>
+                    <View style={styles.spacing} />
                   </View>
                 </TouchableOpacity>
               </Swipeout>

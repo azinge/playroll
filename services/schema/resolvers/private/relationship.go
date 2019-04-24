@@ -75,8 +75,8 @@ var listFriends = gqltag.Method{
 		}
 
 		type listFriendsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listFriendsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -85,7 +85,9 @@ var listFriends = gqltag.Method{
 			return nil, err
 		}
 
-		users, err := models.GetFriendsByUserID(user.ID, mctx.DB)
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
+		users, err := models.GetFriendsByUserID(user.ID, db)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -105,8 +107,8 @@ var listFriendRequests = gqltag.Method{
 		}
 
 		type listFriendRequestsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listFriendRequestsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -116,7 +118,8 @@ var listFriendRequests = gqltag.Method{
 		}
 
 		rs := &[]models.Relationship{}
-		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Find(&rs).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := mctx.DB.Preload("OtherUser").Where(&models.Relationship{UserID: user.ID, Status: "Friend Request Received"}).Offset(offset).Limit(count).Find(&rs).Error; err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
@@ -233,6 +236,16 @@ var sendFriendRequest = gqltag.Method{
 			return nil, err
 		}
 
+		pushNotification := &models.PushNotification{
+			Type:  "RECEIVED_FRIEND_REQUEST",
+			Title: "Received Friend Request",
+			Body:  fmt.Sprintf("%s has just sent you a friend request!", user.Name),
+		}
+
+		if err := models.SendUserPushNotification(otherUserID, pushNotification, mctx.DB); err != nil {
+			return nil, err
+		}
+
 		return models.FormatRelationship(r1)
 	},
 }
@@ -292,6 +305,16 @@ var acceptFriendRequest = gqltag.Method{
 
 		if err := mctx.DB.Save(r2).Error; err != nil {
 			fmt.Println(err)
+			return nil, err
+		}
+
+		pushNotification := &models.PushNotification{
+			Type:  "ACCEPTED_FRIEND_REQUEST",
+			Title: "Accepted Friend Request",
+			Body:  fmt.Sprintf("%s has just accepted your friend request!", user.Name),
+		}
+
+		if err := models.SendUserPushNotification(otherUserID, pushNotification, mctx.DB); err != nil {
 			return nil, err
 		}
 

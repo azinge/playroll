@@ -6,7 +6,6 @@ import (
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
-	"github.com/cazinge/playroll/services/schema/resolvers/admin"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
@@ -30,8 +29,8 @@ var listCurrentUserRecommendations = gqltag.Method{
 		}
 
 		type listCurrentUserRecommendationsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listCurrentUserRecommendationsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -41,8 +40,10 @@ var listCurrentUserRecommendations = gqltag.Method{
 		}
 
 		recommendationsModels := &[]models.Recommendation{}
+
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
 		db := mctx.DB
-		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
+		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}
@@ -55,11 +56,66 @@ var listCurrentUserRecommendations = gqltag.Method{
 	},
 }
 
-// TODO(cazinge): Convert to Authenticated Endpoint
-
 var createRecommendation = gqltag.Method{
 	Description: `Dismisses the current user's recommendation.`,
-	Request:     admin.GenerateCreateEntityMethod(&models.Recommendation{}, &models.RecommendationInput{}),
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		e := &models.Recommendation{}
+		dao := e.InitDAO(mctx.DB)
+
+		type createEntityParams struct {
+			Input models.RecommendationInput
+		}
+		params := &createEntityParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		fmt.Printf("%#v\n", params)
+		fmt.Printf("%#v\n", params.Input)
+
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		entity, err := params.Input.ToModel()
+		if err != nil {
+			return nil, err
+		}
+
+		rawEntity, err := dao.Create(entity)
+		if err != nil {
+			return nil, err
+		}
+
+		userID := utils.StringIDToNumber(params.Input.UserID)
+
+		recommendationName := "."
+
+		if len(params.Input.Data.Sources) > 0 {
+			mainSource := params.Input.Data.Sources[0]
+			if mainSource.Type == "Artist" {
+				recommendationName = fmt.Sprintf(": %s", mainSource.Name)
+			} else {
+				recommendationName = fmt.Sprintf(": %s by %s", mainSource.Name, mainSource.Creator)
+			}
+		}
+
+		pushNotification := &models.PushNotification{
+			Type:  "RECEIVED_RECOMMENDATION",
+			Title: "Received Recommendation",
+			Body:  fmt.Sprintf("%s has just sent you a recommendation%s", user.Name, recommendationName),
+		}
+
+		if err := models.SendUserPushNotification(userID, pushNotification, mctx.DB); err != nil {
+			return nil, err
+		}
+
+		return dao.Format(rawEntity)
+	},
 }
 
 var dismissRecommendation = gqltag.Method{

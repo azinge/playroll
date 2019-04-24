@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "272693779385",
+    "firebase_url": "https://playroll-35d56.firebaseio.com",
+    "project_id": "playroll-35d56",
+    "storage_bucket": "playroll-35d56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272693779385:android:4925c671c840d96d",
+        "android_client_info": {
+          "package_name": "com.playroll.playroll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272693779385-jkcf8s5nf6jf87irj49dhaombialeekn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG1dhJXHyqk145g1o-6MDx9zfxOk02JXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272693779385-jkcf8s5nf6jf87irj49dhaombialeekn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -70,13 +70,36 @@ export default class PlayrollCard extends React.Component<Props, State> {
             }
           }
           return (
-            <TouchableHighlight
-              style={{ marginHorizontal: 15 }}
-              onPress={() => onPress(playroll)}
+            <View
+              onLayout={event => {
+                let { x, y, width, height } = event.nativeEvent.layout;
+              }}
             >
-              <View>
-                <View style={{ flexDirection: 'row' }}>
-                  <View>
+              <TouchableHighlight
+                style={{
+                  marginHorizontal: 15,
+                  marginVertical: 15,
+                  height: 75,
+                }}
+                onPress={() => onPress(playroll)}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                      alignContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
                     {playroll.rolls && playroll.rolls.length > 0 ? (
                       <Carousel
                         data={playroll.rolls}
@@ -108,9 +131,9 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     )}
                   </View>
                 </View>
-                <HorizontalRule />
-              </View>
-            </TouchableHighlight>
+              </TouchableHighlight>
+              <HorizontalRule />
+            </View>
           );
         }}
       </GetCurrentUserPlayrollQuery>

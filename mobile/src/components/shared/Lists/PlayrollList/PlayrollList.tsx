@@ -21,6 +21,7 @@ export default class PlayrollList extends React.Component<Props, State> {
     return (
       <FlatList
         data={playrolls}
+        contentContainerStyle={{ flex: 1, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         keyExtractor={playroll => `${playroll.id}`}
         extraData={this.state}

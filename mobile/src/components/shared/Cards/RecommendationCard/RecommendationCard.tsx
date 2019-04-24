@@ -35,41 +35,44 @@ export default class RecommendationCard extends React.Component<Props, State> {
       >
         {dismissRecommendation => {
           return (
-            <Swipeout
-              right={[
-                {
-                  text: 'Dismiss',
-                  backgroundColor: '#c70700',
-                  onPress: () => {
-                    dismissRecommendation();
+            <View style={styles.spacing}>
+              <Swipeout
+                right={[
+                  {
+                    text: 'Dismiss',
+                    backgroundColor: '#c70700',
+                    onPress: () => {
+                      dismissRecommendation();
+                    },
                   },
-                },
-              ]}
-              backgroundColor={'transparent'}
-              autoClose={true}
-            >
-              <TouchableOpacity
-                onPress={() => this.manageRoll(mainSource, recommendation.data)}
-                key={recommendation.id}
+                ]}
+                backgroundColor={'transparent'}
+                autoClose={true}
               >
-                <View
-                  style={{ width: '100%', alignItems: 'center' }}
+                <TouchableOpacity
+                  onPress={() =>
+                    this.manageRoll(mainSource, recommendation.data)
+                  }
                   key={recommendation.id}
                 >
-                  <View style={{ flexDirection: 'row', width: '100%' }}>
-                    <Image
-                      style={styles.cover}
-                      source={{ uri: mainSource.cover }}
-                    />
-                    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                      <Text style={styles.artist} numberOfLines={2}>
-                        {mainSource.name}
-                      </Text>
+                  <View
+                    style={{ width: '100%', alignItems: 'center' }}
+                    key={recommendation.id}
+                  >
+                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                      <Image
+                        style={styles.cover}
+                        source={{ uri: mainSource.cover }}
+                      />
+                      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                        <Text style={styles.artist} numberOfLines={2}>
+                          {mainSource.name}
+                        </Text>
 
-                      {/* ISSUE WITH RECOMMENDER */}
-                      <Text style={styles.manageRoll}>
-                        Recommended by: {recommendation.recommender.name}
-                        {/* {console.log(
+                        {/* ISSUE WITH RECOMMENDER */}
+                        <Text style={styles.manageRoll}>
+                          Recommended by: {recommendation.recommender.name}
+                          {/* {console.log(
                     "RECOMMENDER: " +
                       recommendation.recommender.name +
                       "\n" +
@@ -79,20 +82,21 @@ export default class RecommendationCard extends React.Component<Props, State> {
                   {recommendation &&
                     recommendation.recommender &&
                     recommendation.recommender.name} */}
-                      </Text>
+                        </Text>
+                      </View>
+                      <Icon
+                        size={35}
+                        name='more-vert'
+                        color='lightgrey'
+                        underlayColor='rgba(255,255,255,0)'
+                        // onPress={() => NavigationService.goBack()}
+                      />
                     </View>
-                    <Icon
-                      size={35}
-                      name='more-vert'
-                      color='lightgrey'
-                      underlayColor='rgba(255,255,255,0)'
-                      // onPress={() => NavigationService.goBack()}
-                    />
                   </View>
-                  <View style={styles.spacing} />
-                </View>
-              </TouchableOpacity>
-            </Swipeout>
+                </TouchableOpacity>
+                {/* <View style={styles.spacing} /> */}
+              </Swipeout>
+            </View>
           );
         }}
       </DismissRecommendationMutation>

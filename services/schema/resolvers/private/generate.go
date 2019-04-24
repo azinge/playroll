@@ -22,11 +22,16 @@ type GenerateMethods struct {
 var getTracklistSongs = gqltag.Method{
 	Description: `[Get Tracklist Songs Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		_, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println("error authorizing user: ", err.Error())
+			return nil, err
+		}
 		type getTracklistSongsParams struct {
 			TracklistID string
 		}
 		params := &getTracklistSongsParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -46,11 +51,16 @@ var getTracklistSongs = gqltag.Method{
 var generateTracklist = gqltag.Method{
 	Description: `[Generate Tracklist Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		_, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println("error authorizing user: ", err.Error())
+			return nil, err
+		}
 		type generateTracklistParams struct {
 			PlayrollID string
 		}
 		params := &generateTracklistParams{}
-		err := mapstructure.Decode(resolveParams.Args, params)
+		err = mapstructure.Decode(resolveParams.Args, params)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
+	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
 )
@@ -94,8 +95,8 @@ var searchUsers = gqltag.Method{
 
 		type searchUsersParams struct {
 			Query  string
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &searchUsersParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -105,7 +106,8 @@ var searchUsers = gqltag.Method{
 		}
 
 		userModels := &[]models.User{}
-		if err := mctx.DB.Preload("Relationships", "user_id = ?", authorizedUser.ID).Where("name LIKE ?", "%"+params.Query+"%").Where("id <> ? AND account_type <> ?", authorizedUser.ID, "Managed").Find(userModels).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := mctx.DB.Preload("Relationships", "user_id = ?", authorizedUser.ID).Where("name LIKE ?", "%"+params.Query+"%").Where("id <> ? AND account_type <> ?", authorizedUser.ID, "Managed").Offset(offset).Limit(count).Find(userModels).Error; err != nil {
 			fmt.Printf("error searching users: %s", err.Error())
 			return nil, err
 		}

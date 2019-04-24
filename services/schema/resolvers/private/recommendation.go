@@ -29,8 +29,8 @@ var listCurrentUserRecommendations = gqltag.Method{
 		}
 
 		type listCurrentUserRecommendationsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listCurrentUserRecommendationsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -40,8 +40,10 @@ var listCurrentUserRecommendations = gqltag.Method{
 		}
 
 		recommendationsModels := &[]models.Recommendation{}
+
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
 		db := mctx.DB
-		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Find(recommendationsModels).Error; err != nil {
+		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}

@@ -40,6 +40,7 @@ func AdminGraphqlHandler(context context.Context, request events.APIGatewayProxy
 	mctx := &gqltag.MethodContext{
 		DB:      db,
 		Request: request,
+		Context: context,
 	}
 	schema, err := gqltag.GenerateGraphQLSchema(
 		schema.LinkedAdminTypes,

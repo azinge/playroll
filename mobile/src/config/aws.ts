@@ -1,3 +1,6 @@
+import { WebBrowser, Linking } from 'expo';
+import { Platform } from 'react-native';
+
 export const api = {
   local: {
     url: 'http://localhost:4445/graphql',
@@ -20,6 +23,15 @@ export const amplify = {
       userPoolId: 'us-west-2_u1L3OQa8W',
       // OPTIONAL - Amazon Cognito App Client ID
       userPoolWebClientId: '3gvfjnh67m86026e6g5vkaiegs',
+
+      oauth: {
+        domain: 'playroll-general.auth.us-west-2.amazoncognito.com',
+        scope: ['public_profile', 'phone', 'email', 'profile', 'openid'],
+        redirectSignIn: 'https://app-dev.playroll.io',
+        redirectSignOut: 'https://app-dev.playroll.io',
+        responseType: 'code', // or token
+        urlOpener: WebBrowser.openBrowserAsync,
+      },
     },
   },
 };

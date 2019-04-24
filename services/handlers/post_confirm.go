@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cazinge/playroll/services/models"
@@ -32,9 +34,15 @@ type CognitoEventResponse struct {
 }
 
 type CognitoUserAttributes struct {
-	Sub     string `json:"sub"`
-	Email   string `json:"email"`
-	Profile string `json:"profile"`
+	Sub               string `json:"sub"`
+	Email             string `json:"email"`
+	Profile           string `json:"profile"`
+	PreferredUsername string `json:"preferred_username"`
+}
+
+func IsJSON(str string) bool {
+	var js json.RawMessage
+	return json.Unmarshal([]byte(str), &js) == nil
 }
 
 func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*CognitoEventResponse, error) {
@@ -54,9 +62,10 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*
 	defer db.Close()
 
 	type cognitoEventInternalRequest struct {
-		UserAttributes CognitoUserAttributes
+		UserAttributes map[string]string
 	}
 	intReq := &cognitoEventInternalRequest{}
+
 	err = mapstructure.Decode(request.Request, intReq)
 	if err != nil {
 		fmt.Println(err)
@@ -64,8 +73,34 @@ func PostConfirmHandler(context context.Context, request CognitoEventRequest) (*
 	}
 
 	attrs := intReq.UserAttributes
-	userInput := &models.UserInput{Name: request.Username, Avatar: attrs.Profile, Email: attrs.Email}
-	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", Identifier: attrs.Sub}
+
+	fmt.Println("%#v\n", intReq)
+	fmt.Println("%#v\n", attrs)
+	name := attrs["preferred_username"]
+	if name == "" {
+		name = request.Username
+	}
+	name = strings.Replace(name, " ", "_", -1)
+	fmt.Println(attrs["preferred_username"], request.Username)
+
+	avatar := attrs["profile"]
+	fmt.Println(avatar, IsJSON(avatar))
+	if IsJSON(avatar) {
+		var data struct {
+			Data struct {
+				URL string `json:"url"`
+			} `json:"data"`
+		}
+		json.Unmarshal([]byte(avatar), &data)
+		fmt.Println(data)
+		avatar = data.Data.URL
+	}
+
+	email := attrs["email"]
+	sub := attrs["sub"]
+
+	userInput := &models.UserInput{Name: name, Avatar: avatar, Email: email}
+	identityCredentialInput := &models.IdentityCredentialInput{Provider: "CognitoUserPool", Identifier: sub}
 	models.CreateUserWithIdentityCredential(userInput, identityCredentialInput, db)
 
 	return &CognitoEventResponse{

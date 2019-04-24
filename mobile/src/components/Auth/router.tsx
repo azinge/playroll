@@ -4,33 +4,18 @@ import { createStackNavigator } from 'react-navigation';
 import SignUpScreen from './SignUpScreen';
 import ConfirmationScreen from './ConfirmationScreen';
 import LandingScreen from './LandingScreen';
+import OAuthTestScreen from './OAuthTestScreen';
 
 export const AuthNavigator = createStackNavigator(
   {
-    SignUp: {
-      screen: SignUpScreen,
-      navigationOptions: () => ({
-        title: `SignUp`,
-        header: null,
-      }),
-    },
-    Confirmation: {
-      screen: ConfirmationScreen,
-      navigationOptions: () => ({
-        title: `Confirmation`,
-        header: null,
-      }),
-    },
-    Landing: {
-      screen: LandingScreen,
-      navigationOptions: () => ({
-        title: `Landing`,
-        header: null,
-      }),
-    },
+    SignUp: SignUpScreen,
+    Confirmation: ConfirmationScreen,
+    Landing: LandingScreen,
+
+    OAuthTest: OAuthTestScreen,
   },
   {
     initialRouteName: 'Landing',
-    headerMode: 'screen',
+    headerMode: 'none',
   }
 );

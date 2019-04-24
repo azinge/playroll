@@ -20,13 +20,19 @@ import {
 } from 'react-navigation';
 import Errors from '../../shared/Modals/Errors';
 import { SignInMutation } from '../../../graphql/requests/Auth';
+import { withOAuth } from 'aws-amplify-react-native';
 
 import styles from './LandingScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import DropdownAlert from 'react-native-dropdownalert';
+import { SocialIcon } from 'react-native-elements';
+import { Linking, WebBrowser } from 'expo';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
+  googleSignIn?: () => void;
+  facebookSignIn?: () => void;
+  oAuthUser?: any;
 }
 
 interface State {
@@ -37,7 +43,7 @@ interface State {
   triggerSignIn: boolean;
 }
 
-export default class LandingScreen extends React.Component<Props, State> {
+class LandingScreen extends React.Component<Props, State> {
   dropdown: DropdownAlert;
 
   constructor(props) {
@@ -57,6 +63,19 @@ export default class LandingScreen extends React.Component<Props, State> {
     this.renderErrorModal = this.renderErrorModal.bind(this);
   }
 
+  handleRedirect(result) {
+    console.log(result);
+    if (result.url) {
+      WebBrowser.dismissBrowser();
+    } else {
+      return this.dropdown.alertWithType(
+        'error',
+        'Error',
+        'Error signing up with external provider.'
+      );
+    }
+  }
+
   componentDidMount() {
     const username =
       this.props.navigation && this.props.navigation.getParam('username');
@@ -72,6 +91,12 @@ export default class LandingScreen extends React.Component<Props, State> {
         triggerSignIn,
       });
     }
+
+    Linking.addEventListener('url', this.handleRedirect);
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleRedirect);
   }
 
   handleErrors(error) {
@@ -135,6 +160,7 @@ export default class LandingScreen extends React.Component<Props, State> {
             value={this.state.password}
           />
         </View>
+        {this.renderSocialLogin()}
       </View>
     );
   }
@@ -147,13 +173,6 @@ export default class LandingScreen extends React.Component<Props, State> {
           password: this.state.password,
         },
       });
-      NavigationService.dispatch(
-        StackActions.reset({
-          key: null,
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Main' })],
-        })
-      );
     } catch (err) {
       console.log(err);
       if (err.code === 'UserNotConfirmedException') {
@@ -196,6 +215,15 @@ export default class LandingScreen extends React.Component<Props, State> {
         }}
       >
         {(signIn, { error, loading, data }) => {
+          if (this.props.oAuthUser) {
+            NavigationService.dispatch(
+              StackActions.reset({
+                key: null,
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: 'Main' })],
+              })
+            );
+          }
           if (this.state.triggerSignIn) {
             this.setState({ triggerSignIn: false }, () => {
               this.signInWrapper(signIn);
@@ -231,6 +259,27 @@ export default class LandingScreen extends React.Component<Props, State> {
     );
   }
 
+  renderSocialLogin() {
+    return (
+      <View style={{ flexDirection: 'row', margin: 10 }}>
+        <SocialIcon
+          title='Facebook Sign In'
+          button
+          type='facebook'
+          style={{ flex: 1 }}
+          onPress={this.props.facebookSignIn}
+        />
+        <SocialIcon
+          title='Google Sign In'
+          button
+          type='google-plus-official'
+          style={{ flex: 1 }}
+          onPress={this.props.googleSignIn}
+        />
+      </View>
+    );
+  }
+
   renderFooter() {
     return (
       <View style={styles.footerRow}>
@@ -251,3 +300,5 @@ export default class LandingScreen extends React.Component<Props, State> {
     );
   }
 }
+
+export default withOAuth(LandingScreen);

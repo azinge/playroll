@@ -9,6 +9,7 @@ import Carousel from 'react-native-snap-carousel';
 import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
 
 import styles from './HorizontalPlayrollList.styles';
+import { Card } from 'react-native-elements';
 
 export interface Props {
   title?: string;
@@ -53,6 +54,7 @@ export default class HorizontalPlayrollList extends React.Component<
         </View>
         <FlatList
           horizontal={true}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
           showsHorizontalScrollIndicator={false}
           data={this.props.playrolls.map((ms, i) => ({
             ...ms,
@@ -69,41 +71,64 @@ export default class HorizontalPlayrollList extends React.Component<
             }
             return (
               <TouchableOpacity onPress={() => onPress(playroll)}>
-                <View
-                  style={{
-                    width: 125,
-                    alignItems: 'center',
+                <Card
+                  wrapperStyle={{
+                    marginVertical: 3,
+                    marginHorizontal: 0,
+                    paddingHorizontal: 0,
+                  }}
+                  containerStyle={{
+                    borderRadius: 12,
+                    borderColor: 'white',
+                    shadowColor: 'gray',
+                    shadowOffset: {
+                      width: 2,
+                      height: 3,
+                    },
+                    shadowRadius: 5,
+                    shadowOpacity: 0.3,
+                    padding: 0,
+                    margin: 0,
+                    marginHorizontal: 5,
+                    marginVertical: 0,
                   }}
                 >
-                  {playroll.rolls && playroll.rolls.length > 0 ? (
-                    <Carousel
-                      data={playroll.rolls}
-                      renderItem={this._renderRoll}
-                      hasParallaxImages={false}
-                      sliderWidth={100}
-                      itemWidth={75}
-                      itemHeight={75}
-                      loop={true}
-                      useScrollView
-                    />
-                  ) : (
-                    <Image
-                      source={{
-                        uri:
-                          'https://www.unesale.com/ProductImages/Large/notfound.png',
-                      }}
-                      style={{ height: 75, width: 75, borderRadius: 5 }}
-                    />
-                  )}
-                  <Text style={styles.sourceTitle} numberOfLines={2}>
-                    {playroll.name}
-                  </Text>
-                  {creator && (
-                    <Text style={styles.sourceCreator} numberOfLines={1}>
-                      By {creator}
+                  <View
+                    style={{
+                      width: 125,
+                      alignItems: 'center',
+                    }}
+                  >
+                    {playroll.rolls && playroll.rolls.length > 0 ? (
+                      <Carousel
+                        data={playroll.rolls}
+                        renderItem={this._renderRoll}
+                        hasParallaxImages={false}
+                        sliderWidth={100}
+                        itemWidth={75}
+                        itemHeight={75}
+                        loop={true}
+                        useScrollView
+                      />
+                    ) : (
+                      <Image
+                        source={{
+                          uri:
+                            'https://www.unesale.com/ProductImages/Large/notfound.png',
+                        }}
+                        style={{ height: 75, width: 75, borderRadius: 5 }}
+                      />
+                    )}
+                    <Text style={styles.sourceTitle} numberOfLines={2}>
+                      {playroll.name}
                     </Text>
-                  )}
-                </View>
+                    {creator && (
+                      <Text style={styles.sourceCreator} numberOfLines={1}>
+                        By {creator}
+                      </Text>
+                    )}
+                  </View>
+                </Card>
               </TouchableOpacity>
             );
           }}

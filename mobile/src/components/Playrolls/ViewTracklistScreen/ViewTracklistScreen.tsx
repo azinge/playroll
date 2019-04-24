@@ -3,8 +3,16 @@
  */
 
 import React from 'react';
-import { Text, View, Image, ScrollView, ActivityIndicator } from 'react-native';
-import { Card, Button, Header, Icon } from 'react-native-elements';
+import { Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  Card,
+  Button,
+  Header,
+  Icon,
+  ListItem,
+  Image,
+  Divider,
+} from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 
 import {
@@ -27,67 +35,119 @@ interface State {}
 
 export default class ViewTracklistScreen extends React.Component<Props, State> {
   render() {
-    const nav = this.props.navigation;
-    const tracklistID =
-      nav && nav.state && nav.state.params && nav.state.params.tracklistID;
-    const playlistName =
-      nav && nav.state && nav.state.params && nav.state.params.playrollName;
+    const { navigation } = this.props;
+    const tracklistID = navigation.getParam('tracklistID', '');
+    const playlistName = navigation.getParam('playrollName', '');
+    const extractTracklist = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return null;
+      }
+      return data.private.currentUserTracklist;
+    };
     return (
-      // SafeAreaView causes a large margin/padding at the top, so we're avoiding it, using bottomMargin instead
-      // https://facebook.github.io/react-native/docs/safeareaview
-      // <SafeAreaView style={styles.screenContainer} forceInset={{ top: 'never' }}>
       <GetTracklistQuery variables={{ id: tracklistID }}>
         {({ loading, error, data }) => {
+          const success = !loading && !error;
+          const tracklist = extractTracklist(data);
           if (loading || error) {
             return <SubScreenContainer title='View Tracklist' />;
           }
+
           return (
             <View style={{ flex: 1 }}>
-              <SubScreenContainer title='View Tracklist'>
-                <View style={styles.tracklistView}>
-                  {/* Scroll View Content */}
-                  <ScrollView
-                    style={styles.scrollView}
-                    contentContainerStyle={styles.scrollViewContent}
-                  >
-                    {data &&
-                      data.private.currentUserTracklist &&
-                      data.private.currentUserTracklist.compiledRolls &&
-                      data.private.currentUserTracklist.compiledRolls.map(
-                        compiledRoll => {
+              <SubScreenContainer
+                contentContainerStyle={{ paddingTop: 10, paddingBottom: 120 }}
+                title='View Tracklist'
+                flatList={success}
+                data={tracklist.compiledRolls}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => {
+                  console.log('ROLL NAME: ' + JSON.stringify(item));
+                  const rollSource =
+                    item &&
+                    item.roll &&
+                    item.roll.data &&
+                    item.roll.data.sources &&
+                    item.roll.data.sources.length > 0 &&
+                    item.roll.data.sources[0];
+                  return (
+                    <Card
+                      key={item.id}
+                      containerStyle={{
+                        borderRadius: 20,
+                        // marginTop: 0,
+                        borderColor: 'white',
+                        shadowColor: 'gray',
+                        shadowOffset: {
+                          width: 2,
+                          height: 3,
+                        },
+                        shadowRadius: 5,
+                        shadowOpacity: 0.5,
+                      }}
+                      //   image={{ uri: rollSource.cover }}
+                      //   title={rollSource.name}
+                    >
+                      <View>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Image
+                            style={{
+                              height: 65,
+                              width: 65,
+                              borderRadius: 65 / 2,
+                            }}
+                            source={{ uri: rollSource.cover }}
+                          />
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              textAlignVertical: 'center',
+                              marginLeft: 15,
+                              fontSize: 28,
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {rollSource.name}
+                          </Text>
+                        </View>
+                        <Divider style={{ marginVertical: 10 }} />
+                        {item.data.tracks.map(track => {
                           return (
-                            compiledRoll &&
-                            compiledRoll.data &&
-                            compiledRoll.data.tracks &&
-                            compiledRoll.data.tracks.length > 0 && (
-                              <Card
-                                key={compiledRoll.id}
-                                containerStyle={styles.rollCardContainer}
-                              >
-                                {compiledRoll.data.tracks.map(track => {
-                                  return (
-                                    track && (
-                                      <View
-                                        style={styles.trackView}
-                                        key={track.providerID}
-                                      >
-                                        <Image
-                                          style={styles.trackImage}
-                                          source={{ uri: track.cover }}
-                                        />
-                                        <Text>{track.name}</Text>
-                                      </View>
-                                    )
-                                  );
-                                })}
-                              </Card>
+                            track && (
+                              <ListItem
+                                containerStyle={{
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                                key={track.providerID}
+                                title={track.name}
+                                titleStyle={{ fontSize: 14 }}
+                                leftIcon={
+                                  <Icon
+                                    color='purple'
+                                    type='material'
+                                    name='audiotrack'
+                                  />
+                                }
+                              />
                             )
                           );
-                        }
-                      )}
-                  </ScrollView>
-                </View>
-              </SubScreenContainer>
+                        })}
+                      </View>
+                    </Card>
+                  );
+                }}
+              />
+              {this.renderGeneratePlaylistButton(tracklistID, playlistName)}
               <CurrentUserSpotifyStatusQuery>
                 {({ loading, error, data }) => {
                   const authenticated =
@@ -146,6 +206,26 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
         }}
       </GetTracklistQuery>
       // </SafeAreaView>
+    );
+  }
+
+  renderGeneratePlaylistButton(tracklistID, playlistName) {
+    return (
+      <GeneratePlaylistMutation
+        variables={{
+          tracklistID,
+          playlistName,
+        }}
+      >
+        {generatePlaylist => (
+          <FooterButton
+            title={'Generate Tracklist'}
+            onPress={() => {
+              generatePlaylist();
+            }}
+          />
+        )}
+      </GeneratePlaylistMutation>
     );
   }
 }

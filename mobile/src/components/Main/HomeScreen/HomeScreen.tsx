@@ -78,7 +78,6 @@ export default class HomeScreen extends React.Component<Props, State> {
               />
             </View>
             <HomeCarousel numItems={5} />
-
             <View
               style={{
                 marginHorizontal: 10,

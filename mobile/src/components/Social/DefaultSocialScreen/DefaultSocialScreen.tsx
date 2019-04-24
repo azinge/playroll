@@ -72,7 +72,7 @@ export default class DefaultSocialScreen extends React.Component {
                     Your Friends
                   </Heading>
                   <Heading
-                    type={'h6'}
+                    type={'h7'}
                     alignment={'right'}
                     opacity={0.7}
                     style={{ flex: 1 }}
@@ -136,7 +136,7 @@ export default class DefaultSocialScreen extends React.Component {
                   Friends Playrolls
                 </Heading>
                 <Heading
-                  type={'h6'}
+                  type={'h7'}
                   alignment={'right'}
                   opacity={0.7}
                   style={{ flex: 1 }}
@@ -178,7 +178,7 @@ export default class DefaultSocialScreen extends React.Component {
                     Recommendations
                   </Heading>
                   <Heading
-                    type={'h6'}
+                    type={'h7'}
                     alignment={'right'}
                     opacity={0.7}
                     style={{ flex: 1 }}

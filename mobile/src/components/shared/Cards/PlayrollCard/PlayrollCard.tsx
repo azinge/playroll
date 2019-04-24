@@ -26,6 +26,7 @@ import { Playroll, Roll, MusicSource } from '../../../../graphql/types';
 import styles from './PlayrollCard.styles';
 import Heading from '../../Text/Heading';
 import HorizontalRule from '../../Text/HorizontalRule';
+import { Card } from 'react-native-elements';
 
 export interface Props {
   playroll?: Playroll;
@@ -70,44 +71,37 @@ export default class PlayrollCard extends React.Component<Props, State> {
             }
           }
           return (
-            <View
-              onLayout={event => {
-                let { x, y, width, height } = event.nativeEvent.layout;
-              }}
-            >
-              <TouchableHighlight
-                style={{
-                  marginHorizontal: 15,
-                  marginVertical: 15,
-                  height: 75,
+            <TouchableOpacity onPress={() => onPress(playroll)}>
+              <Card
+                containerStyle={{
+                  height: 100,
+                  padding: 5,
+                  borderRadius: 12,
+                  borderColor: 'white',
+                  shadowColor: 'gray',
+                  shadowOffset: {
+                    width: 2,
+                    height: 3,
+                  },
+                  shadowRadius: 5,
+                  shadowOpacity: 0.3,
                 }}
-                onPress={() => onPress(playroll)}
               >
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignContent: 'center',
                     alignItems: 'center',
                   }}
                 >
-                  <View
-                    style={{
-                      alignSelf: 'center',
-                      justifyContent: 'center',
-                      alignContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <View style={{ marginTop: 7 }}>
                     {playroll.rolls && playroll.rolls.length > 0 ? (
                       <Carousel
                         data={playroll.rolls}
                         renderItem={this._renderItem}
                         hasParallaxImages={false}
-                        sliderWidth={100}
-                        itemWidth={75}
-                        itemHeight={75}
+                        sliderWidth={110}
+                        itemWidth={70}
+                        itemHeight={70}
                         loop={true}
                       />
                     ) : (
@@ -131,9 +125,8 @@ export default class PlayrollCard extends React.Component<Props, State> {
                     )}
                   </View>
                 </View>
-              </TouchableHighlight>
-              <HorizontalRule />
-            </View>
+              </Card>
+            </TouchableOpacity>
           );
         }}
       </GetCurrentUserPlayrollQuery>

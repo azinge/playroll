@@ -6,6 +6,10 @@ import * as React from 'react';
 import { Text, View, FlatList } from 'react-native';
 import PlayrollCard from '../../Cards/PlayrollCard';
 import { Playroll } from '../../../../graphql/types';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 export interface Props {
   playrolls: Playroll[];
@@ -21,16 +25,18 @@ export default class PlayrollList extends React.Component<Props, State> {
     return (
       <FlatList
         data={playrolls}
-        contentContainerStyle={{ flex: 1, paddingBottom: 40 }}
+        contentContainerStyle={{ flex: 1, paddingBottom: hp('10%') }}
         showsVerticalScrollIndicator={false}
         keyExtractor={playroll => `${playroll.id}`}
         extraData={this.state}
         renderItem={({ item }) => (
-          <PlayrollCard
-            playroll={item}
-            onPress={onPress}
-            hideCreator={hideCreator}
-          />
+          <View>
+            <PlayrollCard
+              playroll={item}
+              onPress={onPress}
+              hideCreator={hideCreator}
+            />
+          </View>
         )}
       />
     );

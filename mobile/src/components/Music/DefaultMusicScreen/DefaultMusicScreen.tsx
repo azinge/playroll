@@ -46,8 +46,8 @@ export default class DefaultMusicScreen extends React.Component {
             width: 2,
             height: 1,
           },
-          shadowRadius: 3,
-          shadowOpacity: 0.2,
+          shadowRadius: 4,
+          shadowOpacity: 0.7,
           overflow: 'visible',
         }}
       />

@@ -68,7 +68,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
 
                       {/* ISSUE WITH RECOMMENDER */}
                       <Text style={styles.manageRoll}>
-                        Recommended by: {recommendation.recommender.name}
+                        Recommended by {recommendation.recommender.name}
                         {/* {console.log(
                     "RECOMMENDER: " +
                       recommendation.recommender.name +

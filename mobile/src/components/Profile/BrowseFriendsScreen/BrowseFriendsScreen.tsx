@@ -45,7 +45,8 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
                 data={friends}
                 icons={[
                   {
-                    name: 'system-update-alt',
+                    name: 'email-search-outline',
+                    type: 'material-community',
                     onPress: () => {
                       NavigationService.navigate('BrowseFriendRequests');
                     },

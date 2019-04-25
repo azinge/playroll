@@ -35,64 +35,85 @@ export default class RecommendationCard extends React.Component<Props, State> {
       >
         {dismissRecommendation => {
           return (
-            <Swipeout
-              right={[
-                {
-                  text: 'Dismiss',
-                  backgroundColor: '#c70700',
-                  onPress: () => {
-                    dismissRecommendation();
-                  },
-                },
-              ]}
-              backgroundColor={'transparent'}
-              autoClose={true}
+            <View
+              style={{
+                borderBottomWidth: 0.5,
+                borderBottomColor: 'lightgrey',
+              }}
             >
-              <TouchableOpacity
-                onPress={() => this.manageRoll(mainSource, recommendation.data)}
-                key={recommendation.id}
+              <Swipeout
+                right={[
+                  {
+                    text: 'Dismiss',
+                    backgroundColor: '#c70700',
+                    onPress: () => {
+                      dismissRecommendation();
+                    },
+                  },
+                ]}
+                backgroundColor={'transparent'}
+                autoClose={true}
               >
-                <View
-                  style={{ width: '100%', alignItems: 'center' }}
+                <TouchableOpacity
+                  onPress={() =>
+                    this.manageRoll(mainSource, recommendation.data)
+                  }
                   key={recommendation.id}
                 >
-                  <View style={{ flexDirection: 'row', width: '100%' }}>
-                    <Image
-                      style={styles.cover}
-                      source={{ uri: mainSource.cover }}
-                    />
-                    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                      <Text style={styles.artist} numberOfLines={2}>
-                        {mainSource.name}
-                      </Text>
+                  <View
+                    style={{
+                      width: '100%',
+                      alignItems: 'center',
+                      marginTop: 5,
+                    }}
+                    key={recommendation.id}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        width: '100%',
+                      }}
+                    >
+                      <Image
+                        style={styles.cover}
+                        source={{ uri: mainSource.cover }}
+                      />
+                      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                        <Text style={styles.artist} numberOfLines={2}>
+                          {mainSource.name}
+                        </Text>
 
-                      {/* ISSUE WITH RECOMMENDER */}
-                      <Text style={styles.manageRoll}>
-                        Recommended by {recommendation.recommender.name}
-                        {/* {console.log(
-                    "RECOMMENDER: " +
-                      recommendation.recommender.name +
-                      "\n" +
-                      "length: " +
-                      recommendation.recommender.name.length
-                  )}
-                  {recommendation &&
-                    recommendation.recommender &&
-                    recommendation.recommender.name} */}
-                      </Text>
+                        {/* ISSUE WITH RECOMMENDER */}
+                        <Text style={styles.manageRoll}>
+                          Recommended by {recommendation.recommender.name}
+                          {/* {console.log(
+                            "RECOMMENDER: " +
+                              recommendation.recommender.name +
+                              "\n" +
+                              "length: " +
+                              recommendation.recommender.name.length
+                          )}
+                          {recommendation &&
+                            recommendation.recommender &&
+                            recommendation.recommender.name} */}
+                        </Text>
+                      </View>
+                      <Icon
+                        size={35}
+                        name='more-vert'
+                        color='lightgrey'
+                        underlayColor='rgba(255,255,255,0)'
+                        // onPress={() => NavigationService.goBack()}
+                      />
                     </View>
-                    <Icon
-                      size={35}
-                      name='more-vert'
-                      color='lightgrey'
-                      underlayColor='rgba(255,255,255,0)'
-                      // onPress={() => NavigationService.goBack()}
-                    />
+                    <View style={styles.spacing} />
                   </View>
-                  <View style={styles.spacing} />
-                </View>
-              </TouchableOpacity>
-            </Swipeout>
+                </TouchableOpacity>
+                {/* <View style={styles.spacing} /> */}
+              </Swipeout>
+            </View>
           );
         }}
       </DismissRecommendationMutation>

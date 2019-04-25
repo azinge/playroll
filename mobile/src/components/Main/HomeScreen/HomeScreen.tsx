@@ -84,6 +84,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               triggerRefetchPopularPlayrolls: true,
             })
           }
+          refreshing={false}
         >
           <View style={{ marginTop: 5, flex: 1 }}>
             <View
@@ -152,11 +153,14 @@ export default class HomeScreen extends React.Component<Props, State> {
               />
             </View>
             <ListNewReleasePlayrollsQuery>
-              {({ data, loading, error }) => {
-                if (this.state.triggerResendSignUp) {
-                  this.setState({ triggerResendSignUp: false }, () => {
-                    this.resendSignUpWrapper(resendSignUp);
-                  });
+              {({ data, loading, error, refetch }) => {
+                if (this.state.triggerRefetchNewReleasePlayrolls) {
+                  this.setState(
+                    { triggerRefetchNewReleasePlayrolls: false },
+                    () => {
+                      refetch();
+                    }
+                  );
                 }
                 if (loading) {
                   return <ActivityIndicator />;
@@ -198,11 +202,14 @@ export default class HomeScreen extends React.Component<Props, State> {
               />
             </View>
             <ListPopularPlayrollsQuery>
-              {({ data, loading, error }) => {
-                if (this.state.triggerResendSignUp) {
-                  this.setState({ triggerResendSignUp: false }, () => {
-                    this.resendSignUpWrapper(resendSignUp);
-                  });
+              {({ data, loading, error, refetch }) => {
+                if (this.state.triggerRefetchPopularPlayrolls) {
+                  this.setState(
+                    { triggerRefetchPopularPlayrolls: false },
+                    () => {
+                      refetch();
+                    }
+                  );
                 }
                 if (loading) {
                   return <ActivityIndicator />;

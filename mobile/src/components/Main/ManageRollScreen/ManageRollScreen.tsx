@@ -100,7 +100,9 @@ export default class ManageRollScreen extends React.Component<Props, State> {
             />
           </View>
           <View style={styles.source}>
-            <Text style={styles.sourceTitle}>{currentSource.name}</Text>
+            <Text numberOfLines={2} style={styles.sourceTitle}>
+              {currentSource.name}
+            </Text>
             <Text style={styles.sourceSubtitle}>{currentSource.type}</Text>
           </View>
           <View style={styles.buttonContainer}>

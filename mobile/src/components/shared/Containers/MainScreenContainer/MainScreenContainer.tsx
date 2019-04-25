@@ -84,6 +84,7 @@ export default class MainScreenContainer extends React.Component<Props, State> {
             : undefined
         }
         renderItem={this.props.renderItem}
+        {...this.getRefreshProps()}
       />
     );
   }

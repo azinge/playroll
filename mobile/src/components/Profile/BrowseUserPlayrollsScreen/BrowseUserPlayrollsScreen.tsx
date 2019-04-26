@@ -18,16 +18,17 @@ import NavigationService from '../../../services/NavigationService';
 import { CreateRollMutation } from '../../../graphql/requests/Roll';
 import DropdownAlert from 'react-native-dropdownalert';
 import { NavigationScreenProp } from 'react-navigation';
-import { RollData } from '../../../graphql/types';
+import { RollData, User } from '../../../graphql/types';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import { ListUserPlayrollsQuery } from '../../../graphql/requests/Playroll/ListUserPlayrollsQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
 
 interface State {
-  rollData: RollData;
+  user: User;
 }
 
 export default class AddToPlayrollScreen extends React.Component<Props, State> {
@@ -37,14 +38,14 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      rollData: {},
+      user: {},
     };
   }
 
   componentDidMount() {
-    const rollData =
-      this.props.navigation && this.props.navigation.getParam('rollData');
-    this.setState({ rollData });
+    const user =
+      this.props.navigation && this.props.navigation.getParam('user');
+    this.setState({ user });
   }
 
   render() {
@@ -55,10 +56,12 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
       ) {
         return [];
       }
-      return data.private.listCurrentUserPlayrolls;
+      return data.private.listUserPlayrolls;
     };
     return (
-      <ListCurrentUserPlayrollsQuery variables={{ offset: 0, count: 20 }}>
+      <ListUserPlayrollsQuery
+        variables={{ userID: this.state.user.id, offset: 0, count: 20 }}
+      >
         {({ loading, error, data, refetch, fetchMore }) => {
           let playrolls = [];
           if (!loading && !error) {
@@ -67,7 +70,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
           return (
             <View style={{ flex: 1 }}>
               <SubScreenContainer
-                title={'Add To Playroll'}
+                title={`${this.state.user.name}'s Playrolls`}
                 contentContainerStyle={{
                   marginTop: 10,
                   paddingBottom: hp('10%'),
@@ -90,7 +93,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
                       if (!fetchMoreResult) return prev;
                       return Object.assign({}, prev, {
                         private: {
-                          listCurrentUserPlayrolls: [
+                          listUserPlayrolls: [
                             ...prevPlayrolls,
                             ...fetchMorePlayrolls,
                           ],
@@ -105,62 +108,23 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
             </View>
           );
         }}
-      </ListCurrentUserPlayrollsQuery>
+      </ListUserPlayrollsQuery>
     );
   }
 
-  async createRollWrapper(createRoll, playroll) {
-    try {
-      await createRoll({
-        variables: {
-          input: {
-            playrollID: playroll.id,
-            data: this.state.rollData,
-          },
-        },
-      });
-      // this.dropdown.alertWithType(
-      //   'info',
-      //   'Added to Playroll',
-      //   'Roll successfully added to playroll.'
-      // );
-      NavigationService.goBack();
-    } catch (err) {
-      console.log(err);
-      this.dropdown.alertWithType(
-        'error',
-        'Error',
-        "We're sorry, Please try again."
-      );
-    }
-  }
-
   renderPlayrolls(playrolls, onEndReached) {
-    const extractPlayrolls = data => {
-      if (
-        Object.keys(data).length === 0 ||
-        Object.keys(data.private).length === 0
-      ) {
-        return [];
-      }
-      return data.private.listCurrentUserPlayrolls;
-    };
     return (
-      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
-        {(createRoll, { loading, error, data }) => {
-          return (
-            <PlayrollList
-              playrolls={playrolls}
-              onPress={playroll => {
-                this.createRollWrapper(createRoll, playroll);
-              }}
-              hideCreator
-              onEndReached={onEndReached}
-              onEndReachedThreshold={0.5}
-            />
-          );
+      <PlayrollList
+        playrolls={playrolls}
+        onPress={playroll => {
+          NavigationService.navigate('ViewExternalPlayroll', {
+            playroll,
+          });
         }}
-      </CreateRollMutation>
+        hideCreator
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+      />
     );
   }
 }

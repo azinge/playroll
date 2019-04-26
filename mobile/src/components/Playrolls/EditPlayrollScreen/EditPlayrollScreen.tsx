@@ -50,8 +50,11 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    const playroll: Playroll =
+      (props && props.navigation && props.navigation.getParam('playroll')) ||
+      {};
     this.state = {
-      editPlayrollName: '',
+      editPlayrollName: playroll.name,
     };
     // this.renderHeader = this.renderHeader.bind(this);
   }
@@ -141,13 +144,6 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
           source={require('../../../assets/new_playroll.png')}
         />
         <UpdatePlayrollMutation
-          variables={{
-            id: playroll.id,
-            input: {
-              name: this.state.editPlayrollName,
-              userID: playroll.userID,
-            },
-          }}
           refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
         >
           {(updatePlayroll, { data }) => (
@@ -157,11 +153,20 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
                 placeholder='Name Your Playroll'
                 placeholderTextColor='lightgrey'
                 style={styles.editingBarNameInput}
+                value={this.state.editPlayrollName}
                 onChangeText={name => this.setState({ editPlayrollName: name })}
-                onSubmitEditing={() => updatePlayroll()}
-              >
-                {playroll.name}
-              </TextInput>
+                onSubmitEditing={() =>
+                  updatePlayroll({
+                    variables: {
+                      id: playroll.id,
+                      input: {
+                        name: this.state.editPlayrollName,
+                        userID: playroll.userID,
+                      },
+                    },
+                  })
+                }
+              />
               <View style={styles.horizontalRule} />
               {playroll && playroll.rolls && (
                 <Text style={styles.subtitle}>

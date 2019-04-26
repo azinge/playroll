@@ -6,9 +6,9 @@ export const LIST_CURRENT_USER_RECOMMENDATIONS =
   'LIST_CURRENT_USER_RECOMMENDATIONS';
 
 export const LIST_CURRENT_USER_RECOMMENDATIONS_QUERY = gql`
-  query LIST_CURRENT_USER_RECOMMENDATIONS {
+  query LIST_CURRENT_USER_RECOMMENDATIONS($offset: Int, $count: Int) {
     private {
-      listCurrentUserRecommendations {
+      listCurrentUserRecommendations(offset: $offset, count: $count) {
         ...DefaultRecommendation
       }
     }
@@ -16,7 +16,10 @@ export const LIST_CURRENT_USER_RECOMMENDATIONS_QUERY = gql`
   ${RecommendationFragments.default}
 `;
 
-type ListCurrentUserRecommendationsVariables = {};
+type ListCurrentUserRecommendationsVariables = {
+  offset?: number;
+  count?: number;
+};
 
 type ListCurrentUserRecommendationsData = {
   private: {

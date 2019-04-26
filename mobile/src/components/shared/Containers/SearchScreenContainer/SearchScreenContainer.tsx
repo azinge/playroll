@@ -7,7 +7,7 @@ import Collapsible from 'react-native-collapsible-header';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import SearchScreenHeader from '../../Headers/SearchScreenHeader';
 import { HeaderIconType } from '../../../../themes/Icons';
-import { StyleProp, ViewStyle, RefreshControl } from 'react-native';
+import { StyleProp, ViewStyle, RefreshControl, View } from 'react-native';
 
 export interface HeaderProps {
   title?: string;
@@ -18,39 +18,29 @@ export interface HeaderProps {
 
 interface ContainerProps extends HeaderProps {
   renderHeader?: () => JSX.Element;
+  renderSubHeader?: () => JSX.Element;
   flatList?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderFlatListHeader?: () => JSX.Element;
   renderFlatListFooter?: () => JSX.Element;
+  renderFlatListEmptyComponent?: () => JSX.Element;
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 interface Props extends ContainerProps {}
 
-interface State {
-  key: string;
-}
+interface State {}
 
 export default class SearchScreenContainer extends React.Component<
   Props,
   State
 > {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      key: `${this.props.title},${this.props.flatList}`,
-    };
-  }
-  componentWillReceiveProps(nextProps, prevState) {
-    const key = `${nextProps.title}${this.props.flatList}`;
-    if (key !== prevState.key) {
-      this.setState({ key });
-    }
-  }
   getRefreshProps() {
     const { flatList, refreshing, onRefresh } = this.props;
     if (!onRefresh) {
@@ -69,7 +59,6 @@ export default class SearchScreenContainer extends React.Component<
   render() {
     return (
       <Collapsible
-        key={this.state.key}
         max={45}
         min={isIphoneX() ? 48 : 20}
         backgroundColor={'purple'}
@@ -93,7 +82,14 @@ export default class SearchScreenContainer extends React.Component<
             ? this.props.renderFlatListFooter()
             : undefined
         }
+        ListEmptyComponent={
+          this.props.renderFlatListEmptyComponent
+            ? this.props.renderFlatListEmptyComponent()
+            : undefined
+        }
         renderItem={this.props.renderItem}
+        onEndReached={this.props.onEndReached}
+        onEndReachedThreshold={this.props.onEndReachedThreshold}
         {...this.getRefreshProps()}
       />
     );

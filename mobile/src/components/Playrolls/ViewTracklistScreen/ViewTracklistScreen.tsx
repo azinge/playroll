@@ -61,7 +61,7 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
               <SubScreenContainer
                 contentContainerStyle={{ paddingTop: 10, paddingBottom: 120 }}
                 title='View Tracklist'
-                flatList={success}
+                flatList
                 data={tracklist.compiledRolls}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => {

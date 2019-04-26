@@ -5,9 +5,9 @@ import { Playroll, PlayrollFragments } from '../../types';
 export const LIST_FRIENDS_PLAYROLLS = 'LIST_FRIENDS_PLAYROLLS';
 
 export const LIST_FRIENDS_PLAYROLLS_QUERY = gql`
-  query LIST_FRIENDS_PLAYROLLS {
+  query LIST_FRIENDS_PLAYROLLS($offset: Int, $count: Int) {
     private {
-      listFriendsPlayrolls {
+      listFriendsPlayrolls(offset: $offset, count: $count) {
         ...DefaultPlayroll
       }
     }
@@ -15,7 +15,10 @@ export const LIST_FRIENDS_PLAYROLLS_QUERY = gql`
   ${PlayrollFragments.default}
 `;
 
-type ListFriendsPlayrollsVariables = {};
+type ListFriendsPlayrollsVariables = {
+  offset: number;
+  count: number;
+};
 
 type ListFriendsPlayrollsData = {
   private: {

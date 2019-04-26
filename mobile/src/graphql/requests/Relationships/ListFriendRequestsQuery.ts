@@ -5,9 +5,9 @@ import { Relationship, RelationshipFragments } from '../../types';
 export const LIST_FRIEND_REQUESTS = 'LIST_FRIEND_REQUESTS';
 
 export const LIST_FRIEND_REQUESTS_QUERY = gql`
-  query LIST_FRIEND_REQUESTS {
+  query LIST_FRIEND_REQUESTS($offset: Int, $count: Int) {
     private {
-      listFriendRequests {
+      listFriendRequests(offset: $offset, count: $count) {
         ...RelationshipWithOtherUser
       }
     }
@@ -15,10 +15,15 @@ export const LIST_FRIEND_REQUESTS_QUERY = gql`
   ${RelationshipFragments.withOtherUser}
 `;
 
-type ListFriendRequestsVariables = {};
+type ListFriendRequestsVariables = {
+  offset: number;
+  count: number;
+};
 
 type ListFriendRequestsData = {
-  listFriendRequests: Relationship[];
+  private: {
+    listFriendRequests: Relationship[];
+  };
 };
 
 export class ListFriendRequestsQuery extends Query<

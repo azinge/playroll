@@ -20,7 +20,7 @@ type SpotifyMethods struct {
 	ListSpotifySavedTracks    *gqltag.Query    `gql:"listSpotifySavedTracks(offset: Int, count: Int): [MusicSource]"`
 	SearchSpotify             *gqltag.Query    `gql:"searchSpotify(query: String, searchType: String): [MusicSource]"`
 	SearchSpotifyFull         *gqltag.Query    `gql:"searchSpotifyFull(query: String): SearchSpotifyOutput"`
-	RegisterSpotifyAuthCode   *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String): MusicServiceCredential"`
+	RegisterSpotifyAuthCode   *gqltag.Mutation `gql:"registerSpotifyAuthCode(code: String, devMode: Boolean): MusicServiceCredential"`
 	GeneratePlaylist          *gqltag.Mutation `gql:"generatePlaylist(tracklistID: ID, playlistName: String): String"`
 }
 
@@ -240,7 +240,8 @@ var registerSpotifyAuthCode = gqltag.Method{
 		}
 
 		type registerSpotifyAuthCodeParams struct {
-			Code string
+			Code    string
+			DevMode bool
 		}
 		params := &registerSpotifyAuthCodeParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -249,7 +250,7 @@ var registerSpotifyAuthCode = gqltag.Method{
 			return nil, err
 		}
 
-		ec, err := spotifyhelpers.RegisterSpotifyAuthCodeForUser(user.ID, params.Code, mctx.DB)
+		ec, err := spotifyhelpers.RegisterSpotifyAuthCodeForUser(user.ID, params.Code, mctx.DB, params.DevMode)
 		if err != nil {
 			fmt.Println("Error Registering Spotify Auth Code for User: ", err.Error())
 			return nil, err

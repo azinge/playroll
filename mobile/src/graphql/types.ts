@@ -119,6 +119,7 @@ export type Recommendation = {
   recommender?: User;
   isActive?: boolean;
   data?: RollData;
+  playrollID?: string;
   playroll?: Playroll;
 };
 
@@ -311,6 +312,7 @@ const RecommendationFragments = {
     fragment DefaultRecommendation on Recommendation {
       id
       isActive
+      playrollID
       data {
         ...DefaultRollData
       }

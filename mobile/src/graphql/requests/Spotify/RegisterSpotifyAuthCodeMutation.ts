@@ -4,9 +4,9 @@ import { Mutation } from 'react-apollo';
 export const REGISTER_SPOTIFY_AUTH_CODE = 'REGISTER_SPOTIFY_AUTH_CODE';
 
 export const REGISTER_SPOTIFY_AUTH_CODE_MUTATION = gql`
-  mutation REGISTER_SPOTIFY_AUTH_CODE($code: String) {
+  mutation REGISTER_SPOTIFY_AUTH_CODE($code: String, $devMode: Boolean) {
     private {
-      registerSpotifyAuthCode(code: $code) {
+      registerSpotifyAuthCode(code: $code, devMode: $devMode) {
         id
       }
     }
@@ -15,6 +15,7 @@ export const REGISTER_SPOTIFY_AUTH_CODE_MUTATION = gql`
 
 type RegisterSpotifyAuthCodeVariables = {
   code?: string;
+  devMode?: boolean;
 };
 
 type RegisterSpotifyAuthCodeData = {

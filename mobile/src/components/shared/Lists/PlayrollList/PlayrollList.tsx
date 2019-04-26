@@ -15,6 +15,8 @@ export interface Props {
   playrolls: Playroll[];
   onPress?: (playroll) => void;
   hideCreator?: boolean;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 interface State {}
@@ -25,7 +27,7 @@ export default class PlayrollList extends React.Component<Props, State> {
     return (
       <FlatList
         data={playrolls}
-        contentContainerStyle={{ flex: 1, paddingBottom: hp('10%') }}
+        contentContainerStyle={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
         keyExtractor={playroll => `${playroll.id}`}
         extraData={this.state}
@@ -38,6 +40,8 @@ export default class PlayrollList extends React.Component<Props, State> {
             />
           </View>
         )}
+        onEndReached={this.props.onEndReached}
+        onEndReachedThreshold={this.props.onEndReachedThreshold}
       />
     );
   }

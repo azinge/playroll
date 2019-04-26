@@ -18,15 +18,19 @@ interface HeaderProps {
 
 interface ContainerProps extends HeaderProps {
   renderHeader?: () => JSX.Element;
+  renderSubHeader?: () => JSX.Element;
   flatList?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   data?: any[];
   keyExtractor?: (item: any, i: number) => string;
   renderFlatListHeader?: () => JSX.Element;
   renderFlatListFooter?: () => JSX.Element;
+  renderFlatListEmptyComponent?: () => JSX.Element;
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 interface Props extends ContainerProps {}
@@ -36,18 +40,6 @@ interface State {
 }
 
 export default class SubScreenContainer extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      key: `${this.props.title},${this.props.flatList}`,
-    };
-  }
-  componentWillReceiveProps(nextProps, prevState) {
-    const key = `${nextProps.title}${this.props.flatList}`;
-    if (key !== prevState.key) {
-      this.setState({ key });
-    }
-  }
   getRefreshProps() {
     const { flatList, refreshing, onRefresh } = this.props;
     if (!onRefresh) {
@@ -66,7 +58,6 @@ export default class SubScreenContainer extends React.Component<Props, State> {
   render() {
     return (
       <Collapsible
-        key={this.state.key}
         max={45}
         min={isIphoneX() ? 48 : 20}
         backgroundColor={'white'}
@@ -90,7 +81,14 @@ export default class SubScreenContainer extends React.Component<Props, State> {
             ? this.props.renderFlatListFooter()
             : undefined
         }
+        ListEmptyComponent={
+          this.props.renderFlatListEmptyComponent
+            ? this.props.renderFlatListEmptyComponent()
+            : undefined
+        }
         renderItem={this.props.renderItem}
+        onEndReached={this.props.onEndReached}
+        onEndReachedThreshold={this.props.onEndReachedThreshold}
         {...this.getRefreshProps()}
       />
     );

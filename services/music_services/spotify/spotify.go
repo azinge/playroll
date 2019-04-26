@@ -12,6 +12,7 @@ import (
 )
 
 const redirectURL = "http://app.playroll.io"
+const devRedirectURL = "https://app-dev.playroll.io"
 
 var spotifyScopes = []string{
 	spotify.ScopeUserReadPrivate,
@@ -58,8 +59,12 @@ func GetSpotifyClientForUser(userID uint, db *gorm.DB) (*spotify.Client, error) 
 	return &client, err
 }
 
-func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB) (*models.MusicServiceCredentialOutput, error) {
-	oauthToken, err := spotify.NewAuthenticator(redirectURL, spotifyScopes...).Exchange(code)
+func RegisterSpotifyAuthCodeForUser(userID uint, code string, db *gorm.DB, devMode bool) (*models.MusicServiceCredentialOutput, error) {
+	redirectLocation := redirectURL
+	if devMode {
+		redirectLocation = devRedirectURL
+	}
+	oauthToken, err := spotify.NewAuthenticator(redirectLocation, spotifyScopes...).Exchange(code)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

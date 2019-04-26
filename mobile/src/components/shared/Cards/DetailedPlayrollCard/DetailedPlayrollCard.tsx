@@ -128,7 +128,6 @@ export default class DetailedPlayrollCard extends React.Component<
                     />
                   )}
                 </View>
-                <View />
               </View>
               <View style={{ margin: -16, flexDirection: 'row' }}>
                 <TouchableOpacity

@@ -41,10 +41,7 @@ export default class ProfileScreenHeader extends React.Component<Props, State> {
         <Header
           backgroundColor='white'
           placement='right'
-          backgroundImage={{
-            uri:
-              'https://imgc.artprintimages.com/img/print/scenic-view-of-a-waterfall-on-havasu-creek_u-l-p3lch50.jpg?h=550&w=550',
-          }}
+          backgroundImage={require('../../../../../assets/playroll_square_background.png')}
           containerStyle={{ borderBottomWidth: 0, height: 300 }}
           leftComponent={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

@@ -5,9 +5,9 @@ import { User, UserFragments } from '../../types';
 export const LIST_FRIENDS = 'LIST_FRIENDS';
 
 export const LIST_FRIENDS_QUERY = gql`
-  query LIST_FRIENDS {
+  query LIST_FRIENDS($offset: Int, $count: Int) {
     private {
-      listFriends {
+      listFriends(offset: $offset, count: $count) {
         ...UserWithRelationships
       }
     }
@@ -15,7 +15,10 @@ export const LIST_FRIENDS_QUERY = gql`
   ${UserFragments.withRelationships}
 `;
 
-type ListFriendsVariables = {};
+type ListFriendsVariables = {
+  offset: number;
+  count: number;
+};
 
 type ListFriendsData = {
   listFriends: User[];

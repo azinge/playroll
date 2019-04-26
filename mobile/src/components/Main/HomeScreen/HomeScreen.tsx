@@ -6,6 +6,10 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { Permissions, Notifications } from 'expo';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import HomeCarousel from './HomeCarousel';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
@@ -84,6 +88,7 @@ export default class HomeScreen extends React.Component<Props, State> {
               triggerRefetchPopularPlayrolls: true,
             })
           }
+          contentContainerStyle={{ paddingBottom: hp('10%') }}
           refreshing={false}
         >
           <View style={{ marginTop: 5, flex: 1 }}>

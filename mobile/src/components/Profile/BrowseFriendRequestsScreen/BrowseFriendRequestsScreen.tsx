@@ -7,6 +7,10 @@ import { NavigationScreenProp } from 'react-navigation';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { TouchableOpacity, ActivityIndicator, Text, View } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import { Icon } from 'react-native-elements';
 import {
   ListFriendRequestsQuery,
@@ -40,19 +44,31 @@ export default class BrowseFriendRequestsScreen extends React.Component<
       return data.private.listFriendRequests;
     };
     return (
-      <ListFriendRequestsQuery>
-        {({ loading, error, data }) => {
+      <ListFriendRequestsQuery variables={{ offset: 0, count: 20 }}>
+        {({ loading, error, data, refetch, fetchMore }) => {
           const friendRequests = extractFriendRequests(data);
           return (
             <View style={{ flex: 1 }}>
               <SubScreenContainer
                 title={'My Friend Requests'}
-                flatList={!loading && !error}
-                contentContainerStyle={{ marginTop: 10 }}
+                flatList
+                contentContainerStyle={{
+                  marginTop: 10,
+                  paddingBottom: hp('10%'),
+                }}
                 data={friendRequests}
                 keyExtractor={item => item.id}
                 renderFlatListHeader={() => {
-                  return <SearchSubHeader />;
+                  return (
+                    <>
+                      {error && (
+                        <Text style={{ paddingTop: 50 }}>
+                          Error Loading Recommendation
+                        </Text>
+                      )}
+                      <SearchSubHeader />
+                    </>
+                  );
                 }}
                 renderItem={({ item }) => {
                   return (
@@ -81,17 +97,38 @@ export default class BrowseFriendRequestsScreen extends React.Component<
                     />
                   );
                 }}
+                refreshing={loading}
+                onRefresh={() => refetch()}
+                onEndReached={() => {
+                  fetchMore({
+                    variables: {
+                      offset: friendRequests.length,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      const prevFriendRequests = extractFriendRequests(prev);
+                      const fetchMoreFriendRequests = extractFriendRequests(
+                        fetchMoreResult
+                      );
+                      if (!fetchMoreResult) return prev;
+                      return Object.assign({}, prev, {
+                        private: {
+                          listFriendRequests: [
+                            ...prevFriendRequests,
+                            ...fetchMoreFriendRequests,
+                          ],
+                          __typename: 'PrivateQueryMethods',
+                        },
+                      });
+                    },
+                  });
+                }}
+                onEndReachedThreshold={0.5}
               >
                 {loading && (
                   <ActivityIndicator
                     color={'gray'}
                     style={{ paddingTop: 50 }}
                   />
-                )}
-                {error && (
-                  <Text style={{ paddingTop: 50 }}>
-                    Error Loading Recommendation
-                  </Text>
                 )}
               </SubScreenContainer>
             </View>

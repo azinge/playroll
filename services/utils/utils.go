@@ -297,6 +297,9 @@ func InitializePaginationVariables(o, c *uint) (uint, uint) {
 	} else {
 		count = *c
 	}
+	if count > 50 {
+		count = 50
+	}
 
 	return offset, count
 }

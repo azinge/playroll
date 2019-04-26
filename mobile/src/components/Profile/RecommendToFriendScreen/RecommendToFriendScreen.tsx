@@ -4,6 +4,10 @@
 
 import * as React from 'react';
 import { NavigationScreenProp } from 'react-navigation';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import { Button } from 'react-native-elements';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
@@ -111,7 +115,7 @@ export default class RecommendToFriendScreen extends React.Component<
     };
     return (
       <ListFriendsQuery>
-        {({ loading, error, data }) => {
+        {({ loading, error, data, refetch, fetchMore }) => {
           const friends = extractFriends(data);
           return (
             <CreateRecommendationMutation>
@@ -120,12 +124,24 @@ export default class RecommendToFriendScreen extends React.Component<
                   <View style={{ flex: 1 }}>
                     <SubScreenContainer
                       title={'Recommend To Friend'}
-                      flatList={!loading && !error}
-                      contentContainerStyle={{ marginTop: 10 }}
+                      flatList
+                      contentContainerStyle={{
+                        marginTop: 10,
+                        paddingBottom: hp('16%'),
+                      }}
                       data={friends}
                       keyExtractor={item => item.id}
                       renderFlatListHeader={() => {
-                        return <SearchSubHeader />;
+                        return (
+                          <>
+                            {error && (
+                              <Text style={{ paddingTop: 50 }}>
+                                Error Loading Friends
+                              </Text>
+                            )}
+                            <SearchSubHeader />
+                          </>
+                        );
                       }}
                       renderItem={({ item }) => {
                         return (
@@ -151,19 +167,33 @@ export default class RecommendToFriendScreen extends React.Component<
                         );
                       }}
                       modal
-                    >
-                      {loading && (
-                        <ActivityIndicator
-                          color={'gray'}
-                          style={{ paddingTop: 50 }}
-                        />
-                      )}
-                      {error && (
-                        <Text style={{ paddingTop: 50 }}>
-                          Error Loading Friends
-                        </Text>
-                      )}
-                    </SubScreenContainer>
+                      refreshing={loading}
+                      onRefresh={() => refetch()}
+                      onEndReached={() => {
+                        fetchMore({
+                          variables: {
+                            offset: friends.length,
+                          },
+                          updateQuery: (prev, { fetchMoreResult }) => {
+                            const prevFriends = extractFriends(prev);
+                            const fetchMoreFriends = extractFriends(
+                              fetchMoreResult
+                            );
+                            if (!fetchMoreResult) return prev;
+                            return Object.assign({}, prev, {
+                              private: {
+                                listFriends: [
+                                  ...prevFriends,
+                                  ...fetchMoreFriends,
+                                ],
+                                __typename: 'PrivateQueryMethods',
+                              },
+                            });
+                          },
+                        });
+                      }}
+                      onEndReachedThreshold={0.5}
+                    />
                     <DropdownAlert ref={ref => (this.dropdown = ref)} />
                   </View>
                 );

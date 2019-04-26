@@ -14,6 +14,7 @@ type UserMethods struct {
 	GetCurrentUser   *gqltag.Query    `gql:"currentUser(deviceToken: String): User"`
 	GetUser          *gqltag.Query    `gql:"user(id: ID!): User"`
 	SearchUsers      *gqltag.Query    `gql:"searchUsers(query:String, offset: Int, count: Int): [User]"`
+	StoreDeviceToken *gqltag.Mutation `gql:"storeDeviceToken(deviceToken: String): User"`
 	ClearDeviceToken *gqltag.Mutation `gql:"clearDeviceToken(deviceToken: String): User"`
 }
 
@@ -118,6 +119,30 @@ var searchUsers = gqltag.Method{
 	},
 }
 
+var storeDeviceToken = gqltag.Method{
+	Description: `[Store Device Token Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type storeDeviceTokenParams struct {
+			DeviceToken string
+		}
+
+		params := &storeDeviceTokenParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		return models.StoreUserDeviceToken(user.ID, params.DeviceToken, mctx.DB)
+	},
+}
+
 var clearDeviceToken = gqltag.Method{
 	Description: `[Clear Device Token Description Goes Here]`,
 	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
@@ -146,5 +171,6 @@ var LinkedUserMethods = UserMethods{
 	GetCurrentUser:   gqltag.LinkQuery(getCurrentUser),
 	GetUser:          gqltag.LinkQuery(getUser),
 	SearchUsers:      gqltag.LinkQuery(searchUsers),
+	StoreDeviceToken: gqltag.LinkMutation(storeDeviceToken),
 	ClearDeviceToken: gqltag.LinkMutation(clearDeviceToken),
 }

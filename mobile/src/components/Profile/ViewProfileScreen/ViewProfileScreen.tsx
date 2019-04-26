@@ -29,6 +29,9 @@ import NavigationService from '../../../services/NavigationService';
 import { GetUserQuery } from '../../../graphql/requests/User/GetUserQuery';
 import { NavigationScreenProp } from 'react-navigation';
 import ManageRelationshipButton from './ManageRelationshipButton';
+import { ListUserPlayrollsQuery } from '../../../graphql/requests/Playroll/ListUserPlayrollsQuery';
+import PlayrollList from '../../shared/Lists/PlayrollList';
+import Heading from '../../shared/Text/Heading';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -115,15 +118,16 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
   }
 
   renderContent(user: User) {
-    // const extractPlayrolls = data => {
-    //   if (
-    //     Object.keys(data).length === 0 ||
-    //     Object.keys(data.private).length === 0
-    //   ) {
-    //     return [];
-    //   }
-    //   return data.private.listCurrentUserPlayrolls;
-    // };
+    const extractUserPlayrolls = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listUserPlayrolls;
+    };
     const relationshipID =
       user && user.relationships && user.relationships.length > 0
         ? user.relationships[0].id
@@ -180,12 +184,51 @@ export default class ViewProfileScreen extends React.Component<Props, State> {
                 }}
               /> */}
         </View>
-        <View style={{ padding: 10 }}>
-          <PlaceholderList
-            title={`${user.name}'s Playrolls`}
-            numItems={10}
-            overlayText={'Coming Soon...'}
-          />
+        <View style={{ padding: 10, height: 500 }}>
+          <View style={{ margin: 10, flexDirection: 'row' }}>
+            <Heading type={'h6'} alignment={'left'} style={{ flex: 2 }} bold>
+              Playrolls
+            </Heading>
+            <Heading
+              type={'h7'}
+              alignment={'right'}
+              opacity={0.7}
+              style={{ flex: 1 }}
+              onPress={() => {
+                NavigationService.navigate('BrowseUserPlayrolls', { user });
+              }}
+            >
+              See All..
+            </Heading>
+          </View>
+          <ListUserPlayrollsQuery
+            variables={{ userID: user.id, offset: 0, count: 5 }}
+          >
+            {({ data, loading, error, refetch }) => {
+              if (loading) {
+                return <ActivityIndicator />;
+              }
+              const playrolls = extractUserPlayrolls(data);
+              return (
+                <FlatList
+                  data={playrolls}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(playroll: Playroll) => `${playroll.id}`}
+                  extraData={this.state}
+                  renderItem={({ item }) => (
+                    <PlayrollCard
+                      playroll={item}
+                      onPress={playroll => {
+                        NavigationService.navigate('ViewExternalPlayroll', {
+                          playroll,
+                        });
+                      }}
+                    />
+                  )}
+                />
+              );
+            }}
+          </ListUserPlayrollsQuery>
         </View>
         {/*
         <ListCurrentUserPlayrollsQuery>

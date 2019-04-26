@@ -139,8 +139,8 @@ var searchFriends = gqltag.Method{
 
 		type searchFriendsParams struct {
 			Query  string
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &searchFriendsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -154,7 +154,8 @@ var searchFriends = gqltag.Method{
 			Preload("OtherUser")
 
 		rs := &[]models.Relationship{}
-		if err := db.Where(&models.Relationship{UserID: user.ID, Status: "Friend"}).Where("users.name LIKE ?", "%"+params.Query+"%").Find(rs).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := db.Where(&models.Relationship{UserID: user.ID, Status: "Friend"}).Where("users.name LIKE ?", "%"+params.Query+"%").Offset(offset).Limit(count).Find(rs).Error; err != nil {
 			fmt.Printf("error searching friends: %s", err.Error())
 			return nil, err
 		}

@@ -33,9 +33,7 @@ export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
 
-interface State {
-  addPlayrollName: string;
-}
+interface State {}
 
 export default class BrowsePlayrollsScreen extends React.Component<
   Props,
@@ -43,15 +41,14 @@ export default class BrowsePlayrollsScreen extends React.Component<
 > {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      addPlayrollName: '',
-    };
+    this.state = {};
     this.renderHeader = this.renderHeader.bind(this);
   }
 
   render() {
     const extractPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -59,11 +56,11 @@ export default class BrowsePlayrollsScreen extends React.Component<
       }
       return data.private.listCurrentUserPlayrolls;
     };
+    console.log('rerendered');
     return (
-      <ListCurrentUserPlayrollsQuery>
-        {({ loading, error, data }) => {
+      <ListCurrentUserPlayrollsQuery variables={{ offset: 0, count: 20 }}>
+        {({ loading, error, data, refetch, fetchMore }) => {
           const playrolls = extractPlayrolls(data);
-          const success = !loading && !error;
           return (
             <View
               style={{
@@ -75,7 +72,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
               <View style={{ flex: 1 }}>
                 <MainScreenContainer
                   contentContainerStyle={{ paddingBottom: hp('16%') }}
-                  flatList={success}
+                  flatList
                   data={playrolls}
                   hideBottomBar
                   keyExtractor={item => item.id}
@@ -85,26 +82,54 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
                     return (
-                      <DetailedPlayrollCard
-                        playroll={playroll}
-                        editPlayroll={() =>
-                          this.props.navigation &&
-                          this.props.navigation.navigate('ViewPlayroll', {
+                      <TouchableOpacity
+                        onPress={() =>
+                          NavigationService.navigate('ViewPlayroll', {
                             managePlayroll: 'View Playroll',
                             playroll,
                           })
                         }
-                        key={playroll.id}
-                      />
+                      >
+                        <DetailedPlayrollCard
+                          playroll={playroll}
+                          editPlayroll={() =>
+                            NavigationService.navigate('EditPlayroll', {
+                              managePlayroll: 'View Playroll',
+                              playroll,
+                            })
+                          }
+                          key={playroll.id}
+                        />
+                      </TouchableOpacity>
                     );
                   }}
+                  refreshing={loading}
+                  onRefresh={() => refetch()}
+                  onEndReached={() => {
+                    fetchMore({
+                      variables: {
+                        offset: playrolls.length,
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        const prevPlayrolls = extractPlayrolls(prev);
+                        const fetchMorePlayrolls = extractPlayrolls(
+                          fetchMoreResult
+                        );
+                        if (!fetchMoreResult) return prev;
+                        return Object.assign({}, prev, {
+                          private: {
+                            listCurrentUserPlayrolls: [
+                              ...prevPlayrolls,
+                              ...fetchMorePlayrolls,
+                            ],
+                            __typename: 'PrivateQueryMethods',
+                          },
+                        });
+                      },
+                    });
+                  }}
+                  onEndReachedThreshold={0.5}
                 >
-                  {loading && (
-                    <ActivityIndicator
-                      color={'gray'}
-                      style={{ paddingTop: 50 }}
-                    />
-                  )}
                   {error && (
                     <Text style={{ paddingTop: 50 }}>
                       Error Loading Playrolls

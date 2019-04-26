@@ -43,7 +43,7 @@ export default class SearchScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      query: 'Kendrick Lamar',
+      query: '',
       searchType: 'Artist',
       modalVisible: false,
       currentSource: {},

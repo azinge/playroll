@@ -8,7 +8,7 @@
     "platforms": ["ios", "android"],
     "version": "1.0.3",
     "orientation": "portrait",
-    "icon": "./assets/playroll_icon.png",
+    "icon": "./assets/playroll_square_logo_1024x1024.png",
     "splash": {
       "image": "./assets/loading.png",
       "resizeMode": "cover",
@@ -24,7 +24,14 @@
     "android": {
       "versionCode": 4,
       "package": "com.playroll.playroll",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/playroll_square_foreground_1024x1024.png",
+        "backgroundImage": "./assets/playroll_square_background_1024x1024.png"
+      }
+    },
+    "notification": {
+      "icon": "./assets/playroll_android_notification_96x96.png"
     },
     "primaryColor": "#ffffff"
   }

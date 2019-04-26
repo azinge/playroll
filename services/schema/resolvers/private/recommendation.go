@@ -43,7 +43,7 @@ var listCurrentUserRecommendations = gqltag.Method{
 
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
 		db := mctx.DB
-		if err := db.Preload("Recommender").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
+		if err := db.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}

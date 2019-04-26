@@ -252,8 +252,8 @@ var listUserPlayrolls = gqltag.Method{
 
 		type listCurrentUserPlayrollsParams struct {
 			UserID string
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listCurrentUserPlayrollsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -264,14 +264,8 @@ var listUserPlayrolls = gqltag.Method{
 
 		id := utils.StringIDToNumber(params.UserID)
 
-		if params.Count == 0 {
-			params.Count = 0
-		}
-		if params.Offset == 0 {
-			params.Offset = 20
-		}
-		db := mctx.DB.Offset(params.Offset).Count(params.Count)
-
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Offset(offset).Limit(count)
 		return models.GetPlayrollsByUserID(id, db)
 	},
 }
@@ -376,8 +370,8 @@ var listFriendsPlayrolls = gqltag.Method{
 		}
 
 		type listFriendsPlayrollsParams struct {
-			Offset uint
-			Count  uint
+			Offset *uint
+			Count  *uint
 		}
 		params := &listFriendsPlayrollsParams{}
 		err = mapstructure.Decode(resolveParams.Args, params)
@@ -390,7 +384,8 @@ var listFriendsPlayrolls = gqltag.Method{
 		db := mctx.DB.
 			Joins("JOIN relationships ON CAST(playrolls.user_id AS int) = relationships.user_id").
 			Where("relationships.other_user_id = ? AND relationships.status = ?", user.ID, "Friend")
-		if err := db.Preload("Rolls").Preload("User").Find(playrollModels).Error; err != nil {
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		if err := db.Preload("Rolls").Preload("User").Offset(offset).Limit(count).Find(playrollModels).Error; err != nil {
 			fmt.Printf("error getting playrolls: %s", err.Error())
 			return nil, err
 		}

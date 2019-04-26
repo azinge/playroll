@@ -4,6 +4,10 @@
 
 import * as React from 'react';
 import { Text, ActivityIndicator, View } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
 import RecommendationCard from '../../shared/Cards/RecommendationCard';
@@ -54,8 +58,8 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
       return data.private.listCurrentUserPlayrolls;
     };
     return (
-      <ListCurrentUserPlayrollsQuery>
-        {({ loading, error, data }) => {
+      <ListCurrentUserPlayrollsQuery variables={{ offset: 0, count: 20 }}>
+        {({ loading, error, data, refetch, fetchMore }) => {
           let playrolls = [];
           if (!loading && !error) {
             playrolls = extractPlayrolls(data);
@@ -64,11 +68,38 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
             <View style={{ flex: 1 }}>
               <SubScreenContainer
                 title={'Add To Playroll'}
-                contentContainerStyle={{ marginTop: 10 }}
+                contentContainerStyle={{
+                  marginTop: 10,
+                  paddingBottom: hp('10%'),
+                }}
                 modal
+                refreshing={loading}
+                onRefresh={() => refetch()}
               >
                 <SearchSubHeader />
-                {this.renderPlayrolls(playrolls)}
+                {this.renderPlayrolls(playrolls, () => {
+                  fetchMore({
+                    variables: {
+                      offset: playrolls.length,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      const prevPlayrolls = extractPlayrolls(prev);
+                      const fetchMorePlayrolls = extractPlayrolls(
+                        fetchMoreResult
+                      );
+                      if (!fetchMoreResult) return prev;
+                      return Object.assign({}, prev, {
+                        private: {
+                          listCurrentUserPlayrolls: [
+                            ...prevPlayrolls,
+                            ...fetchMorePlayrolls,
+                          ],
+                          __typename: 'PrivateQueryMethods',
+                        },
+                      });
+                    },
+                  });
+                })}
               </SubScreenContainer>
               <DropdownAlert ref={ref => (this.dropdown = ref)} />
             </View>
@@ -104,7 +135,16 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
     }
   }
 
-  renderPlayrolls(playrolls) {
+  renderPlayrolls(playrolls, onEndReached) {
+    const extractPlayrolls = data => {
+      if (
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listCurrentUserPlayrolls;
+    };
     return (
       <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
         {(createRoll, { loading, error, data }) => {
@@ -115,6 +155,8 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
                 this.createRollWrapper(createRoll, playroll);
               }}
               hideCreator
+              onEndReached={onEndReached}
+              onEndReachedThreshold={0.5}
             />
           );
         }}

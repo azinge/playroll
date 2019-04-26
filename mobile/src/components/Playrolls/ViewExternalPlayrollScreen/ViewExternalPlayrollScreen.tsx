@@ -144,10 +144,22 @@ export default class ViewExternalPlayrollScreen extends React.Component<
                 triggerGenerateTracklist: true,
               }),
           };
+          const recommendationIcon = {
+            type: 'material',
+            name: 'chat',
+            onPress: () =>
+              NavigationService.navigate('RecommendToFriend', {
+                playrollID: playroll.id,
+              }),
+          };
           return (
             <SubScreenHeader
               title={'View Playroll'} // visible screen title
-              icons={[copyPlayrollIcon, generateTracklistIcon]} // top right buttons
+              icons={[
+                recommendationIcon,
+                copyPlayrollIcon,
+                generateTracklistIcon,
+              ]} // top right buttons
             />
           );
         }}

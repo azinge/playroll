@@ -96,11 +96,21 @@ var createRecommendation = gqltag.Method{
 		recommendationName := "."
 
 		if len(params.Input.Data.Sources) > 0 {
-			mainSource := params.Input.Data.Sources[0]
-			if mainSource.Type == "Artist" {
-				recommendationName = fmt.Sprintf(": %s", mainSource.Name)
+			if params.Input.PlayrollID != "" {
+				id := utils.StringIDToNumber(params.Input.PlayrollID)
+				playrollModel := &models.Playroll{}
+				db := mctx.DB.Preload("User")
+				if err := db.Where(&models.Playroll{UserID: user.ID}).First(playrollModel, id).Error; err != nil {
+					return nil, err
+				}
+				recommendationName = fmt.Sprintf(": %s, a Playroll by %s", playrollModel.Name, playrollModel.User.Name)
 			} else {
-				recommendationName = fmt.Sprintf(": %s by %s", mainSource.Name, mainSource.Creator)
+				mainSource := params.Input.Data.Sources[0]
+				if mainSource.Type == "Artist" {
+					recommendationName = fmt.Sprintf(": %s", mainSource.Name)
+				} else {
+					recommendationName = fmt.Sprintf(": %s by %s", mainSource.Name, mainSource.Creator)
+				}
 			}
 		}
 

@@ -39,6 +39,7 @@ export interface Props {
 
 interface State {
   editPlayrollName: string;
+  inEditMode: boolean;
 }
 
 export default class ViewPlayrollScreen extends React.Component<Props, State> {
@@ -46,6 +47,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     super(props);
     this.state = {
       editPlayrollName: '',
+      inEditMode: false,
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
@@ -94,11 +96,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     };
     const editPlayrollIcon = {
       ...Icons.editIcon,
-      onPress: () =>
-        NavigationService.navigate('EditPlayroll', {
-          managePlayroll: 'View Playroll',
-          playroll,
-        }),
+      onPress: () => this.setState({ inEditMode: true }),
+    };
+    const viewPlayrollIcon = {
+      name: 'pencil-off',
+      type: 'material-community',
+      onPress: () => this.setState({ inEditMode: false }),
     };
     const generateTracklistIcon = {
       ...Icons.exportIcon,
@@ -119,7 +122,11 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     return (
       <SubScreenHeader
         title={'View Playroll'} // visible screen title
-        icons={[recommendationIcon, editPlayrollIcon, generateTracklistIcon]} // top right buttons
+        icons={
+          this.state.inEditMode
+            ? [viewPlayrollIcon]
+            : [recommendationIcon, editPlayrollIcon, generateTracklistIcon]
+        } // top right buttons
       />
     );
   }

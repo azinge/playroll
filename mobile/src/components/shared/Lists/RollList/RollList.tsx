@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import { Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Roll } from '../../../../graphql/types';
 
 import styles from './RollList.styles';
@@ -28,7 +29,7 @@ export default class RollList extends React.Component<Props, State> {
     this.renderItem = this.renderItem.bind(this);
   }
 
-  renderItem({ item: roll }: { item: Roll }) {
+  renderItem({ item: roll, move, moveEnd, isActive }: { item: Roll }) {
     const mainSource =
       (roll.data && roll.data.sources && roll.data.sources[0]) || {};
 
@@ -158,7 +159,7 @@ export default class RollList extends React.Component<Props, State> {
               break;
             default:
           }
-          console.log('FILTER NAME: ' + filter.name);
+          // console.log('FILTER NAME: ' + filter.name);
           if (filter.name !== 'Default') {
             filterViews.push(
               <View style={styles.itemTextView} key={key}>
@@ -224,6 +225,16 @@ export default class RollList extends React.Component<Props, State> {
                 >
                   <View style={styles.outerContainer} key={roll.id}>
                     <View style={styles.innerContainer}>
+                      {!this.props.readOnly && (
+                        <TouchableOpacity onPressIn={move} onPressOut={moveEnd}>
+                          <Icon
+                            size={25}
+                            name='menu'
+                            color='lightgrey'
+                            iconStyle={{ marginLeft: 20 }}
+                          />
+                        </TouchableOpacity>
+                      )}
                       <Image
                         style={styles.cover}
                         source={{ uri: mainSource.cover }}
@@ -260,12 +271,14 @@ export default class RollList extends React.Component<Props, State> {
 
   render() {
     return (
-      <FlatList
+      <DraggableFlatList
         data={this.props.rolls}
         showsVerticalScrollIndicator={false}
         keyExtractor={roll => `${roll.id}`}
         extraData={this.state}
         renderItem={this.renderItem}
+        scrollPercent={5}
+        onDragEnd={() => {}}
       />
     );
   }

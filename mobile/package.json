@@ -25,6 +25,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-collapsible-header": "^0.0.14",
     "react-native-collapsible-header-views": "^1.0.0",
+    "react-native-draggable-flatlist": "^1.1.7",
     "react-native-dropdownalert": "^3.10.0",
     "react-native-elements": "^1.0.0",
     "react-native-image-color-picker": "^1.0.4",

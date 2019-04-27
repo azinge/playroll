@@ -79,7 +79,7 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             <View style={styles.screenContainer}>
               <SubScreenContainer
                 contentContainerStyle={{ paddingBottom: hp('17%') }}
-                title='View Playroll'
+                title='Edit Playroll'
                 renderHeader={this.renderHeader}
               >
                 {/* Icon, Title, and Hashtags */}
@@ -124,12 +124,11 @@ export default class EditPlayrollScreen extends React.Component<Props, State> {
             // onPress: () => generateTracklist(),
             onPress: () => NavigationService.navigate('GenerateTracklist'),
           };
-          return (
-            <SubScreenHeader
-              title='Edit Playroll'
-              // icons={[generateTracklistIcon]}
-            />
-          );
+          const viewIcon = {
+            name: 'pencil-off',
+            type: 'material-community',
+          };
+          return <SubScreenHeader title='Edit Playroll' icons={[viewIcon]} />;
         }}
       </GenerateTracklistMutation>
     );

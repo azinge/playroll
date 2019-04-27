@@ -7122,6 +7122,11 @@ react-native-collapsible-header@^0.0.14:
   dependencies:
     prop-types "^15.6.1"
 
+react-native-draggable-flatlist@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-1.1.7.tgz#d15cd84cfa924c8733114cb9d3324a5bdbcd7ec2"
+  integrity sha512-HBYYfbDbf7iRuEnSPUfh7iyGltwqLe3OokYI2d6aWY+OUEPEnd9bmTBu8LISQag+9W91/sqKsp8fRAZtnVIsNg==
+
 react-native-dropdownalert@^3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/react-native-dropdownalert/-/react-native-dropdownalert-3.10.0.tgz#a925391c4a00fbb5685eb1561ed7c921d6f8539d"

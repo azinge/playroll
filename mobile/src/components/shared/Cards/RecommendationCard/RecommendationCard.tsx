@@ -98,51 +98,60 @@ export default class RecommendationCard extends React.Component<Props, State> {
     }
     console.log(recommendation);
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
+      <TouchableOpacity
+        onPress={() => {
+          NavigationService.navigate('ViewExternalPlayroll', {
+            playroll: recommendation.playroll,
+          });
         }}
       >
-        <View style={{ margin: 7, height: 80 }}>
-          {playroll.rolls && playroll.rolls.length > 0 ? (
-            <Carousel
-              data={playroll.rolls}
-              renderItem={this._renderItem}
-              hasParallaxImages={false}
-              sliderWidth={100}
-              itemWidth={70}
-              itemHeight={70}
-              loop={true}
-            />
-          ) : (
-            <Image
-              source={{
-                uri: 'https://www.unesale.com/ProductImages/Large/notfound.png',
-              }}
-              style={{ height: 75, width: 75, borderRadius: 5 }}
-            />
-          )}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <View style={{ margin: 7, height: 80 }}>
+            {playroll.rolls && playroll.rolls.length > 0 ? (
+              <Carousel
+                data={playroll.rolls}
+                renderItem={this._renderItem}
+                hasParallaxImages={false}
+                sliderWidth={100}
+                itemWidth={70}
+                itemHeight={70}
+                loop={true}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri:
+                    'https://www.unesale.com/ProductImages/Large/notfound.png',
+                }}
+                style={{ height: 75, width: 75, borderRadius: 5 }}
+              />
+            )}
+          </View>
+          <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+            <Heading type={'h7'} alignment={'left'} bold>
+              {playroll.name}
+            </Heading>
+            <Heading type={'h10'} alignment={'left'} color={'grey'} bold>
+              Playroll by {creator}
+            </Heading>
+            <Text style={[styles.manageRoll, { marginTop: 5 }]}>
+              Recommended by {recommendation.recommender.name}
+            </Text>
+          </View>
+          <Icon
+            size={35}
+            name='more-vert'
+            color='lightgrey'
+            underlayColor='rgba(255,255,255,0)'
+            // onPress={() => NavigationService.goBack()}
+          />
         </View>
-        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-          <Heading type={'h7'} alignment={'left'} bold>
-            {playroll.name}
-          </Heading>
-          <Heading type={'h10'} alignment={'left'} color={'grey'} bold>
-            Playroll by {creator}
-          </Heading>
-          <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-            Recommended by {recommendation.recommender.name}
-          </Text>
-        </View>
-        <Icon
-          size={35}
-          name='more-vert'
-          color='lightgrey'
-          underlayColor='rgba(255,255,255,0)'
-          // onPress={() => NavigationService.goBack()}
-        />
-      </View>
+      </TouchableOpacity>
     );
   }
   renderRollRecommendation(recommendation: Recommendation) {

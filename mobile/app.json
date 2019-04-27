@@ -26,7 +26,7 @@
       "package": "com.playroll.playroll",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/playroll_square_foreground_1024x1024.png",
+        "foregroundImage": "./assets/playroll_square_foreground_far_1024x1024.png",
         "backgroundImage": "./assets/playroll_square_background_1024x1024.png"
       }
     },

@@ -27,14 +27,17 @@
     "react-native-collapsible-header-views": "^1.0.0",
     "react-native-dropdownalert": "^3.10.0",
     "react-native-elements": "^1.0.0",
+    "react-native-google-signin": "^2.0.0",
     "react-native-image-color-picker": "^1.0.4",
     "react-native-iphone-x-helper": "^1.2.0",
+    "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-picker-select": "^6.0.0",
     "react-native-progress": "^3.6.0",
     "react-native-responsive-screen": "^1.2.2",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-swipeout": "^2.3.6",
-    "react-navigation": "^3.2.1"
+    "react-navigation": "^3.2.1",
+    "react-social-login-buttons": "^2.3.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.0",

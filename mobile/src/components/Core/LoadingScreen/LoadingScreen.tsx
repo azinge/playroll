@@ -30,8 +30,12 @@ export default class LoadingScreen extends React.Component<Props, State> {
     };
   }
   async componentDidMount() {
-    const deviceToken = await NotificationService.registerForPushNotificationsAsync();
-    this.setState({ deviceToken });
+    try {
+      const deviceToken = await NotificationService.registerForPushNotificationsAsync();
+      this.setState({ deviceToken });
+    } catch (err) {
+      this.setState({ deviceToken: '' });
+    }
   }
   render() {
     const { width, height } = Dimensions.get('window');

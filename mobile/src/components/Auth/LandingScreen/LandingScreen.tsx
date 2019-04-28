@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   Modal,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {
   NavigationScreenProp,
@@ -21,11 +23,11 @@ import {
 import Errors from '../../shared/Modals/Errors';
 import { SignInMutation } from '../../../graphql/requests/Auth';
 import { withOAuth } from 'aws-amplify-react-native';
-
+import { GoogleSigninButton } from 'react-native-google-signin';
 import styles from './LandingScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import DropdownAlert from 'react-native-dropdownalert';
-import { SocialIcon } from 'react-native-elements';
+import { SocialIcon, Button } from 'react-native-elements';
 import { Linking, WebBrowser } from 'expo';
 
 export interface Props {
@@ -291,12 +293,18 @@ class LandingScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {this.renderHeader()}
-        {this.renderForm()}
-        {this.renderFooter()}
-        <DropdownAlert ref={ref => (this.dropdown = ref)} />
-      </SafeAreaView>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <SafeAreaView style={styles.container}>
+          {this.renderHeader()}
+          {this.renderForm()}
+          {this.renderFooter()}
+          <DropdownAlert ref={ref => (this.dropdown = ref)} />
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }

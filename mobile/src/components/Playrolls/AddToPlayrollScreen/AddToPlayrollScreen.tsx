@@ -28,6 +28,7 @@ export interface Props {
 
 interface State {
   rollData: RollData;
+  onSuccess: () => void;
 }
 
 export default class AddToPlayrollScreen extends React.Component<Props, State> {
@@ -38,13 +39,16 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
 
     this.state = {
       rollData: {},
+      onSuccess: () => {},
     };
   }
 
   componentDidMount() {
     const rollData =
       this.props.navigation && this.props.navigation.getParam('rollData');
-    this.setState({ rollData });
+    const onSuccess =
+      this.props.navigation && this.props.navigation.getParam('onSuccess');
+    this.setState({ rollData, onSuccess });
   }
 
   render() {
@@ -116,15 +120,12 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
           input: {
             playrollID: playroll.id,
             data: this.state.rollData,
+            order: playroll.rolls.length,
           },
         },
       });
-      // this.dropdown.alertWithType(
-      //   'info',
-      //   'Added to Playroll',
-      //   'Roll successfully added to playroll.'
-      // );
       NavigationService.goBack();
+      this.state.onSuccess();
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(

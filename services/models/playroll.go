@@ -33,9 +33,23 @@ type PlayrollOutput struct {
 
 // Utility Methods
 
+func GetPlayrollByID(id uint, db *gorm.DB) (*PlayrollOutput, error) {
+	playrollModel := &Playroll{}
+	db = db.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+		return db.Order("order")
+	}).Preload("User")
+	if err := db.First(playrollModel, id).Error; err != nil {
+		fmt.Printf("error getting playroll: %s", err.Error())
+		return nil, err
+	}
+	return FormatPlayroll(playrollModel)
+}
+
 func GetPlayrollsByUserID(id uint, db *gorm.DB) ([]PlayrollOutput, error) {
 	playrollModels := &[]Playroll{}
-	db = db.Preload("Rolls").Preload("User")
+	db = db.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+		return db.Order("order")
+	}).Preload("User")
 	if err := db.Where(Playroll{UserID: id}).Find(playrollModels).Error; err != nil {
 		fmt.Printf("error getting playrolls: %s", err.Error())
 		return nil, err
@@ -122,7 +136,9 @@ func PlayrollModelToOutput(p *Playroll) (*PlayrollOutput, error) {
 func InitPlayrollDAO(db *gorm.DB) Entity {
 	dao := &Playroll{}
 	dao.SetEntity(dao)
-	dao.SetDB(db.Preload("Rolls").Preload("User"))
+	dao.SetDB(db.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+		return db.Order("order")
+	}).Preload("User"))
 	return dao
 }
 

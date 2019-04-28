@@ -14,6 +14,9 @@ import (
 // RecommendationMethods defines the methods for the Recommendations entity.
 type RecommendationMethods struct {
 	ListCurrentUserRecommendations *gqltag.Query    `gql:"listCurrentUserRecommendations(offset: Int, count: Int): [Recommendation]"`
+	ListReceivedRecommendations    *gqltag.Query    `gql:"listReceivedRecommendations(offset: Int, count: Int): [Recommendation]"`
+	ListSentRecommendations        *gqltag.Query    `gql:"listSentRecommendations(offset: Int, count: Int): [Recommendation]"`
+	ListExchangedRecommendations   *gqltag.Query    `gql:"listExchangedRecommendations(userID: ID!, offset: Int, count: Int): [Recommendation]"`
 	CreateRecommendation           *gqltag.Mutation `gql:"createRecommendation(input: RecommendationInput): Recommendation"`
 	DismissRecommendation          *gqltag.Mutation `gql:"dismissRecommendation(recommendationID: ID): Recommendation"`
 	RecommendToAUser               *gqltag.Mutation `gql:"recommendToAUser(receiverID: Int, playrollID: Int, rollData: RollDataInput): Recommendation"`
@@ -42,8 +45,124 @@ var listCurrentUserRecommendations = gqltag.Method{
 		recommendationsModels := &[]models.Recommendation{}
 
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		db := mctx.DB
-		if err := db.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
+			fmt.Printf("error getting recommendations: %s", err.Error())
+			return nil, err
+		}
+
+		recommendations, err := models.FormatRecommendationSlice(recommendationsModels)
+		if err != nil {
+			return nil, err
+		}
+		return recommendations, nil
+	},
+}
+
+var listReceivedRecommendations = gqltag.Method{
+	Description: `This function lists the current user's recommendations.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listReceivedRecommendationsParams struct {
+			Offset *uint
+			Count  *uint
+		}
+		params := &listReceivedRecommendationsParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		recommendationsModels := &[]models.Recommendation{}
+
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
+			fmt.Printf("error getting recommendations: %s", err.Error())
+			return nil, err
+		}
+
+		recommendations, err := models.FormatRecommendationSlice(recommendationsModels)
+		if err != nil {
+			return nil, err
+		}
+		return recommendations, nil
+	},
+}
+
+var listSentRecommendations = gqltag.Method{
+	Description: `This function lists the current user's recommendations.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listSentRecommendationsParams struct {
+			Offset *uint
+			Count  *uint
+		}
+		params := &listSentRecommendationsParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		recommendationsModels := &[]models.Recommendation{}
+
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		if err := db.Where(models.Recommendation{RecommenderID: user.ID}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
+			fmt.Printf("error getting recommendations: %s", err.Error())
+			return nil, err
+		}
+
+		recommendations, err := models.FormatRecommendationSlice(recommendationsModels)
+		if err != nil {
+			return nil, err
+		}
+		return recommendations, nil
+	},
+}
+
+var listExchangedRecommendations = gqltag.Method{
+	Description: `This function lists the current user's recommendations.`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		user, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type listExchangedRecommendationsParams struct {
+			UserID string
+			Offset *uint
+			Count  *uint
+		}
+		params := &listExchangedRecommendationsParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		otherUserID := utils.StringIDToNumber(params.UserID)
+
+		recommendationsModels := &[]models.Recommendation{}
+		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		if err := db.Where(models.Recommendation{UserID: user.ID, RecommenderID: otherUserID}).
+			Or(models.Recommendation{UserID: otherUserID, RecommenderID: user.ID}).
+			Offset(offset).Limit(count).
+			Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
 		}
@@ -209,6 +328,9 @@ var recommendToAUser = gqltag.Method{
 // LinkedRecommendationMethods exports the methods for the Recommendations entity.
 var LinkedRecommendationMethods = RecommendationMethods{
 	ListCurrentUserRecommendations: gqltag.LinkQuery(listCurrentUserRecommendations),
+	ListReceivedRecommendations:    gqltag.LinkQuery(listReceivedRecommendations),
+	ListSentRecommendations:        gqltag.LinkQuery(listSentRecommendations),
+	ListExchangedRecommendations:   gqltag.LinkQuery(listExchangedRecommendations),
 	CreateRecommendation:           gqltag.LinkMutation(createRecommendation),
 	DismissRecommendation:          gqltag.LinkMutation(dismissRecommendation),
 	RecommendToAUser:               gqltag.LinkMutation(recommendToAUser),

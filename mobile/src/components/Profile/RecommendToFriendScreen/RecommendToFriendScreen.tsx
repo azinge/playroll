@@ -32,6 +32,7 @@ export interface Props {
 interface State {
   rollData: RollData;
   playrollID: number;
+  onSuccess: () => void;
 }
 
 export default class RecommendToFriendScreen extends React.Component<
@@ -46,6 +47,7 @@ export default class RecommendToFriendScreen extends React.Component<
     this.state = {
       rollData: {},
       playrollID: 0,
+      onSuccess: () => {},
     };
   }
 
@@ -54,7 +56,9 @@ export default class RecommendToFriendScreen extends React.Component<
       this.props.navigation && this.props.navigation.getParam('rollData');
     const playrollID =
       this.props.navigation && this.props.navigation.getParam('playrollID');
-    this.setState({ rollData, playrollID });
+    const onSuccess =
+      this.props.navigation && this.props.navigation.getParam('onSuccess');
+    this.setState({ rollData, playrollID, onSuccess });
   }
 
   async createRecommendationWrapper(createRecommendation, receiver, sender) {
@@ -70,12 +74,8 @@ export default class RecommendToFriendScreen extends React.Component<
           },
         },
       });
-      // this.dropdown.alertWithType(
-      //   'info',
-      //   'Recommended To Friend',
-      //   'Successfully Recommended to Friend.'
-      // );
       NavigationService.goBack();
+      this.state.onSuccess();
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(

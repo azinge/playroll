@@ -1,9 +1,9 @@
 import * as React from "react";
 import renderer from "react-test-renderer";
 
-import EditPlayrollScreen from "../EditPlayrollScreen";
+import RollCard from "../RollCard";
 
 it("renders correctly", () => {
-  const tree = renderer.create(<EditPlayrollScreen />).toJSON();
+  const tree = renderer.create(<RollCard />).toJSON();
   expect(tree).toMatchSnapshot();
 });

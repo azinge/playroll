@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cazinge/playroll/services/schema/resolvers/admin"
+	"github.com/jinzhu/gorm"
 
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
@@ -21,6 +22,7 @@ type PlayrollMethods struct {
 	CopyPlayroll              *gqltag.Mutation `gql:"copyPlayroll(playrollID: ID): Playroll"`
 	UpdateCurrentUserPlayroll *gqltag.Mutation `gql:"updateCurrentUserPlayroll(id: ID, input: PlayrollInput): Playroll"`
 	DeleteCurrentUserPlayroll *gqltag.Mutation `gql:"deleteCurrentUserPlayroll(id: ID): Playroll"`
+	ReorderPlayroll           *gqltag.Mutation `gql:"reorderPlayroll(playrollID: ID!, rollIDs: [ID]!, orders: [Int]!): Playroll"`
 
 	ListFeaturedPlayrolls   *gqltag.Query `gql:"listFeaturedPlayrolls(offset: Int, count: Int): [Playroll]"`
 	ListPopularPlayrolls    *gqltag.Query `gql:"listPopularPlayrolls(offset: Int, count: Int): [Playroll]"`
@@ -50,7 +52,9 @@ var getCurrentUserPlayroll = gqltag.Method{
 		id := utils.StringIDToNumber(params.ID)
 		playrollModel := &models.Playroll{}
 
-		db := mctx.DB.Preload("Rolls")
+		db := mctx.DB.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+			return db.Order("order")
+		})
 		if err := db.Where(&models.Playroll{UserID: user.ID}).First(playrollModel, id).Error; err != nil {
 			return nil, err
 		}
@@ -90,7 +94,9 @@ var copyPlayroll = gqltag.Method{
 
 		playrollModel := &models.Playroll{}
 		playrollID := utils.StringIDToNumber(params.PlayrollID)
-		if err := mctx.DB.Preload("Rolls").First(playrollModel, playrollID).Error; err != nil {
+		if err := mctx.DB.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+			return db.Order("order")
+		}).First(playrollModel, playrollID).Error; err != nil {
 			return nil, err
 		}
 
@@ -175,6 +181,61 @@ var updateCurrentUserPlayroll = gqltag.Method{
 		}
 
 		return playroll, nil
+	},
+}
+
+var reorderPlayroll = gqltag.Method{
+	Description: `[Update Current User's Playroll Description Goes Here]`,
+	Request: func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		_, err := models.AuthorizeUser(mctx)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		type reorderPlayrollParams struct {
+			PlayrollID string
+			RollIDs    []string
+			Orders     []uint
+		}
+		params := &reorderPlayrollParams{}
+		err = mapstructure.Decode(resolveParams.Args, params)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+
+		tx := mctx.DB.Begin()
+
+		if len(params.RollIDs) != len(params.Orders) {
+			return nil, fmt.Errorf("length of rollIDs array does not match length of orders array")
+		}
+
+		playrollID := utils.StringIDToNumber(params.PlayrollID)
+
+		for i, rollID := range params.RollIDs {
+			fmt.Println(i, rollID)
+			id := utils.StringIDToNumber(rollID)
+			roll := &models.Roll{}
+			if err := tx.First(roll, id).Error; err != nil {
+				tx.Rollback()
+				return nil, err
+			}
+
+			if playrollID != roll.PlayrollID {
+				tx.Rollback()
+				return nil, fmt.Errorf("can only reorder one playroll at a time")
+			}
+
+			if err := tx.Model(roll).Update("order", params.Orders[i]).Error; err != nil {
+				tx.Rollback()
+				return nil, err
+			}
+		}
+
+		tx.Commit()
+
+		return models.GetPlayrollByID(playrollID, mctx.DB)
 	},
 }
 
@@ -385,7 +446,10 @@ var listFriendsPlayrolls = gqltag.Method{
 			Joins("JOIN relationships ON CAST(playrolls.user_id AS int) = relationships.user_id").
 			Where("relationships.other_user_id = ? AND relationships.status = ?", user.ID, "Friend")
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		if err := db.Preload("Rolls").Preload("User").Offset(offset).Limit(count).Find(playrollModels).Error; err != nil {
+		db = db.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+			return db.Order("order")
+		}).Preload("User")
+		if err := db.Offset(offset).Limit(count).Find(playrollModels).Error; err != nil {
 			fmt.Printf("error getting playrolls: %s", err.Error())
 			return nil, err
 		}
@@ -407,6 +471,7 @@ var LinkedPlayrollMethods = PlayrollMethods{
 	CopyPlayroll:              gqltag.LinkMutation(copyPlayroll),
 	UpdateCurrentUserPlayroll: gqltag.LinkMutation(updateCurrentUserPlayroll),
 	DeleteCurrentUserPlayroll: gqltag.LinkMutation(deleteCurrentUserPlayroll),
+	ReorderPlayroll:           gqltag.LinkMutation(reorderPlayroll),
 
 	ListFeaturedPlayrolls:   gqltag.LinkQuery(listFeaturedPlayrolls),
 	ListPopularPlayrolls:    gqltag.LinkQuery(listPopularPlayrolls),

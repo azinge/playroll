@@ -33,6 +33,7 @@ import { SocialIcon, Button } from 'react-native-elements';
 import { Linking, WebBrowser } from 'expo';
 import { StoreDeviceTokenMutation } from '../../../graphql/requests/User/StoreDeviceTokenMutation';
 import NotificationService from '../../../services/NotificationService';
+import validate from '../validate';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;

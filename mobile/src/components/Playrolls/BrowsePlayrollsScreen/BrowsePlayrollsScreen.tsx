@@ -75,6 +75,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   flatList
                   data={playrolls}
                   hideBottomBar
+                  renderFlatListEmptyComponent={this.renderEmptySearch}
                   keyExtractor={item => item.id}
                   renderFlatListHeader={() => {
                     return <SearchSubHeader />;
@@ -144,6 +145,13 @@ export default class BrowsePlayrollsScreen extends React.Component<
           );
         }}
       </ListCurrentUserPlayrollsQuery>
+    );
+  }
+  renderEmptySearch() {
+    return (
+      <View style={{ alignSelf: 'center', top: 20 }}>
+        <Text style={{ fontSize: 20 }}>No results found!</Text>
+      </View>
     );
   }
 

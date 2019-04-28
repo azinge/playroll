@@ -9,6 +9,7 @@ import { MusicSource } from '../../../../graphql/types';
 import styles from './MusicSourceList.styles';
 import NavigationService from '../../../../services/NavigationService';
 import { Icon } from 'react-native-elements';
+import MusicSourceCard from '../../Cards/MusicSourceCard';
 
 export interface Props {
   sources: MusicSource[];
@@ -24,48 +25,7 @@ export default class MusicSourceList extends React.Component<Props, State> {
   }
 
   renderItem({ item: source }: { item: MusicSource }) {
-    // console.log(mainSource)
-    return (
-      <TouchableOpacity onPress={() => this.props.onPress(source)}>
-        <View style={styles.outerContainer} key={source.providerID}>
-          <View style={styles.innerContainer}>
-            <Image style={styles.cover} source={{ uri: source.cover }} />
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              {/* <Text style={[styles.text, styles.rollType]} numberOfLines={2}>
-                {source.type}
-              </Text> */}
-              <Text style={[styles.text, styles.name]} numberOfLines={2}>
-                {source.name}
-              </Text>
-              <Text style={[styles.text, styles.source]} numberOfLines={2}>
-                {source.provider}
-              </Text>
-              {source.creator ? (
-                <Text style={styles.artist} numberOfLines={2}>
-                  {source.creator}
-                </Text>
-              ) : null}
-            </View>
-            {/* <Icon
-            size={25}
-            name='edit'
-            color='lightgrey'
-            // onPress={roll => {
-            //   NavigationService.navigate('EditRoll', {
-            //     roll,
-            //   });
-            // }}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            iconStyle={styles.editIcon}
-          /> */}
-          </View>
-          <View style={styles.spacing} />
-        </View>
-      </TouchableOpacity>
-    );
+    return <MusicSourceCard source={source} onPress={this.props.onPress} />;
   }
 
   render() {

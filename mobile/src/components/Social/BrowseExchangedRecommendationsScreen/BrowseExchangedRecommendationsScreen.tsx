@@ -1,22 +1,39 @@
 /**
- * BrowseRecommendationsScreen
+ * BrowseExchangedRecommendationsScreen
  */
 
 import * as React from 'react';
-import { Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  TouchableHighlight,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
-import RecommendationCard from '../../shared/Cards/RecommendationCard';
+import { ListExchangedRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListExchangedRecommendationsQuery';
+import ChatRecommendationCard from '../../shared/Cards/ChatRecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import { NavigationScreenProp } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
+import styles from './BrowseExchangedRecommendationsScreen.styles';
 
-export default class BrowseRecommendationsScreen extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {}
+
+export default class BrowseExchangedRecommendationsScreen extends React.Component<
+  Props,
+  State
+> {
   render() {
     const extractRecommendations = data => {
       if (
@@ -25,30 +42,49 @@ export default class BrowseRecommendationsScreen extends React.Component {
       ) {
         return [];
       }
-      return data.private.listCurrentUserRecommendations;
+      return data.private.listExchangedRecommendations;
     };
+    const user =
+      this.props.navigation && this.props.navigation.getParam('user');
     return (
-      <ListCurrentUserRecommendationsQuery variables={{ offset: 0, count: 20 }}>
+      <ListExchangedRecommendationsQuery
+        variables={{ userID: user.id, offset: 0, count: 20 }}
+      >
         {({ loading, error, data, refetch, fetchMore }) => {
           const recommendations = extractRecommendations(data);
           return (
             <SubScreenContainer
-              title={'My Recommendations'}
+              title={user.name}
               flatList
               contentContainerStyle={{
                 marginTop: 10,
-                paddingBottom: hp('16%'),
+                paddingBottom: hp('10%'),
               }}
               data={recommendations}
+              keyExtractor={item => item.id}
               icons={[
                 {
-                  name: 'send',
-                  onPress: () => {
-                    NavigationService.navigate('BrowseSentRecommendations');
-                  },
+                  name: 'profile',
+                  render: () => (
+                    <TouchableHighlight
+                      onPress={() =>
+                        NavigationService.navigate('ViewProfile', {
+                          userID: user.id,
+                        })
+                      }
+                      style={styles.profileAvatarContainer}
+                      key='profile'
+                    >
+                      {
+                        <Image
+                          style={styles.profileAvatar}
+                          source={{ uri: user.avatar }}
+                        />
+                      }
+                    </TouchableHighlight>
+                  ),
                 },
               ]}
-              keyExtractor={item => item.id}
               renderFlatListHeader={() => {
                 return (
                   <>
@@ -63,9 +99,11 @@ export default class BrowseRecommendationsScreen extends React.Component {
               }}
               renderItem={({ item }) => {
                 return (
-                  <RecommendationCard
+                  <ChatRecommendationCard
                     recommendation={item}
-                    onPress={() => {}}
+                    readOnly
+                    hideRecommender
+                    alignLeft={item.recommender.id === user.id}
                   />
                 );
               }}
@@ -84,7 +122,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
                     if (!fetchMoreResult) return prev;
                     return Object.assign({}, prev, {
                       private: {
-                        listCurrentUserRecommendations: [
+                        listExchangedRecommendations: [
                           ...prevRecommendations,
                           ...fetchMoreRecommendations,
                         ],
@@ -98,7 +136,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
             />
           );
         }}
-      </ListCurrentUserRecommendationsQuery>
+      </ListExchangedRecommendationsQuery>
     );
   }
 }

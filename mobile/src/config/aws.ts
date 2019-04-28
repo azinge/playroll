@@ -27,10 +27,10 @@ export const amplify = {
       oauth: {
         domain: 'playroll-general.auth.us-west-2.amazoncognito.com',
         scope: ['public_profile', 'phone', 'email', 'profile', 'openid'],
-        // redirectSignIn: 'https://app-dev.playroll.io',
-        // redirectSignOut: 'https://app-dev.playroll.io',
-        redirectSignIn: 'https://app.playroll.io',
-        redirectSignOut: 'https://app.playroll.io',
+        redirectSignIn: 'https://app-dev.playroll.io',
+        redirectSignOut: 'https://app-dev.playroll.io',
+        // redirectSignIn: 'https://app.playroll.io',
+        // redirectSignOut: 'https://app.playroll.io',
         responseType: 'code', // or token
         urlOpener: WebBrowser.openBrowserAsync,
       },

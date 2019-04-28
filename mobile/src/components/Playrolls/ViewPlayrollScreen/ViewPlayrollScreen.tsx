@@ -222,7 +222,6 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
               readOnly={!this.state.inEditMode}
               disableManage={this.state.inEditMode}
               onMoveEnd={({ data: rolls }) => {
-                console.log(rolls);
                 reorderPlayroll({
                   variables: {
                     playrollID: playroll.id,

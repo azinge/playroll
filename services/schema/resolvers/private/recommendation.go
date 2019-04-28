@@ -45,7 +45,7 @@ var listCurrentUserRecommendations = gqltag.Method{
 		recommendationsModels := &[]models.Recommendation{}
 
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Order("created_at desc")
 		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
@@ -82,7 +82,7 @@ var listReceivedRecommendations = gqltag.Method{
 		recommendationsModels := &[]models.Recommendation{}
 
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Order("created_at desc")
 		if err := db.Where(models.Recommendation{UserID: user.ID, IsActive: true}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
@@ -119,7 +119,7 @@ var listSentRecommendations = gqltag.Method{
 		recommendationsModels := &[]models.Recommendation{}
 
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		db := mctx.DB.Preload("User").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Order("created_at desc")
 		if err := db.Where(models.Recommendation{RecommenderID: user.ID}).Offset(offset).Limit(count).Find(recommendationsModels).Error; err != nil {
 			fmt.Printf("error getting recommendations: %s", err.Error())
 			return nil, err
@@ -158,7 +158,7 @@ var listExchangedRecommendations = gqltag.Method{
 
 		recommendationsModels := &[]models.Recommendation{}
 		offset, count := utils.InitializePaginationVariables(params.Offset, params.Count)
-		db := mctx.DB.Preload("Recommender").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		db := mctx.DB.Preload("Recommender").Preload("User").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User").Order("created_at desc")
 		if err := db.Where(models.Recommendation{UserID: user.ID, RecommenderID: otherUserID}).
 			Or(models.Recommendation{UserID: otherUserID, RecommenderID: user.ID}).
 			Offset(offset).Limit(count).
@@ -268,7 +268,8 @@ var dismissRecommendation = gqltag.Method{
 		recommendationID := utils.StringIDToNumber(params.RecommendationID)
 
 		recommendationModel := &models.Recommendation{}
-		if err := mctx.DB.Where(&models.Recommendation{UserID: user.ID}).First(recommendationModel, recommendationID).Error; err != nil {
+		db := mctx.DB.Preload("Recommender").Preload("User").Preload("Playroll").Preload("Playroll.Rolls").Preload("Playroll.User")
+		if err := db.Where(&models.Recommendation{UserID: user.ID}).First(recommendationModel, recommendationID).Error; err != nil {
 			return nil, err
 		}
 

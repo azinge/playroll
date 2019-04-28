@@ -10,6 +10,10 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import {
@@ -57,7 +61,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
 
   _keyExtractor = (item, index) => item.providerID;
 
-  render() {
+  render2() {
     return (
       <MainScreenContainer>
         <View
@@ -144,8 +148,21 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
                         }}
                       />
                     </TouchableOpacity>
-                    <ListSpotifyPlaylistsQuery variables={{ count: 3 }}>
-                      {({ loading, error, data }) => {
+                    <ListSpotifyPlaylistsQuery
+                      variables={{ offset: 0, count: 20 }}
+                    >
+                      {({ loading, error, data, fetchMore, refetch }) => {
+                        const extractPlaylists = data => {
+                          if (
+                            !data ||
+                            Object.keys(data).length === 0 ||
+                            Object.keys(data.private).length === 0
+                          ) {
+                            return [];
+                          }
+                          return data.private.listSpotifyPlaylists;
+                        };
+                        const playlists = extractPlaylists(data);
                         console.log(error && error.message);
                         console.log(
                           data &&
@@ -162,6 +179,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
                               }
                               keyExtractor={this._keyExtractor}
                               renderItem={this._renderItem}
+                              refreshing={loading}
                             />
                           </View>
                         );
@@ -174,6 +192,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
                   <TouchableOpacity
                     onPress={() => NavigationService.navigate('ConnectSpotify')}
                     style={{ marginHorizontal: 60, marginBottom: 5 }}
+                    disabled={loading}
                   >
                     <ListItem
                       title={'Connect To Spotify'}
@@ -206,6 +225,184 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
           </CurrentUserSpotifyStatusQuery>
         </View>
       </MainScreenContainer>
+    );
+  }
+  renderSpotifyHeader(authenticated, loading) {
+    return (
+      <View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginBottom: 5,
+            left: 2,
+            alignItems: 'center',
+          }}
+        >
+          <Icon
+            type='material-community'
+            name='spotify'
+            color='black'
+            size={30}
+          />
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: 'bold',
+              fontSize: 24,
+              left: 3,
+            }}
+          >
+            Spotify
+          </Text>
+        </View>
+        {authenticated ? (
+          <View>
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('BrowseSpotifySavedTracks')
+              }
+              style={{
+                marginHorizontal: 60,
+                marginBottom: 5,
+              }}
+            >
+              <ListItem
+                title={'My Saved Tracks'}
+                titleStyle={{
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 17,
+                  color: 'white',
+                }}
+                containerStyle={{
+                  //   marginHorizontal: 30,
+                  //   marginBottom: 10,
+                  backgroundColor: 'purple',
+                  borderColor: 'white',
+                  borderRadius: 30,
+                  shadowColor: 'gray',
+                  shadowOffset: {
+                    width: 5,
+                    height: 1,
+                  },
+                  shadowRadius: 9,
+                  shadowOpacity: 0.5,
+                  overflow: 'visible',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => NavigationService.navigate('ConnectSpotify')}
+            style={{
+              marginHorizontal: 60,
+              marginBottom: 5,
+            }}
+          >
+            <ListItem
+              title={loading ? 'Loading...' : 'Connect To Spotify'}
+              titleStyle={{
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: 17,
+                color: 'white',
+              }}
+              containerStyle={{
+                //   marginHorizontal: 30,
+                //   marginBottom: 10,
+                backgroundColor: 'purple',
+                borderColor: 'white',
+                borderRadius: 30,
+                shadowColor: 'gray',
+                shadowOffset: {
+                  width: 5,
+                  height: 1,
+                },
+                shadowRadius: 9,
+                shadowOpacity: 0.5,
+                overflow: 'visible',
+              }}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  }
+
+  render() {
+    const extractPlaylists = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listSpotifyPlaylists;
+    };
+    return (
+      <CurrentUserSpotifyStatusQuery>
+        {({ loading: statusLoading, data: statusData }) => {
+          const authenticated =
+            statusData &&
+            statusData.private &&
+            statusData.private.currentUserSpotifyStatus;
+          return (
+            <ListSpotifyPlaylistsQuery
+              variables={{ offset: 0, count: 20 }}
+              skip={!authenticated}
+            >
+              {({ loading, error, data, fetchMore, refetch }) => {
+                const playlists = extractPlaylists(data);
+                return (
+                  <MainScreenContainer
+                    flatList
+                    contentContainerStyle={{
+                      marginTop: 10,
+                      paddingBottom: hp('10%'),
+                    }}
+                    renderFlatListHeader={() =>
+                      this.renderSpotifyHeader(authenticated, statusLoading)
+                    }
+                    data={playlists}
+                    keyExtractor={this._keyExtractor}
+                    renderItem={this._renderItem}
+                    refreshing={statusLoading || loading}
+                    onRefresh={() => refetch()}
+                    onEndReached={() => {
+                      // @ts-ignore
+                      fetchMore({
+                        variables: {
+                          offset: playlists.length,
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          const prevPlaylists = extractPlaylists(prev);
+                          const fetchMorePlaylists = extractPlaylists(
+                            fetchMoreResult
+                          );
+                          if (!fetchMoreResult) return prev;
+                          return Object.assign({}, prev, {
+                            private: {
+                              listSpotifyPlaylists: [
+                                ...prevPlaylists,
+                                ...fetchMorePlaylists,
+                              ],
+                              __typename: 'PrivateQueryMethods',
+                            },
+                          });
+                        },
+                      });
+                    }}
+                    onEndReachedThreshold={0.5}
+                  />
+                );
+              }}
+            </ListSpotifyPlaylistsQuery>
+          );
+        }}
+      </CurrentUserSpotifyStatusQuery>
     );
   }
 }

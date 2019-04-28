@@ -1,15 +1,16 @@
 /**
- * RecommendationCard
+ * ChatRecommendationCard
  */
 
 import * as React from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 import Carousel from 'react-native-snap-carousel';
+import Moment from 'react-moment';
 
-import styles from './RecommendationCard.styles';
+import styles from './ChatRecommendationCard.styles';
 import { Recommendation, MusicSource, Roll } from '../../../../graphql/types';
-import { Icon } from 'react-native-elements';
+import { Icon, Card } from 'react-native-elements';
 import NavigationService from '../../../../services/NavigationService';
 import { DismissRecommendationMutation } from '../../../../graphql/requests/Recommendation/DismissRecommendationMutation';
 import { LIST_CURRENT_USER_RECOMMENDATIONS } from '../../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
@@ -23,11 +24,15 @@ export interface Props {
   readOnly?: boolean;
   hideRecommender?: boolean;
   disableManage?: boolean;
+  alignLeft?: boolean;
 }
 
 interface State {}
 
-export default class RecommendationCard extends React.Component<Props, State> {
+export default class ChatRecommendationCard extends React.Component<
+  Props,
+  State
+> {
   render() {
     const { recommendation } = this.props;
 
@@ -37,32 +42,69 @@ export default class RecommendationCard extends React.Component<Props, State> {
         refetchQueries={() => [LIST_CURRENT_USER_RECOMMENDATIONS]}
       >
         {dismissRecommendation => {
+          const calendarStrings = {
+            lastDay: '[Yesterday at] LT',
+            sameDay: '[Today at] LT',
+            lastWeek: '[Last] dddd [at] LT',
+            nextWeek: 'dddd [at] LT',
+            sameElse: 'L',
+          };
           return (
-            <View
-              style={{
-                borderBottomWidth: 0.5,
-                borderBottomColor: 'lightgrey',
-              }}
-            >
-              <Swipeout
-                right={[
+            <View>
+              {/* <Heading
+                type={'h11'}
+                alignment={this.props.alignLeft ? 'left' : 'right'}
+                style={{ marginHorizontal: 15 }}
+              > */}
+              <Moment
+                calendar={calendarStrings}
+                element={props => (
+                  <Heading
+                    type={'h11'}
+                    alignment={this.props.alignLeft ? 'left' : 'right'}
+                    style={{ marginHorizontal: 15 }}
+                    color={'grey'}
+                  >
+                    {props.children}
+                  </Heading>
+                )}
+              >
+                {recommendation.createdAt}
+              </Moment>
+              {/* </Heading> */}
+              <Card
+                containerStyle={[
                   {
-                    text: 'Dismiss',
-                    backgroundColor: '#c70700',
-                    onPress: () => {
-                      dismissRecommendation();
+                    marginTop: 0,
+                    marginBottom: 15,
+                    // height: 100,
+                    padding: 5,
+                    borderRadius: 12,
+                    borderColor: 'white',
+                    shadowColor: 'gray',
+                    shadowOffset: {
+                      width: 2,
+                      height: 3,
                     },
+                    shadowRadius: 5,
+                    shadowOpacity: 0.3,
                   },
+                  this.props.alignLeft
+                    ? { marginRight: 100 }
+                    : { marginLeft: 100 },
                 ]}
-                backgroundColor={'transparent'}
-                autoClose={true}
-                disabled={this.props.readOnly}
               >
                 {recommendation.playrollID && recommendation.playrollID !== '0'
                   ? this.renderPlayrollRecommendation(recommendation)
                   : this.renderRollRecommendation(recommendation)}
                 {/* <View style={styles.spacing} /> */}
-              </Swipeout>
+              </Card>
+              {this.props.alignLeft && (
+                <Image
+                  style={[styles.profileAvatar, { top: -25 }]}
+                  source={{ uri: recommendation.recommender.avatar }}
+                />
+              )}
             </View>
           );
         }}
@@ -139,30 +181,19 @@ export default class RecommendationCard extends React.Component<Props, State> {
             )}
           </View>
           <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-            <Heading type={'h7'} alignment={'left'} bold>
+            <Heading type={'h8'} alignment={'left'} bold numLines={2}>
               {playroll.name}
             </Heading>
-            <Heading type={'h10'} alignment={'left'} color={'grey'} bold>
+            <Heading
+              type={'h11'}
+              alignment={'left'}
+              color={'grey'}
+              bold
+              numLines={2}
+            >
               Playroll by {creator}
             </Heading>
-            {!this.props.hideRecommender &&
-              (this.props.senderView ? (
-                <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-                  Recommended to {recommendation.user.name}
-                </Text>
-              ) : (
-                <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-                  Recommended by {recommendation.recommender.name}
-                </Text>
-              ))}
           </View>
-          <Icon
-            size={35}
-            name='more-vert'
-            color='lightgrey'
-            underlayColor='rgba(255,255,255,0)'
-            // onPress={() => NavigationService.goBack()}
-          />
         </View>
       </TouchableOpacity>
     );
@@ -197,35 +228,21 @@ export default class RecommendationCard extends React.Component<Props, State> {
           >
             <Image style={styles.cover} source={{ uri: mainSource.cover }} />
             <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-              <Text style={styles.artist} numberOfLines={2}>
+              <Heading type={'h9'} alignment={'left'} bold numLines={2}>
                 {mainSource.name}
-              </Text>
+              </Heading>
               {!!mainSource.creator && (
-                <Text
-                  style={[styles.manageRoll, { fontWeight: 'bold' }]}
-                  numberOfLines={1}
+                <Heading
+                  type={'h11'}
+                  alignment={'left'}
+                  color={'grey'}
+                  bold
+                  numLines={2}
                 >
                   {mainSource.creator}
-                </Text>
+                </Heading>
               )}
-              {!this.props.hideRecommender &&
-                (this.props.senderView ? (
-                  <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-                    Recommended to {recommendation.user.name}
-                  </Text>
-                ) : (
-                  <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-                    Recommended by {recommendation.recommender.name}
-                  </Text>
-                ))}
             </View>
-            <Icon
-              size={35}
-              name='more-vert'
-              color='lightgrey'
-              underlayColor='rgba(255,255,255,0)'
-              // onPress={() => NavigationService.goBack()}
-            />
           </View>
           <View style={styles.spacing} />
         </View>

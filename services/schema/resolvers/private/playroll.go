@@ -175,12 +175,7 @@ var updateCurrentUserPlayroll = gqltag.Method{
 			return nil, err
 		}
 
-		playroll, err := models.FormatPlayroll(playrollModel)
-		if err != nil {
-			return nil, err
-		}
-
-		return playroll, nil
+		return models.GetPlayrollByID(playrollModel.ID, mctx.DB)
 	},
 }
 

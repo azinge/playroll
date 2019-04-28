@@ -1,5 +1,5 @@
 /**
- * BrowseRecommendationsScreen
+ * BrowseSentRecommendationsScreen
  */
 
 import * as React from 'react';
@@ -9,14 +9,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
-import { ListCurrentUserRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListCurrentUserRecommendationsQuery';
+import { ListSentRecommendationsQuery } from '../../../graphql/requests/Recommendation/ListSentRecommendationsQuery';
 import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
-import NavigationService from '../../../services/NavigationService';
 
-export default class BrowseRecommendationsScreen extends React.Component {
+export default class BrowseSentRecommendationsScreen extends React.Component {
   render() {
     const extractRecommendations = data => {
       if (
@@ -25,29 +24,21 @@ export default class BrowseRecommendationsScreen extends React.Component {
       ) {
         return [];
       }
-      return data.private.listCurrentUserRecommendations;
+      return data.private.listSentRecommendations;
     };
     return (
-      <ListCurrentUserRecommendationsQuery variables={{ offset: 0, count: 20 }}>
+      <ListSentRecommendationsQuery variables={{ offset: 0, count: 20 }}>
         {({ loading, error, data, refetch, fetchMore }) => {
           const recommendations = extractRecommendations(data);
           return (
             <SubScreenContainer
-              title={'My Recommendations'}
+              title={'Sent Recommendations'}
               flatList
               contentContainerStyle={{
                 marginTop: 10,
                 paddingBottom: hp('16%'),
               }}
               data={recommendations}
-              icons={[
-                {
-                  name: 'send',
-                  onPress: () => {
-                    NavigationService.navigate('BrowseSentRecommendations');
-                  },
-                },
-              ]}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
                 return (
@@ -65,7 +56,8 @@ export default class BrowseRecommendationsScreen extends React.Component {
                 return (
                   <RecommendationCard
                     recommendation={item}
-                    onPress={() => {}}
+                    senderView
+                    readOnly
                   />
                 );
               }}
@@ -84,7 +76,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
                     if (!fetchMoreResult) return prev;
                     return Object.assign({}, prev, {
                       private: {
-                        listCurrentUserRecommendations: [
+                        listSentRecommendations: [
                           ...prevRecommendations,
                           ...fetchMoreRecommendations,
                         ],
@@ -98,7 +90,7 @@ export default class BrowseRecommendationsScreen extends React.Component {
             />
           );
         }}
-      </ListCurrentUserRecommendationsQuery>
+      </ListSentRecommendationsQuery>
     );
   }
 }

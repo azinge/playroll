@@ -24,6 +24,8 @@ import { CreateRecommendationMutation } from '../../../graphql/requests/Recommen
 import { RollData } from '../../../graphql/types';
 import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import { LIST_SENT_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListSentRecommendationsQuery';
+import { LIST_EXCHANGED_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListExchangedRecommendationsQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -118,7 +120,12 @@ export default class RecommendToFriendScreen extends React.Component<
         {({ loading, error, data, refetch, fetchMore }) => {
           const friends = extractFriends(data);
           return (
-            <CreateRecommendationMutation>
+            <CreateRecommendationMutation
+              refetchQueries={() => [
+                LIST_SENT_RECOMMENDATIONS,
+                LIST_EXCHANGED_RECOMMENDATIONS,
+              ]}
+            >
               {createRecommendation => {
                 return (
                   <View style={{ flex: 1 }}>

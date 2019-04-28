@@ -148,9 +148,10 @@ export default class DefaultSocialScreen extends React.Component<Props, State> {
                           renderItem={({ item: friend }: { item: User }) => (
                             <TouchableOpacity
                               onPress={() => {
-                                NavigationService.navigate('ViewProfile', {
-                                  userID: friend.id,
-                                });
+                                NavigationService.navigate(
+                                  'BrowseExchangedRecommendations',
+                                  { user: friend }
+                                );
                               }}
                             >
                               <View>

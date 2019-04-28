@@ -205,8 +205,10 @@ func SearchSpotify(query string, searchType string, client *spotify.Client) (*js
 	return &output, nil
 }
 
-func ListPlaylistsFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
-	playlistsPage, err := client.CurrentUsersPlaylists()
+func ListPlaylistsFromClient(client *spotify.Client, db *gorm.DB, offset uint, count uint) (*[]jsonmodels.MusicSource, error) {
+	o := int(offset)
+	c := int(count)
+	playlistsPage, err := client.CurrentUsersPlaylistsOpt(&spotify.Options{Offset: &o, Limit: &c})
 	if err != nil {
 		fmt.Println("error fetching playlists: ", err.Error())
 		return nil, err
@@ -225,17 +227,19 @@ func ListPlaylistsFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels
 	return &playlists, nil
 }
 
-func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
-	fullPlaylist, err := client.GetPlaylist(spotify.ID(playlistID))
+func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db *gorm.DB, offset uint, count uint) (*[]jsonmodels.MusicSource, error) {
+	o := int(offset)
+	c := int(count)
+	playlistTracks, err := client.GetPlaylistTracksOpt(spotify.ID(playlistID), &spotify.Options{Offset: &o, Limit: &c}, "total,limit,items(track(name,id,artists(name),album(images)))")
 	if err != nil {
 		fmt.Println("error fetching playlist: ", err.Error())
 		return nil, err
 	}
-	playlistTracks := make([]jsonmodels.MusicSource, len(fullPlaylist.Tracks.Tracks))
-	for i, playlistTrack := range fullPlaylist.Tracks.Tracks {
+	mss := make([]jsonmodels.MusicSource, len(playlistTracks.Tracks))
+	for i, playlistTrack := range playlistTracks.Tracks {
 		track := playlistTrack.Track
 		_, artistName := extractArtist(track.Artists)
-		playlistTracks[i] = jsonmodels.MusicSource{
+		mss[i] = jsonmodels.MusicSource{
 			Type:       "Track",
 			Provider:   "Spotify",
 			ProviderID: string(track.ID),
@@ -244,13 +248,13 @@ func ListPlaylistTracksFromClient(playlistID string, client *spotify.Client, db 
 			Cover:      extractCover(track.Album.Images),
 		}
 	}
-	return &playlistTracks, nil
+	return &mss, nil
 }
 
-func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB) (*[]jsonmodels.MusicSource, error) {
-	offset := 0
-	limit := 20
-	savedTracksPage, err := client.CurrentUsersTracksOpt(&spotify.Options{Offset: &offset, Limit: &limit})
+func ListSavedTracksFromClient(client *spotify.Client, db *gorm.DB, offset uint, count uint) (*[]jsonmodels.MusicSource, error) {
+	o := int(offset)
+	c := int(count)
+	savedTracksPage, err := client.CurrentUsersTracksOpt(&spotify.Options{Offset: &o, Limit: &c})
 	if err != nil {
 		fmt.Println("error fetching savedTracks: ", err.Error())
 		return nil, err

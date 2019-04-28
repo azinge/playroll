@@ -5,9 +5,17 @@ import { MusicSource, MusicSourceFragments } from '../../types';
 export const LIST_SPOTIFY_PLAYLIST_TRACKS = 'LIST_SPOTIFY_PLAYLIST_TRACKS';
 
 export const LIST_SPOTIFY_PLAYLIST_TRACKS_QUERY = gql`
-  query LIST_SPOTIFY_PLAYLIST_TRACKS($playlistID: String!) {
+  query LIST_SPOTIFY_PLAYLIST_TRACKS(
+    $playlistID: String!
+    $offset: Int!
+    $count: Int!
+  ) {
     private {
-      listSpotifyPlaylistTracks(playlistID: $playlistID) {
+      listSpotifyPlaylistTracks(
+        playlistID: $playlistID
+        offset: $offset
+        count: $count
+      ) {
         ...DefaultMusicSource
       }
     }
@@ -17,6 +25,8 @@ export const LIST_SPOTIFY_PLAYLIST_TRACKS_QUERY = gql`
 
 type ListSpotifyPlaylistTracksVariables = {
   playlistID?: number;
+  offset?: number;
+  count?: number;
 };
 
 type ListSpotifyPlaylistTracksData = {

@@ -23,6 +23,7 @@ import { SignUpMutation } from '../../../graphql/requests/Auth';
 import styles from './SignUpScreen.styles';
 import NavigationService from '../../../services/NavigationService';
 import DropdownAlert from 'react-native-dropdownalert';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 export interface Props {
   toggleSignUp?: () => void;
@@ -282,43 +283,45 @@ export default class SignUpScreen extends React.Component<Props, State> {
       >
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
-            {this.renderSegueToSignIn()}
-            {this.renderHeader()}
-            <Text style={styles.formText}>Username</Text>
-            <TextInput
-              placeholder='Username'
-              autoCapitalize='none'
-              style={styles.inputContainer}
-              onChangeText={(username: string) => this.setState({ username })}
-              value={this.state.username}
-            />
-            <Text style={styles.formText}>Email</Text>
-            <TextInput
-              placeholder='Email'
-              style={styles.inputContainer}
-              onChangeText={(email: string) => this.setState({ email })}
-              autoCapitalize={'none'}
-              value={this.state.email}
-            />
-            <Text style={styles.formText}>Password</Text>
-            <TextInput
-              placeholder='Password'
-              style={styles.inputContainer}
-              onChangeText={(password: string) => this.setState({ password })}
-              secureTextEntry={true}
-              value={this.state.password}
-            />
-            <Text style={styles.formText}>Confirm Password</Text>
-            <TextInput
-              placeholder='Confirm Password'
-              style={styles.inputContainer}
-              onChangeText={(confirmPassword: string) =>
-                this.setState({ confirmPassword })
-              }
-              secureTextEntry={true}
-              value={this.state.confirmPassword}
-            />
-            {this.termsOfServiceLink()}
+            <KeyboardAwareScrollView style={{ flex: 1 }}>
+              {this.renderSegueToSignIn()}
+              {this.renderHeader()}
+              <Text style={styles.formText}>Username</Text>
+              <TextInput
+                placeholder='Username'
+                autoCapitalize='none'
+                style={styles.inputContainer}
+                onChangeText={(username: string) => this.setState({ username })}
+                value={this.state.username}
+              />
+              <Text style={styles.formText}>Email</Text>
+              <TextInput
+                placeholder='Email'
+                style={styles.inputContainer}
+                onChangeText={(email: string) => this.setState({ email })}
+                autoCapitalize={'none'}
+                value={this.state.email}
+              />
+              <Text style={styles.formText}>Password</Text>
+              <TextInput
+                placeholder='Password'
+                style={styles.inputContainer}
+                onChangeText={(password: string) => this.setState({ password })}
+                secureTextEntry={true}
+                value={this.state.password}
+              />
+              <Text style={styles.formText}>Confirm Password</Text>
+              <TextInput
+                placeholder='Confirm Password'
+                style={styles.inputContainer}
+                onChangeText={(confirmPassword: string) =>
+                  this.setState({ confirmPassword })
+                }
+                secureTextEntry={true}
+                value={this.state.confirmPassword}
+              />
+              {this.termsOfServiceLink()}
+            </KeyboardAwareScrollView>
           </View>
           {this.renderSignupButton()}
           <DropdownAlert ref={ref => (this.dropdown = ref)} />

@@ -27,7 +27,7 @@ export default StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 5,
+    paddingTop: 30,
     paddingBottom: 20,
     paddingRight: 20,
   },
@@ -62,7 +62,7 @@ export default StyleSheet.create({
   inputContainer: {
     width: '100%',
     height: 45,
-    marginBottom: 10,
+    marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,

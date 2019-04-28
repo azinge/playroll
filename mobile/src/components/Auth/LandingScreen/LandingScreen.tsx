@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import {
   NavigationScreenProp,
@@ -29,6 +30,7 @@ import NavigationService from '../../../services/NavigationService';
 import DropdownAlert from 'react-native-dropdownalert';
 import { SocialIcon, Button } from 'react-native-elements';
 import { Linking, WebBrowser } from 'expo';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -299,8 +301,11 @@ class LandingScreen extends React.Component<Props, State> {
         }}
       >
         <SafeAreaView style={styles.container}>
-          {this.renderHeader()}
-          {this.renderForm()}
+          <KeyboardAwareScrollView style={{ flex: 1 }}>
+            {this.renderHeader()}
+            {this.renderForm()}
+          </KeyboardAwareScrollView>
+
           {this.renderFooter()}
           <DropdownAlert ref={ref => (this.dropdown = ref)} />
         </SafeAreaView>

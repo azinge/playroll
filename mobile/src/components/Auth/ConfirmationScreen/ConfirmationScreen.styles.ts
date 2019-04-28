@@ -17,6 +17,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: '22%', // TODO: handle spacing
     opacity: 0.5,
+    paddingTop: 20,
   },
   signInTitle: {
     fontSize: 17,

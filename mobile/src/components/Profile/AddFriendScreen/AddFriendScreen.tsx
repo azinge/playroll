@@ -15,6 +15,10 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import { ApolloConsumer } from 'react-apollo';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import Errors from '../../shared/Modals/Errors';
 import { SEARCH_USERS_QUERY } from '../../../graphql/requests/User/';
 import { SendFriendRequestMutation } from '../../../graphql/requests/Relationships';
@@ -377,6 +381,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
   render() {
     const extractUsers = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -385,28 +390,52 @@ export default class AddFriendScreen extends React.Component<Props, State> {
       return data.private.searchUsers;
     };
     return (
-      <SearchUsersQuery variables={{ query: this.state.query }}>
-        {({ data, loading, error }) => {
+      <SearchUsersQuery
+        variables={{ query: this.state.query, offset: 0, count: 20 }}
+        skip={this.state.query === ''}
+      >
+        {({ data, loading, error, fetchMore }) => {
           const users = extractUsers(data);
           return (
             <SearchScreenContainer
-              contentContainerStyle={{ marginTop: 10 }}
+              contentContainerStyle={{
+                marginTop: 10,
+                paddingBottom: hp('10%'),
+              }}
               title={'Search Users'}
               onSubmitEditing={query => this.setState({ query })}
-              flatList={!loading && !error}
+              flatList
               data={users}
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return this.renderUserRow({ item });
               }}
-            >
-              {loading && (
-                <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
-              )}
-              {error && (
-                <Text style={{ paddingTop: 50 }}>Error Loading Users</Text>
-              )}
-            </SearchScreenContainer>
+              refreshing={loading}
+              renderFlatListHeader={() =>
+                error && (
+                  <Text style={{ paddingTop: 50 }}>Error Loading Users</Text>
+                )
+              }
+              onEndReached={() => {
+                fetchMore({
+                  variables: {
+                    offset: users.length,
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    const prevUsers = extractUsers(prev);
+                    const fetchMoreUsers = extractUsers(fetchMoreResult);
+                    if (!fetchMoreResult) return prev;
+                    return Object.assign({}, prev, {
+                      private: {
+                        searchUsers: [...prevUsers, ...fetchMoreUsers],
+                        __typename: 'PrivateQueryMethods',
+                      },
+                    });
+                  },
+                });
+              }}
+              onEndReachedThreshold={0.5}
+            />
           );
         }}
       </SearchUsersQuery>

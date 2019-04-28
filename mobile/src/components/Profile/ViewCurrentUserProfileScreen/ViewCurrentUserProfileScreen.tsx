@@ -27,6 +27,9 @@ import {
 } from '../../../graphql/requests/Playroll/';
 import NavigationService from '../../../services/NavigationService';
 import { NavigationScreenProp } from 'react-navigation';
+import { ListUserPlayrollsQuery } from '../../../graphql/requests/Playroll/ListUserPlayrollsQuery';
+import PlayrollList from '../../shared/Lists/PlayrollList';
+import Heading from '../../shared/Text/Heading';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -102,15 +105,16 @@ export default class ViewCurrentUserProfileScreen extends React.Component<
   }
 
   renderContent(user: User) {
-    // const extractPlayrolls = data => {
-    //   if (
-    //     Object.keys(data).length === 0 ||
-    //     Object.keys(data.private).length === 0
-    //   ) {
-    //     return [];
-    //   }
-    //   return data.private.listCurrentUserPlayrolls;
-    // };
+    const extractCurrentUserPlayrolls = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listCurrentUserPlayrolls;
+    };
     return (
       <View
         style={{
@@ -180,12 +184,49 @@ export default class ViewCurrentUserProfileScreen extends React.Component<
               /> */
           }
         </View>
-        <View style={{ padding: 10 }}>
-          <PlaceholderList
-            title={`${user.name}'s Playrolls`}
-            numItems={10}
-            overlayText={'Coming Soon...'}
-          />
+        <View style={{ padding: 10, height: 500 }}>
+          <View style={{ margin: 10, marginBottom: 0, flexDirection: 'row' }}>
+            <Heading type={'h6'} alignment={'left'} style={{ flex: 2 }} bold>
+              Your Playrolls
+            </Heading>
+            <Heading
+              type={'h7'}
+              alignment={'right'}
+              opacity={0.7}
+              style={{ flex: 1 }}
+              onPress={() => {
+                NavigationService.navigate('BrowsePlayrolls');
+              }}
+            >
+              See All..
+            </Heading>
+          </View>
+          <ListCurrentUserPlayrollsQuery variables={{ offset: 0, count: 5 }}>
+            {({ data, loading, error, refetch }) => {
+              if (loading) {
+                return <ActivityIndicator />;
+              }
+              const playrolls = extractCurrentUserPlayrolls(data);
+              return (
+                <FlatList
+                  data={playrolls}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={playroll => `${playroll.id}`}
+                  extraData={this.state}
+                  renderItem={({ item }) => (
+                    <PlayrollCard
+                      playroll={item}
+                      onPress={playroll => {
+                        NavigationService.navigate('ViewPlayroll', {
+                          playroll,
+                        });
+                      }}
+                    />
+                  )}
+                />
+              );
+            }}
+          </ListCurrentUserPlayrollsQuery>
         </View>
         {/*
         <ListCurrentUserPlayrollsQuery>

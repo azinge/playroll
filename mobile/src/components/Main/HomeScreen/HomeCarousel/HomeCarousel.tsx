@@ -18,7 +18,7 @@ import styles from './HomeCarousel.styles';
 import { Card, Icon } from 'react-native-elements';
 import { DeletePlayrollMutation } from '../../../../graphql/requests/Playroll';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
-import { MusicSource, Roll } from '../../../../graphql/types';
+import { MusicSource, Roll, Playroll } from '../../../../graphql/types';
 import { ListFeaturedPlayrollsQuery } from '../../../../graphql/requests/Playroll/ListFeaturedPlayrollsQuery';
 import Heading from '../../../shared/Text/Heading';
 import NavigationService from '../../../../services/NavigationService';
@@ -27,6 +27,7 @@ export interface Props {
   title?: string;
   overlayText?: string;
   numItems: number;
+  playrolls: Playroll[];
 }
 
 interface State {}
@@ -121,54 +122,35 @@ export default class HomeCarousel extends React.Component<Props, State> {
     );
   }
   render() {
-    const extractPlayrolls = data => {
-      if (
-        Object.keys(data).length === 0 ||
-        Object.keys(data.private).length === 0
-      ) {
-        return [];
-      }
-      return data.private.listFeaturedPlayrolls;
-    };
     return (
-      <ListFeaturedPlayrollsQuery>
-        {({ loading, data, error }) => {
-          if (loading) {
-            return <ActivityIndicator />;
-          }
-          const playrolls = extractPlayrolls(data);
-          return (
-            <View>
-              <View style={{ height: 220 }}>
-                <Carousel
-                  data={playrolls}
-                  renderItem={this._renderPlayroll}
-                  hasParallaxImages={false}
-                  sliderWidth={Dimensions.get('window').width}
-                  itemWidth={Dimensions.get('window').width}
-                  itemHeight={250}
-                  loop={true}
-                />
-              </View>
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    position: 'absolute',
-                    bottom: 16,
-                    right: 12,
-                    opacity: 0.8,
-                    textAlign: 'center',
-                    color: 'grey',
-                  },
-                ]}
-              >
-                {this.props.overlayText}
-              </Text>
-            </View>
-          );
-        }}
-      </ListFeaturedPlayrollsQuery>
+      <View>
+        <View style={{ height: 220 }}>
+          <Carousel
+            data={this.props.playrolls}
+            renderItem={this._renderPlayroll}
+            hasParallaxImages={false}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width}
+            itemHeight={250}
+            loop={true}
+          />
+        </View>
+        <Text
+          style={[
+            styles.title,
+            {
+              position: 'absolute',
+              bottom: 16,
+              right: 12,
+              opacity: 0.8,
+              textAlign: 'center',
+              color: 'grey',
+            },
+          ]}
+        >
+          {this.props.overlayText}
+        </Text>
+      </View>
     );
   }
 }

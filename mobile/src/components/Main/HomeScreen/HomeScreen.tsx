@@ -6,6 +6,10 @@ import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { Permissions, Notifications } from 'expo';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import HomeCarousel from './HomeCarousel';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
@@ -19,15 +23,29 @@ import PlayrollList from '../../shared/Lists/PlayrollList';
 import { ListPopularPlayrollsQuery } from '../../../graphql/requests/Playroll/ListPopularPlayrollsQuery';
 import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
 import { ListNewReleasePlayrollsQuery } from '../../../graphql/requests/Playroll/ListNewReleasePlayrollsQuery';
+import { ListFeaturedPlayrollsQuery } from '../../../graphql/requests/Playroll/ListFeaturedPlayrollsQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
 }
 
-interface State {}
+interface State {
+  triggerRefetchFeaturedPlayrolls: boolean;
+  triggerRefetchNewReleasePlayrolls: boolean;
+  triggerRefetchPopularPlayrolls: boolean;
+}
 
 export default class HomeScreen extends React.Component<Props, State> {
   dropdown: DropdownAlert;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      triggerRefetchFeaturedPlayrolls: false,
+      triggerRefetchNewReleasePlayrolls: false,
+      triggerRefetchPopularPlayrolls: false,
+    };
+  }
 
   render() {
     const extractNewReleasePlayrolls = data => {
@@ -50,9 +68,29 @@ export default class HomeScreen extends React.Component<Props, State> {
       }
       return data.private.listPopularPlayrolls;
     };
+    const extractFeaturedPlayrolls = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listFeaturedPlayrolls;
+    };
     return (
       <View style={{ flex: 1 }}>
-        <MainScreenContainer>
+        <MainScreenContainer
+          onRefresh={() =>
+            this.setState({
+              triggerRefetchFeaturedPlayrolls: true,
+              triggerRefetchNewReleasePlayrolls: true,
+              triggerRefetchPopularPlayrolls: true,
+            })
+          }
+          contentContainerStyle={{ paddingBottom: hp('10%') }}
+          refreshing={false}
+        >
           <View style={{ marginTop: 5, flex: 1 }}>
             <View
               style={{
@@ -77,7 +115,24 @@ export default class HomeScreen extends React.Component<Props, State> {
                 }}
               />
             </View>
-            <HomeCarousel numItems={5} />
+            <ListFeaturedPlayrollsQuery>
+              {({ loading, data, error, refetch }) => {
+                if (this.state.triggerRefetchFeaturedPlayrolls) {
+                  this.setState(
+                    { triggerRefetchFeaturedPlayrolls: false },
+                    () => {
+                      refetch();
+                    }
+                  );
+                }
+                if (loading) {
+                  return <ActivityIndicator />;
+                }
+                const playrolls = extractFeaturedPlayrolls(data);
+                return <HomeCarousel numItems={5} playrolls={playrolls} />;
+              }}
+            </ListFeaturedPlayrollsQuery>
+
             <View
               style={{
                 marginHorizontal: 10,
@@ -103,7 +158,15 @@ export default class HomeScreen extends React.Component<Props, State> {
               />
             </View>
             <ListNewReleasePlayrollsQuery>
-              {({ data, loading, error }) => {
+              {({ data, loading, error, refetch }) => {
+                if (this.state.triggerRefetchNewReleasePlayrolls) {
+                  this.setState(
+                    { triggerRefetchNewReleasePlayrolls: false },
+                    () => {
+                      refetch();
+                    }
+                  );
+                }
                 if (loading) {
                   return <ActivityIndicator />;
                 }
@@ -144,7 +207,15 @@ export default class HomeScreen extends React.Component<Props, State> {
               />
             </View>
             <ListPopularPlayrollsQuery>
-              {({ data, loading, error }) => {
+              {({ data, loading, error, refetch }) => {
+                if (this.state.triggerRefetchPopularPlayrolls) {
+                  this.setState(
+                    { triggerRefetchPopularPlayrolls: false },
+                    () => {
+                      refetch();
+                    }
+                  );
+                }
                 if (loading) {
                   return <ActivityIndicator />;
                 }

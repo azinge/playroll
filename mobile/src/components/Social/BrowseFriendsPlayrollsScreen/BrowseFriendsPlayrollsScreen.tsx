@@ -4,6 +4,10 @@
 
 import * as React from 'react';
 import { Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
@@ -24,18 +28,30 @@ export default class BrowseFriendsPlayrollsScreen extends React.Component {
       return data.private.listFriendsPlayrolls;
     };
     return (
-      <ListFriendsPlayrollsQuery>
-        {({ loading, error, data }) => {
+      <ListFriendsPlayrollsQuery variables={{ offset: 0, count: 20 }}>
+        {({ loading, error, data, refetch, fetchMore }) => {
           const playrolls = extractFriendsPlayrolls(data);
           return (
             <SubScreenContainer
               title={'My Friends Playrolls'}
-              flatList={!loading && !error}
-              contentContainerStyle={{ marginTop: 10 }}
+              flatList
+              contentContainerStyle={{
+                marginTop: 10,
+                paddingBottom: hp('10%'),
+              }}
               data={playrolls}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
-                return <SearchSubHeader />;
+                return (
+                  <>
+                    {error && (
+                      <Text style={{ paddingTop: 50 }}>
+                        Error Loading Friends Playrolls
+                      </Text>
+                    )}
+                    <SearchSubHeader />
+                  </>
+                );
               }}
               renderItem={({ item }) => {
                 return (
@@ -49,16 +65,33 @@ export default class BrowseFriendsPlayrollsScreen extends React.Component {
                   />
                 );
               }}
-            >
-              {loading && (
-                <ActivityIndicator color={'gray'} style={{ paddingTop: 50 }} />
-              )}
-              {error && (
-                <Text style={{ paddingTop: 50 }}>
-                  Error Loading Friends Playrolls
-                </Text>
-              )}
-            </SubScreenContainer>
+              refreshing={loading}
+              onRefresh={() => refetch()}
+              onEndReached={() => {
+                fetchMore({
+                  variables: {
+                    offset: playrolls.length,
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    const prevPlayrolls = extractFriendsPlayrolls(prev);
+                    const fetchMorePlayrolls = extractFriendsPlayrolls(
+                      fetchMoreResult
+                    );
+                    if (!fetchMoreResult) return prev;
+                    return Object.assign({}, prev, {
+                      private: {
+                        listFriendsPlayrolls: [
+                          ...prevPlayrolls,
+                          ...fetchMorePlayrolls,
+                        ],
+                        __typename: 'PrivateQueryMethods',
+                      },
+                    });
+                  },
+                });
+              }}
+              onEndReachedThreshold={0.5}
+            />
           );
         }}
       </ListFriendsPlayrollsQuery>

@@ -46,6 +46,8 @@ interface ContainerProps extends HeaderProps {
   renderItem?: (obj: any) => any;
   refreshing?: boolean;
   onRefresh?: () => void;
+  onEndReached?: () => void;
+  onEndReachedThreshold?: number;
 }
 
 interface Props extends ContainerProps {}
@@ -58,19 +60,6 @@ export default class ProfileScreenContainer extends React.Component<
   Props,
   State
 > {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      key: `${this.props.title},${this.props.flatList}`,
-    };
-  }
-  componentWillReceiveProps(nextProps, prevState) {
-    const key = `${nextProps.title}${this.props.flatList}`;
-    if (key !== prevState.key) {
-      this.setState({ key });
-    }
-  }
-
   getRefreshProps() {
     const { flatList, refreshing, onRefresh } = this.props;
     if (!onRefresh) {
@@ -91,7 +80,6 @@ export default class ProfileScreenContainer extends React.Component<
     return (
       <View style={{ flex: 1 }}>
         <Collapsible
-          key={this.state.key}
           max={45}
           min={isIphoneX() ? 48 : 20}
           backgroundColor={'white'}
@@ -111,6 +99,8 @@ export default class ProfileScreenContainer extends React.Component<
               : undefined
           }
           renderItem={this.props.renderItem}
+          onEndReached={this.props.onEndReached}
+          onEndReachedThreshold={this.props.onEndReachedThreshold}
           {...this.getRefreshProps()}
         />
         {this.renderContent()}

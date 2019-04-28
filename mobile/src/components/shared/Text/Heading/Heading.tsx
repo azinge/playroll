@@ -25,6 +25,7 @@ export interface Props {
   style?: StyleProp<ViewStyle>;
   onPress?: () => void;
   disabled?: boolean;
+  width?: number;
 }
 
 interface State {}
@@ -42,6 +43,7 @@ export default class Heading extends React.Component<Props, State> {
       onPress,
       disabled,
       style,
+      width,
     } = this.props;
     const text = (
       <Text
@@ -53,6 +55,7 @@ export default class Heading extends React.Component<Props, State> {
             textAlign: alignment || 'center',
             fontWeight: bold ? 'bold' : 'normal',
             opacity,
+            width,
           },
           disabled ? { color: 'grey', opacity: 0.7 } : {},
         ]}

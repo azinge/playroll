@@ -12,9 +12,10 @@ import {
   TouchableOpacity,
   Modal,
   SafeAreaView,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
+  Platform,
 } from 'react-native';
 import {
   NavigationScreenProp,
@@ -30,7 +31,8 @@ import NavigationService from '../../../services/NavigationService';
 import DropdownAlert from 'react-native-dropdownalert';
 import { SocialIcon, Button } from 'react-native-elements';
 import { Linking, WebBrowser } from 'expo';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import { StoreDeviceTokenMutation } from '../../../graphql/requests/User/StoreDeviceTokenMutation';
+import NotificationService from '../../../services/NotificationService';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -212,41 +214,53 @@ class LandingScreen extends React.Component<Props, State> {
 
   renderSignInButton() {
     return (
-      <SignInMutation
-        variables={{
-          username: this.state.username,
-          password: this.state.password,
-        }}
-      >
-        {(signIn, { error, loading, data }) => {
-          if (this.props.oAuthUser) {
-            NavigationService.dispatch(
-              StackActions.reset({
-                key: null,
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: 'Main' })],
-              })
-            );
-          }
-          if (this.state.triggerSignIn) {
-            this.setState({ triggerSignIn: false }, () => {
-              this.signInWrapper(signIn);
-            });
-          }
+      <StoreDeviceTokenMutation>
+        {storeDeviceToken => {
           return (
-            <TouchableOpacity
-              onPress={() => this.validateInput(signIn)}
-              style={styles.signInButton}
+            <SignInMutation
+              variables={{
+                username: this.state.username,
+                password: this.state.password,
+              }}
+              onCompleted={async () => {
+                const deviceToken = await NotificationService.registerForPushNotificationsAsync();
+                storeDeviceToken({ variables: { deviceToken } });
+              }}
             >
-              {loading ? (
-                <ActivityIndicator color={'white'} />
-              ) : (
-                <Text style={styles.footerButtonText}>Sign In</Text>
-              )}
-            </TouchableOpacity>
+              {(signIn, { error, loading, data }) => {
+                if (this.props.oAuthUser) {
+                  NavigationService.dispatch(
+                    StackActions.reset({
+                      key: null,
+                      index: 0,
+                      actions: [
+                        NavigationActions.navigate({ routeName: 'Main' }),
+                      ],
+                    })
+                  );
+                }
+                if (this.state.triggerSignIn) {
+                  this.setState({ triggerSignIn: false }, () => {
+                    this.signInWrapper(signIn);
+                  });
+                }
+                return (
+                  <TouchableOpacity
+                    onPress={() => this.validateInput(signIn)}
+                    style={styles.signInButton}
+                  >
+                    {loading ? (
+                      <ActivityIndicator color={'white'} />
+                    ) : (
+                      <Text style={styles.footerButtonText}>Sign In</Text>
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
+            </SignInMutation>
           );
         }}
-      </SignInMutation>
+      </StoreDeviceTokenMutation>
     );
   }
 
@@ -301,11 +315,16 @@ class LandingScreen extends React.Component<Props, State> {
         }}
       >
         <SafeAreaView style={styles.container}>
-          <KeyboardAwareScrollView style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+            }}
+          >
             {this.renderHeader()}
             {this.renderForm()}
-          </KeyboardAwareScrollView>
-
+          </KeyboardAvoidingView>
           {this.renderFooter()}
           <DropdownAlert ref={ref => (this.dropdown = ref)} />
         </SafeAreaView>

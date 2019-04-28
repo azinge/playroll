@@ -59,7 +59,7 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
 
   render() {
     return (
-      <MainScreenContainer title='My Spotify Playlists'>
+      <MainScreenContainer>
         <View
           style={{
             overflow: 'visible',

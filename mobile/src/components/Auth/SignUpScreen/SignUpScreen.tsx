@@ -150,14 +150,21 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <View style={styles.signupTextContainer}>
           <Text style={styles.signupText}>Sign Up</Text>
         </View>
+
         <TouchableOpacity
           style={styles.imageSelectionContainer}
           onPress={this.selectProfileImage}
+          disabled
         >
-          <Image source={{ uri: this.state.avatar.uri }} style={styles.image} />
-          <Text style={[styles.editPhotoText, { color: '#6A0070' }]}>
-            Edit Photo
-          </Text>
+          <View style={{ opacity: 0 }}>
+            <Image
+              source={{ uri: this.state.avatar.uri }}
+              style={styles.image}
+            />
+            <Text style={[styles.editPhotoText, { color: '#6A0070' }]}>
+              Edit Photo
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
     );

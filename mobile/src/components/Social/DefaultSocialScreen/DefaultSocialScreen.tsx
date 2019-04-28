@@ -28,8 +28,28 @@ import { ListFriendsPlayrollsQuery } from '../../../graphql/requests/Playroll/Li
 import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
 import { ListFriendsQuery } from '../../../graphql/requests/Relationships';
 import { Playroll, User } from '../../../graphql/types';
+import { NavigationScreenProp } from 'react-navigation';
 
-export default class DefaultSocialScreen extends React.Component {
+export interface Props {
+  navigation?: NavigationScreenProp<{}>;
+}
+
+interface State {
+  triggerRefetchFriends: boolean;
+  triggerRefetchFriendsPlayrolls: boolean;
+  triggerRefetchRecommendations: boolean;
+}
+
+export default class DefaultSocialScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      triggerRefetchFriends: false,
+      triggerRefetchFriendsPlayrolls: false,
+      triggerRefetchRecommendations: false,
+    };
+  }
+
   render() {
     const extractFriends = data => {
       if (
@@ -43,6 +63,7 @@ export default class DefaultSocialScreen extends React.Component {
     };
     const extractRecommendations = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -52,6 +73,7 @@ export default class DefaultSocialScreen extends React.Component {
     };
     const extractFriendsPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -61,7 +83,12 @@ export default class DefaultSocialScreen extends React.Component {
     };
     return (
       <ListCurrentUserRecommendationsQuery>
-        {({ loading, error, data }) => {
+        {({ loading, error, data, refetch }) => {
+          if (this.state.triggerRefetchRecommendations) {
+            this.setState({ triggerRefetchRecommendations: false }, () => {
+              refetch();
+            });
+          }
           const recommendations = extractRecommendations(data);
           return (
             <MainScreenContainer
@@ -69,6 +96,14 @@ export default class DefaultSocialScreen extends React.Component {
                 marginTop: 10,
                 paddingBottom: hp('12.1%'),
               }}
+              onRefresh={() =>
+                this.setState({
+                  triggerRefetchFriends: true,
+                  triggerRefetchFriendsPlayrolls: true,
+                  triggerRefetchRecommendations: true,
+                })
+              }
+              refreshing={false}
             >
               <View style={{ marginBottom: 10 }}>
                 <View style={{ margin: 10, flexDirection: 'row' }}>
@@ -94,7 +129,12 @@ export default class DefaultSocialScreen extends React.Component {
                 </View>
                 <View>
                   <ListFriendsQuery>
-                    {({ data, loading, error }) => {
+                    {({ data, loading, error, refetch }) => {
+                      if (this.state.triggerRefetchFriends) {
+                        this.setState({ triggerRefetchFriends: false }, () => {
+                          refetch();
+                        });
+                      }
                       if (loading) {
                         return <ActivityIndicator />;
                       }
@@ -125,7 +165,9 @@ export default class DefaultSocialScreen extends React.Component {
                                     borderColor: '#af00bc99',
                                   }}
                                 />
-                                <Heading type={'h10'}>{friend.name}</Heading>
+                                <Heading type={'h10'} width={70} numLines={1}>
+                                  {friend.name}
+                                </Heading>
                               </View>
                             </TouchableOpacity>
                           )}
@@ -158,7 +200,15 @@ export default class DefaultSocialScreen extends React.Component {
               </View>
 
               <ListFriendsPlayrollsQuery>
-                {({ data, loading, error }) => {
+                {({ data, loading, error, refetch }) => {
+                  if (this.state.triggerRefetchFriendsPlayrolls) {
+                    this.setState(
+                      { triggerRefetchFriendsPlayrolls: false },
+                      () => {
+                        refetch();
+                      }
+                    );
+                  }
                   if (loading) {
                     return <ActivityIndicator />;
                   }
@@ -175,7 +225,6 @@ export default class DefaultSocialScreen extends React.Component {
                   );
                 }}
               </ListFriendsPlayrollsQuery>
-
               <View>
                 <View style={{ margin: 10, flexDirection: 'row' }}>
                   <Heading

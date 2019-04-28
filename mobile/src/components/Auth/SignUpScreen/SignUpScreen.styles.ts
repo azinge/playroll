@@ -33,7 +33,9 @@ export default StyleSheet.create({
     paddingRight: 20,
   },
   signupTextContainer: {
-    flex: 2,
+    flex: 1,
+    alignItems: 'center',
+    right: 25,
   },
   signupText: {
     fontWeight: 'bold',

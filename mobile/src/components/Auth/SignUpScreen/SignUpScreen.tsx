@@ -99,27 +99,6 @@ export default class SignUpScreen extends React.Component<Props, State> {
     WebBrowser.openBrowserAsync(url);
   }
 
-  renderSegueToSignIn() {
-    return (
-      <TouchableOpacity
-        style={styles.segueToSignInContainer}
-        onPress={() => {
-          NavigationService.goBack();
-        }}
-      >
-        <Icon
-          name='arrow-back'
-          type='material'
-          color='#6A0070'
-          onPress={() => {
-            NavigationService.goBack();
-          }}
-        />
-        <Text style={styles.signInTitle}>Sign In</Text>
-      </TouchableOpacity>
-    );
-  }
-
   selectProfileImage() {
     Permissions.askAsync(Permissions.CAMERA_ROLL)
       .then(async data => {
@@ -148,6 +127,31 @@ export default class SignUpScreen extends React.Component<Props, State> {
     return (
       <View style={styles.signupHeader}>
         <View style={styles.signupTextContainer}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              right: 25,
+            }}
+          >
+            <Icon
+              name='arrow-back'
+              type='material'
+              color='#6A0070'
+              onPress={() => {
+                NavigationService.goBack();
+              }}
+              containerStyle={{}}
+            />
+            <Text
+              onPress={() => NavigationService.goBack()}
+              style={{ color: 'purple', fontSize: 18 }}
+            >
+              Back
+            </Text>
+          </View>
+
           <Text style={styles.signupText}>Sign Up</Text>
         </View>
 
@@ -291,7 +295,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
         <SafeAreaView style={styles.mainContainer}>
           <View style={styles.container}>
             <KeyboardAwareScrollView style={{ flex: 1 }}>
-              {this.renderSegueToSignIn()}
+              {/* {this.renderSegueToSignIn()} */}
               {this.renderHeader()}
               <Text style={styles.formText}>Username</Text>
               <TextInput

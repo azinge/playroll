@@ -56,20 +56,32 @@ export default class RollList extends React.Component<Props, State> {
         mainSourceIcon = 'music-note';
     }
 
-    const mainSourceView = (
-      <View style={styles.itemTextView}>
-        <Icon
-          size={25}
-          name={mainSourceIcon}
-          type='material'
-          color='purple'
-          iconStyle={styles.rowIcon}
-        />
-        <Text style={[styles.text, styles.artistName]} numberOfLines={1}>
-          {mainSource.name}
-        </Text>
-      </View>
-    );
+    const mainSourceView = () => {
+      return (
+        <View style={styles.itemTextView}>
+          <Icon
+            size={25}
+            name={mainSourceIcon}
+            type='material'
+            color='purple'
+            iconStyle={styles.rowIcon}
+          />
+          <Text style={[styles.text, styles.artistName]} numberOfLines={1}>
+            {mainSource.name}
+          </Text>
+        </View>
+      );
+    };
+
+    const creatorView = () => {
+      return (
+        <View style={styles.itemTextView}>
+          <Text style={[styles.text, styles.creatorName]} numberOfLines={1}>
+            {mainSource.creator}
+          </Text>
+        </View>
+      )
+    }
 
     // console.log('SOURCES');
     // console.log(roll.data.sources);
@@ -230,7 +242,9 @@ export default class RollList extends React.Component<Props, State> {
                       />
                       <View style={styles.rowsView}>
                         {/* Main source icon/text row */}
-                        {mainSourceView}
+                        {mainSourceView()}
+                        {/* Optional creator name */}
+                        {mainSource.creator !== null && creatorView()}
                         {/* Filter info per row, see loop above */}
                         {filterViews}
                       </View>

@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'purple',
   },
+  creatorName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'gray',
+    marginLeft: 34,
+  },
   noArtist: {
     fontFamily: 'Avenir',
     fontSize: 15,

@@ -170,6 +170,7 @@ export default class AccountScreen extends React.Component<Props, State> {
                               <TouchableOpacity
                                 onPress={async () => {
                                   try {
+
                                     try {
                                       const deviceToken = await NotificationService.registerForPushNotificationsAsync();
                                       if (deviceToken !== null) {

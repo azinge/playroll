@@ -33,7 +33,9 @@ export default StyleSheet.create({
     paddingRight: 20,
   },
   signupTextContainer: {
-    flex: 2,
+    flex: 1,
+    alignItems: 'center',
+    right: 25,
   },
   signupText: {
     fontWeight: 'bold',
@@ -63,7 +65,7 @@ export default StyleSheet.create({
   inputContainer: {
     width: '100%',
     height: 45,
-    marginBottom: 25,
+    marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,

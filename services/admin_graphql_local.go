@@ -49,9 +49,6 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	// db.LogMode(true)
 	context, _ := context.WithDeadline(context.Background(), time.Now().Add(6000*time.Millisecond))
 
-	deadline, _ := context.Deadline()
-	fmt.Println(deadline.String())
-
 	mctx := &gqltag.MethodContext{
 		DB: db,
 		// Request: request,

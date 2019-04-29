@@ -15,11 +15,10 @@ export default StyleSheet.create({
   profileAvatarContainer: {
     borderWidth: 1,
     borderColor: '#660066',
-    backgroundColor: '#660066',
     marginLeft: 16,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     overflow: 'hidden',
   },
 });

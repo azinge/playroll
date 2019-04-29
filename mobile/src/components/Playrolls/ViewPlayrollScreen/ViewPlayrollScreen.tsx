@@ -14,7 +14,7 @@ import {
 import { Header, Icon, Button } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import styles, { rawStyles } from './ViewPlayrollScreen.styles';
-import { Playroll, MusicSource } from '../../../graphql/types';
+import { Playroll, MusicSource, Roll } from '../../../graphql/types';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -32,6 +32,10 @@ import Icons from '../../../themes/Icons';
 import NavigationService from '../../../services/NavigationService';
 import RollList from '../../shared/Lists/RollList';
 import { isIphoneX } from 'react-native-iphone-x-helper';
+import { CreateRollMutation } from '../../../graphql/requests/Roll';
+import FooterButton from '../../shared/Buttons/FooterButton';
+import DropdownAlert from 'react-native-dropdownalert';
+import { ReorderPlayrollMutation } from '../../../graphql/requests/Playroll/ReorderPlayrollMutation';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -39,13 +43,22 @@ export interface Props {
 
 interface State {
   editPlayrollName: string;
+  inEditMode: boolean;
 }
 
 export default class ViewPlayrollScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
   constructor(props: Props) {
     super(props);
+    const playroll: Playroll =
+      (props && props.navigation && props.navigation.getParam('playroll')) ||
+      {};
+    const inEditMode: boolean =
+      (props && props.navigation && props.navigation.getParam('inEditMode')) ||
+      false;
     this.state = {
-      editPlayrollName: '',
+      editPlayrollName: playroll.name,
+      inEditMode,
     };
     this.renderHeader = this.renderHeader.bind(this);
   }
@@ -61,21 +74,26 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
         {({ loading, error, data, client: { cache } }) => {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
-          // TODO: Edit roll button (pencil) on right of each Roll should show an Edit modal (currently shows bottom overlay screen)
           return (
-            <SubScreenContainer
-              contentContainerStyle={{
-                paddingBottom: isIphoneX() ? hp('11%') : hp('7%'),
-              }}
-              title='View Playroll'
-              renderHeader={this.renderHeader}
-            >
-              {/* Icon, Title, and Hashtags */}
-              {this.renderTitleBar(playroll)}
+            <View style={{ flex: 1 }}>
+              <SubScreenContainer
+                contentContainerStyle={{
+                  paddingBottom: isIphoneX() ? hp('11%') : hp('7%'),
+                }}
+                title='View Playroll'
+                renderHeader={this.renderHeader}
+              >
+                {/* Icon, Title, and Hashtags */}
+                {this.state.inEditMode
+                  ? this.renderPlayrollHeader(playroll)
+                  : this.renderTitleBar(playroll)}
 
-              {/* List the Rolls */}
-              {this.renderRolls(playroll)}
-            </SubScreenContainer>
+                {/* List the Rolls */}
+                {this.renderRolls(playroll)}
+              </SubScreenContainer>
+              {this.state.inEditMode && this.renderNewRollButton(playroll)}
+              <DropdownAlert ref={ref => (this.dropdown = ref)} />
+            </View>
           );
         }}
       </GetCurrentUserPlayrollQuery>
@@ -94,11 +112,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     };
     const editPlayrollIcon = {
       ...Icons.editIcon,
-      onPress: () =>
-        NavigationService.navigate('EditPlayroll', {
-          managePlayroll: 'View Playroll',
-          playroll,
-        }),
+      onPress: () => this.setState({ inEditMode: true }),
+    };
+    const viewPlayrollIcon = {
+      name: 'pencil-off',
+      type: 'material-community',
+      onPress: () => this.setState({ inEditMode: false }),
     };
     const generateTracklistIcon = {
       ...Icons.exportIcon,
@@ -118,8 +137,12 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
     };
     return (
       <SubScreenHeader
-        title={'View Playroll'} // visible screen title
-        icons={[recommendationIcon, editPlayrollIcon, generateTracklistIcon]} // top right buttons
+        title={this.state.inEditMode ? 'Edit Playroll' : 'View Playroll'} // visible screen title
+        icons={
+          this.state.inEditMode
+            ? [viewPlayrollIcon]
+            : [recommendationIcon, editPlayrollIcon, generateTracklistIcon]
+        } // top right buttons
       />
     );
   }
@@ -143,43 +166,137 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       </View>
     );
   }
+  // Thumbnail, Name, and Subtitle
+  renderPlayrollHeader(playroll: Playroll) {
+    return (
+      <View style={styles.editingBarContainer}>
+        <Image
+          style={rawStyles.editingBarImage}
+          source={require('../../../assets/new_playroll.png')}
+        />
+        <UpdatePlayrollMutation
+          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
+        >
+          {(updatePlayroll, { data }) => (
+            <View style={styles.titleBarName}>
+              <TextInput
+                selectionColor={'purple'}
+                placeholder='Name Your Playroll'
+                placeholderTextColor='lightgrey'
+                style={styles.editingBarNameInput}
+                value={this.state.editPlayrollName}
+                onChangeText={name => this.setState({ editPlayrollName: name })}
+                onSubmitEditing={() =>
+                  updatePlayroll({
+                    variables: {
+                      id: playroll.id,
+                      input: {
+                        name: this.state.editPlayrollName,
+                        userID: playroll.userID,
+                      },
+                    },
+                  })
+                }
+              />
+              <View style={styles.horizontalRule} />
+              {playroll && playroll.rolls && (
+                <Text style={styles.subtitle}>
+                  This playroll contains {playroll.rolls.length}{' '}
+                  {playroll.rolls.length === 1 ? 'roll' : 'rolls'}.
+                </Text>
+              )}
+            </View>
+          )}
+        </UpdatePlayrollMutation>
+      </View>
+    );
+  }
   renderRolls(playroll) {
     return (
-      <RollList
-        rolls={playroll.rolls || []}
-        // onPress={() => {}}
-        readOnly
-      />
+      <ReorderPlayrollMutation>
+        {reorderPlayroll => {
+          return (
+            <RollList
+              rolls={playroll.rolls || []}
+              // onPress={() => {}}
+              readOnly={!this.state.inEditMode}
+              disableManage={this.state.inEditMode}
+              onMoveEnd={({ data: rolls }) => {
+                reorderPlayroll({
+                  variables: {
+                    playrollID: playroll.id,
+                    rollIDs: rolls.map(roll => roll.id),
+                    orders: rolls.map((_, i) => i),
+                  },
+                });
+              }}
+            />
+          );
+        }}
+      </ReorderPlayrollMutation>
     );
+  }
+
+  async createRollWrapper(createRoll, playroll, musicSource) {
+    try {
+      NavigationService.goBack();
+      delete musicSource.__typename;
+      await createRoll({
+        variables: {
+          input: {
+            playrollID: playroll.id,
+            data: {
+              sources: [musicSource],
+              filters: [
+                {
+                  type: 'Source',
+                  name: 'Union',
+                  modifications: ['0'],
+                },
+                {
+                  type: 'Order',
+                  name: 'Default',
+                },
+                {
+                  type: 'Length',
+                  name: 'Default',
+                },
+              ],
+            },
+            order: playroll.rolls.length,
+          },
+        },
+      });
+      this.dropdown.alertWithType(
+        'info',
+        'Added to Playroll',
+        'Roll successfully added to playroll.'
+      );
+    } catch (err) {
+      console.log(err);
+      this.dropdown.alertWithType(
+        'error',
+        'Error',
+        "We're sorry, Please try again."
+      );
+    }
   }
   renderNewRollButton(playroll) {
     return (
-      <View
-        style={{
-          bottom: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Button
-          // linearGradientProps={{
-          //   colors: ['purple', '#4A00E0'],
-          //   start: { x: 0 },
-          //   end: { x: 1 },
-          // }}
-          containerStyle={{ borderRadius: 80, width: '75%' }}
-          buttonStyle={{ borderRadius: 80, height: 50 }}
-          raised
-          title={'Add New Rolls'}
-          titleStyle={{ fontWeight: 'bold' }}
-          onPress={() => {
-            NavigationService.navigate('EditPlayroll', {
-              managePlayroll: 'View Playroll',
-              playroll,
-            });
-          }}
-        />
-      </View>
+      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
+        {(createRoll, { data }) => (
+          <FooterButton
+            title={'Add a Roll'}
+            onPress={() => {
+              NavigationService.navigate('Search', {
+                onPress: musicSource => {
+                  this.createRollWrapper(createRoll, playroll, musicSource);
+                },
+              });
+            }}
+          />
+        )}
+      </CreateRollMutation>
     );
   }
 }

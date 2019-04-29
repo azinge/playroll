@@ -4,6 +4,10 @@
 
 import * as React from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { ListSpotifySavedTracksQuery } from '../../../graphql/requests/Spotify';
@@ -11,6 +15,8 @@ import { ListItem, Icon } from 'react-native-elements';
 import MusicSourceList from '../../shared/Lists/MusicSourceList';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import NavigationService from '../../../services/NavigationService';
+import MusicSourceCard from '../../shared/Cards/MusicSourceCard';
+import { MusicSource } from '../../../graphql/types';
 
 export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -44,44 +50,72 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _keyExtractor = (item, index) => item.providerID;
 
   render() {
+    const extractSavedTracks = data => {
+      if (
+        !data ||
+        Object.keys(data).length === 0 ||
+        Object.keys(data.private).length === 0
+      ) {
+        return [];
+      }
+      return data.private.listSpotifySavedTracks;
+    };
     return (
-      <SubScreenContainer
-        title={'My Spotify Saved Tracks'}
-        contentContainerStyle={{ marginTop: 10 }}
-      >
-        <ListSpotifySavedTracksQuery variables={{ count: 10 }}>
-          {({ loading, error, data }) => {
-            console.log(error && error.message);
-            console.log(
-              data && data.private && data.private.listSpotifySavedTracks
-            );
-            return (
-              <View style={{ marginBottom: 45, flex: 1 }}>
-                {/* <FlatList
-                  data={
-                    data && data.private && data.private.listSpotifySavedTracks
-                  }
-                  keyExtractor={this._keyExtractor}
-                  renderItem={this._renderItem}
-                  style={{ marginBottom: 35 }}
-                /> */}
-                <SearchSubHeader />
-                <MusicSourceList
-                  sources={
-                    data && data.private && data.private.listSpotifySavedTracks
-                  }
+      <ListSpotifySavedTracksQuery variables={{ offset: 0, count: 20 }}>
+        {({ loading, error, data, refetch, fetchMore }) => {
+          const savedTracks = extractSavedTracks(data);
+          return (
+            <SubScreenContainer
+              title={'My Spotify Saved Tracks'}
+              flatList
+              contentContainerStyle={{
+                marginTop: 10,
+                paddingBottom: hp('10%'),
+              }}
+              renderFlatListHeader={() => <SearchSubHeader />}
+              data={savedTracks}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item: source }: { item: MusicSource }) => (
+                <MusicSourceCard
+                  source={source}
                   onPress={musicSource => {
                     NavigationService.navigate('ManageRoll', {
                       currentSource: musicSource,
                     });
                   }}
                 />
-              </View>
-            );
-          }}
-        </ListSpotifySavedTracksQuery>
-        {/* <PlaceholderList numItems={20} overlayText={'Coming Soon...'} /> */}
-      </SubScreenContainer>
+              )}
+              refreshing={loading}
+              onRefresh={() => refetch()}
+              onEndReached={() => {
+                // @ts-ignore
+                fetchMore({
+                  variables: {
+                    offset: savedTracks.length,
+                  },
+                  updateQuery: (prev, { fetchMoreResult }) => {
+                    const prevSavedTracks = extractSavedTracks(prev);
+                    const fetchMoreSavedTracks = extractSavedTracks(
+                      fetchMoreResult
+                    );
+                    if (!fetchMoreResult) return prev;
+                    return Object.assign({}, prev, {
+                      private: {
+                        listSpotifySavedTracks: [
+                          ...prevSavedTracks,
+                          ...fetchMoreSavedTracks,
+                        ],
+                        __typename: 'PrivateQueryMethods',
+                      },
+                    });
+                  },
+                });
+              }}
+              onEndReachedThreshold={0.5}
+            />
+          );
+        }}
+      </ListSpotifySavedTracksQuery>
     );
     // return (
     //   <SubScreenContainer title={'My Spotify Saved Tracks'}>

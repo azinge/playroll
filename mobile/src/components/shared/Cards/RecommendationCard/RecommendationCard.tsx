@@ -19,6 +19,10 @@ import Heading from '../../Text/Heading';
 export interface Props {
   recommendation: Recommendation;
   onPress?: (recommendation: Recommendation) => void;
+  senderView?: boolean;
+  readOnly?: boolean;
+  hideRecommender?: boolean;
+  disableManage?: boolean;
 }
 
 interface State {}
@@ -52,6 +56,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
                 ]}
                 backgroundColor={'transparent'}
                 autoClose={true}
+                disabled={this.props.readOnly}
               >
                 {recommendation.playrollID && recommendation.playrollID !== '0'
                   ? this.renderPlayrollRecommendation(recommendation)
@@ -104,6 +109,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
             playroll: recommendation.playroll,
           });
         }}
+        disabled={this.props.disableManage}
       >
         <View
           style={{
@@ -139,9 +145,16 @@ export default class RecommendationCard extends React.Component<Props, State> {
             <Heading type={'h10'} alignment={'left'} color={'grey'} bold>
               Playroll by {creator}
             </Heading>
-            <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-              Recommended by {recommendation.recommender.name}
-            </Text>
+            {!this.props.hideRecommender &&
+              (this.props.senderView ? (
+                <Text style={[styles.manageRoll, { marginTop: 5 }]}>
+                  Recommended to {recommendation.user.name}
+                </Text>
+              ) : (
+                <Text style={[styles.manageRoll, { marginTop: 5 }]}>
+                  Recommended by {recommendation.recommender.name}
+                </Text>
+              ))}
           </View>
           <Icon
             size={35}
@@ -164,6 +177,7 @@ export default class RecommendationCard extends React.Component<Props, State> {
       <TouchableOpacity
         onPress={() => this.manageRoll(mainSource, recommendation.data)}
         key={recommendation.id}
+        disabled={this.props.disableManage}
       >
         <View
           style={{
@@ -194,9 +208,16 @@ export default class RecommendationCard extends React.Component<Props, State> {
                   {mainSource.creator}
                 </Text>
               )}
-              <Text style={[styles.manageRoll, { marginTop: 5 }]}>
-                Recommended by {recommendation.recommender.name}
-              </Text>
+              {!this.props.hideRecommender &&
+                (this.props.senderView ? (
+                  <Text style={[styles.manageRoll, { marginTop: 5 }]}>
+                    Recommended to {recommendation.user.name}
+                  </Text>
+                ) : (
+                  <Text style={[styles.manageRoll, { marginTop: 5 }]}>
+                    Recommended by {recommendation.recommender.name}
+                  </Text>
+                ))}
             </View>
             <Icon
               size={35}

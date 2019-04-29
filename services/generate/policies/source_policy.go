@@ -84,9 +84,6 @@ func (isp *IntersectionSourcePolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
 		Select("music_service_tracks.id")
 	for _, source := range isp.Sources {
-		if err := CollectSource(&source, isp.cleanDB, isp.client); err != nil {
-			return nil, err
-		}
 		subQueryDB = subQueryDB.Where(createTrackLinkedToSource(&source))
 	}
 	subQuery := subQueryDB.SubQuery()
@@ -121,9 +118,6 @@ func (usp *UnionSourcePolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
 		Select("music_service_tracks.id")
 	for _, source := range usp.Sources {
-		if err := CollectSource(&source, usp.cleanDB, usp.client); err != nil {
-			return nil, err
-		}
 		subQueryDB = subQueryDB.Or(createTrackLinkedToSource(&source))
 	}
 	subQuery := subQueryDB.SubQuery()

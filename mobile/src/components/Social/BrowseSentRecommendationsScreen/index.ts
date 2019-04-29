@@ -1,0 +1,2 @@
+import BrowseSentRecommendationsScreen from "./BrowseSentRecommendationsScreen";
+export default BrowseSentRecommendationsScreen;

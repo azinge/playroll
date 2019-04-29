@@ -50,7 +50,7 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
                 flatList
                 contentContainerStyle={{
                   marginTop: 10,
-                  paddingBottom: hp('16%'),
+                  paddingBottom: hp('10%'),
                 }}
                 data={friends}
                 icons={[this.createFriendRequestsIcon()]}
@@ -74,9 +74,10 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
                       friend={item}
                       onPress={friend => {
                         console.log(friend);
-                        NavigationService.navigate('ViewProfile', {
-                          userID: friend.id,
-                        });
+                        NavigationService.navigate(
+                          'BrowseExchangedRecommendations',
+                          { user: friend }
+                        );
                       }}
                     />
                   );

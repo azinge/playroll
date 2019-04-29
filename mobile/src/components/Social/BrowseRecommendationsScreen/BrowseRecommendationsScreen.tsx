@@ -14,6 +14,7 @@ import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import NavigationService from '../../../services/NavigationService';
 
 export default class BrowseRecommendationsScreen extends React.Component {
   render() {
@@ -39,6 +40,14 @@ export default class BrowseRecommendationsScreen extends React.Component {
                 paddingBottom: hp('16%'),
               }}
               data={recommendations}
+              icons={[
+                {
+                  name: 'send',
+                  onPress: () => {
+                    NavigationService.navigate('BrowseSentRecommendations');
+                  },
+                },
+              ]}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
                 return (

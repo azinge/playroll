@@ -235,6 +235,8 @@ func parseGraphQLType(s string, typeMap *map[string]*graphql.Object, inputTypeMa
 		return graphql.Float, nil
 	case "String":
 		return graphql.String, nil
+	case "DateTime":
+		return graphql.DateTime, nil
 	case "Boolean":
 		return graphql.Boolean, nil
 	case "ID":

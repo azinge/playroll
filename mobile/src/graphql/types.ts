@@ -114,10 +114,12 @@ export type PlayrollInput = {
 
 export type Recommendation = {
   id?: number;
+  user?: User;
   userID?: number;
   recommenderID?: number;
   recommender?: User;
   isActive?: boolean;
+  createdAt?: string;
   data?: RollData;
   playrollID?: string;
   playroll?: Playroll;
@@ -313,6 +315,7 @@ const RecommendationFragments = {
       id
       isActive
       playrollID
+      createdAt
       data {
         ...DefaultRollData
       }

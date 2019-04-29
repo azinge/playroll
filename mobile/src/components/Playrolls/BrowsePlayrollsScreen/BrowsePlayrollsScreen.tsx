@@ -94,9 +94,10 @@ export default class BrowsePlayrollsScreen extends React.Component<
                         <DetailedPlayrollCard
                           playroll={playroll}
                           editPlayroll={() =>
-                            NavigationService.navigate('EditPlayroll', {
+                            NavigationService.navigate('ViewPlayroll', {
                               managePlayroll: 'View Playroll',
                               playroll,
+                              inEditMode: true,
                             })
                           }
                           key={playroll.id}

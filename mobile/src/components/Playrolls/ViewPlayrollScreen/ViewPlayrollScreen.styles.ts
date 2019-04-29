@@ -7,6 +7,23 @@ interface Style {
 }
 
 const styles = StyleSheet.create({
+  editingBarContainer: {
+    flexDirection: 'row',
+    height: 100,
+    alignItems: 'center',
+  },
+  editingBarNameContainer: {
+    flex: 1,
+  },
+
+  editingBarNameInput: {
+    fontSize: 20,
+  },
+
+  editingBarTagInput: {
+    fontSize: 15,
+  },
+
   // Bottom Button
   newRollButton: {
     width: '90%',
@@ -28,6 +45,14 @@ const styles = StyleSheet.create({
 
 // TODO: this is required, but explanation needed here...
 export const rawStyles = {
+  editingBarImage: {
+    width: 65,
+    height: 65,
+    marginHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+  },
   titleBarImage: {
     width: 65,
     height: 65,

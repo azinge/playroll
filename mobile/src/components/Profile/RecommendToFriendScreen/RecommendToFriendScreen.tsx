@@ -24,6 +24,8 @@ import { CreateRecommendationMutation } from '../../../graphql/requests/Recommen
 import { RollData } from '../../../graphql/types';
 import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import { LIST_SENT_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListSentRecommendationsQuery';
+import { LIST_EXCHANGED_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListExchangedRecommendationsQuery';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -32,6 +34,7 @@ export interface Props {
 interface State {
   rollData: RollData;
   playrollID: number;
+  onSuccess: () => void;
 }
 
 export default class RecommendToFriendScreen extends React.Component<
@@ -46,6 +49,7 @@ export default class RecommendToFriendScreen extends React.Component<
     this.state = {
       rollData: {},
       playrollID: 0,
+      onSuccess: () => {},
     };
   }
 
@@ -54,7 +58,9 @@ export default class RecommendToFriendScreen extends React.Component<
       this.props.navigation && this.props.navigation.getParam('rollData');
     const playrollID =
       this.props.navigation && this.props.navigation.getParam('playrollID');
-    this.setState({ rollData, playrollID });
+    const onSuccess =
+      this.props.navigation && this.props.navigation.getParam('onSuccess');
+    this.setState({ rollData, playrollID, onSuccess });
   }
 
   async createRecommendationWrapper(createRecommendation, receiver, sender) {
@@ -70,12 +76,8 @@ export default class RecommendToFriendScreen extends React.Component<
           },
         },
       });
-      // this.dropdown.alertWithType(
-      //   'info',
-      //   'Recommended To Friend',
-      //   'Successfully Recommended to Friend.'
-      // );
       NavigationService.goBack();
+      this.state.onSuccess();
     } catch (err) {
       console.log(err);
       this.dropdown.alertWithType(
@@ -118,7 +120,12 @@ export default class RecommendToFriendScreen extends React.Component<
         {({ loading, error, data, refetch, fetchMore }) => {
           const friends = extractFriends(data);
           return (
-            <CreateRecommendationMutation>
+            <CreateRecommendationMutation
+              refetchQueries={() => [
+                LIST_SENT_RECOMMENDATIONS,
+                LIST_EXCHANGED_RECOMMENDATIONS,
+              ]}
+            >
               {createRecommendation => {
                 return (
                   <View style={{ flex: 1 }}>

@@ -125,6 +125,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
         case 'Order':
           switch (filter.name) {
             case 'Default':
+            case 'Popularity':
             case 'Random':
               orderType = {
                 name: filter.name,

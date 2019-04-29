@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -55,9 +56,9 @@ type PlaylistTrack struct {
 // Utility Methods
 
 func GetMusicServicePlaylistByProviderInfo(provider, providerID string, db *gorm.DB) (*MusicServicePlaylistOutput, error) {
-	//TODO: include cache stale timer
+	lastHour := time.Now().Add(-1 * time.Hour)
 	mst := &MusicServicePlaylist{}
-	if err := db.Where(&MusicServicePlaylist{Provider: provider, ProviderID: providerID}).Last(mst).Error; err != nil {
+	if err := db.Where("updated_at > ?", lastHour).Where(&MusicServicePlaylist{Provider: provider, ProviderID: providerID}).Last(mst).Error; err != nil {
 		return nil, err
 	}
 	return FormatMusicServicePlaylist(mst)

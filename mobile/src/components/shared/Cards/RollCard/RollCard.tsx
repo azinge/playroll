@@ -63,9 +63,26 @@ export default class RollCard extends React.Component<Props, State> {
           color='purple'
           iconStyle={styles.rowIcon}
         />
-        <Text style={[styles.text, styles.artistName]} numberOfLines={1}>
-          {mainSource.name}
-        </Text>
+        <View>
+          <Text style={[styles.text, styles.artistName]} numberOfLines={1}>
+            {mainSource.name}
+          </Text>
+          {mainSource.creator !== '' && (
+            <Text
+              style={[
+                styles.text,
+                {
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  color: 'gray',
+                },
+              ]}
+              numberOfLines={1}
+            >
+              {mainSource.creator}
+            </Text>
+          )}
+        </View>
       </View>
     );
 

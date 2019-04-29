@@ -405,10 +405,23 @@ func GetSpotifyAlbumWithTracks(id spotify.ID, client *spotify.Client) (msa *mode
 	if err != nil {
 		return nil, nil, err
 	}
-	ids := make([]spotify.ID, len(album.Tracks.Tracks))
-	for i, track := range album.Tracks.Tracks {
-		ids[i] = track.ID
+
+	albumTracks := &album.Tracks
+	ids := make([]spotify.ID, albumTracks.Total)
+
+	offset := 0
+	limit := 50
+	for offset < album.Tracks.Total {
+		albumTracks, err = client.GetAlbumTracksOpt(id, limit, offset)
+		if err != nil {
+			return nil, nil, err
+		}
+		for i, track := range albumTracks.Tracks {
+			ids[i+offset] = track.ID
+		}
+		offset += 50
 	}
+
 	artistID, artistName := extractArtist(album.Artists)
 	msa =
 		&models.MusicServiceAlbum{
@@ -464,10 +477,22 @@ func GetSpotifyArtistWithAlbums(id spotify.ID, client *spotify.Client) (msa *mod
 		return nil, nil, err
 	}
 	albums, err := client.GetArtistAlbums(id)
-	ids := make([]spotify.ID, len(albums.Albums))
-	for i, album := range albums.Albums {
-		ids[i] = album.ID
+	ids := make([]spotify.ID, albums.Total)
+	albumsTotal := albums.Total
+	offset := 0
+	limit := 50
+	albumTypes := spotify.AlbumTypeAlbum | spotify.AlbumTypeSingle
+	for offset < albumsTotal {
+		albums, err = client.GetArtistAlbumsOpt(id, &spotify.Options{Offset: &offset, Limit: &limit}, &albumTypes)
+		if err != nil {
+			return nil, nil, err
+		}
+		for i, album := range albums.Albums {
+			ids[i+offset] = album.ID
+		}
+		offset += 50
 	}
+
 	msa = &models.MusicServiceArtist{
 		Provider:   "Spotify",
 		ProviderID: string(artist.ID),
@@ -502,9 +527,21 @@ func GetSpotifyPlaylistWithTracks(id spotify.ID, client *spotify.Client) (msp *m
 	if err != nil {
 		return nil, nil, err
 	}
-	ids := make([]spotify.ID, len(playlist.Tracks.Tracks))
-	for i, track := range playlist.Tracks.Tracks {
-		ids[i] = track.Track.ID
+
+	playlistTracks := &playlist.Tracks
+	ids := make([]spotify.ID, playlistTracks.Total)
+
+	offset := 0
+	limit := 100
+	for offset < playlist.Tracks.Total {
+		playlistTracks, err = client.GetPlaylistTracksOpt(id, &spotify.Options{Offset: &offset, Limit: &limit}, "items(track(id))")
+		if err != nil {
+			return nil, nil, err
+		}
+		for i, track := range playlistTracks.Tracks {
+			ids[i+offset] = track.Track.ID
+		}
+		offset += 100
 	}
 	msp = &models.MusicServicePlaylist{
 		Provider:    "Spotify",

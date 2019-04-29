@@ -69,7 +69,21 @@ func (dop *DefaultOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 }
 
 func (dop *DefaultOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	return db, nil
+	if len(*dop.originalSources) != 1 {
+		return db.Order("random()"), nil
+	}
+	switch (*dop.originalSources)[0].Type {
+	case "Track":
+		return db, nil
+	case "Album":
+		return db.Order("track_number"), nil
+	case "Artist":
+		return db.Order("random()"), nil
+	case "Playlist":
+		return db.Order("random()"), nil
+	default:
+		return db.Order("random()"), nil
+	}
 }
 
 type RandomOrderPolicy struct {

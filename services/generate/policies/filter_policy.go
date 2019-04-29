@@ -84,9 +84,6 @@ func (esfp *ExcludeSourcesFilterPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
 		Select("music_service_tracks.id")
 	for _, source := range esfp.Sources {
-		if err := CollectSource(&source, esfp.cleanDB, esfp.client); err != nil {
-			return nil, err
-		}
 		subQueryDB = subQueryDB.Or(createTrackLinkedToSource(&source))
 	}
 	subQuery := subQueryDB.SubQuery()
@@ -121,9 +118,6 @@ func (isfp *IncludeSourcesFilterPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 		Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").
 		Select("music_service_tracks.id")
 	for _, source := range isfp.Sources {
-		if err := CollectSource(&source, isfp.cleanDB, isfp.client); err != nil {
-			return nil, err
-		}
 		subQueryDB = subQueryDB.Or(createTrackLinkedToSource(&source))
 	}
 	subQuery := subQueryDB.SubQuery()

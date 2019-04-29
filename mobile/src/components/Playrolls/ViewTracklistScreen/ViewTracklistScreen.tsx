@@ -107,17 +107,31 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
                             }}
                             source={{ uri: rollSource.cover }}
                           />
-                          <Text
-                            numberOfLines={1}
-                            style={{
-                              textAlignVertical: 'center',
-                              marginLeft: 15,
-                              fontSize: 28,
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            {rollSource.name}
-                          </Text>
+                          <View style={{ flex: 1 }}>
+                            <Text
+                              numberOfLines={2}
+                              style={{
+                                textAlignVertical: 'center',
+                                marginLeft: 15,
+                                fontSize: 28,
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              {rollSource.name}
+                            </Text>
+                            {rollSource.creator !== '' && (
+                              <Text
+                                numberOfLines={2}
+                                style={{
+                                  textAlignVertical: 'center',
+                                  marginLeft: 15,
+                                  fontSize: 15,
+                                }}
+                              >
+                                {rollSource.creator}
+                              </Text>
+                            )}
+                          </View>
                         </View>
                         <Divider style={{ marginVertical: 10 }} />
                         {item.data.tracks.map(track => {

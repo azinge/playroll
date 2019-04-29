@@ -41,7 +41,7 @@ func NewOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSo
 		return NewDefaultOrderPolicy(filter, sources, db, client)
 	case "Random":
 		return NewRandomOrderPolicy(filter, sources, db, client)
-	case "Popular":
+	case "Popularity":
 		return NewPopularityOrderPolicy(filter, sources, db, client)
 	default:
 		return nil, fmt.Errorf("error, invalid filter")
@@ -122,15 +122,15 @@ func NewPopularityOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmode
 	pop := &PopularityOrderPolicy{}
 	pop.Init(sources, cleanDB, client)
 	if ok := pop.Validate(filter); !ok {
-		return nil, fmt.Errorf("random order policy error, could not validate filter: %v", filter)
+		return nil, fmt.Errorf("popularity order policy error, could not validate filter: %v", filter)
 	}
 	if err := pop.Load(filter); err != nil {
-		return nil, fmt.Errorf("random order policy error, could not load filter: %v", filter)
+		return nil, fmt.Errorf("popularity order policy error, could not load filter: %v", filter)
 	}
 	return pop, nil
 }
 
-func (pop *PopularityOrderPolicy) Name() string { return "Popular" }
+func (pop *PopularityOrderPolicy) Name() string { return "Popularity" }
 
 func (pop *PopularityOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 	return pop.OrderPolicy.Validate(rf) && rf.Name == pop.Name()

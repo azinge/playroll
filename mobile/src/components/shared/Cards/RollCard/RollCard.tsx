@@ -24,6 +24,18 @@ export interface Props {
 
 interface State {}
 
+const rollFilterNameToLabel = {
+  Union: 'Union',
+  Intersection: 'Intersection',
+  'N/A': 'Not Selected',
+  ExcludeSources: 'Exclude Sources',
+  IncludeSources: 'Include Sources',
+  Default: 'Default',
+  Popularity: 'By Popularity',
+  Random: 'Random',
+  NumberOfSongs: 'Number Of Songs',
+};
+
 export default class RollCard extends React.Component<Props, State> {
   render() {
     const roll = this.props.roll;
@@ -157,7 +169,7 @@ export default class RollCard extends React.Component<Props, State> {
                   iconStyle={styles.rowIcon}
                 />
                 <Text style={[styles.text, styles.artistName]}>
-                  {filter.name}
+                  {rollFilterNameToLabel[filter.name]}
                 </Text>
               </View>
             );

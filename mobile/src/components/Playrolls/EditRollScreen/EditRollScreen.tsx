@@ -44,6 +44,7 @@ const rollFilterNameToLabel = {
   ExcludeSources: 'Exclude Sources',
   IncludeSources: 'Include Sources',
   Default: 'Default',
+  Popularity: 'By Popularity',
   Random: 'Random',
   NumberOfSongs: 'Number Of Songs',
 };
@@ -594,7 +595,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
     );
   }
   renderOrderSection() {
-    const items = ['Default', 'Random'];
+    const items = ['Default', 'Random', 'Popularity'];
     const onValueChange = value => {
       this.setState({
         orderType: { ...this.state.orderType, name: value },
@@ -692,6 +693,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
       >
         <RNPickerSelect
           placeholder={{}}
+          value={pickedType.name}
           // hideIcon={true}
           items={items.map(name => ({
             label: rollFilterNameToLabel[name],

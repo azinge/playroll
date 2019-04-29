@@ -72,7 +72,7 @@ func createPGTOutput(tracklist *models.Tracklist, isComplete bool, currentRollIn
 
 func ProgressiveGenerateTracklist(playroll *models.PlayrollOutput, tracklist *models.Tracklist, rollBatchSize uint, mctx *gqltag.MethodContext, client *spotify.Client) (*jsonmodels.ProgressiveGenerateTracklistOutput, error) {
 	deadline, _ := mctx.Context.Deadline()
-	deadline = deadline.Add(-5000 * time.Millisecond)
+	deadline = deadline.Add(-3500 * time.Millisecond)
 	timeoutChannel := time.After(time.Until(deadline))
 	db := mctx.DB
 	currentRollBatchSize := uint(0)
@@ -94,12 +94,14 @@ func ProgressiveGenerateTracklist(playroll *models.PlayrollOutput, tracklist *mo
 				select {
 				case <-timeoutChannel:
 					return createPGTOutput(tracklist, false, currentRollIndex, currentSourceIndex, db)
-
 				default:
-					if err := policies.CollectSource(&sources[currentSourceIndex], db, client); err != nil {
+					done, err := policies.CollectSource(&sources[currentSourceIndex], db, client, timeoutChannel)
+					if err != nil {
 						return nil, err
 					}
-					time.Sleep(1000 * time.Millisecond)
+					if !done {
+						return createPGTOutput(tracklist, false, currentRollIndex, currentSourceIndex, db)
+					}
 				}
 			}
 			compiledRollOutput, err := CompileRoll(&rolls[currentRollIndex], db, client)

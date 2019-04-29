@@ -1,6 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
 
-import EditPlayrollScreen from './EditPlayrollScreen';
 import EditRollScreen from './EditRollScreen';
 import ViewTracklistScreen from './ViewTracklistScreen';
 import ViewPlayrollScreen from './ViewPlayrollScreen';
@@ -13,7 +12,6 @@ import ViewExternalPlayrollScreen from './ViewExternalPlayrollScreen';
 export const PlayrollsNavigator = createStackNavigator(
   {
     AddRoll: AddRollScreen,
-    EditPlayroll: EditPlayrollScreen,
     ViewPlayroll: ViewPlayrollScreen,
     BrowsePlayrolls: BrowsePlayrollsScreen,
     ViewTracklist: ViewTracklistScreen,

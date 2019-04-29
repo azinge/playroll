@@ -30,6 +30,7 @@ import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/Ge
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import NavigationService from '../../../services/NavigationService';
+import DropdownAlert from 'react-native-dropdownalert';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -41,6 +42,8 @@ interface State {
 }
 
 export default class ManageRollScreen extends React.Component<Props, State> {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -114,18 +117,17 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               onPress={() =>
                 NavigationService.navigate('AddToPlayroll', {
                   rollData,
+                  onSuccess: () => {
+                    this.dropdown.alertWithType(
+                      'info',
+                      'Added to Playroll',
+                      'Roll successfully added to playroll.'
+                    );
+                  },
                 })
               }
               raised
             />
-            {/* <Button
-                title='Add To Discovery Queue'
-                containerStyle={{ margin: 10 }}
-                buttonStyle={styles.button}
-                titleStyle={{ color: 'purple', fontSize: 16 }}
-                onPress={() => {}}
-                raised
-              /> */}
             <Button
               title='Recommend'
               containerStyle={{ margin: 10 }}
@@ -134,12 +136,20 @@ export default class ManageRollScreen extends React.Component<Props, State> {
               onPress={() => {
                 NavigationService.navigate('RecommendToFriend', {
                   rollData,
+                  onSuccess: () => {
+                    this.dropdown.alertWithType(
+                      'info',
+                      'Recommended To Friend',
+                      'Successfully Recommended Item To Friend.'
+                    );
+                  },
                 });
               }}
               raised
             />
           </View>
         </LinearGradient>
+        <DropdownAlert ref={ref => (this.dropdown = ref)} />
       </View>
     );
   }

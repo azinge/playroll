@@ -70,7 +70,21 @@ func (dlp *DefaultLengthPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 }
 
 func (dlp *DefaultLengthPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	return db.Offset(0).Limit(10), nil
+	if len(*dlp.originalSources) != 1 {
+		return db.Offset(0).Limit(10), nil
+	}
+	switch (*dlp.originalSources)[0].Type {
+	case "Track":
+		return db.Offset(0).Limit(1), nil
+	case "Album":
+		return db.Offset(0).Limit(20), nil
+	case "Artist":
+		return db.Offset(0).Limit(10), nil
+	case "Playlist":
+		return db.Offset(0).Limit(20), nil
+	default:
+		return db.Offset(0).Limit(10), nil
+	}
 }
 
 type NumberOfSongsLengthPolicy struct {

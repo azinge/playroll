@@ -56,128 +56,93 @@ export default class DetailedPlayrollCard extends React.Component<
   }
 
   render() {
-    const { editPlayroll = () => {} } = this.props;
+    const { playroll, editPlayroll = () => {} } = this.props;
+
     return (
-      <GetCurrentUserPlayrollQuery
-        variables={{ id: this.props.playroll.id }}
-        // fetchPolicy='cache-only'
-      >
-        {({ loading, error, data }) => {
-          // if (loading || error) {
-          //   return (
-          //     <Card
-          //       title={'Loading'}
-          //       // image={require("../../assets/wack.jpg")}
-          //       key={''}
-          //       containerStyle={{
-          //         borderRadius: 12,
-          //         borderColor: 'white',
-          //         shadowColor: 'gray',
-          //         shadowOffset: {
-          //           width: 2,
-          //           height: 3,
-          //         },
-          //         shadowRadius: 5,
-          //         shadowOpacity: 0.2,
-          //       }}
-          //     />
-          //   );
-          // }
-          const playroll: any =
-            (data && data.private.currentUserPlayroll) || {};
-          return (
-            <Card
-              title={playroll.name}
-              // image={require("../../assets/wack.jpg")}
-              titleStyle={{
-                textAlign: 'left',
-                fontWeight: 'bold',
-                fontSize: 28,
-                margin: 0,
-              }}
-              key={playroll.id}
-              containerStyle={{
-                borderRadius: 12,
-                borderColor: 'white',
-                shadowColor: 'gray',
-                shadowOffset: {
-                  width: 2,
-                  height: 3,
-                },
-                shadowRadius: 5,
-                shadowOpacity: 0.5,
-              }}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ height: 110 }}>
-                  {playroll.rolls && playroll.rolls.length > 0 ? (
-                    <FlatList
-                      data={playroll.rolls}
-                      renderItem={this._renderItem}
-                      keyExtractor={item => item.id.toString()}
-                      horizontal={true}
-                      style={{ height: 80, width: 329 }}
-                    />
-                  ) : (
-                    <Image
-                      source={{
-                        uri:
-                          'https://www.unesale.com/ProductImages/Large/notfound.png',
-                      }}
-                      style={{ height: 75, width: 75, borderRadius: 5 }}
-                    />
-                  )}
-                </View>
-              </View>
-              <View style={{ margin: -16, flexDirection: 'row' }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    editPlayroll();
-                  }}
-                  style={styles.submitButtonLeft}
-                >
-                  {loading ? (
-                    <ActivityIndicator color={'white'} />
-                  ) : (
-                    // <Text style={styles.submitButtonText}>Sign In</Text>
-                    <Icon
-                      type='material-community'
-                      name='playlist-edit'
-                      color='white'
-                      size={30}
-                    />
-                  )}
-                </TouchableOpacity>
-                <DeletePlayrollMutation
-                  variables={{
-                    id: playroll.id,
-                  }}
-                  refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
-                >
-                  {deletePlayroll => (
-                    <TouchableOpacity
-                      onPress={() => deletePlayroll()}
-                      style={styles.submitButtonRight}
-                    >
-                      {loading ? (
-                        <ActivityIndicator color={'white'} />
-                      ) : (
-                        <Icon
-                          type='material-community'
-                          name='delete'
-                          color='white'
-                          containerStyle={{ top: 3 }}
-                          size={25}
-                        />
-                      )}
-                    </TouchableOpacity>
-                  )}
-                </DeletePlayrollMutation>
-              </View>
-            </Card>
-          );
+      <Card
+        title={playroll.name}
+        // image={require("../../assets/wack.jpg")}
+        titleStyle={{
+          textAlign: 'left',
+          fontWeight: 'bold',
+          fontSize: 28,
+          margin: 0,
         }}
-      </GetCurrentUserPlayrollQuery>
+        key={playroll.id}
+        containerStyle={{
+          borderRadius: 12,
+          borderColor: 'white',
+          shadowColor: 'gray',
+          shadowOffset: {
+            width: 2,
+            height: 3,
+          },
+          shadowRadius: 5,
+          shadowOpacity: 0.5,
+        }}
+      >
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ height: 110 }}>
+            {playroll.rolls && playroll.rolls.length > 0 ? (
+              <FlatList
+                data={playroll.rolls}
+                renderItem={this._renderItem}
+                keyExtractor={item => item.id.toString()}
+                horizontal={true}
+                style={{ height: 80, width: 329 }}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri:
+                    'https://www.unesale.com/ProductImages/Large/notfound.png',
+                }}
+                style={{ height: 75, width: 75, borderRadius: 5 }}
+              />
+            )}
+          </View>
+        </View>
+        <View style={{ margin: -16, flexDirection: 'row' }}>
+          <TouchableOpacity
+            onPress={() => {
+              editPlayroll();
+            }}
+            style={styles.submitButtonLeft}
+          >
+            <Icon
+              type='material-community'
+              name='playlist-edit'
+              color='white'
+              size={30}
+            />
+          </TouchableOpacity>
+          <DeletePlayrollMutation
+            variables={{
+              id: playroll.id,
+            }}
+            refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
+          >
+            {(deletePlayroll, { loading }) => (
+              <TouchableOpacity
+                onPress={() => deletePlayroll()}
+                style={styles.submitButtonRight}
+              >
+                {loading ? (
+                  <ActivityIndicator color={'white'} />
+                ) : (
+                  <Icon
+                    type='material-community'
+                    name='delete'
+                    color='white'
+                    containerStyle={{ top: 3 }}
+                    size={25}
+                  />
+                )}
+              </TouchableOpacity>
+            )}
+          </DeletePlayrollMutation>
+        </View>
+      </Card>
     );
   }
 }

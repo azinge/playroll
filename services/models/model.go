@@ -60,9 +60,9 @@ type EntityOutput interface {
 
 type Model struct {
 	ID        uint       `gql:"id: ID" gorm:"primary_key"`
-	CreatedAt time.Time  `gql:"createdAt: String"`
-	UpdatedAt time.Time  `gql:"updatedAt: String"`
-	DeletedAt *time.Time `gql:"deletedAt: String"`
+	CreatedAt time.Time  `gql:"createdAt: DateTime"`
+	UpdatedAt time.Time  `gql:"updatedAt: DateTime"`
+	DeletedAt *time.Time `gql:"deletedAt: DateTime"`
 
 	// For Internal Reference and Method Functions.
 	// In order to get Model's functions to work, these values must be populated

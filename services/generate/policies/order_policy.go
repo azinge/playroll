@@ -41,6 +41,8 @@ func NewOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSo
 		return NewDefaultOrderPolicy(filter, sources, db, client)
 	case "Random":
 		return NewRandomOrderPolicy(filter, sources, db, client)
+	case "Popular":
+		return NewPopularityOrderPolicy(filter, sources, db, client)
 	default:
 		return nil, fmt.Errorf("error, invalid filter")
 	}
@@ -110,4 +112,30 @@ func (rop *RandomOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 
 func (rop *RandomOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
 	return db.Order("random()"), nil
+}
+
+type PopularityOrderPolicy struct {
+	OrderPolicy
+}
+
+func NewPopularityOrderPolicy(filter *jsonmodels.RollFilter, sources *[]jsonmodels.MusicSource, cleanDB *gorm.DB, client *spotify.Client) (*PopularityOrderPolicy, error) {
+	pop := &PopularityOrderPolicy{}
+	pop.Init(sources, cleanDB, client)
+	if ok := pop.Validate(filter); !ok {
+		return nil, fmt.Errorf("random order policy error, could not validate filter: %v", filter)
+	}
+	if err := pop.Load(filter); err != nil {
+		return nil, fmt.Errorf("random order policy error, could not load filter: %v", filter)
+	}
+	return pop, nil
+}
+
+func (pop *PopularityOrderPolicy) Name() string { return "Popular" }
+
+func (pop *PopularityOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
+	return pop.OrderPolicy.Validate(rf) && rf.Name == pop.Name()
+}
+
+func (pop *PopularityOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
+	return db.Order("popularity"), nil
 }

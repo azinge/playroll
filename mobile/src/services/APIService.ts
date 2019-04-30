@@ -3,7 +3,7 @@ import Amplify, { Auth } from 'aws-amplify';
 import Signer from 'aws-appsync/lib/link/signer/signer';
 import Url from 'url';
 
-Amplify.configure(config.amplify.dev);
+Amplify.configure(config.amplify.prod);
 
 const signedFetch = async (uri, { method, body }) => {
   const {
@@ -19,7 +19,7 @@ const signedFetch = async (uri, { method, body }) => {
     method,
     body,
     service: 'execute-api',
-    region: config.api.dev.region,
+    region: config.api.prod.region,
     url: uri,
     host,
     path,

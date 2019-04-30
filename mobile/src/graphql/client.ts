@@ -27,7 +27,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLink = new HttpLink({
-  uri: config.api.dev.url,
+  uri: config.api.prod.url,
   fetch: APIService.fetch,
 });
 

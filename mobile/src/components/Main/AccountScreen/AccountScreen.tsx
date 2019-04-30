@@ -39,15 +39,13 @@ export default class AccountScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <GetCurrentUserQuery>
-        {({ loading, error, data }) => {
-          if (loading || error || Object.keys(data).length === 0) {
-            return <SubScreenContainer title='My Account' modal />;
-          }
-          const currentUser = (data && data.private.currentUser) || {};
-          return (
-            <View style={{ flex: 1 }}>
-              <SubScreenContainer title='My Account' modal>
+      <View style={{ flex: 1 }}>
+        <SubScreenContainer title='My Account' modal>
+          <GetCurrentUserQuery>
+            {({ loading, error, data }) => {
+              const currentUser =
+                (data && data.private && data.private.currentUser) || {};
+              return (
                 <View
                   style={{
                     marginLeft: 15,
@@ -77,146 +75,145 @@ export default class AccountScreen extends React.Component<Props, State> {
                     {currentUser.name}
                   </Text>
                 </View>
+              );
+            }}
+          </GetCurrentUserQuery>
 
-                <View
-                  style={{
-                    marginTop: 10,
-                  }}
-                >
-                  {/* View Profile */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('ViewCurrentUserProfile');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>View Profile</Text>
-                    </View>
-                  </TouchableOpacity>
+          <View
+            style={{
+              marginTop: 10,
+            }}
+          >
+            {/* View Profile */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('ViewCurrentUserProfile');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>View Profile</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Playrolls */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('BrowsePlayrolls');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>Playrolls</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Playrolls */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('BrowsePlayrolls');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>Playrolls</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Friends */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('BrowseFriends');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>Friends</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Friends */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('BrowseFriends');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>Friends</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Recommendations */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('BrowseRecommendations');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>Recommendations</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Recommendations */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('BrowseRecommendations');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>Recommendations</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Music */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('Music');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>My Music</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Music */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('Music');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>My Music</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Settings */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      NavigationService.navigate('Settings');
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>Settings</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Settings */}
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('Settings');
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>Settings</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Contact Us */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      Linking.openURL(`http://contact.playroll.io`);
-                    }}
-                  >
-                    <View style={styles.textContainer}>
-                      <Text style={styles.enabledText}>Contact Us</Text>
-                    </View>
-                  </TouchableOpacity>
+            {/* Contact Us */}
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`http://contact.playroll.io`);
+              }}
+            >
+              <View style={styles.textContainer}>
+                <Text style={styles.enabledText}>Contact Us</Text>
+              </View>
+            </TouchableOpacity>
 
-                  {/* Sign Out */}
-                  <ClearDeviceTokenMutation>
-                    {clearDeviceToken => {
+            {/* Sign Out */}
+            <ClearDeviceTokenMutation>
+              {clearDeviceToken => {
+                return (
+                  <SignOutMutation>
+                    {signOut => {
                       return (
-                        <SignOutMutation>
-                          {signOut => {
-                            return (
-                              <TouchableOpacity
-                                onPress={async () => {
-                                  try {
-
-                                    try {
-                                      const deviceToken = await NotificationService.registerForPushNotificationsAsync();
-                                      if (deviceToken !== null) {
-                                        await clearDeviceToken({
-                                          variables: { deviceToken },
-                                        });
-                                      }
-                                    } catch (err) {}
-                                    await signOut();
-                                    NavigationService.dispatch(
-                                      StackActions.reset({
-                                        key: null,
-                                        index: 0,
-                                        actions: [
-                                          NavigationActions.navigate({
-                                            routeName: 'Auth',
-                                          }),
-                                        ],
-                                      })
-                                    );
-                                  } catch (err) {
-                                    this.dropdown.alertWithType(
-                                      'error',
-                                      'Error',
-                                      "We're sorry, please try again."
-                                    );
-                                  }
-                                }}
-                              >
-                                <View style={styles.textContainer}>
-                                  <Text style={styles.signOut}>Sign Out</Text>
-                                </View>
-                              </TouchableOpacity>
-                            );
+                        <TouchableOpacity
+                          onPress={async () => {
+                            try {
+                              try {
+                                const deviceToken = await NotificationService.registerForPushNotificationsAsync();
+                                if (deviceToken !== null) {
+                                  await clearDeviceToken({
+                                    variables: { deviceToken },
+                                  });
+                                }
+                              } catch (err) {}
+                              await signOut();
+                              NavigationService.dispatch(
+                                StackActions.reset({
+                                  key: null,
+                                  index: 0,
+                                  actions: [
+                                    NavigationActions.navigate({
+                                      routeName: 'Auth',
+                                    }),
+                                  ],
+                                })
+                              );
+                            } catch (err) {
+                              this.dropdown.alertWithType(
+                                'error',
+                                'Error',
+                                "We're sorry, please try again."
+                              );
+                            }
                           }}
-                        </SignOutMutation>
+                        >
+                          <View style={styles.textContainer}>
+                            <Text style={styles.signOut}>Sign Out</Text>
+                          </View>
+                        </TouchableOpacity>
                       );
                     }}
-                  </ClearDeviceTokenMutation>
-                </View>
-              </SubScreenContainer>
-              <DropdownAlert ref={ref => (this.dropdown = ref)} />
-            </View>
-          );
-        }}
-      </GetCurrentUserQuery>
+                  </SignOutMutation>
+                );
+              }}
+            </ClearDeviceTokenMutation>
+          </View>
+        </SubScreenContainer>
+        <DropdownAlert ref={ref => (this.dropdown = ref)} />
+      </View>
     );
   }
 }

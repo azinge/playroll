@@ -18,7 +18,7 @@ deploy: build
 	sls invoke --function automigrate
 
 .PHONY: deploy-development
-deploy-staging: clean build
+deploy-development: clean build
 	sls deploy --verbose
 	sls invoke --function automigrate
 

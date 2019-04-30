@@ -205,30 +205,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
     );
   }
 
-  async createPlayrollWrapper(createPlayroll) {
-    try {
-      const data = await createPlayroll({
-        variables: {
-          input: { name: 'New Playroll' },
-        },
-      });
-      const playroll = extractPlayroll(data);
-      NavigationService.navigate('ViewPlayroll', {
-        playroll,
-        inEditMode: true,
-      });
-    } catch (err) {
-      console.log(err);
-      this.dropdown.alertWithType(
-        'error',
-        'Error',
-        "We're sorry, Please try again."
-      );
-    }
-  }
-
   renderNewPlayrollButton() {
-    // return (
     const extractPlayroll = data => {
       if (
         !data ||
@@ -251,6 +228,14 @@ export default class BrowsePlayrollsScreen extends React.Component<
             inEditMode: true,
           });
         }}
+        onError={err => {
+          console.log(err);
+          this.dropdown.alertWithType(
+            'error',
+            'Error',
+            "We're sorry, Please try again."
+          );
+        }}
         refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
       >
         {createPlayroll => {
@@ -258,7 +243,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             <FooterButton
               title={'Create New Playroll'}
               onPress={() => {
-                this.createPlayrollWrapper(createPlayroll);
+                createPlayroll();
               }}
             />
           );

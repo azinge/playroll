@@ -7,6 +7,7 @@ import { Text, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import DropdownAlert from 'react-native-dropdownalert';
 import { NavigationScreenProp } from 'react-navigation';
+import { AdMobRewarded } from 'expo';
 
 import styles from './GenerateTracklistScreen.styles';
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
@@ -60,6 +61,14 @@ export default class GenerateTracklistScreen extends React.Component<
     if (playroll) {
       this.setState({ playroll, triggerGenerateTracklist });
     }
+
+    // setTimeout(async () => {
+    //   // Display a rewarded ad
+    //   AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
+    //   AdMobRewarded.setTestDeviceID('EMULATOR');
+    //   await AdMobRewarded.requestAdAsync();
+    //   await AdMobRewarded.showAdAsync();
+    // }, 1000);
   }
 
   async progressiveGenerateTracklistWrapper(progressiveGenerateTracklist) {

@@ -12,6 +12,7 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { TouchableOpacity, ActivityIndicator, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
+
 import {
   ListFriendsQuery,
   ListFriendRequestsQuery,
@@ -20,6 +21,7 @@ import FriendCard from '../../shared/Cards/FriendCard';
 import NavigationService from '../../../services/NavigationService';
 import FooterButton from '../../shared/Buttons/FooterButton';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -55,15 +57,17 @@ export default class BrowseFriendsScreen extends React.Component<Props, State> {
                 data={friends}
                 icons={[this.createFriendRequestsIcon()]}
                 renderFlatListHeader={() => {
-                  return (
-                    <>
-                      {error && (
-                        <Text style={{ paddingTop: 50 }}>
-                          Error Loading Recommendation
-                        </Text>
-                      )}
-                      <SearchSubHeader />
-                    </>
+                  return <SearchSubHeader />;
+                }}
+                renderFlatListEmptyComponent={() => {
+                  return loading ? null : (
+                    <EmptyDataFiller
+                      text={
+                        error ? 'Could not load Friends' : 'Find some Friends!'
+                      }
+                      textSize={'h5'}
+                      textWidth={300}
+                    />
                   );
                 }}
                 keyExtractor={item => item.id}

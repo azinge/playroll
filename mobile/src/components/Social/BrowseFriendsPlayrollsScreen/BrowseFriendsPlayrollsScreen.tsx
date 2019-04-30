@@ -15,11 +15,13 @@ import { Icon } from 'react-native-elements';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import { ListFriendsPlayrollsQuery } from '../../../graphql/requests/Playroll/ListFriendsPlayrollsQuery';
 import NavigationService from '../../../services/NavigationService';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export default class BrowseFriendsPlayrollsScreen extends React.Component {
   render() {
     const extractFriendsPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -42,15 +44,19 @@ export default class BrowseFriendsPlayrollsScreen extends React.Component {
               data={playrolls}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
-                return (
-                  <>
-                    {error && (
-                      <Text style={{ paddingTop: 50 }}>
-                        Error Loading Friends Playrolls
-                      </Text>
-                    )}
-                    <SearchSubHeader />
-                  </>
+                return <SearchSubHeader />;
+              }}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load Friends Playrolls'
+                        : 'Get your Friends to Create Playrolls!'
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
                 );
               }}
               renderItem={({ item }) => {

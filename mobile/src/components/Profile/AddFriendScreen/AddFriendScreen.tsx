@@ -29,6 +29,7 @@ import styles from './AddFriendScreen.styles';
 import SearchScreenContainer from '../../shared/Containers/SearchScreenContainer';
 import { SearchUsersQuery } from '../../../graphql/requests/User/SearchUsersQuery';
 import ManageRelationshipRow from './ManageRelationshipRow';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -394,7 +395,7 @@ export default class AddFriendScreen extends React.Component<Props, State> {
         variables={{ query: this.state.query, offset: 0, count: 20 }}
         skip={this.state.query === ''}
       >
-        {({ data, loading, error, fetchMore }) => {
+        {({ data, loading, error, fetchMore, refetch }) => {
           const users = extractUsers(data);
           return (
             <SearchScreenContainer
@@ -411,11 +412,24 @@ export default class AddFriendScreen extends React.Component<Props, State> {
                 return this.renderUserRow({ item });
               }}
               refreshing={loading}
-              renderFlatListHeader={() =>
-                error && (
-                  <Text style={{ paddingTop: 50 }}>Error Loading Users</Text>
-                )
-              }
+              onRefresh={() => {
+                refetch();
+              }}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load Users'
+                        : this.state.query === ''
+                        ? 'Search for Friends!'
+                        : `No users found with name: '${this.state.query}' `
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
+                );
+              }}
               onEndReached={() => {
                 fetchMore({
                   variables: {

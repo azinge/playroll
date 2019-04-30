@@ -40,6 +40,7 @@ export default class ViewTracklistScreen extends React.Component<Props, State> {
     const playlistName = navigation.getParam('playrollName', '');
     const extractTracklist = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {

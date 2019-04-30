@@ -18,6 +18,7 @@ import { ListNewReleasePlayrollsQuery } from '../../../graphql/requests/Playroll
 import { ListPopularPlayrollsQuery } from '../../../graphql/requests/Playroll/ListPopularPlayrollsQuery';
 import Heading from '../../shared/Text/Heading';
 import DropdownAlert from 'react-native-dropdownalert';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {}
 
@@ -28,6 +29,7 @@ export default class DiscoverScreen extends React.Component<Props, State> {
   render() {
     const extractFeaturedPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -37,6 +39,7 @@ export default class DiscoverScreen extends React.Component<Props, State> {
     };
     const extractNewReleasePlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -46,6 +49,7 @@ export default class DiscoverScreen extends React.Component<Props, State> {
     };
     const extractPopularPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -115,9 +119,35 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             <ListFeaturedPlayrollsQuery>
               {({ loading, data, error }) => {
                 if (loading) {
-                  return <ActivityIndicator />;
+                  return (
+                    <View style={{ height: 150 }}>
+                      <ActivityIndicator />
+                    </View>
+                  );
                 }
                 const playrolls = extractFeaturedPlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        height: 150,
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load Featured Playrolls'
+                            : 'No Featured Playrolls Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <HorizontalPlayrollList
                     playrolls={playrolls}
@@ -156,9 +186,35 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             <ListNewReleasePlayrollsQuery>
               {({ loading, data, error }) => {
                 if (loading) {
-                  return <ActivityIndicator />;
+                  return (
+                    <View style={{ height: 150 }}>
+                      <ActivityIndicator />
+                    </View>
+                  );
                 }
                 const playrolls = extractNewReleasePlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        height: 150,
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load New Releases'
+                            : 'No New Releases Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <HorizontalPlayrollList
                     playrolls={playrolls}
@@ -197,9 +253,35 @@ export default class DiscoverScreen extends React.Component<Props, State> {
             <ListPopularPlayrollsQuery>
               {({ loading, data, error }) => {
                 if (loading) {
-                  return <ActivityIndicator />;
+                  return (
+                    <View style={{ height: 150 }}>
+                      <ActivityIndicator />
+                    </View>
+                  );
                 }
                 const playrolls = extractPopularPlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        height: 150,
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load Popular Playrolls'
+                            : 'No Popular Playrolls Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <HorizontalPlayrollList
                     playrolls={playrolls}

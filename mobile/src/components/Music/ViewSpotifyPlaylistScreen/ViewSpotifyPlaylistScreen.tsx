@@ -18,6 +18,7 @@ import Icons from '../../../themes/Icons';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import MusicSourceCard from '../../shared/Cards/MusicSourceCard';
 import { MusicSource } from '../../../graphql/types';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -45,10 +46,6 @@ export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
       >
         {({ loading, error, data, refetch, fetchMore }) => {
           const playlistTracks = extractPlaylistTracks(data);
-          console.log(error && error.message);
-          console.log(
-            data && data.private && data.private.listSpotifyPlaylistTracks
-          );
           return (
             <SubScreenContainer
               title={'View Spotify Playlist'}
@@ -68,6 +65,19 @@ export default class ViewSpotifyPlaylistScreen extends React.Component<Props> {
                 paddingBottom: hp('10%'),
               }}
               renderFlatListHeader={() => <SearchSubHeader />}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load this Playlist from Spotify'
+                        : 'Add some Tracks to this Playlist on Spotify!'
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
+                );
+              }}
               data={playlistTracks}
               keyExtractor={this._keyExtractor}
               renderItem={({ item: source }: { item: MusicSource }) => (

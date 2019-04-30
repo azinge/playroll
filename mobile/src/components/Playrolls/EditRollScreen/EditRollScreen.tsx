@@ -248,7 +248,6 @@ export default class EditRollScreen extends React.Component<Props, State> {
         onCompleted={() => {
           NavigationService.goBack();
         }}
-        refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
       >
         {deleteRoll => {
           return (
@@ -256,7 +255,6 @@ export default class EditRollScreen extends React.Component<Props, State> {
               onCompleted={() => {
                 NavigationService.goBack();
               }}
-              refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
             >
               {updateRoll => {
                 return (
@@ -618,7 +616,7 @@ export default class EditRollScreen extends React.Component<Props, State> {
     const onValueChange = value => {
       const { lengthType } = this.state;
       lengthType.name = value;
-      lengthType.data.modifications = ['0', '5'];
+      lengthType.data.modifications = this.state.lengthType.data.modifications || ['0', '5'];
       this.setState({ lengthType });
     };
     return (

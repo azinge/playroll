@@ -16,14 +16,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  Dimensions,
 } from 'react-native';
 import {
   NavigationScreenProp,
   StackActions,
   NavigationActions,
+  NavigationEvents,
 } from 'react-navigation';
 import Errors from '../../shared/Modals/Errors';
 import { SignInMutation } from '../../../graphql/requests/Auth';
+import { screen } from '../../../themes/Scaled';
 import { withOAuth } from 'aws-amplify-react-native';
 
 import styles from './LandingScreen.styles';
@@ -83,21 +86,6 @@ class LandingScreen extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const username =
-      this.props.navigation && this.props.navigation.getParam('username');
-    const password =
-      this.props.navigation && this.props.navigation.getParam('password');
-    const triggerSignIn =
-      this.props.navigation && this.props.navigation.getParam('triggerSignIn');
-
-    if (username) {
-      this.setState({
-        username,
-        password,
-        triggerSignIn,
-      });
-    }
-
     Linking.addEventListener('url', this.handleRedirect);
   }
 
@@ -129,18 +117,13 @@ class LandingScreen extends React.Component<Props, State> {
   renderHeader() {
     return (
       <View style={styles.headerContainer}>
-        <View style={styles.headerTitleRow}>
-          <Image
-            style={styles.playrollLogo}
-            source={require('../../../../assets/playroll_icon.png')}
-          />
-          <Text style={styles.headerTitleLabel}>Playroll</Text>
-        </View>
-        <View style={styles.headerDescriptionContainer}>
-          <Text style={styles.headerDescriptionLabel}>
-            Playlists Made Better
-          </Text>
-        </View>
+        <Image
+          source={require('../../../assets/playroll_full_banner.png')}
+          style={{
+            height: Dimensions.get('window').width / 2,
+            width: Dimensions.get('window').width - 20,
+          }}
+        />
       </View>
     );
   }
@@ -187,7 +170,11 @@ class LandingScreen extends React.Component<Props, State> {
           triggerResendSignUp: true,
         });
       } else if (err.code === 'NotAuthorizedException') {
-        this.dropdown.alertWithType('error', 'Error', 'Incorrect Password.');
+        this.dropdown.alertWithType(
+          'error',
+          'Error',
+          'Incorrect Username or Password.'
+        );
       } else if (err.code === 'UserNotFoundException') {
         this.dropdown.alertWithType('error', 'Error', 'Could not find User.');
       } else {
@@ -315,6 +302,27 @@ class LandingScreen extends React.Component<Props, State> {
         }}
       >
         <SafeAreaView style={styles.container}>
+          <NavigationEvents
+            onWillFocus={() => {
+              const username =
+                this.props.navigation &&
+                this.props.navigation.getParam('username');
+              const password =
+                this.props.navigation &&
+                this.props.navigation.getParam('password');
+              const triggerSignIn =
+                this.props.navigation &&
+                this.props.navigation.getParam('triggerSignIn');
+
+              if (username) {
+                this.setState({
+                  username,
+                  password,
+                  triggerSignIn,
+                });
+              }
+            }}
+          />
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : null}
             style={{

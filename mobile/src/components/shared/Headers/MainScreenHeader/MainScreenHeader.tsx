@@ -49,15 +49,19 @@ export default class MainScreenHeader extends React.Component<Props, State> {
           containerStyle={this.props.hideBottomBar && { borderBottomWidth: 0 }}
           placement='right'
           leftComponent={
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name='play-circle'
-                type='font-awesome'
-                color='white'
-                containerStyle={{ marginTop: 5, marginRight: 4 }}
-              />
-              <Text style={styles.headerTitle}>Playroll</Text>
-            </View>
+            <Image
+              source={require('../../../../assets/playroll_banner_with_logo.png')}
+              style={{ height: 50, width: 115 }}
+            />
+            // <View style={{ flexDirection: 'row' }}>
+            //   <Icon
+            //     name='play-circle'
+            //     type='font-awesome'
+            //     color='white'
+            //     containerStyle={{ marginTop: 5, marginRight: 4 }}
+            //   />
+            //   <Text style={styles.headerTitle}>Playroll</Text>
+            // </View>
           }
           rightComponent={
             <View style={{ flexDirection: 'row' }}>{this.renderIcons()}</View>
@@ -70,6 +74,7 @@ export default class MainScreenHeader extends React.Component<Props, State> {
   renderIcons() {
     const extractUser = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {

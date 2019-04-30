@@ -29,6 +29,7 @@ import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
 import { ListFriendsQuery } from '../../../graphql/requests/Relationships';
 import { Playroll, User } from '../../../graphql/types';
 import { NavigationScreenProp } from 'react-navigation';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -82,7 +83,7 @@ export default class DefaultSocialScreen extends React.Component<Props, State> {
       return data.private.listFriendsPlayrolls;
     };
     return (
-      <ListCurrentUserRecommendationsQuery>
+      <ListCurrentUserRecommendationsQuery variables={{ offset: 0, count: 10 }}>
         {({ loading, error, data, refetch }) => {
           if (this.state.triggerRefetchRecommendations) {
             this.setState({ triggerRefetchRecommendations: false }, () => {
@@ -136,43 +137,71 @@ export default class DefaultSocialScreen extends React.Component<Props, State> {
                         });
                       }
                       if (loading) {
-                        return <ActivityIndicator />;
+                        return (
+                          <View style={{ height: 70 }}>
+                            <ActivityIndicator />
+                          </View>
+                        );
                       }
                       const friends = extractFriends(data);
+                      if (friends.length <= 0) {
+                        return (
+                          <View
+                            style={{
+                              flex: 1,
+                              alignItems: 'center',
+                              height: 70,
+                            }}
+                          >
+                            <EmptyDataFiller
+                              imgSize={70}
+                              text={
+                                error
+                                  ? 'Could not load Friends'
+                                  : 'Find Some Friends!'
+                              }
+                              textWidth={250}
+                              horizontal
+                            />
+                          </View>
+                        );
+                      }
                       return (
-                        <FlatList
-                          horizontal={true}
-                          showsHorizontalScrollIndicator={false}
-                          data={friends.slice(0, 20)}
-                          keyExtractor={(_, i) => `${i}`}
-                          renderItem={({ item: friend }: { item: User }) => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                NavigationService.navigate(
-                                  'BrowseExchangedRecommendations',
-                                  { user: friend }
-                                );
-                              }}
-                            >
-                              <View>
-                                <Image
-                                  source={{ uri: friend.avatar }}
-                                  style={{
-                                    width: 50,
-                                    height: 50,
-                                    marginHorizontal: 10,
-                                    borderRadius: 25,
-                                    borderWidth: 1,
-                                    borderColor: '#af00bc99',
-                                  }}
-                                />
-                                <Heading type={'h10'} width={70} numLines={1}>
-                                  {friend.name}
-                                </Heading>
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        />
+                        <View style={{ height: 70 }}>
+                          <FlatList
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            data={friends.slice(0, 20)}
+                            keyExtractor={(_, i) => `${i}`}
+                            renderItem={({ item: friend }: { item: User }) => (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  NavigationService.navigate(
+                                    'BrowseExchangedRecommendations',
+                                    { user: friend }
+                                  );
+                                }}
+                              >
+                                <View>
+                                  <Image
+                                    source={{ uri: friend.avatar }}
+                                    style={{
+                                      width: 50,
+                                      height: 50,
+                                      marginHorizontal: 10,
+                                      borderRadius: 25,
+                                      borderWidth: 1,
+                                      borderColor: '#af00bc99',
+                                    }}
+                                  />
+                                  <Heading type={'h10'} width={70} numLines={1}>
+                                    {friend.name}
+                                  </Heading>
+                                </View>
+                              </TouchableOpacity>
+                            )}
+                          />
+                        </View>
                       );
                     }}
                   </ListFriendsQuery>
@@ -211,9 +240,35 @@ export default class DefaultSocialScreen extends React.Component<Props, State> {
                     );
                   }
                   if (loading) {
-                    return <ActivityIndicator />;
+                    return (
+                      <View style={{ height: 150 }}>
+                        <ActivityIndicator />
+                      </View>
+                    );
                   }
                   const playrolls = extractFriendsPlayrolls(data);
+                  if (playrolls.length <= 0) {
+                    return (
+                      <View
+                        style={{
+                          flex: 1,
+                          alignItems: 'center',
+                          height: 150,
+                        }}
+                      >
+                        <EmptyDataFiller
+                          imgSize={70}
+                          text={
+                            error
+                              ? 'Could not load Friends Playrolls'
+                              : 'Get your Friends to Create Playrolls!'
+                          }
+                          textWidth={250}
+                          horizontal
+                        />
+                      </View>
+                    );
+                  }
                   return (
                     <HorizontalPlayrollList
                       playrolls={playrolls.slice(0, 5)}
@@ -254,18 +309,33 @@ export default class DefaultSocialScreen extends React.Component<Props, State> {
                     style={{ paddingTop: 50 }}
                   />
                 )}
-                {!loading && (
-                  <RecommendationList
-                    recommendations={recommendations.slice(0, 5)}
-                    onPress={() => {}}
-                  />
-                )}
+
+                {!loading &&
+                  (recommendations.length <= 0 || error ? (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load Recommendations'
+                            : 'Get your Friends to Recommend you Songs!'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  ) : (
+                    <RecommendationList
+                      recommendations={recommendations}
+                      onPress={() => {}}
+                    />
+                  ))}
               </View>
-              {error && (
-                <Text style={{ paddingTop: 50 }}>
-                  Error Loading Recommendation
-                </Text>
-              )}
             </MainScreenContainer>
           );
         }}

@@ -7,6 +7,7 @@ import (
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -36,7 +37,9 @@ var getCurrentUserTracklist = gqltag.Method{
 		id := utils.StringIDToNumber(params.ID)
 		tracklistModel := &models.Tracklist{}
 
-		db := mctx.DB.Preload("CompiledRolls").Preload("CompiledRolls.Roll")
+		db := mctx.DB.Preload("CompiledRolls", func(db *gorm.DB) *gorm.DB {
+			return db.Order("order")
+		}).Preload("CompiledRolls.Roll")
 		if err := db.Where(&models.Tracklist{OwnerID: user.ID}).First(tracklistModel, id).Error; err != nil {
 			return nil, err
 		}

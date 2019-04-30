@@ -17,6 +17,7 @@ import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import NavigationService from '../../../services/NavigationService';
 import MusicSourceCard from '../../shared/Cards/MusicSourceCard';
 import { MusicSource } from '../../../graphql/types';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export default class BrowseSpotifySavedTracksScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -73,6 +74,19 @@ export default class BrowseSpotifySavedTracksScreen extends React.Component {
                 paddingBottom: hp('10%'),
               }}
               renderFlatListHeader={() => <SearchSubHeader />}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load Saved Tracks from Spotify'
+                        : 'Save some Tracks on Spotify!'
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
+                );
+              }}
               data={savedTracks}
               keyExtractor={this._keyExtractor}
               renderItem={({ item: source }: { item: MusicSource }) => (

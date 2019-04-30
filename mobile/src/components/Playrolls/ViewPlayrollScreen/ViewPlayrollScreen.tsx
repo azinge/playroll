@@ -36,6 +36,7 @@ import { CreateRollMutation } from '../../../graphql/requests/Roll';
 import FooterButton from '../../shared/Buttons/FooterButton';
 import DropdownAlert from 'react-native-dropdownalert';
 import { ReorderPlayrollMutation } from '../../../graphql/requests/Playroll/ReorderPlayrollMutation';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -71,7 +72,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       {};
     return (
       <GetCurrentUserPlayrollQuery variables={{ id: playrollID }}>
-        {({ loading, error, data, client: { cache } }) => {
+        {({ loading, error, data, client: { cache }, refetch }) => {
           const playroll: any =
             (data && data.private && data.private.currentUserPlayroll) || {};
           return (
@@ -82,6 +83,8 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
                 }}
                 title='View Playroll'
                 renderHeader={this.renderHeader}
+                refreshing={loading}
+                onRefresh={() => refetch()}
               >
                 {/* Icon, Title, and Hashtags */}
                 {this.state.inEditMode
@@ -89,7 +92,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
                   : this.renderTitleBar(playroll)}
 
                 {/* List the Rolls */}
-                {this.renderRolls(playroll)}
+                {this.renderRolls(playroll, loading, error)}
               </SubScreenContainer>
               {this.state.inEditMode && this.renderNewRollButton(playroll)}
               <DropdownAlert ref={ref => (this.dropdown = ref)} />
@@ -174,9 +177,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
           style={rawStyles.editingBarImage}
           source={require('../../../assets/new_playroll.png')}
         />
-        <UpdatePlayrollMutation
-          refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}
-        >
+        <UpdatePlayrollMutation>
           {(updatePlayroll, { data }) => (
             <View style={styles.titleBarName}>
               <TextInput
@@ -211,7 +212,18 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
       </View>
     );
   }
-  renderRolls(playroll) {
+  renderRolls(playroll, loading, error) {
+    if (!loading && playroll.rolls.length <= 0) {
+      return (
+        <EmptyDataFiller
+          text={
+            error ? 'Could not load Rolls' : 'Add some Rolls to this Playroll!'
+          }
+          textSize={'h5'}
+          textWidth={250}
+        />
+      );
+    }
     return (
       <ReorderPlayrollMutation>
         {reorderPlayroll => {
@@ -283,7 +295,7 @@ export default class ViewPlayrollScreen extends React.Component<Props, State> {
   }
   renderNewRollButton(playroll) {
     return (
-      <CreateRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
+      <CreateRollMutation>
         {(createRoll, { data }) => (
           <FooterButton
             title={'Add a Roll'}

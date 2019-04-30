@@ -1,38 +1,159 @@
 package private
 
 import (
+	"fmt"
+
 	"github.com/cazinge/playroll/services/gqltag"
 	"github.com/cazinge/playroll/services/models"
-	"github.com/cazinge/playroll/services/schema/resolvers/admin"
+	"github.com/cazinge/playroll/services/utils"
+	"github.com/graphql-go/graphql"
+	"github.com/mitchellh/mapstructure"
 )
 
 type RollMethods struct {
-	GetCurrentUserRoll    *gqltag.Query    `gql:"currentUserRoll(id: ID): Roll"`
-	CreateCurrentUserRoll *gqltag.Mutation `gql:"createCurrentUserRoll(input: RollInput): Roll"`
-	UpdateCurrentUserRoll *gqltag.Mutation `gql:"updateCurrentUserRoll(id: ID, input: RollInput): Roll"`
-	DeleteCurrentUserRoll *gqltag.Mutation `gql:"deleteCurrentUserRoll(id: ID): Roll"`
+	GetCurrentUserRoll    *gqltag.Query    `gql:"currentUserRoll(id: ID): Playroll"`
+	CreateCurrentUserRoll *gqltag.Mutation `gql:"createCurrentUserRoll(input: RollInput): Playroll"`
+	UpdateCurrentUserRoll *gqltag.Mutation `gql:"updateCurrentUserRoll(id: ID, input: RollInput): Playroll"`
+	DeleteCurrentUserRoll *gqltag.Mutation `gql:"deleteCurrentUserRoll(id: ID): Playroll"`
 }
 
 // TODO(cazinge): Switch to using Authenticated style
 
 var getCurrentUserRoll = gqltag.Method{
 	Description: `[Get Current User Roll Description Goes Here]`,
-	Request:     admin.GenerateGetEntityMethod(&models.Roll{}),
+	Request: (func(e models.Entity) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+			dao := e.InitDAO(mctx.DB)
+
+			type getEntityParams struct {
+				ID string
+			}
+			params := &getEntityParams{}
+			err := mapstructure.Decode(resolveParams.Args, params)
+			if err != nil {
+				fmt.Println(err)
+				return nil, err
+			}
+
+			id := utils.StringIDToNumber(params.ID)
+
+			rawEntity, err := dao.Get(id)
+			if err != nil {
+				return nil, err
+			}
+			roll, err := models.FormatRoll(rawEntity)
+			if err != nil {
+				return nil, err
+			}
+			return models.GetPlayrollByID(roll.PlayrollID, mctx.DB)
+		}
+	})(&models.Roll{}),
 }
 
 var createCurrentUserRoll = gqltag.Method{
 	Description: `[Create Current User Roll Description Goes Here]`,
-	Request:     admin.GenerateCreateEntityMethod(&models.Roll{}, &models.RollInput{}),
+	Request: (func(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+			dao := e.InitDAO(mctx.DB)
+
+			type createEntityParams struct {
+				Input models.EntityInput
+			}
+			params := &createEntityParams{Input: entityInput}
+			err := mapstructure.Decode(resolveParams.Args, params)
+			fmt.Printf("%#v\n", params)
+			fmt.Printf("%#v\n", params.Input)
+
+			if err != nil {
+				fmt.Println(err)
+				return nil, err
+			}
+
+			entity, err := params.Input.ToModel()
+			if err != nil {
+				return nil, err
+			}
+
+			rawEntity, err := dao.Create(entity)
+			if err != nil {
+				return nil, err
+			}
+			roll, err := models.FormatRoll(rawEntity)
+			if err != nil {
+				return nil, err
+			}
+			return models.GetPlayrollByID(roll.PlayrollID, mctx.DB)
+		}
+	})(&models.Roll{}, &models.RollInput{}),
 }
 
 var updateCurrentUserRoll = gqltag.Method{
 	Description: `[Update Current User Roll Description Goes Here]`,
-	Request:     admin.GenerateUpdateEntityMethod(&models.Roll{}, &models.RollInput{}),
+	Request: (func(e models.Entity, entityInput models.EntityInput) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+			dao := e.InitDAO(mctx.DB)
+
+			type updateEntityParams struct {
+				ID    string
+				Input models.EntityInput
+			}
+			params := &updateEntityParams{Input: entityInput}
+			err := mapstructure.Decode(resolveParams.Args, params)
+			if err != nil {
+				fmt.Println(err)
+				return nil, err
+			}
+
+			entity, err := params.Input.ToModel()
+			if err != nil {
+				return nil, err
+			}
+			id := utils.StringIDToNumber(params.ID)
+			entity.SetID(id)
+
+			rawEntity, err := dao.Update(entity)
+			if err != nil {
+				return nil, err
+			}
+			roll, err := models.FormatRoll(rawEntity)
+			if err != nil {
+				return nil, err
+			}
+			return models.GetPlayrollByID(roll.PlayrollID, mctx.DB)
+		}
+	})(&models.Roll{}, &models.RollInput{}),
 }
 
 var deleteCurrentUserRoll = gqltag.Method{
 	Description: `[Delete Current User Roll Description Goes Here]`,
-	Request:     admin.GenerateDeleteEntityMethod(&models.Roll{}),
+	Request: (func(e models.Entity) func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+		return func(resolveParams graphql.ResolveParams, mctx *gqltag.MethodContext) (interface{}, error) {
+			dao := e.InitDAO(mctx.DB)
+
+			type deleteEntityParams struct {
+				ID string
+			}
+
+			params := &deleteEntityParams{}
+			err := mapstructure.Decode(resolveParams.Args, params)
+			if err != nil {
+				fmt.Println(err)
+				return nil, err
+			}
+
+			id := utils.StringIDToNumber(params.ID)
+
+			rawEntity, err := dao.Delete(id)
+			if err != nil {
+				return nil, err
+			}
+			roll, err := models.FormatRoll(rawEntity)
+			if err != nil {
+				return nil, err
+			}
+			return models.GetPlayrollByID(roll.PlayrollID, mctx.DB)
+		}
+	})(&models.Roll{}),
 }
 
 // var getCurrentUserRoll = gqltag.Method{

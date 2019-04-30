@@ -24,6 +24,7 @@ import { ListPopularPlayrollsQuery } from '../../../graphql/requests/Playroll/Li
 import HorizontalPlayrollList from '../../shared/Lists/HorizontalPlayrollList';
 import { ListNewReleasePlayrollsQuery } from '../../../graphql/requests/Playroll/ListNewReleasePlayrollsQuery';
 import { ListFeaturedPlayrollsQuery } from '../../../graphql/requests/Playroll/ListFeaturedPlayrollsQuery';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -126,9 +127,35 @@ export default class HomeScreen extends React.Component<Props, State> {
                   );
                 }
                 if (loading) {
-                  return <ActivityIndicator />;
+                  return (
+                    <View style={{ height: 220 }}>
+                      <ActivityIndicator />
+                    </View>
+                  );
                 }
                 const playrolls = extractFeaturedPlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        height: 220,
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load Featured Playrolls'
+                            : 'No Featured Playrolls Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return <HomeCarousel numItems={5} playrolls={playrolls} />;
               }}
             </ListFeaturedPlayrollsQuery>
@@ -168,9 +195,35 @@ export default class HomeScreen extends React.Component<Props, State> {
                   );
                 }
                 if (loading) {
-                  return <ActivityIndicator />;
+                  return (
+                    <View style={{ height: 150 }}>
+                      <ActivityIndicator />
+                    </View>
+                  );
                 }
                 const playrolls = extractNewReleasePlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        height: 150,
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load New Releases'
+                            : 'No New Releases Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <HorizontalPlayrollList
                     playrolls={playrolls}
@@ -220,6 +273,27 @@ export default class HomeScreen extends React.Component<Props, State> {
                   return <ActivityIndicator />;
                 }
                 const playrolls = extractPopularPlayrolls(data);
+                if (playrolls.length <= 0) {
+                  return (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <EmptyDataFiller
+                        imgSize={70}
+                        text={
+                          error
+                            ? 'Could not load Popular Playrolls'
+                            : 'No Popular Playrolls Found'
+                        }
+                        textWidth={250}
+                        horizontal
+                      />
+                    </View>
+                  );
+                }
                 return (
                   <PlayrollList
                     playrolls={playrolls}

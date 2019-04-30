@@ -154,12 +154,6 @@ export default class DefaultMusicScreen extends React.Component {
                     </TouchableOpacity>
                     <ListSpotifyPlaylistsQuery variables={{ count: 3 }}>
                       {({ loading, error, data }) => {
-                        console.log(error && error.message);
-                        console.log(
-                          data &&
-                            data.private &&
-                            data.private.listSpotifyPlaylists
-                        );
                         return (
                           <View style={{ marginBottom: 5, flex: 1 }}>
                             <FlatList

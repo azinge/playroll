@@ -23,6 +23,7 @@ import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import { NavigationScreenProp } from 'react-navigation';
 import NavigationService from '../../../services/NavigationService';
 import styles from './BrowseExchangedRecommendationsScreen.styles';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -37,6 +38,7 @@ export default class BrowseExchangedRecommendationsScreen extends React.Componen
   render() {
     const extractRecommendations = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -86,15 +88,19 @@ export default class BrowseExchangedRecommendationsScreen extends React.Componen
                 },
               ]}
               renderFlatListHeader={() => {
-                return (
-                  <>
-                    {error && (
-                      <Text style={{ paddingTop: 50 }}>
-                        Error Loading Recommendation
-                      </Text>
-                    )}
-                    <SearchSubHeader />
-                  </>
+                return <SearchSubHeader />;
+              }}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load Recommendations'
+                        : `Send ${user.name} some Recommendations!`
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
                 );
               }}
               renderItem={({ item }) => {

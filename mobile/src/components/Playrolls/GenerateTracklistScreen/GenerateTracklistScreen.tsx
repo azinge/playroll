@@ -176,6 +176,7 @@ export default class GenerateTracklistScreen extends React.Component<
   renderCurrentlyGeneratingDisplay() {
     const extractPlayroll = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {

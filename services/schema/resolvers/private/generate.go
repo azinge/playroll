@@ -8,6 +8,7 @@ import (
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/utils"
 	"github.com/graphql-go/graphql"
+	"github.com/jinzhu/gorm"
 	"github.com/mitchellh/mapstructure"
 
 	spotifyhelpers "github.com/cazinge/playroll/services/music_services/spotify"
@@ -68,7 +69,9 @@ var generateTracklist = gqltag.Method{
 
 		playrollID := utils.StringIDToNumber(params.PlayrollID)
 
-		pDAO := models.InitPlayrollDAO(mctx.DB.Preload("Rolls"))
+		pDAO := models.InitPlayrollDAO(mctx.DB.Preload("Rolls", func(db *gorm.DB) *gorm.DB {
+			return db.Order("order")
+		}))
 		rawPlayroll, err := pDAO.Get(playrollID)
 		if err != nil {
 			fmt.Println("Error getting playroll: ", err.Error())

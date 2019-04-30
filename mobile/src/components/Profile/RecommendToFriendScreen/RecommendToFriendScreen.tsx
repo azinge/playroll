@@ -26,6 +26,7 @@ import { GetCurrentUserQuery } from '../../../graphql/requests/User';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import { LIST_SENT_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListSentRecommendationsQuery';
 import { LIST_EXCHANGED_RECOMMENDATIONS } from '../../../graphql/requests/Recommendation/ListExchangedRecommendationsQuery';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -98,6 +99,7 @@ export default class RecommendToFriendScreen extends React.Component<
     // );
     const extractFriends = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -139,15 +141,17 @@ export default class RecommendToFriendScreen extends React.Component<
                       data={friends}
                       keyExtractor={item => item.id}
                       renderFlatListHeader={() => {
-                        return (
-                          <>
-                            {error && (
-                              <Text style={{ paddingTop: 50 }}>
-                                Error Loading Friends
-                              </Text>
-                            )}
-                            <SearchSubHeader />
-                          </>
+                        return <SearchSubHeader />;
+                      }}
+                      renderFlatListEmptyComponent={() => {
+                        return loading ? null : (
+                          <EmptyDataFiller
+                            text={
+                              error
+                                ? 'Could not load Friends'
+                                : 'Find some Friends!'
+                            }
+                          />
                         );
                       }}
                       renderItem={({ item }) => {

@@ -228,47 +228,6 @@ export default class ViewCurrentUserProfileScreen extends React.Component<
             }}
           </ListCurrentUserPlayrollsQuery>
         </View>
-        {/*
-        <ListCurrentUserPlayrollsQuery>
-          {({ loading, error, data }) => {
-            const playrolls = extractPlayrolls(data);
-            const success = !loading && !error;
-            return (
-              <View
-                style={
-                  {
-                    // flex: 1,
-                    // paddingBottom: 50
-                    // TODO(ianlizzo): Fix this pls
-                  }
-                }
-              >
-                <View style={{ paddingTop: 20 }}>
-                  <FlatList
-                    data={playrolls}
-                    keyExtractor={(item, index) => item.id}
-                    renderItem={this._renderItem}
-                    contentContainerStyle={{ paddingBottom: 50 }}
-                    // style={{height: '100%'}}
-                  />
-                  {loading && (
-                    <ActivityIndicator
-                      color={'gray'}
-                      style={{ paddingTop: 50 }}
-                    />
-                  )}
-                  {error && (
-                    <Text style={{ paddingTop: 50 }}>
-                      Error Loading Playrolls
-                    </Text>
-                  )}
-                  <View style={{ margin: 10 }} />
-                  {playrolls.length === 0 && <Text> No Playrolls added</Text>}
-                </View>
-              </View>
-            );
-          }}
-        </ListCurrentUserPlayrollsQuery> */}
       </View>
     );
   }

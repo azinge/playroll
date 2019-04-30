@@ -22,6 +22,7 @@ import NavigationService from '../../../services/NavigationService';
 import { LIST_FRIEND_REQUESTS } from '../../../graphql/requests/Relationships/ListFriendRequestsQuery';
 import { LIST_FRIENDS } from '../../../graphql/requests/Relationships/ListFriendsQuery';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -36,6 +37,7 @@ export default class BrowseFriendRequestsScreen extends React.Component<
   render() {
     const extractFriendRequests = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -59,15 +61,19 @@ export default class BrowseFriendRequestsScreen extends React.Component<
                 data={friendRequests}
                 keyExtractor={item => item.id}
                 renderFlatListHeader={() => {
-                  return (
-                    <>
-                      {error && (
-                        <Text style={{ paddingTop: 50 }}>
-                          Error Loading Recommendation
-                        </Text>
-                      )}
-                      <SearchSubHeader />
-                    </>
+                  return <SearchSubHeader />;
+                }}
+                renderFlatListEmptyComponent={() => {
+                  return loading ? null : (
+                    <EmptyDataFiller
+                      text={
+                        error
+                          ? 'Could not load Friend Requests'
+                          : 'You have no Friend Requests right now'
+                      }
+                      textSize={'h5'}
+                      textWidth={300}
+                    />
                   );
                 }}
                 renderItem={({ item }) => {

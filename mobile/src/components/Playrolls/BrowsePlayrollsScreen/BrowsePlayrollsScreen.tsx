@@ -3,7 +3,13 @@
  */
 
 import React from 'react';
-import { Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { Button, Icon, SearchBar } from 'react-native-elements';
 
@@ -16,11 +22,13 @@ import {
   ListCurrentUserPlayrollsQuery,
   CreatePlayrollMutation,
 } from '../../../graphql/requests/Playroll/';
+import DropdownAlert from 'react-native-dropdownalert';
 
 import DetailedPlayrollCard from '../../shared/Cards/DetailedPlayrollCard';
 import PlayrollCard from '../../shared/Cards/PlayrollCard';
 import SubScreenHeader from '../../shared/Headers/SubScreenHeader';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
+import Heading from '../../shared/Text/Heading';
 import { Playroll } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
@@ -28,6 +36,7 @@ import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/
 import styles from './BrowsePlayrollsScreen.styles';
 import FooterButton from '../../shared/Buttons/FooterButton';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -39,6 +48,8 @@ export default class BrowsePlayrollsScreen extends React.Component<
   Props,
   State
 > {
+  dropdown: DropdownAlert;
+
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -78,6 +89,19 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   keyExtractor={item => item.id}
                   renderFlatListHeader={() => {
                     return <SearchSubHeader />;
+                  }}
+                  renderFlatListEmptyComponent={() => {
+                    return loading ? null : (
+                      <EmptyDataFiller
+                        text={
+                          error
+                            ? 'Could not load Playrolls'
+                            : 'Create Some Playrolls!'
+                        }
+                        textSize={'h5'}
+                        textWidth={300}
+                      />
+                    );
                   }}
                   renderItem={({ item }) => {
                     const playroll = item as Playroll;
@@ -131,14 +155,10 @@ export default class BrowsePlayrollsScreen extends React.Component<
                   }}
                   onEndReachedThreshold={0.5}
                 >
-                  {error && (
-                    <Text style={{ paddingTop: 50 }}>
-                      Error Loading Playrolls
-                    </Text>
-                  )}
                   {/* <View style={{ margin: 10 }} /> */}
                 </MainScreenContainer>
                 {/* {playrolls.length === 0 && <Text> No Playrolls added</Text>} */}
+                <DropdownAlert ref={ref => (this.dropdown = ref)} />
               </View>
               {this.renderNewPlayrollButton()}
             </View>
@@ -151,6 +171,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
   renderHeader() {
     const extractPlayroll = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -183,10 +204,34 @@ export default class BrowsePlayrollsScreen extends React.Component<
       </CreatePlayrollMutation>
     );
   }
+
+  async createPlayrollWrapper(createPlayroll) {
+    try {
+      const data = await createPlayroll({
+        variables: {
+          input: { name: 'New Playroll' },
+        },
+      });
+      const playroll = extractPlayroll(data);
+      NavigationService.navigate('ViewPlayroll', {
+        playroll,
+        inEditMode: true,
+      });
+    } catch (err) {
+      console.log(err);
+      this.dropdown.alertWithType(
+        'error',
+        'Error',
+        "We're sorry, Please try again."
+      );
+    }
+  }
+
   renderNewPlayrollButton() {
     // return (
     const extractPlayroll = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -201,8 +246,9 @@ export default class BrowsePlayrollsScreen extends React.Component<
         }}
         onCompleted={data => {
           const playroll = extractPlayroll(data);
-          NavigationService.navigate('EditPlayroll', {
+          NavigationService.navigate('ViewPlayroll', {
             playroll,
+            inEditMode: true,
           });
         }}
         refetchQueries={() => [LIST_CURRENT_USER_PLAYROLLS]}
@@ -212,7 +258,7 @@ export default class BrowsePlayrollsScreen extends React.Component<
             <FooterButton
               title={'Create New Playroll'}
               onPress={() => {
-                createPlayroll();
+                this.createPlayrollWrapper(createPlayroll);
               }}
             />
           );

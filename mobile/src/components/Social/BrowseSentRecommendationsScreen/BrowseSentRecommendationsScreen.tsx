@@ -14,11 +14,13 @@ import RecommendationCard from '../../shared/Cards/RecommendationCard';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
 import { Icon } from 'react-native-elements';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export default class BrowseSentRecommendationsScreen extends React.Component {
   render() {
     const extractRecommendations = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -41,15 +43,19 @@ export default class BrowseSentRecommendationsScreen extends React.Component {
               data={recommendations}
               keyExtractor={item => item.id}
               renderFlatListHeader={() => {
-                return (
-                  <>
-                    {error && (
-                      <Text style={{ paddingTop: 50 }}>
-                        Error Loading Recommendation
-                      </Text>
-                    )}
-                    <SearchSubHeader />
-                  </>
+                return <SearchSubHeader />;
+              }}
+              renderFlatListEmptyComponent={() => {
+                return loading ? null : (
+                  <EmptyDataFiller
+                    text={
+                      error
+                        ? 'Could not load Sent Recommendations'
+                        : 'Send your Friends some Recommendations!'
+                    }
+                    textSize={'h5'}
+                    textWidth={300}
+                  />
                 );
               }}
               renderItem={({ item }) => {

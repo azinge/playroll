@@ -22,6 +22,7 @@ import { RollData, User } from '../../../graphql/types';
 import { GET_CURRENT_USER_PLAYROLL } from '../../../graphql/requests/Playroll/GetCurrentUserPlayrollQuery';
 import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import { ListUserPlayrollsQuery } from '../../../graphql/requests/Playroll/ListUserPlayrollsQuery';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   navigation?: NavigationScreenProp<{}>;
@@ -51,6 +52,7 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
   render() {
     const extractPlayrolls = data => {
       if (
+        !data ||
         Object.keys(data).length === 0 ||
         Object.keys(data.private).length === 0
       ) {
@@ -80,29 +82,34 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
                 onRefresh={() => refetch()}
               >
                 <SearchSubHeader />
-                {this.renderPlayrolls(playrolls, () => {
-                  fetchMore({
-                    variables: {
-                      offset: playrolls.length,
-                    },
-                    updateQuery: (prev, { fetchMoreResult }) => {
-                      const prevPlayrolls = extractPlayrolls(prev);
-                      const fetchMorePlayrolls = extractPlayrolls(
-                        fetchMoreResult
-                      );
-                      if (!fetchMoreResult) return prev;
-                      return Object.assign({}, prev, {
-                        private: {
-                          listUserPlayrolls: [
-                            ...prevPlayrolls,
-                            ...fetchMorePlayrolls,
-                          ],
-                          __typename: 'PrivateQueryMethods',
-                        },
-                      });
-                    },
-                  });
-                })}
+                {this.renderPlayrolls(
+                  playrolls,
+                  () => {
+                    fetchMore({
+                      variables: {
+                        offset: playrolls.length,
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        const prevPlayrolls = extractPlayrolls(prev);
+                        const fetchMorePlayrolls = extractPlayrolls(
+                          fetchMoreResult
+                        );
+                        if (!fetchMoreResult) return prev;
+                        return Object.assign({}, prev, {
+                          private: {
+                            listUserPlayrolls: [
+                              ...prevPlayrolls,
+                              ...fetchMorePlayrolls,
+                            ],
+                            __typename: 'PrivateQueryMethods',
+                          },
+                        });
+                      },
+                    });
+                  },
+                  loading,
+                  error
+                )}
               </SubScreenContainer>
               <DropdownAlert ref={ref => (this.dropdown = ref)} />
             </View>
@@ -112,7 +119,20 @@ export default class AddToPlayrollScreen extends React.Component<Props, State> {
     );
   }
 
-  renderPlayrolls(playrolls, onEndReached) {
+  renderPlayrolls(playrolls, onEndReached, loading, error) {
+    if (!loading && playrolls.length <= 0) {
+      return (
+        <EmptyDataFiller
+          text={
+            error
+              ? 'Could not load Playrolls'
+              : `${this.state.user.name} has no Playrolls`
+          }
+          textSize={'h5'}
+          textWidth={300}
+        />
+      );
+    }
     return (
       <PlayrollList
         playrolls={playrolls}

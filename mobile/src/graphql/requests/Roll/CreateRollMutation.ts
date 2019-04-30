@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Roll, RollInput, RollFragments } from '../../types';
+import { Playroll, RollInput, PlayrollFragments } from '../../types';
 
 export const CREATE_ROLL = 'CREATE_ROLL';
 
@@ -8,11 +8,11 @@ export const CREATE_ROLL_MUTATION = gql`
   mutation CREATE_ROLL($input: RollInput!) {
     private {
       createCurrentUserRoll(input: $input) {
-        ...DefaultRoll
+        ...DefaultPlayroll
       }
     }
   }
-  ${RollFragments.default}
+  ${PlayrollFragments.default}
 `;
 
 type CreateRollVariables = {
@@ -21,7 +21,7 @@ type CreateRollVariables = {
 
 type CreateRollData = {
   private: {
-    createCurrentUserRoll?: Roll;
+    createCurrentUserRoll?: Playroll;
   };
 };
 

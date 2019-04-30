@@ -212,7 +212,7 @@ export default class RollCard extends React.Component<Props, State> {
 
     return (
       // Does not refetch after multiple deletions
-      <DeleteRollMutation refetchQueries={() => [GET_CURRENT_USER_PLAYROLL]}>
+      <DeleteRollMutation>
         {deleteRoll => {
           return (
             <View

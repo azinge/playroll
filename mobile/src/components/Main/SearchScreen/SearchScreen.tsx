@@ -25,6 +25,7 @@ import NavigationService from '../../../services/NavigationService';
 import ManageRollScreen from '../ManageRollScreen';
 import { BlurView } from 'expo';
 import Swipeout from 'react-native-swipeout';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 export interface Props {
   playrollID?: any;
@@ -98,11 +99,19 @@ export default class SearchScreen extends React.Component<Props, State> {
     );
   }
 
-  renderEmptySearch() {
-    return (
-      <View style={{ alignSelf: 'center' }}>
-        <Text style={{ fontSize: 20 }}>No results found!</Text>
-      </View>
+  renderEmptySearch(loading, error) {
+    return loading ? null : (
+      <EmptyDataFiller
+        text={
+          error
+            ? 'Could not load Music from Spotify'
+            : this.state.query === ''
+            ? 'Search for Music!'
+            : `No music found with name: '${this.state.query}' `
+        }
+        textSize={'h5'}
+        textWidth={300}
+      />
     );
   }
 
@@ -132,7 +141,9 @@ export default class SearchScreen extends React.Component<Props, State> {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => item.providerID}
                     extraData={this.state}
-                    ListEmptyComponent={this.renderEmptySearch}
+                    ListEmptyComponent={() =>
+                      this.renderEmptySearch(loading, error)
+                    }
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() => {

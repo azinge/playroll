@@ -6,11 +6,12 @@
   packages = [
     "events",
     "lambda",
+    "lambda/handlertrace",
     "lambda/messages",
     "lambdacontext"
   ]
-  revision = "928161204cad89472f9e6b5dd49ce16bc91230de"
-  version = "v1.8.1"
+  revision = "08d251dc58f204411d79012fd6f1beefb7107fea"
+  version = "v1.10.0"
 
 [[projects]]
   name = "github.com/fatih/structs"
@@ -21,8 +22,8 @@
 [[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
-  version = "v1.2.0"
+  revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
+  version = "v1.3.1"
 
 [[projects]]
   name = "github.com/graphql-go/graphql"
@@ -39,8 +40,8 @@
     "language/typeInfo",
     "language/visitor"
   ]
-  revision = "08943645bf265d192b32f2100cdff2428f7ae7c5"
-  version = "v0.7.7"
+  revision = "2b0b7340d2285b861482047fbf5de0488e021bea"
+  version = "v0.7.8"
 
 [[projects]]
   name = "github.com/jinzhu/gorm"
@@ -48,8 +49,8 @@
     ".",
     "dialects/postgres"
   ]
-  revision = "472c70caa40267cb89fd8facb07fe6454b578626"
-  version = "v1.9.2"
+  revision = "29cb2a42d2a41e5ae449435e1c9277d47115775c"
+  version = "v1.9.5"
 
 [[projects]]
   branch = "master"
@@ -62,10 +63,11 @@
   packages = [
     ".",
     "hstore",
-    "oid"
+    "oid",
+    "scram"
   ]
-  revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
-  version = "v1.0.0"
+  revision = "51e2106eed1cea199c802d2a49e91e2491b02056"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/mitchellh/mapstructure"
@@ -83,7 +85,7 @@
   branch = "master"
   name = "github.com/zmb3/spotify"
   packages = ["."]
-  revision = "a4bd83f60e06ab58f3516c61680d0532aabf470e"
+  revision = "94cbe6dc5cc2eaa467e36f30b130b0f827e4262d"
 
 [[projects]]
   branch = "master"
@@ -92,7 +94,7 @@
     "context",
     "context/ctxhttp"
   ]
-  revision = "ed066c81e75eba56dd9bd2139ade88125b855585"
+  revision = "4829fb13d2c62012c17688fa7f629f371014946d"
 
 [[projects]]
   branch = "master"
@@ -101,7 +103,7 @@
     ".",
     "internal"
   ]
-  revision = "5dab4167f31cbd76b407f1486c86b40748bc5073"
+  revision = "9f3314589c9a9136388751d9adae6b0ed400978a"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -114,8 +116,8 @@
     "internal/urlfetch",
     "urlfetch"
   ]
-  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
-  version = "v1.4.0"
+  revision = "54a98f90d1c46b7731eb8fb305d2a321c30ef610"
+  version = "v1.5.0"
 
 [solve-meta]
   analyzer-name = "dep"

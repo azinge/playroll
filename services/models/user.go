@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -144,7 +145,7 @@ func AuthorizeUser(mctx *gqltag.MethodContext) (*UserOutput, error) {
 
 	// Cognito User Pool
 	provider := mctx.Request.RequestContext.Identity.CognitoAuthenticationProvider
-	userPoolID := "us-west-2_u1L3OQa8W" //TODO(cazinge): Use environment variables here.
+	userPoolID := os.Getenv("USER_POOL_ID") //TODO(cazinge): Use environment variables here.
 	cognitoUserPoolPrefix := fmt.Sprintf("cognito-idp.us-west-2.amazonaws.com/%v,cognito-idp.us-west-2.amazonaws.com/%v:CognitoSignIn:", userPoolID, userPoolID)
 	if strings.HasPrefix(provider, cognitoUserPoolPrefix) {
 		cognitoUserPoolSub := strings.TrimPrefix(provider, cognitoUserPoolPrefix)

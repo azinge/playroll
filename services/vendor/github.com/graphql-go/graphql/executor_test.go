@@ -297,6 +297,62 @@ func TestMergesParallelFragments(t *testing.T) {
 	}
 }
 
+type CustomMap map[string]interface{}
+
+func TestCustomMapType(t *testing.T) {
+	query := `
+		query Example { data { a } }
+	`
+	data := CustomMap{
+		"a": "1",
+		"b": "2",
+	}
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{
+		Query: graphql.NewObject(graphql.ObjectConfig{
+			Name: "RootQuery",
+			Fields: graphql.Fields{
+				"data": &graphql.Field{
+					Type: graphql.NewObject(graphql.ObjectConfig{
+						Name: "Data",
+						Fields: graphql.Fields{
+							"a": &graphql.Field{
+								Type: graphql.String,
+							},
+							"b": &graphql.Field{
+								Type: graphql.String,
+							},
+						},
+					}),
+					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+						return data, nil
+					},
+				},
+			},
+		}),
+	})
+	if err != nil {
+		t.Fatalf("Error in schema %v", err.Error())
+	}
+
+	result := testutil.TestExecute(t, graphql.ExecuteParams{
+		Schema: schema,
+		Root:   data,
+		AST:    testutil.TestParse(t, query),
+	})
+	if len(result.Errors) > 0 {
+		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
+	}
+
+	expected := map[string]interface{}{
+		"data": map[string]interface{}{
+			"a": "1",
+		},
+	}
+	if !reflect.DeepEqual(result.Data, expected) {
+		t.Fatalf("Expected context.key to equal %v, got %v", expected, result.Data)
+	}
+}
+
 func TestThreadsSourceCorrectly(t *testing.T) {
 
 	query := `
@@ -515,9 +571,8 @@ func TestNullsOutErrorSubtrees(t *testing.T) {
 		"sync":      "sync",
 		"syncError": nil,
 	}
-	originalError := errors.New("Error getting syncError")
-	expectedErrors := []gqlerrors.FormattedError{gqlerrors.FormatError(gqlerrors.Error{
-		Message: originalError.Error(),
+	expectedErrors := []gqlerrors.FormattedError{{
+		Message: "Error getting syncError",
 		Locations: []location.SourceLocation{
 			{
 				Line: 3, Column: 7,
@@ -526,8 +581,7 @@ func TestNullsOutErrorSubtrees(t *testing.T) {
 		Path: []interface{}{
 			"syncError",
 		},
-		OriginalError: originalError,
-	}),
+	},
 	}
 
 	data := map[string]interface{}{
@@ -565,13 +619,10 @@ func TestNullsOutErrorSubtrees(t *testing.T) {
 		Root:   data,
 	}
 	result := testutil.TestExecute(t, ep)
-	if len(result.Errors) == 0 {
-		t.Fatalf("wrong result, expected errors, got %v", len(result.Errors))
-	}
 	if !reflect.DeepEqual(expectedData, result.Data) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expectedData, result.Data))
 	}
-	if !reflect.DeepEqual(expectedErrors, result.Errors) {
+	if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
 	}
 }
@@ -749,13 +800,10 @@ func TestThrowsIfNoOperationIsProvided(t *testing.T) {
 		Root:   data,
 	}
 	result := testutil.TestExecute(t, ep)
-	if len(result.Errors) != 1 {
-		t.Fatalf("wrong result, expected len(1) unexpected len: %v", len(result.Errors))
-	}
 	if result.Data != nil {
 		t.Fatalf("wrong result, expected nil result.Data, got %v", result.Data)
 	}
-	if !reflect.DeepEqual(expectedErrors, result.Errors) {
+	if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
 		t.Fatalf("unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
 	}
 }
@@ -797,13 +845,10 @@ func TestThrowsIfNoOperationNameIsProvidedWithMultipleOperations(t *testing.T) {
 		Root:   data,
 	}
 	result := testutil.TestExecute(t, ep)
-	if len(result.Errors) != 1 {
-		t.Fatalf("wrong result, expected len(1) unexpected len: %v", len(result.Errors))
-	}
 	if result.Data != nil {
 		t.Fatalf("wrong result, expected nil result.Data, got %v", result.Data)
 	}
-	if !reflect.DeepEqual(expectedErrors, result.Errors) {
+	if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
 		t.Fatalf("unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
 	}
 }
@@ -850,8 +895,59 @@ func TestThrowsIfUnknownOperationNameIsProvided(t *testing.T) {
 	if result.Data != nil {
 		t.Fatalf("wrong result, expected nil result.Data, got %v", result.Data)
 	}
-	if !reflect.DeepEqual(expectedErrors, result.Errors) {
+	if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
 		t.Fatalf("unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
+	}
+}
+
+func TestThrowsIfOperationTypeIsUnsupported(t *testing.T) {
+	query := `mutation Mut { a } subscription Sub { a }`
+	operations := []string{"Mut", "Sub"}
+
+	expectedErrors := [][]gqlerrors.FormattedError{
+		{{
+			Message:   `Schema is not configured for mutations`,
+			Locations: []location.SourceLocation{{Line: 1, Column: 1}},
+		}},
+		{{
+			Message:   `Schema is not configured for subscriptions`,
+			Locations: []location.SourceLocation{{Line: 1, Column: 20}},
+		}},
+	}
+
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{
+		Query: graphql.NewObject(graphql.ObjectConfig{
+			Name: "Query",
+			Fields: graphql.Fields{
+				"a": &graphql.Field{
+					Type: graphql.String,
+				},
+			},
+		}),
+	})
+	if err != nil {
+		t.Fatalf("Error in schema %v", err.Error())
+	}
+
+	// parse query
+	ast := testutil.TestParse(t, query)
+
+	for opIndex, operation := range operations {
+		expectedErrors := expectedErrors[opIndex]
+
+		// execute
+		ep := graphql.ExecuteParams{
+			Schema:        schema,
+			AST:           ast,
+			OperationName: operation,
+		}
+		result := testutil.TestExecute(t, ep)
+		if result.Data != nil {
+			t.Fatalf("wrong result, expected nil result.Data, got %v", result.Data)
+		}
+		if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
+			t.Fatalf("unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
+		}
 	}
 }
 func TestUsesTheQuerySchemaForQueries(t *testing.T) {
@@ -1297,7 +1393,6 @@ func TestFailsWhenAnIsTypeOfCheckIsNotMet(t *testing.T) {
 		},
 	}
 
-	originalError := gqlerrors.NewFormattedError(`Expected value of type "SpecialType" but got: graphql_test.testNotSpecialType.`)
 	expected := &graphql.Result{
 		Data: map[string]interface{}{
 			"specials": []interface{}{
@@ -1307,8 +1402,8 @@ func TestFailsWhenAnIsTypeOfCheckIsNotMet(t *testing.T) {
 				nil,
 			},
 		},
-		Errors: []gqlerrors.FormattedError{gqlerrors.FormatError(gqlerrors.Error{
-			Message: originalError.Message,
+		Errors: []gqlerrors.FormattedError{{
+			Message: `Expected value of type "SpecialType" but got: graphql_test.testNotSpecialType.`,
 			Locations: []location.SourceLocation{
 				{
 					Line:   1,
@@ -1319,8 +1414,8 @@ func TestFailsWhenAnIsTypeOfCheckIsNotMet(t *testing.T) {
 				"specials",
 				1,
 			},
-			OriginalError: originalError,
-		})},
+		},
+		},
 	}
 
 	specialType := graphql.NewObject(graphql.ObjectConfig{
@@ -1367,10 +1462,7 @@ func TestFailsWhenAnIsTypeOfCheckIsNotMet(t *testing.T) {
 		Root:   data,
 	}
 	result := testutil.TestExecute(t, ep)
-	if len(result.Errors) == 0 {
-		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
-	}
-	if !reflect.DeepEqual(expected, result) {
+	if !testutil.EqualResults(expected, result) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
@@ -1415,10 +1507,7 @@ func TestFailsToExecuteQueryContainingATypeDefinition(t *testing.T) {
 		AST:    ast,
 	}
 	result := testutil.TestExecute(t, ep)
-	if len(result.Errors) != 1 {
-		t.Fatalf("wrong result, unexpected errors: %v", result.Errors)
-	}
-	if !reflect.DeepEqual(expected, result) {
+	if !testutil.EqualResults(expected, result) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expected, result))
 	}
 }
@@ -1816,7 +1905,7 @@ func TestContextDeadline(t *testing.T) {
 	if !result.HasErrors() || len(result.Errors) == 0 {
 		t.Fatalf("Result should include errors when deadline is exceeded")
 	}
-	if !reflect.DeepEqual(expectedErrors, result.Errors) {
+	if !testutil.EqualFormattedErrors(expectedErrors, result.Errors) {
 		t.Fatalf("Unexpected result, Diff: %v", testutil.Diff(expectedErrors, result.Errors))
 	}
 }
@@ -2241,11 +2330,15 @@ func TestQuery_ErrorExtensions(t *testing.T) {
 
 func TestQuery_OriginalErrorBuiltin(t *testing.T) {
 	result := testErrors(t, graphql.String, nil, nil)
-	originalError := result.Errors[0].OriginalError()
-	switch originalError.(type) {
-	case error:
+	switch err := result.Errors[0].OriginalError().(type) {
+	case *gqlerrors.Error:
+		switch err := err.OriginalError.(type) {
+		case error:
+		default:
+			t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
+		}
 	default:
-		t.Fatalf("unexpected error: %v", reflect.TypeOf(originalError))
+		t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
 	}
 }
 
@@ -2253,12 +2346,16 @@ func TestQuery_OriginalErrorExtended(t *testing.T) {
 	result := testErrors(t, graphql.String, map[string]interface{}{
 		"code": "CAN_NOT_FETCH_BY_ID",
 	}, nil)
-	originalError := result.Errors[0].OriginalError()
-	switch originalError.(type) {
-	case *extendedError:
-	case extendedError:
+	switch err := result.Errors[0].OriginalError().(type) {
+	case *gqlerrors.Error:
+		switch err := err.OriginalError.(type) {
+		case *extendedError:
+		case extendedError:
+		default:
+			t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
+		}
 	default:
-		t.Fatalf("unexpected error: %v", reflect.TypeOf(originalError))
+		t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
 	}
 }
 
@@ -2274,11 +2371,15 @@ func TestQuery_OriginalErrorCustom(t *testing.T) {
 	result := testErrors(t, graphql.String, nil, func(err error) error {
 		return customError{error: err}
 	})
-	originalError := result.Errors[0].OriginalError()
-	switch originalError.(type) {
-	case customError:
+	switch err := result.Errors[0].OriginalError().(type) {
+	case *gqlerrors.Error:
+		switch err := err.OriginalError.(type) {
+		case customError:
+		default:
+			t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
+		}
 	default:
-		t.Fatalf("unexpected error: %v", reflect.TypeOf(originalError))
+		t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
 	}
 }
 
@@ -2286,11 +2387,15 @@ func TestQuery_OriginalErrorCustomPtr(t *testing.T) {
 	result := testErrors(t, graphql.String, nil, func(err error) error {
 		return &customError{error: err}
 	})
-	originalError := result.Errors[0].OriginalError()
-	switch originalError.(type) {
-	case *customError:
+	switch err := result.Errors[0].OriginalError().(type) {
+	case *gqlerrors.Error:
+		switch err := err.OriginalError.(type) {
+		case *customError:
+		default:
+			t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
+		}
 	default:
-		t.Fatalf("unexpected error: %v", reflect.TypeOf(originalError))
+		t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
 	}
 }
 
@@ -2298,10 +2403,14 @@ func TestQuery_OriginalErrorPanic(t *testing.T) {
 	result := testErrors(t, graphql.String, nil, func(err error) error {
 		panic(errors.New("panic error"))
 	})
-	originalError := result.Errors[0].OriginalError()
-	switch originalError.(type) {
-	case error:
+	switch err := result.Errors[0].OriginalError().(type) {
+	case *gqlerrors.Error:
+		switch err := err.OriginalError.(type) {
+		case error:
+		default:
+			t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
+		}
 	default:
-		t.Fatalf("unexpected error: %v", reflect.TypeOf(originalError))
+		t.Fatalf("unexpected error: %v", reflect.TypeOf(err))
 	}
 }

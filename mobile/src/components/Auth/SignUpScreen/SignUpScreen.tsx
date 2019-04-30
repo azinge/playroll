@@ -92,8 +92,7 @@ export default class SignUpScreen extends React.Component<Props, State> {
   }
 
   handleOpenTOSURL() {
-    const url =
-      'https://www.freeprivacypolicy.com/privacy/view/919ec0f8123830156075504b5da568d3';
+    const url = 'https://terms.playroll.io';
 
     WebBrowser.openBrowserAsync(url);
   }

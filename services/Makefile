@@ -11,8 +11,26 @@ clean:
 
 .PHONY: deploy
 deploy: build
+	sls deploy function --function graphql
+	sls deploy function --function admingraphql
+	sls deploy function --function postconfirm
+	sls deploy function --function automigrate
+	sls invoke --function automigrate
+
+.PHONY: deploy-development
+deploy-staging: clean build
 	sls deploy --verbose
 	sls invoke --function automigrate
+
+.PHONY: deploy-staging
+deploy-staging: clean build
+	sls deploy --verbose --stage stag
+	sls invoke --function automigrate --stage stag
+
+.PHONY: deploy-production
+deploy-production: clean build
+	sls deploy --verbose --stage prod
+	sls invoke --function automigrate --stage prod
 
 .PHONY: deploy-local
 deploy-local: clean build

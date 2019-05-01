@@ -178,7 +178,12 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
     };
     return (
       <CurrentUserSpotifyStatusQuery>
-        {({ loading: statusLoading, error: statusError, data: statusData }) => {
+        {({
+          loading: statusLoading,
+          error: statusError,
+          data: statusData,
+          refetch: statusRefetch,
+        }) => {
           const authenticated =
             statusData &&
             statusData.private &&
@@ -217,7 +222,10 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
                     keyExtractor={this._keyExtractor}
                     renderItem={this._renderItem}
                     refreshing={statusLoading || loading}
-                    onRefresh={() => refetch()}
+                    onRefresh={() => {
+                      statusRefetch();
+                      refetch();
+                    }}
                     onEndReached={() => {
                       // @ts-ignore
                       fetchMore({

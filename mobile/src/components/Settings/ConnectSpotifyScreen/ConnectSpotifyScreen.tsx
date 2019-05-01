@@ -13,6 +13,7 @@ import { RegisterSpotifyAuthCodeMutation } from '../../../graphql/requests/Spoti
 import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import DropdownAlert from 'react-native-dropdownalert';
 import { CurrentUserSpotifyStatusQuery } from '../../../graphql/requests/Spotify';
+import NavigationService from '../../../services/NavigationService';
 
 export type Props = {};
 
@@ -42,6 +43,7 @@ export default class ConnectSpotifyScreen extends React.Component<
     const responseType = 'code';
     const clientID = 'e5149b4616b84918911f9419a279d23b';
     const redirectURI = `http://app.playroll.io`;
+    // const redirectURI = `https://app-dev.playroll.io`;
     const authParams = `client_id=${clientID}&redirect_uri=${redirectURI}&response_type=${responseType}&scope=${scope}`;
     const uri = `https://accounts.spotify.com/authorize?${authParams}`;
     WebBrowser.openBrowserAsync(uri);
@@ -68,74 +70,67 @@ export default class ConnectSpotifyScreen extends React.Component<
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <CurrentUserSpotifyStatusQuery>
-          {({ refetch }) => {
-            return (
-              <SubScreenContainer title='Connect to Spotify' modal>
-                <View style={{ alignItems: 'center' }}>
-                  <Image
-                    style={styles.spotifyIcon}
-                    source={require('../../../assets/spotifyIcon.png')}
+        <SubScreenContainer title='Connect to Spotify' modal>
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              style={styles.spotifyIcon}
+              source={require('../../../assets/spotifyIcon.png')}
+            />
+            <RegisterSpotifyAuthCodeMutation
+              onCompleted={() => {
+                this.dropdown.alertWithType(
+                  'info',
+                  'Success',
+                  'Successfully Connected Your Spotify Account!'
+                );
+                setTimeout(() => NavigationService.goBack(), 1000);
+              }}
+              onError={err => {
+                console.log(err);
+                this.dropdown.alertWithType(
+                  'error',
+                  'Error',
+                  "We're sorry, Please try again."
+                );
+              }}
+            >
+              {(registerSpotifyAuthCode, { loading }) => {
+                const { code: stateCode } = this.state;
+                if (stateCode !== '') {
+                  this.setState({ code: '' }, async () => {
+                    await registerSpotifyAuthCode({
+                      variables: { code: stateCode },
+                    });
+                  });
+                }
+                return (
+                  <Button
+                    title='Connect to Spotify'
+                    titleStyle={{ fontWeight: 'bold' }}
+                    containerStyle={[
+                      styles.connectButton,
+                      {
+                        borderRadius: 80,
+                        width: '75%',
+                        height: 50,
+                      },
+                    ]}
+                    onPress={() => {
+                      this.handleOpenSpotifyAuthView();
+                    }}
+                    buttonStyle={{
+                      borderRadius: 80,
+                      height: 50,
+                      backgroundColor: '#af00bc',
+                    }}
+                    raised
+                    loading={loading}
                   />
-                  <RegisterSpotifyAuthCodeMutation
-                    onCompleted={() => {
-                      refetch();
-                    }}
-                  >
-                    {(registerSpotifyAuthCode, { loading }) => {
-                      const { code: stateCode } = this.state;
-                      if (stateCode !== '') {
-                        this.setState({ code: '' }, async () => {
-                          try {
-                            await registerSpotifyAuthCode({
-                              variables: { code: stateCode },
-                            });
-                            this.dropdown.alertWithType(
-                              'info',
-                              'Success',
-                              'Successfully Connected Your Spotify Account!'
-                            );
-                          } catch (err) {
-                            console.log(err);
-                            this.dropdown.alertWithType(
-                              'error',
-                              'Error',
-                              "We're sorry, Please try again."
-                            );
-                          }
-                        });
-                      }
-                      return (
-                        <Button
-                          title='Connect to Spotify'
-                          titleStyle={{ fontWeight: 'bold' }}
-                          containerStyle={[
-                            styles.connectButton,
-                            {
-                              borderRadius: 80,
-                              width: '75%',
-                              height: 50,
-                            },
-                          ]}
-                          onPress={() => {
-                            this.handleOpenSpotifyAuthView();
-                          }}
-                          buttonStyle={{
-                            borderRadius: 80,
-                            height: 50,
-                            backgroundColor: '#af00bc',
-                          }}
-                          raised
-                          loading={loading}
-                        />
-                      );
-                    }}
-                  </RegisterSpotifyAuthCodeMutation>
-                </View>
-              </SubScreenContainer>
-            );
-          }}
-        </CurrentUserSpotifyStatusQuery>
+                );
+              }}
+            </RegisterSpotifyAuthCodeMutation>
+          </View>
+        </SubScreenContainer>
         <DropdownAlert ref={ref => (this.dropdown = ref)} />
       </View>
     );

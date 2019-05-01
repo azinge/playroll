@@ -20,6 +20,7 @@ import { Playroll, User } from '../../../graphql/types';
 import Icons from '../../../themes/Icons';
 import { LIST_CURRENT_USER_PLAYROLLS } from '../../../graphql/requests/Playroll/ListCurrentUserPlayrollsQuery';
 import PlaceholderList from '../../shared/Lists/PlaceholderList';
+import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 
 import {
   ListCurrentUserPlayrollsQuery,
@@ -223,6 +224,22 @@ export default class ViewCurrentUserProfileScreen extends React.Component<
                       }}
                     />
                   )}
+                  ListEmptyComponent={() => {
+                    return loading ? null : (
+                      <View style={{ flex: 1, alignItems: 'center' }}>
+                        <EmptyDataFiller
+                          text={
+                            error
+                              ? 'Could not load Playrolls'
+                              : `You have no Playrolls`
+                          }
+                          imgSize={70}
+                          textWidth={250}
+                          horizontal
+                        />
+                      </View>
+                    );
+                  }}
                 />
               );
             }}

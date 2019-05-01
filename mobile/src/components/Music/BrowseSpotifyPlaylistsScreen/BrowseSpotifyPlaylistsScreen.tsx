@@ -28,7 +28,23 @@ import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
 import { NavigationEvents } from 'react-navigation';
 
-export default class BrowseSpotifyPlaylistsScreen extends React.Component {
+export type Props = {};
+
+type State = {
+  triggerRefetch: boolean;
+};
+
+export default class BrowseSpotifyPlaylistsScreen extends React.Component<
+  Props,
+  State
+> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      triggerRefetch: false,
+    };
+  }
+
   _renderItem = ({ item }) => (
     <TouchableOpacity
       style={{ marginHorizontal: 20, marginBottom: 5, marginTop: 5 }}
@@ -130,7 +146,10 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
           </View>
         ) : (
           <TouchableOpacity
-            onPress={() => NavigationService.navigate('ConnectSpotify')}
+            onPress={() => {
+              this.setState({ triggerRefetch: true });
+              NavigationService.navigate('ConnectSpotify');
+            }}
             style={{
               marginHorizontal: 60,
               marginBottom: 5,
@@ -200,8 +219,12 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
                   <>
                     <NavigationEvents
                       onWillFocus={() => {
-                        statusRefetch();
-                        refetch();
+                        if (this.state.triggerRefetch) {
+                          this.setState({ triggerRefetch: false }, () => {
+                            statusRefetch();
+                            refetch();
+                          });
+                        }
                       }}
                     />
                     <MainScreenContainer

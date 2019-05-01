@@ -42,8 +42,8 @@ export default class ConnectSpotifyScreen extends React.Component<
       'user-read-private+user-library-read+user-read-email+playlist-modify-public+playlist-modify-private';
     const responseType = 'code';
     const clientID = 'e5149b4616b84918911f9419a279d23b';
-    const redirectURI = `http://app.playroll.io`;
-    // const redirectURI = `https://app-dev.playroll.io`;
+    // const redirectURI = `http://app.playroll.io`;
+    const redirectURI = `https://app-dev.playroll.io`;
     const authParams = `client_id=${clientID}&redirect_uri=${redirectURI}&response_type=${responseType}&scope=${scope}`;
     const uri = `https://accounts.spotify.com/authorize?${authParams}`;
     WebBrowser.openBrowserAsync(uri);
@@ -78,20 +78,10 @@ export default class ConnectSpotifyScreen extends React.Component<
             />
             <RegisterSpotifyAuthCodeMutation
               onCompleted={() => {
-                this.dropdown.alertWithType(
-                  'info',
-                  'Success',
-                  'Successfully Connected Your Spotify Account!'
-                );
                 setTimeout(() => NavigationService.goBack(), 1000);
               }}
               onError={err => {
                 console.log(err);
-                this.dropdown.alertWithType(
-                  'error',
-                  'Error',
-                  "We're sorry, Please try again."
-                );
               }}
             >
               {(registerSpotifyAuthCode, { loading }) => {
@@ -99,7 +89,8 @@ export default class ConnectSpotifyScreen extends React.Component<
                 if (stateCode !== '') {
                   this.setState({ code: '' }, async () => {
                     await registerSpotifyAuthCode({
-                      variables: { code: stateCode },
+                      variables: { code: stateCode, devMode: true },
+                      // variables: { code: stateCode },
                     });
                   });
                 }

@@ -26,6 +26,7 @@ import SearchSubHeader from '../../shared/SubHeaders/SearchSubHeader';
 import Icons from '../../../themes/Icons';
 import MainScreenContainer from '../../shared/Containers/MainScreenContainer';
 import EmptyDataFiller from '../../shared/Text/EmptyDataFiller';
+import { NavigationEvents } from 'react-navigation';
 
 export default class BrowseSpotifyPlaylistsScreen extends React.Component {
   _renderItem = ({ item }) => (
@@ -196,62 +197,70 @@ export default class BrowseSpotifyPlaylistsScreen extends React.Component {
               {({ loading, error, data, fetchMore, refetch }) => {
                 const playlists = extractPlaylists(data);
                 return (
-                  <MainScreenContainer
-                    flatList
-                    contentContainerStyle={{
-                      marginTop: 10,
-                      paddingBottom: hp('10%'),
-                    }}
-                    renderFlatListHeader={() =>
-                      this.renderSpotifyHeader(authenticated, statusLoading)
-                    }
-                    renderFlatListEmptyComponent={() => {
-                      return statusLoading || loading ? null : (
-                        <EmptyDataFiller
-                          text={
-                            error || statusError
-                              ? 'Could not load Playlists from Spotify'
-                              : 'Add some Playlists on Spotify!'
-                          }
-                          textSize={'h5'}
-                          textWidth={300}
-                        />
-                      );
-                    }}
-                    data={playlists}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={this._renderItem}
-                    refreshing={statusLoading || loading}
-                    onRefresh={() => {
-                      statusRefetch();
-                      refetch();
-                    }}
-                    onEndReached={() => {
-                      // @ts-ignore
-                      fetchMore({
-                        variables: {
-                          offset: playlists.length,
-                        },
-                        updateQuery: (prev, { fetchMoreResult }) => {
-                          const prevPlaylists = extractPlaylists(prev);
-                          const fetchMorePlaylists = extractPlaylists(
-                            fetchMoreResult
-                          );
-                          if (!fetchMoreResult) return prev;
-                          return Object.assign({}, prev, {
-                            private: {
-                              listSpotifyPlaylists: [
-                                ...prevPlaylists,
-                                ...fetchMorePlaylists,
-                              ],
-                              __typename: 'PrivateQueryMethods',
-                            },
-                          });
-                        },
-                      });
-                    }}
-                    onEndReachedThreshold={0.5}
-                  />
+                  <>
+                    <NavigationEvents
+                      onWillFocus={() => {
+                        statusRefetch();
+                        refetch();
+                      }}
+                    />
+                    <MainScreenContainer
+                      flatList
+                      contentContainerStyle={{
+                        marginTop: 10,
+                        paddingBottom: hp('10%'),
+                      }}
+                      renderFlatListHeader={() =>
+                        this.renderSpotifyHeader(authenticated, statusLoading)
+                      }
+                      renderFlatListEmptyComponent={() => {
+                        return statusLoading || loading ? null : (
+                          <EmptyDataFiller
+                            text={
+                              error || statusError
+                                ? 'Could not load Playlists from Spotify'
+                                : 'Add some Playlists on Spotify!'
+                            }
+                            textSize={'h5'}
+                            textWidth={300}
+                          />
+                        );
+                      }}
+                      data={playlists}
+                      keyExtractor={this._keyExtractor}
+                      renderItem={this._renderItem}
+                      refreshing={statusLoading || loading}
+                      onRefresh={() => {
+                        statusRefetch();
+                        refetch();
+                      }}
+                      onEndReached={() => {
+                        // @ts-ignore
+                        fetchMore({
+                          variables: {
+                            offset: playlists.length,
+                          },
+                          updateQuery: (prev, { fetchMoreResult }) => {
+                            const prevPlaylists = extractPlaylists(prev);
+                            const fetchMorePlaylists = extractPlaylists(
+                              fetchMoreResult
+                            );
+                            if (!fetchMoreResult) return prev;
+                            return Object.assign({}, prev, {
+                              private: {
+                                listSpotifyPlaylists: [
+                                  ...prevPlaylists,
+                                  ...fetchMorePlaylists,
+                                ],
+                                __typename: 'PrivateQueryMethods',
+                              },
+                            });
+                          },
+                        });
+                      }}
+                      onEndReachedThreshold={0.5}
+                    />
+                  </>
                 );
               }}
             </ListSpotifyPlaylistsQuery>

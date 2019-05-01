@@ -88,7 +88,7 @@ export default class ConnectSpotifyScreen extends React.Component<
                         this.setState({ code: '' }, async () => {
                           try {
                             await registerSpotifyAuthCode({
-                              variables: { code: stateCode, devMode: true },
+                              variables: { code: stateCode },
                             });
                             this.dropdown.alertWithType(
                               'info',

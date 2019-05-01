@@ -78,9 +78,8 @@ export default class SearchScreenHeader extends React.Component<Props, State> {
                 backgroundColor: '#4F0C50',
                 borderRadius: 5,
                 paddingHorizontal: 5,
-                flex: 1,
-                marginTop: 7,
-                marginBottom: 4,
+                alignSelf: 'stretch',
+                height: 35,
               }}
             >
               <TextInput

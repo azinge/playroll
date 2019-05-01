@@ -6,7 +6,7 @@
     "sdkVersion": "32.0.0",
     "scheme": "playroll",
     "platforms": ["ios", "android"],
-    "version": "1.1.1",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/playroll_square_logo_1024x1024.png",
     "splash": {
@@ -22,7 +22,7 @@
       "bundleIdentifier": "com.playroll.playroll"
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 9,
       "package": "com.playroll.playroll",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {

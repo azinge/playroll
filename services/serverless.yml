@@ -61,7 +61,8 @@ functions:
       - http:
           path: admin_graphql
           method: post
-          authorizer: aws_iam
+          authorizer:
+            arn: arn:aws:cognito-idp:us-west-2:124787320957:userpool/us-west-2_kISnsVhAK
           cors: true
   postconfirm:
     vpc:

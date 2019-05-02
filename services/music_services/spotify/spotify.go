@@ -290,10 +290,18 @@ func CreateSpotifyPlaylistFromTracks(tracks *[]jsonmodels.MusicSource, playlistN
 		fmt.Println("error creating playlist for user: ", err.Error())
 		return "", err
 	}
-	_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs...)
-	if err != nil {
-		fmt.Println("error adding songs for user: ", err.Error())
-		return "", err
+
+	for i := 0; i < len(trackIDs); i += 100 {
+		var err error
+		if i+100 < len(trackIDs) {
+			_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs[i:i+100]...)
+		} else {
+			_, err = client.AddTracksToPlaylist(playlist.ID, trackIDs[i:]...)
+		}
+		if err != nil {
+			fmt.Println("error adding songs for user: ", err.Error())
+			return "", err
+		}
 	}
 	return string(playlist.ID), nil
 }

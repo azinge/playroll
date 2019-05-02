@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/cazinge/playroll/services/models"
 	"github.com/jinzhu/gorm"
@@ -29,11 +28,5 @@ func main() {
 	if db.AutoMigrate(models.ModelList...).Error != nil {
 		fmt.Println("error migrating db: " + err.Error())
 	}
-	playrollModel := &models.Playroll{}
-	lastHour := time.Now().Add(-1 * time.Hour)
-	if err := db.Where("updated_at > ?", lastHour).First(playrollModel).Error; err != nil {
-		panic(err)
-	}
-	p, err := models.FormatPlayroll(playrollModel)
-	fmt.Println(p, err)
+
 }

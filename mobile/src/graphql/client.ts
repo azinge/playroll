@@ -4,7 +4,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 // @ts-ignore
 import apolloLogger from 'apollo-link-logger';
-import * as config from '../config/aws';
+import { APIConfig } from '../config/aws';
 import APIService from '../services/APIService';
 import { withClientState } from 'apollo-link-state';
 import { resolvers, typeDefs, loadDefaults } from './local-state';
@@ -27,7 +27,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLink = new HttpLink({
-  uri: config.api.prod.url,
+  uri: APIConfig.url,
   fetch: APIService.fetch,
 });
 

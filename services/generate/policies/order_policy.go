@@ -137,5 +137,5 @@ func (pop *PopularityOrderPolicy) Validate(rf *jsonmodels.RollFilter) bool {
 }
 
 func (pop *PopularityOrderPolicy) Apply(db *gorm.DB) (*gorm.DB, error) {
-	return db.Order("popularity"), nil
+	return db.Order("popularity desc"), nil
 }

@@ -34,8 +34,6 @@ func AutoMigrateHandler(context context.Context) (events.APIGatewayProxyResponse
 	}
 	defer db.Close()
 
-	// TODO: Proper Migrations, run one time for db
-
 	if err := db.AutoMigrate(models.ModelList...).Error; err != nil {
 		fmt.Println("error auto migrating db: " + err.Error())
 		return events.APIGatewayProxyResponse{

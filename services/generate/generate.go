@@ -72,7 +72,7 @@ func createPGTOutput(tracklist *models.Tracklist, isComplete bool, currentRollIn
 
 func ProgressiveGenerateTracklist(playroll *models.PlayrollOutput, tracklist *models.Tracklist, rollBatchSize uint, mctx *gqltag.MethodContext, client *spotify.Client) (*jsonmodels.ProgressiveGenerateTracklistOutput, error) {
 	deadline, _ := mctx.Context.Deadline()
-	deadline = deadline.Add(-3500 * time.Millisecond)
+	deadline = deadline.Add(-1500 * time.Millisecond)
 	timeoutChannel := time.After(time.Until(deadline))
 	db := mctx.DB
 	currentRollBatchSize := uint(0)

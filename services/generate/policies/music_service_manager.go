@@ -28,7 +28,6 @@ func CollectSource(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 }
 
 func collectTrack(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client, timeoutChannel <-chan time.Time) (bool, error) {
-	lastHour := time.Now().Add(-1 * time.Hour)
 	if _, err := models.GetMusicServiceTrackByProviderInfo(source.Provider, source.ProviderID, db); err == nil {
 		return true, nil
 	}
@@ -39,7 +38,7 @@ func collectTrack(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 		if err != nil {
 			return false, err
 		}
-		if err := db.Where("updated_at > ?", lastHour).Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
+		if err := db.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 			return false, err
 		}
 		return true, nil
@@ -49,7 +48,6 @@ func collectTrack(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 }
 
 func collectAlbum(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client, timeoutChannel <-chan time.Time) (bool, error) {
-	lastHour := time.Now().Add(-1 * time.Hour)
 	if _, err := models.GetMusicServiceAlbumByProviderInfo(source.Provider, source.ProviderID, db); err == nil {
 		return true, nil
 	}
@@ -85,14 +83,14 @@ func collectAlbum(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 				default:
 				}
 
-				if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
+				if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 					tx.Rollback()
 					return false, err
 				}
 			}
 		}
 
-		if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
+		if err = tx.Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
 			tx.Rollback()
 			return false, err
 		}
@@ -106,7 +104,6 @@ func collectAlbum(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.C
 }
 
 func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client, timeoutChannel <-chan time.Time) (bool, error) {
-	lastHour := time.Now().Add(-1 * time.Hour)
 	if _, err := models.GetMusicServiceArtistByProviderInfo(source.Provider, source.ProviderID, db); err == nil {
 		return true, nil
 	}
@@ -165,18 +162,18 @@ func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 						return false, nil
 					default:
 					}
-					if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
+					if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&models.MusicServiceTrack{}).Error; err != nil {
 						tx.Rollback()
 						return false, err
 					}
 				}
 			}
-			if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
+			if err = tx.Where(models.MusicServiceAlbum{ProviderID: album.ProviderID}).Attrs(album).FirstOrCreate(&models.MusicServiceAlbum{}).Error; err != nil {
 				tx.Rollback()
 				return false, err
 			}
 		}
-		if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceArtist{ProviderID: artist.ProviderID}).Attrs(artist).FirstOrCreate(&models.MusicServiceArtist{}).Error; err != nil {
+		if err = tx.Where(models.MusicServiceArtist{ProviderID: artist.ProviderID}).Attrs(artist).FirstOrCreate(&models.MusicServiceArtist{}).Error; err != nil {
 			tx.Rollback()
 			return false, err
 		}
@@ -190,7 +187,6 @@ func collectArtist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.
 }
 
 func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotify.Client, timeoutChannel <-chan time.Time) (bool, error) {
-	lastHour := time.Now().Add(-1 * time.Hour)
 	if _, err := models.GetMusicServicePlaylistByProviderInfo(source.Provider, source.ProviderID, db); err == nil {
 		return true, nil
 	}
@@ -227,7 +223,7 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 				default:
 				}
 				trackModel := &models.MusicServiceTrack{}
-				if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&trackModel).Error; err != nil {
+				if err = tx.Where(models.MusicServiceTrack{ProviderID: track.ProviderID}).Attrs(track).FirstOrCreate(&trackModel).Error; err != nil {
 					tx.Rollback()
 					return false, err
 				}
@@ -240,7 +236,7 @@ func collectPlaylist(source *jsonmodels.MusicSource, db *gorm.DB, client *spotif
 					tx.Rollback()
 					return false, err
 				}
-				if err = tx.Where("updated_at > ?", lastHour).Where(models.MusicServicePlaylist{ProviderID: playlist.ProviderID}).Attrs(playlist).FirstOrCreate(&models.MusicServicePlaylist{}).Error; err != nil {
+				if err = tx.Where(models.MusicServicePlaylist{ProviderID: playlist.ProviderID}).Attrs(playlist).FirstOrCreate(&models.MusicServicePlaylist{}).Error; err != nil {
 					tx.Rollback()
 					return false, err
 				}

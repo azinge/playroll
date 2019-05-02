@@ -2,7 +2,6 @@ package policies
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/cazinge/playroll/services/models"
 	"github.com/cazinge/playroll/services/models/jsonmodels"
@@ -62,8 +61,7 @@ func NewGeneratePolicyManager(filters *[]jsonmodels.RollFilter, sources *[]jsonm
 
 func (gpm *GeneratePolicyManager) ExecuteQuery(db *gorm.DB) (*[]models.MusicServiceTrack, error) {
 	tracks := &[]models.MusicServiceTrack{}
-	lastHour := time.Now().Add(-1 * time.Hour)
-	db = db.Table("music_service_tracks").Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id").Where("music_service_tracks.updated_at > ?", lastHour)
+	db = db.Table("music_service_tracks").Joins("LEFT JOIN playlist_tracks ON playlist_tracks.music_service_track_id = music_service_tracks.provider_id")
 	var err error
 	if gpm.SourcePolicy != nil {
 		db, err = gpm.SourcePolicy.Apply(db)

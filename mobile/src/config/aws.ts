@@ -3,22 +3,30 @@ import { Platform } from 'react-native';
 
 export const api = {
   local: {
-    url: 'http://localhost:4445/graphql',
+    url: 'http://localhost:4445/admin_graphql',
+    spotify: 'https://app-dev.playroll.io',
     region: '',
   },
   dev: {
     url: 'https://y3by4fytq4.execute-api.us-west-2.amazonaws.com/dev/graphql/',
+    spotify: 'https://app-dev.playroll.io',
     region: 'us-west-2',
   },
   stag: {
     url: 'https://4k051usakf.execute-api.us-west-2.amazonaws.com/stag/graphql/',
+    spotify: 'http://app.playroll.io',
     region: 'us-west-2',
   },
   prod: {
     url: 'https://a474dwg0w4.execute-api.us-west-2.amazonaws.com/prod/graphql/',
+    spotify: 'http://app.playroll.io',
     region: 'us-west-2',
   },
 };
+
+export const CURRENT_STAGE = 'dev';
+
+export const APIConfig = api[CURRENT_STAGE];
 
 export const amplify = {
   local: {
@@ -56,8 +64,8 @@ export const amplify = {
       oauth: {
         domain: 'playroll-dev.auth.us-west-2.amazoncognito.com',
         scope: ['public_profile', 'phone', 'email', 'profile', 'openid'],
-        redirectSignIn: 'https://app.playroll.io',
-        redirectSignOut: 'https://app.playroll.io',
+        redirectSignIn: 'https://app-dev.playroll.io',
+        redirectSignOut: 'https://app-dev.playroll.io',
         responseType: 'code', // or token
         urlOpener: WebBrowser.openBrowserAsync,
       },
@@ -106,3 +114,5 @@ export const amplify = {
     },
   },
 };
+
+export const AmplifyConfig = amplify[CURRENT_STAGE];

@@ -14,6 +14,7 @@ import SubScreenContainer from '../../shared/Containers/SubScreenContainer';
 import DropdownAlert from 'react-native-dropdownalert';
 import { CurrentUserSpotifyStatusQuery } from '../../../graphql/requests/Spotify';
 import NavigationService from '../../../services/NavigationService';
+import { AmplifyConfig, APIConfig, CURRENT_STAGE } from '../../../config/aws';
 
 export type Props = {};
 
@@ -42,7 +43,7 @@ export default class ConnectSpotifyScreen extends React.Component<
       'user-read-private+user-library-read+user-read-email+playlist-modify-public+playlist-modify-private';
     const responseType = 'code';
     const clientID = 'e5149b4616b84918911f9419a279d23b';
-    const redirectURI = `http://app.playroll.io`;
+    const redirectURI = APIConfig.spotify;
     // const redirectURI = `https://app-dev.playroll.io`;
     const authParams = `client_id=${clientID}&redirect_uri=${redirectURI}&response_type=${responseType}&scope=${scope}`;
     const uri = `https://accounts.spotify.com/authorize?${authParams}`;
@@ -89,8 +90,12 @@ export default class ConnectSpotifyScreen extends React.Component<
                 if (stateCode !== '') {
                   this.setState({ code: '' }, async () => {
                     await registerSpotifyAuthCode({
-                      // variables: { code: stateCode, devMode: true },
-                      variables: { code: stateCode },
+                      variables: {
+                        code: stateCode,
+                        devMode:
+                          CURRENT_STAGE === 'dev' || CURRENT_STAGE === 'local',
+                      },
+                      // variables: { code: stateCode },
                     });
                   });
                 }

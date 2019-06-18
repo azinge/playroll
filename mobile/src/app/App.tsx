@@ -38,8 +38,11 @@ export default class App extends React.Component<Props, State> {
       <View style={{ flex: 1 }}>
         <ApolloProvider client={client}>
           <AppContainer // https://reactnavigation.org/docs/en/app-containers.html
+
             // https://stackoverflow.com/questions/44701245/hide-header-in-stack-navigator-react-navigation/44701408#44701408
             navigationOptions={{ header: null, headerMode: 'screen' }}
+
+            // https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
             ref={navigatorRef => {
               navigatorRef = navigatorRef as NavigationContainerComponent;
               NavigationService.setTopLevelNavigator(navigatorRef);

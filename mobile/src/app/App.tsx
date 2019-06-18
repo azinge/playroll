@@ -34,9 +34,11 @@ export default class App extends React.Component<Props, State> {
 
   render() {
     return (
+      // https://reactnavigation.org/docs/en/common-mistakes.html#wrapping-appcontainer-in-a-view-without-flex
       <View style={{ flex: 1 }}>
         <ApolloProvider client={client}>
-          <AppContainer
+          <AppContainer // https://reactnavigation.org/docs/en/app-containers.html
+            // https://stackoverflow.com/questions/44701245/hide-header-in-stack-navigator-react-navigation/44701408#44701408
             navigationOptions={{ header: null, headerMode: 'screen' }}
             ref={navigatorRef => {
               navigatorRef = navigatorRef as NavigationContainerComponent;

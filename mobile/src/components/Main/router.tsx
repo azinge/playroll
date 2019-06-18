@@ -159,7 +159,7 @@ export const MainNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'MainWithoutModals',
-    mode: 'modal',
+    mode: 'modal', // https://reactnavigation.org/docs/en/modal.html
     headerMode: 'none',
     // transparentCard: true,
   }
